@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(5),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -70,7 +70,7 @@ const theme2 = createTheme({
     },
     palette: {
         primary: {
-            main: '#e6b800',
+            main: 'rgb(255,208,94)',
         }
     }
 })
@@ -112,33 +112,18 @@ function Signup() {
                         <Grid item md={12} sm={12} xs={6}>
                             <ThemeProvider theme={theme2}>
                                 <form className={classes.form} noValidate>
-
-
-                                    <Grid container spacing={2}>
-                                        <Grid item lg={6}>
-                                            <TextField
-                                                autoComplete="fname"
-                                                name="firstName"
-                                                variant="outlined"
-                                                required
-                                                fullWidth
-                                                id="firstName"
-                                                label="First Name"
-                                                autoFocus
-                                            />
-                                        </Grid>
-                                        <Grid item lg={6}>
-                                            <TextField
-                                                variant="outlined"
-                                                required
-                                                fullWidth
-                                                id="lastName"
-                                                label="Last Name"
-                                                name="lastName"
-                                                autoComplete="lname"
-                                            />
-                                        </Grid>
-                                    </Grid>
+                                    <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="Username"
+                                        label="Username"
+                                        name="Username"
+                                        autoComplete="email"
+                                        autoFocus
+                                        align="center"
+                                    />
                                     <TextField
                                         variant="outlined"
                                         margin="normal"
@@ -150,7 +135,6 @@ function Signup() {
                                         autoComplete="email"
                                         autoFocus
                                         align="center"
-
 
                                     />
                                     <TextField
@@ -168,8 +152,8 @@ function Signup() {
                             </ThemeProvider>
                         </Grid>
                         <ThemeProvider theme={theme2}>
-                            <Button variant="outlined" color="primary" type="submit" fullWidth className={classes.signin} size="large"
-                                style={{ maxWidth: '20%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>Sign up</b>
+                            <Button variant="contained" color="primary" type="submit" fullWidth className={classes.signin} size="large"
+                                    style={{ maxWidth: '40%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>sign up</b>
                             </Button>
                         </ThemeProvider>
                     </div>
@@ -179,4 +163,4 @@ function Signup() {
     );
 }
 
-export { Signup };
+export default Signup;

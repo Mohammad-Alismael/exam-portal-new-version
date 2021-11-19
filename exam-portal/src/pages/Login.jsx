@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(7),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -73,7 +73,7 @@ const theme2 = createTheme({
     },
     palette: {
         primary: {
-            main: '#e6b800',
+            main: 'rgb(255,208,94)',
         }
     }
 })
@@ -84,22 +84,14 @@ function Login() {
 
     return (
         <div>
-
-
-
             <AppBar position="fixed" color="white" elevation={0} >
                 <Toolbar style={{ marginLeft: '12%', marginRight: '12%', }}>
-
                     <img src={logo} className={classes.logo} alt="Exam Portal" />
-
                     <Typography variant="body2" className={classes.title} style={{ color: '#666666' }} align="right">
                         Don't have an account? <Link href="/signup">Sign up</Link>
                     </Typography>
                 </Toolbar>
             </AppBar>
-
-
-
 
             <Grid item md={12} sm={12} style={{ backgroundColor: '#161b22', padding: '7%' }}>
                 <Paper elevation={10} className={classes.paperStyle}>
@@ -120,14 +112,12 @@ function Login() {
                                         margin="normal"
                                         required
                                         fullWidth
-                                        id="email"
-                                        label="Email Address"
-                                        name="email"
+                                        id="Username"
+                                        label="Username"
+                                        name="Username"
                                         autoComplete="email"
                                         autoFocus
                                         align="center"
-
-
                                     />
                                     <TextField
                                         variant="outlined"
@@ -142,30 +132,18 @@ function Login() {
                                     />
                                 </form>
 
-                                <FormControlLabel
-                                    control={<Checkbox value="remember" color="primary" />}
-                                    label="Remember me"
-                                />
                             </ThemeProvider>
                         </Grid>
                         <ThemeProvider theme={theme2}>
-                            <Button variant="outlined" color="primary" type="submit" fullWidth className={classes.signin} size="large"
-                                style={{ maxWidth: '20%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>Login</b>
+                            <Button variant="contained" color="primary" type="submit" fullWidth className={classes.signin} size="large"
+                                style={{ maxWidth: '40%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>Login</b>
                             </Button>
                         </ThemeProvider>
                     </div>
-                    <Divider style={{ margin: '0px 0px 20px' }} />
-                    <ThemeProvider theme={theme2}>
-                        <Box>
-                            <Link href="#" variant="body1">
-                                {"Forgot your password?"}
-                            </Link>
-                        </Box>
-                    </ThemeProvider>
                 </Paper>
             </Grid>
         </div>
     );
 }
 
-export { Login };
+export default Login ;
