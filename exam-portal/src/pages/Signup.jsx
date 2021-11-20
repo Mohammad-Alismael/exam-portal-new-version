@@ -12,7 +12,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import logo from '../img/logo.png'
 
-
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -78,11 +82,9 @@ const theme2 = createTheme({
 
 function Signup() {
     const classes = useStyles();
-
+    const [type, setType] = React.useState('');
     return (
         <div>
-
-
 
             <AppBar position="fixed" color="white" elevation={0} >
                 <Toolbar style={{ marginLeft: '12%', marginRight: '12%', }}>
@@ -94,9 +96,6 @@ function Signup() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-
-
-
 
             <Grid item md={12} sm={12} style={{ backgroundColor: '#161b22', padding: '7%' }}>
                 <Paper elevation={10} className={classes.paperStyle}>
@@ -148,6 +147,20 @@ function Signup() {
                                         id="password"
                                         autoComplete="current-password"
                                     />
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">User Type</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={type}
+                                            label="User type"
+                                            onChange={(e)=>(setType(e.target.value))}
+                                        >
+                                            <MenuItem value={1}>instructor</MenuItem>
+                                            <MenuItem value={2}>undergraduate</MenuItem>
+                                            <MenuItem value={3}>graduate</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </form>
                             </ThemeProvider>
                         </Grid>
