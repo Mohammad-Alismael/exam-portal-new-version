@@ -1,7 +1,8 @@
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import { Routes, Route } from "react-router-dom";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import React from "react";
 // import Home from "./pages/Home";
@@ -9,6 +10,7 @@ import React from "react";
 function App() {
   return (
     <div>
+      <ToastContainer />
     <Routes>
       <Route exact path="/" element={<Login/>}/>
       {/*<Route path="/" element={<Home/>} />*/}

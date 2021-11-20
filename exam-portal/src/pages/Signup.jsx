@@ -134,7 +134,6 @@ function Signup() {
                                         autoComplete="email"
                                         autoFocus
                                         align="center"
-
                                     />
                                     <TextField
                                         variant="outlined"

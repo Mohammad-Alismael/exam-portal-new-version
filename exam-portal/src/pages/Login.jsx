@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
@@ -14,7 +14,8 @@ import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import logo from '../img/logo.png'
-
+import {toast } from 'react-toastify';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '20%',
     },
     form: {
-        width: '350px',
-        marginTop: theme.spacing(1),
+        maxWidth: '320px',
+        // marginTop: theme.spacing(1),
         align: 'center',
     },
 
@@ -73,6 +74,9 @@ const theme2 = createTheme({
     },
     palette: {
         primary: {
+            main: 'rgb(22,27,34)',
+        },
+        secondary: {
             main: 'rgb(255,208,94)',
         }
     }
@@ -81,7 +85,22 @@ const theme2 = createTheme({
 
 function Login() {
     const classes = useStyles();
+    const [username,setUsername] = useState('')
+    const [password,setPassword] = useState('')
+    const submit = (e) => {
+        e.preventDefault()
+        axios.post('http://localhost:8080/authenticate',{
+            username : username,
+            password : password
+        }).then((res)=>{
+            console.log(res.data[0])
+        }).catch((error)=>{
+            console.log(error)
+            toast.error("incorrect username or password")
+        })
 
+
+    }
     return (
         <div>
             <AppBar position="fixed" color="white" elevation={0} >
@@ -108,6 +127,7 @@ function Login() {
                             <ThemeProvider theme={theme2}>
                                 <form className={classes.form} noValidate>
                                     <TextField
+                                        onChange={e => (setUsername(e.target.value))}
                                         variant="outlined"
                                         margin="normal"
                                         required
@@ -120,6 +140,7 @@ function Login() {
                                         align="center"
                                     />
                                     <TextField
+                                        onChange={e => (setPassword(e.target.value))}
                                         variant="outlined"
                                         margin="normal"
                                         required
@@ -135,7 +156,14 @@ function Login() {
                             </ThemeProvider>
                         </Grid>
                         <ThemeProvider theme={theme2}>
-                            <Button variant="contained" color="primary" type="submit" fullWidth className={classes.signin} size="large"
+                            <Button
+                                onClick={submit}
+                                variant="contained"
+                                color="secondary"
+                                type="submit"
+                                fullWidth
+                                className={classes.signin}
+                                size="large"
                                 style={{ maxWidth: '40%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>Login</b>
                             </Button>
                         </ThemeProvider>
