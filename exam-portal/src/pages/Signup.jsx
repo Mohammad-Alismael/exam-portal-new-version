@@ -42,8 +42,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '20%',
     },
     form: {
-        width: '350px',
-        marginTop: theme.spacing(1),
+        maxWidth: '320px',
         align: 'center',
     },
 
@@ -92,19 +91,25 @@ function Signup() {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const submit = (e) => {
-        e.preventDefault()
-        axios.post('http://localhost:8080/add',{
-            username,
-            password,
-            emailId:email,
-            roleId: type
-        }).then((res)=>{
-            console.log(res.data)
-        }).catch((error)=>{
-            console.log(error)
-            toast.warn("username already taken")
-        })
+        if (username != '' && password != '') {
 
+            e.preventDefault()
+            axios.post('http://localhost:8080/add', {
+                username,
+                password,
+                emailId: email,
+                roleId: type
+            }).then((res) => {
+                console.log(res.data)
+            }).catch((error) => {
+                if (error.response.status == 409)
+                    toast.warn("username already taken")
+                else
+                    toast.error('error happened!')
+            })
+        }else{
+            toast.warn('you cannot leave username or password field empty!')
+        }
 
     }
     return (

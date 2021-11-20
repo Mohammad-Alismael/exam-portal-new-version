@@ -93,10 +93,13 @@ function Login() {
             username : username,
             password : password
         }).then((res)=>{
-            console.log(res.data[0])
+            localStorage.setItem('userId',res.data[0]['userId']);
+            localStorage.setItem('username',username);
         }).catch((error)=>{
-            console.log(error)
-            toast.error("incorrect username or password")
+            if(error.response.status == 400)
+                toast.info("incorrect username or password")
+            else
+                toast.error('error happened!')
         })
 
 
@@ -154,6 +157,10 @@ function Login() {
                                 </form>
 
                             </ThemeProvider>
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label="Remember me"
+                            />
                         </Grid>
                         <ThemeProvider theme={theme2}>
                             <Button
