@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
@@ -17,6 +17,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import axios from "axios";
+import {toast} from "react-toastify";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -74,6 +76,9 @@ const theme2 = createTheme({
     },
     palette: {
         primary: {
+            main: 'rgb(0,0,0)',
+        },
+        secondary: {
             main: 'rgb(255,208,94)',
         }
     }
@@ -83,6 +88,25 @@ const theme2 = createTheme({
 function Signup() {
     const classes = useStyles();
     const [type, setType] = React.useState('');
+    const [username,setUsername] = useState('');
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
+    const submit = (e) => {
+        e.preventDefault()
+        axios.post('http://localhost:8080/add',{
+            username,
+            password,
+            emailId:email,
+            roleId: type
+        }).then((res)=>{
+            console.log(res.data)
+        }).catch((error)=>{
+            console.log(error)
+            toast.warn("username already taken")
+        })
+
+
+    }
     return (
         <div>
 
@@ -112,6 +136,7 @@ function Signup() {
                             <ThemeProvider theme={theme2}>
                                 <form className={classes.form} noValidate>
                                     <TextField
+                                        onChange={e => (setUsername(e.target.value))}
                                         variant="outlined"
                                         margin="normal"
                                         required
@@ -124,6 +149,7 @@ function Signup() {
                                         align="center"
                                     />
                                     <TextField
+                                        onChange={e => (setEmail(e.target.value))}
                                         variant="outlined"
                                         margin="normal"
                                         required
@@ -136,6 +162,7 @@ function Signup() {
                                         align="center"
                                     />
                                     <TextField
+                                        onChange={e => (setPassword(e.target.value))}
                                         variant="outlined"
                                         margin="normal"
                                         required
@@ -164,7 +191,7 @@ function Signup() {
                             </ThemeProvider>
                         </Grid>
                         <ThemeProvider theme={theme2}>
-                            <Button variant="contained" color="primary" type="submit" fullWidth className={classes.signin} size="large"
+                            <Button onClick={submit} variant="contained" color="secondary" type="submit" fullWidth className={classes.signin} size="large"
                                     style={{ maxWidth: '40%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>sign up</b>
                             </Button>
                         </ThemeProvider>
