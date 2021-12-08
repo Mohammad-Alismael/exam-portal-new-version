@@ -22,6 +22,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import Quiz from '../components/Quiz'
+import Link from '@mui/material/Link';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -163,7 +164,7 @@ function Course1() {
                                     }}
                                 >
                                     <MenuItem onClick={handleClose}><AssignmentIcon sx={{ p: 1 }} /> Assignment</MenuItem>
-                                    <MenuItem ><AssignmentIcon /> <Quiz /></MenuItem>
+                                    <Link href="/quiz"><MenuItem ><AssignmentIcon/>Quiz Assignment</MenuItem></Link>
                                     <MenuItem onClick={handleClose}><LiveHelpIcon sx={{ p: 1 }} />Question</MenuItem>
                                 </Menu>
                             </Paper>
