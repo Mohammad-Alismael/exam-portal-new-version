@@ -21,7 +21,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
-import Quiz from '../components/Quiz'
 import Link from '@mui/material/Link';
 
 const useStyles = makeStyles((theme) => ({
