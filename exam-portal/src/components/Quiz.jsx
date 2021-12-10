@@ -27,6 +27,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import {toast} from "react-toastify";
+import QuizBody from "./QuizBody";
+import index from "@mui/material/darkScrollbar";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -63,7 +65,6 @@ const theme2 = createTheme({
 function Quiz() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -71,12 +72,14 @@ function Quiz() {
     const handleClose = () => {
         setOpen(false);
     };
-
+    const [questionContainer,setQuestionContainer] = React.useState([<QuizBody/>]);
     const [selectedType, setSelectedType] = React.useState('');
     const [options,setOptions] = React.useState([]);
     const [checkbox,setCheckbox] = React.useState([])
     const [addOptionText, setAddOptionText] = React.useState('');
     const [checkboxText, setCheckboxText] = React.useState('');
+    const [howManyQuestions, setHowManyQuestions] = React.useState(1);
+    const [examQuestions, setExamQuestions] = React.useState([]);
     const handleChange = (event) => {
         setSelectedType(event.target.value);
     };
@@ -93,7 +96,10 @@ function Quiz() {
     }
 
     const addQuestionContainer = (e) => {
-
+        if (parseInt(e.target.value) < 101 && parseInt(e.target.value) > 0)
+            setHowManyQuestions(parseInt(e.target.value))
+        else
+            toast("that's beyond our limit")
     }
     return (
         <div>                        
@@ -109,126 +115,24 @@ function Quiz() {
                     </Toolbar>
                 </AppBar>
                 <Box sx={{ mt: 10 }}>
-                    <Paper elevation={3} className={classes.paperStyle}>
-                        <TextField
-                            className={classes.textField}
-                            label="Instructions (optional)"
-                            multiline
-                            rows={4}
-                            variant="standard"
-                        />
-                    </Paper>
 
                     <Paper elevation={3} className={classes.paperStyle}>
-
-                        <Grid container >
-                            <Grid xs={7}>
-                                <TextField id="filled-basic"
-                                           label="question text"
-                                           size="small"
-                                           fullWidth
-                                           variant="filled" />
-
-                            </Grid>
-                            <ImageIcon style={{ height: '40px', width: '40px',margin:'5px',cursor: "pointer" }}/>
-                            <Grid xs={4}>
-                                <FormControl fullWidth variant="standard" >
-                                    <InputLabel id="type">Question Type</InputLabel>
-                                    <Select
-                                        labelId="type"
-                                        id="type"
-                                        value={selectedType}
-                                        label="Question type"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={1}>MCQs</MenuItem>
-                                        <MenuItem value={2}>Text</MenuItem>
-                                        <MenuItem value={3}>Checkbox</MenuItem>
-                                        <MenuItem value={4}>Matching</MenuItem>
-                                        <MenuItem value={5}>True/False</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid xs={12}>
-                                {selectedType == 1 ?
-                                    <Grid>
-                                        <RadioGroup >
-                                            {
-                                                options.map((val,index)=>{
-                                                    return <FormControlLabel value={index} control={<Radio />} label={val} />
-                                                })
-                                            }
-                                            <TextField id="filled-basic"
-                                                       label="Add Option"
-                                                       size="small"
-                                                       variant="standard"
-                                                       onChange={setOptionText}/>
-                                        <br/>
-                                            <Button
-                                                variant={"outlined"}
-                                                variant="contained"
-                                                size={"medium"} onClick={addOption}>submit option</Button>
-                                        </RadioGroup>
-                                    </Grid> : null}
-                                {selectedType == 2 ?
-                                    <div>
-                                        <TextField id="filled-basic"
-                                                   label="long answer text"
-                                                   fullWidth
-                                                   disabled
-                                                   variant="standard" />
-                                    </div> : null}
-                                {selectedType == 3 ?
-                                    <Grid container>
-
-                                        {
-                                            checkbox.map((val,index)=>{
-                                                return  <Grid item xs={6}>
-                                                    <FormControlLabel control={<Checkbox />} label={val} />
-                                                </Grid>
-                                            })
-                                        }
-
-                                        <TextField id="filled-basic"
-                                                   label="Add Option"
-                                                   size="small"
-                                                   variant="standard"
-                                                   onChange={(e)=>
-                                                       (setCheckboxText(e.target.value))}/>
-                                        <br/>
-                                        <Button
-                                            variant={"outlined"}
-                                            variant="contained"
-                                            size={"medium"} onClick={(e)=>
-                                            (setCheckbox([...checkbox,checkboxText]))}>submit option</Button>
-
-                                    </Grid> : null}
-                                {selectedType == 4 ?
-                                    <div>
-                                        <TextField id="filled-basic"
-                                                   label="long answer text"
-                                                   fullWidth
-                                                   variant="standard" />
-                                    </div> : null}
-                                {selectedType == 5 ?
-                                    <RadioGroup>
-                                        <FormControlLabel value={1} control={<Radio />} label={"True"} />
-                                        <FormControlLabel value={0} control={<Radio />} label={"False"} />
-                                    </RadioGroup> : null}
-                            </Grid>
+                        <Grid container>
+                        <Grid item xs={6}>
+                            <h2 style={{marginTop:12}}>How many questions</h2>
                         </Grid>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            type="submit"
-                            size="small"
-                            left={"50px"}
-                            id={"add-question"}
-                            onClick={addQuestionContainer}
-                        >add question
-                        </Button>
+                        <Grid item xs={6}>
+                            <TextField type="number" fullWidth inputProps={{ min: 1, max: 100 }}
+                                       onChange={addQuestionContainer}/>
+                        </Grid>
+                        </Grid>
                     </Paper>
 
+                    {
+                        [...Array(howManyQuestions)].map((val,index)=>{
+                            return <QuizBody/>
+                        })
+                    }
                 </Box>
 
         </div>
