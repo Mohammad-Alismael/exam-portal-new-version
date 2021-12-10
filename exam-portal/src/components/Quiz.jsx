@@ -23,7 +23,10 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-
+import ImageIcon from '@mui/icons-material/Image';
+import FormGroup from "@material-ui/core/FormGroup";
+import Checkbox from "@material-ui/core/Checkbox";
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         height: '15vh auto',
         width: '50%',
         margin: "30px auto",
-
+        position: 'relative'
     },
     textField: {
         width: '100%',
@@ -69,20 +72,29 @@ function Quiz() {
         setOpen(false);
     };
 
-    const [type, setType] = React.useState('');
-    const [type1, setType1] = React.useState('');
-    const [type2, setType2] = React.useState('');
-
+    const [selectedType, setSelectedType] = React.useState('');
+    const [options,setOptions] = React.useState([]);
+    const [checkbox,setCheckbox] = React.useState([])
+    const [addOptionText, setAddOptionText] = React.useState('');
+    const [checkboxText, setCheckboxText] = React.useState('');
     const handleChange = (event) => {
-        setType(event.target.value);
+        setSelectedType(event.target.value);
     };
-    const handleChange1 = (event) => {
-        setType1(event.target.value);
-    };
-    const handleChange2 = (event) => {
-        setType2(event.target.value);
-    };
+    const setOptionText = (e) =>{
+        const optionText = e.target.value;
+        // setOptions([...options,optionText])
+        setAddOptionText(optionText)
+    }
+    const addOption = (e) => {
+        if (options.length < 4)
+            setOptions([...options, addOptionText])
+        else
+            toast("4 options maximum")
+    }
 
+    const addQuestionContainer = (e) => {
+
+    }
     return (
         <div>                        
                 <AppBar sx={{ position: 'fixed'}}>
@@ -109,118 +121,114 @@ function Quiz() {
 
                     <Paper elevation={3} className={classes.paperStyle}>
 
-
-                        <Grid container spacing={3}>
-
-                            <Grid xs={7} sx={{ ml: 5 }}>
-                                <h3>Question 1</h3>
-                                <Typography>Is this the first question?</Typography>
-                                <RadioGroup >
-                                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    <FormControlLabel value="Maybe" control={<Radio />} label="Maybe" />
-                                </RadioGroup>
+                        <Grid container >
+                            <Grid xs={7}>
+                                <TextField id="filled-basic"
+                                           label="question text"
+                                           size="small"
+                                           fullWidth
+                                           variant="filled" />
 
                             </Grid>
+                            <ImageIcon style={{ height: '40px', width: '40px',margin:'5px',cursor: "pointer" }}/>
                             <Grid xs={4}>
-                                <FormControl fullWidth variant="standard" sx={{ mt: 5 }}>
+                                <FormControl fullWidth variant="standard" >
                                     <InputLabel id="type">Question Type</InputLabel>
                                     <Select
                                         labelId="type"
                                         id="type"
-                                        value={type}
+                                        value={selectedType}
                                         label="Question type"
                                         onChange={handleChange}
                                     >
                                         <MenuItem value={1}>MCQs</MenuItem>
                                         <MenuItem value={2}>Text</MenuItem>
                                         <MenuItem value={3}>Checkbox</MenuItem>
+                                        <MenuItem value={4}>Matching</MenuItem>
+                                        <MenuItem value={5}>True/False</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            <Grid xs={12}>
+                                {selectedType == 1 ?
+                                    <Grid>
+                                        <RadioGroup >
+                                            {
+                                                options.map((val,index)=>{
+                                                    return <FormControlLabel value={index} control={<Radio />} label={val} />
+                                                })
+                                            }
+                                            <TextField id="filled-basic"
+                                                       label="Add Option"
+                                                       size="small"
+                                                       variant="standard"
+                                                       onChange={setOptionText}/>
+                                        <br/>
+                                            <Button
+                                                variant={"outlined"}
+                                                variant="contained"
+                                                size={"medium"} onClick={addOption}>submit option</Button>
+                                        </RadioGroup>
+                                    </Grid> : null}
+                                {selectedType == 2 ?
+                                    <div>
+                                        <TextField id="filled-basic"
+                                                   label="long answer text"
+                                                   fullWidth
+                                                   disabled
+                                                   variant="standard" />
+                                    </div> : null}
+                                {selectedType == 3 ?
+                                    <Grid container>
+
+                                        {
+                                            checkbox.map((val,index)=>{
+                                                return  <Grid item xs={6}>
+                                                    <FormControlLabel control={<Checkbox />} label={val} />
+                                                </Grid>
+                                            })
+                                        }
+
+                                        <TextField id="filled-basic"
+                                                   label="Add Option"
+                                                   size="small"
+                                                   variant="standard"
+                                                   onChange={(e)=>
+                                                       (setCheckboxText(e.target.value))}/>
+                                        <br/>
+                                        <Button
+                                            variant={"outlined"}
+                                            variant="contained"
+                                            size={"medium"} onClick={(e)=>
+                                            (setCheckbox([...checkbox,checkboxText]))}>submit option</Button>
+
+                                    </Grid> : null}
+                                {selectedType == 4 ?
+                                    <div>
+                                        <TextField id="filled-basic"
+                                                   label="long answer text"
+                                                   fullWidth
+                                                   variant="standard" />
+                                    </div> : null}
+                                {selectedType == 5 ?
+                                    <RadioGroup>
+                                        <FormControlLabel value={1} control={<Radio />} label={"True"} />
+                                        <FormControlLabel value={0} control={<Radio />} label={"False"} />
+                                    </RadioGroup> : null}
+                            </Grid>
                         </Grid>
-                    </Paper>
-
-                    <Paper elevation={3} className={classes.paperStyle}>
-                        <Grid container spacing={3}>
-
-                            <Grid xs={7} sx={{ ml: 5 }}>
-                                <h3>Question 2</h3>
-                                <Typography>Is this the first question?</Typography>
-                                <RadioGroup >
-                                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    <FormControlLabel value="Maybe" control={<Radio />} label="Maybe" />
-                                </RadioGroup>
-
-                            </Grid>
-                            <Grid xs={4}>
-                                <FormControl fullWidth variant="standard" sx={{ mt: 5 }}>
-                                    <InputLabel id="type1">Question Type</InputLabel>
-                                    <Select
-                                        labelId="type1"
-                                        id="type1"
-                                        value={type1}
-                                        label="Question type"
-                                        onChange={handleChange1}
-                                    >
-                                        <MenuItem value={1}>MCQs</MenuItem>
-                                        <MenuItem value={2}>Text</MenuItem>
-                                        <MenuItem value={3}>Checkbox</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-
-                    <Paper elevation={3} className={classes.paperStyle}>
-                        <Grid container spacing={3}>
-
-                            <Grid xs={7} sx={{ ml: 5 }}>
-                                <h3>Question 3</h3>
-                                <Typography>Is this the first question?</Typography>
-                                <RadioGroup >
-                                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    <FormControlLabel value="Maybe" control={<Radio />} label="Maybe" />
-                                </RadioGroup>
-
-                            </Grid>
-                            <Grid xs={4}>
-                                <FormControl fullWidth variant="standard" sx={{ mt: 5 }}>
-                                    <InputLabel id="type2">Question Type</InputLabel>
-                                    <Select
-                                        labelId="type2"
-                                        id="type2"
-                                        value={type2}
-                                        label="Question type"
-                                        onChange={handleChange2}
-                                    >
-                                        <MenuItem value={1}>MCQs</MenuItem>
-                                        <MenuItem value={2}>Text</MenuItem>
-                                        <MenuItem value={3}>Checkbox</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-
-                    <Paper elevation={3} className={classes.paperStyle}>
-                        <TextField sx={{ ml: 5, mr: 5, mt: 4 }}
-                            label="Points"
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            type="submit"
                             size="small"
-                            align="center"
-                        />
-                        <TextField sx={{ ml: 4, mr: 4, mt: 4 }}
-                            label="Due Date"
-                            size="small"
-                        />
-                        <TextField sx={{ ml: 4, mt: 4 }}
-                            label="Topic"
-                            size="small"
-                            align="right"
-                        />
+                            left={"50px"}
+                            id={"add-question"}
+                            onClick={addQuestionContainer}
+                        >add question
+                        </Button>
                     </Paper>
+
                 </Box>
 
         </div>
