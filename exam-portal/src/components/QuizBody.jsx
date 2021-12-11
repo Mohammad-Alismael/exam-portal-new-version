@@ -15,6 +15,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@mui/material/Paper";
 import {toast} from "react-toastify";
 import {makeStyles} from "@material-ui/core/styles";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import {withMobileDialog} from "@material-ui/core";
+import {connect} from "react-redux";
+import * as Actions from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -27,37 +31,67 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
     }
 }));
-function  QuizBody() {
+function  QuizBody(props) {
     const classes = useStyles();
     const [selectedType, setSelectedType] = React.useState('');
     const [options,setOptions] = React.useState([]);
-    const [checkbox,setCheckbox] = React.useState([])
+    const [checkbox,setCheckbox] = React.useState([]);
+    const [matchingOptions,setMatchingOptions] = React.useState([]);
+    const [matchingOptionText,setMatchingOptionText] = React.useState("");
     const [addOptionText, setAddOptionText] = React.useState('');
     const [checkboxText, setCheckboxText] = React.useState('');
     const handleChange = (event) => {
         setSelectedType(event.target.value);
+        if(props.questions[props.id - 1] == null){
+            props.appendQuestion({id: props.id})
+        }else {
+            let questionObject = props.questions[props.id - 1]
+            questionObject["questionText"] = event.target.value
+            console.log(props.questions)
+            console.log(selectedType)
+            if (selectedType == 4) {
+                questionObject["options"] = ["True", "False"]
+            }
+        }
     };
+    const appendQuestion = (e) =>{
+        if(props.questions[props.id - 1] == null){
+            props.appendQuestion({id: props.id})
+        }else {
+            let questionObject = props.questions[props.id - 1]
+            questionObject["questionText"] = e.target.value
+            console.log(props.questions)
+        }
+    }
     const setOptionText = (e) =>{
         const optionText = e.target.value;
         // setOptions([...options,optionText])
         setAddOptionText(optionText)
+
     }
+
     const addOption = (e) => {
-        if (options.length < 4)
-            setOptions([...options, addOptionText])
-        else
+        if (options.length < 4) {
+            setOptions([...options, addOptionText]);
+            let questionObject = props.questions[props.id - 1]
+            questionObject["options"] = [...options, addOptionText]
+
+        }else
             toast("4 options maximum")
+        console.log(props.questions)
     }
 
         return (
             <Paper elevation={3} className={classes.paperStyle}>
 
                 <Grid container >
-                    <Grid xs={7}>
+                    <Grid xs={5}>
                         <TextField id="filled-basic"
                                    label="question text"
                                    size="small"
                                    fullWidth
+                                   onChange={appendQuestion}
+                                   disabled={selectedType == 4 ? true : false}
                                    variant="filled" />
 
                     </Grid>
@@ -80,13 +114,17 @@ function  QuizBody() {
                             </Select>
                         </FormControl>
                     </Grid>
+                    <Grid xs={2}>
+                        <TextField type="number" fullWidth inputProps={{ min: 1, max: 100 }}
+                                   label={"points"}/>
+                    </Grid>
                     <Grid xs={12}>
                         {selectedType == 1 ?
                             <Grid>
                                 <RadioGroup >
                                     {
                                         options.map((val,index)=>{
-                                            return <FormControlLabel value={index} control={<Radio />} label={val} />
+                                            return <FormControlLabel key={index} value={index} control={<Radio />} label={val} />
                                         })
                                     }
                                     <TextField id="filled-basic"
@@ -135,18 +173,65 @@ function  QuizBody() {
 
                             </Grid> : null}
                         {selectedType == 4 ?
-                            <div>
-                                <TextField id="filled-basic"
-                                           label="long answer text"
-                                           fullWidth
-                                           variant="standard" />
-                            </div> : null}
+                            <Grid container>
+                                <Grid item xs={4}>
+                                <FormControl fullWidth variant="standard" >
+                                    <InputLabel id="type">Question Options</InputLabel>
+                                    <Select
+                                        labelId="type"
+                                        id="type"
+                                        value={selectedType}
+                                        label="Question Options"
+                                    >
+                                    {
+                                      matchingOptions.map((val,index)=>{
+                                         return <MenuItem
+                                             value={index}
+                                             onClickCapture={(e)=>(console.log("a"))}
+                                             onKeyDown={(e)=>(console.log("a"))}
+                                         >{val}</MenuItem>
+                                      })
+                                    }
+                                        <TextField
+                                            label="Add Option"
+                                            size="small"
+                                            fullWidth
+                                            onChange={(e)=>
+                                                (setMatchingOptionText(e.target.value))}
+                                            variant="filled"/>
+                                        <Button
+                                            variant={"outlined"}
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={(e)=>(setMatchingOptions([...matchingOptions,matchingOptionText]))}
+                                            size={"small"}>Add option</Button>
+                                    </Select>
+                                </FormControl>
+                                </Grid>
+                                <Grid item xs={7}>
+                                    <TextField
+                                        label="Add Option"
+                                        size="small"
+                                        fullWidth
+                                        variant="filled"/>
+                                </Grid>
+                                <br/>
+                                <Grid item xs={12}>
+                                    <Button
+                                        variant={"outlined"}
+                                        variant="contained"
+                                        fullWidth
+                                        size={"medium"}>Add matching</Button>
+                                </Grid>
+                            </Grid> : null}
                         {selectedType == 5 ?
                             <RadioGroup>
                                 <FormControlLabel value={1} control={<Radio />} label={"True"} />
                                 <FormControlLabel value={0} control={<Radio />} label={"False"} />
                             </RadioGroup> : null}
                     </Grid>
+                    <br/>
+                    <DeleteOutlinedIcon id={"delete-question-icon"}/>
                 </Grid>
 
             </Paper>
@@ -154,5 +239,18 @@ function  QuizBody() {
 
 }
 
+const mapStateToProps = state => {
+    return {
+        questions : state.ExamReducer.questions,
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
+            payload : {question}}),
+        setQuestionArray: (questionAr) => dispatch({type:Actions.SET_QUESTION_ARRAY,
+            payload : {questionAr}})
 
-export default QuizBody;
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(QuizBody);

@@ -29,7 +29,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import {toast} from "react-toastify";
 import QuizBody from "./QuizBody";
 import index from "@mui/material/darkScrollbar";
-
+import {connect} from "react-redux";
+import * as Actions from '../store/actions'
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -62,7 +63,7 @@ const theme2 = createTheme({
 })
 
 
-function Quiz() {
+function Quiz(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
@@ -96,9 +97,10 @@ function Quiz() {
     }
 
     const addQuestionContainer = (e) => {
-        if (parseInt(e.target.value) < 101 && parseInt(e.target.value) > 0)
+        if (parseInt(e.target.value) < 101 && parseInt(e.target.value) > 0) {
             setHowManyQuestions(parseInt(e.target.value))
-        else
+            props.setMaxNumberQuestions(parseInt(e.target.value))
+        }else
             toast("that's beyond our limit")
     }
     return (
@@ -115,22 +117,41 @@ function Quiz() {
                     </Toolbar>
                 </AppBar>
                 <Box sx={{ mt: 10 }}>
-
                     <Paper elevation={3} className={classes.paperStyle}>
                         <Grid container>
-                        <Grid item xs={6}>
-                            <h2 style={{marginTop:12}}>How many questions</h2>
+                            <Grid item xs={6}>
+                                <TextField id="filled-basic"
+                                           label="exam title"
+                                           size="small"
+                                           fullWidth
+                                           variant="filled" />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField id="filled-basic"
+                                           label="points"
+                                           size="small"
+                                           fullWidth
+                                           variant="filled" />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            <TextField type="number" fullWidth inputProps={{ min: 1, max: 100 }}
-                                       onChange={addQuestionContainer}/>
+                    </Paper>
+                    <Paper elevation={3} className={classes.paperStyle}>
+                        <Grid container>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                type="number"
+                                fullWidth
+                                label={"How many questions"}
+                                inputProps={{ min: 1, max: 100 }}
+                                onChange={addQuestionContainer}/>
                         </Grid>
                         </Grid>
                     </Paper>
 
                     {
                         [...Array(howManyQuestions)].map((val,index)=>{
-                            return <QuizBody/>
+                            return <QuizBody key={index} id={index+1}/>
                         })
                     }
                 </Box>
@@ -138,5 +159,11 @@ function Quiz() {
         </div>
     );
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        setMaxNumberQuestions: (questions) => dispatch({type:Actions.SET_MAX_QUESTIONS,
+            payload : {questions}}),
 
-export default Quiz
+    }
+}
+export default connect(null,mapDispatchToProps)(Quiz)
