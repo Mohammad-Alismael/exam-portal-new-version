@@ -29,6 +29,17 @@ const useStyles = makeStyles((theme) => ({
     },
     textField: {
         width: '100%',
+    },
+    dropDown: {
+        margin:"50px"
+    },
+    deleteIcon : {
+        float: "right",
+        cursor: "pointer",
+        position: 'absolute',
+        top: 15,
+        right: 15
+        // paddingTop: 20
     }
 }));
 function  QuizBody(props) {
@@ -84,19 +95,19 @@ function  QuizBody(props) {
         return (
             <Paper elevation={3} className={classes.paperStyle}>
 
-                <Grid container >
-                    <Grid xs={5}>
+                <Grid container spacing={2}>
+                    <Grid xs={5} item>
                         <TextField id="filled-basic"
                                    label="question text"
                                    size="small"
                                    fullWidth
                                    onChange={appendQuestion}
                                    disabled={selectedType == 4 ? true : false}
-                                   variant="filled" />
+                                   variant="standard" />
 
                     </Grid>
-                    <ImageIcon style={{ height: '40px', width: '40px',margin:'5px',cursor: "pointer" }}/>
-                    <Grid xs={4}>
+                    {/*<ImageIcon style={{ height: '40px', width: '40px',margin: '20px 5px',cursor: "pointer" }}/>*/}
+                    <Grid xs={4} item>
                         <FormControl fullWidth variant="standard" >
                             <InputLabel id="type">Question Type</InputLabel>
                             <Select
@@ -114,13 +125,22 @@ function  QuizBody(props) {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid xs={2}>
-                        <TextField type="number" fullWidth inputProps={{ min: 1, max: 100 }}
-                                   label={"points"}/>
+                    <Grid xs={3} item>
+                        <TextField
+                            className={classes.dropDown}
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                            inputProps={{ min: 1, max: 100 }}
+                             label={"points"}/>
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid xs={12} container>
                         {selectedType == 1 ?
-                            <Grid>
+                            <Grid item
+                                  style={{marginLeft:12}}
+                                  justifyContent="center"
+                                  alignItems="center"
+                                  xs={12}>
                                 <RadioGroup >
                                     {
                                         options.map((val,index)=>{
@@ -140,7 +160,8 @@ function  QuizBody(props) {
                                 </RadioGroup>
                             </Grid> : null}
                         {selectedType == 2 ?
-                            <div>
+                            <div                                   style={{marginLeft:12}}
+                            >
                                 <TextField id="filled-basic"
                                            label="long answer text"
                                            fullWidth
@@ -148,7 +169,9 @@ function  QuizBody(props) {
                                            variant="standard" />
                             </div> : null}
                         {selectedType == 3 ?
-                            <Grid container>
+                            <Grid container
+                                  style={{marginLeft:12}}
+                            >
 
                                 {
                                     checkbox.map((val,index)=>{
@@ -173,7 +196,9 @@ function  QuizBody(props) {
 
                             </Grid> : null}
                         {selectedType == 4 ?
-                            <Grid container>
+                            <Grid container
+                                  style={{marginLeft:12}}
+                            >
                                 <Grid item xs={4}>
                                 <FormControl fullWidth variant="standard" >
                                     <InputLabel id="type">Question Options</InputLabel>
@@ -210,7 +235,7 @@ function  QuizBody(props) {
                                 </Grid>
                                 <Grid item xs={7}>
                                     <TextField
-                                        label="Add Option"
+                                        label="question text"
                                         size="small"
                                         fullWidth
                                         variant="filled"/>
@@ -225,15 +250,19 @@ function  QuizBody(props) {
                                 </Grid>
                             </Grid> : null}
                         {selectedType == 5 ?
-                            <RadioGroup>
+                            <RadioGroup style={{marginLeft:12}}
+                            >
                                 <FormControlLabel value={1} control={<Radio />} label={"True"} />
                                 <FormControlLabel value={0} control={<Radio />} label={"False"} />
                             </RadioGroup> : null}
                     </Grid>
-                    <br/>
-                    <DeleteOutlinedIcon id={"delete-question-icon"}/>
+
+
                 </Grid>
 
+                <Grid xs={12}>
+                <DeleteOutlinedIcon className={classes.deleteIcon}/>
+                </Grid>
             </Paper>
         );
 
