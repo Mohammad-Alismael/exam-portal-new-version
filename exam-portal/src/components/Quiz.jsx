@@ -45,11 +45,12 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         width: '100%',
     }
+
 }));
 
 const theme2 = createTheme({
     typography: {
-        h3: {
+        h6: {
             fontSize: 32,
             marginTop: -40,
             color: '#161b22'
@@ -107,21 +108,23 @@ function Quiz(props) {
             toast("that's beyond our limit")
     }
     return (
-        <div>                        
-                <AppBar sx={{ position: 'fixed'}}>
-                    <Toolbar>
-                
-                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            Quiz
-                        </Typography>
-                        <Button style={{ textTransform: 'none' }} autoFocus color="inherit" onClick={handleClose}>
-                            Assign
-                        </Button>
-                    </Toolbar>
-                </AppBar>
+        <ThemeProvider theme={theme2}>
+            <AppBar
+                sx={{ position: 'fixed',bgcolor:"#ffd05e"}}
+
+            >
+                <Toolbar>
+                    <Typography style={{color:"black"}} sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                        Exam / Quiz
+                    </Typography>
+                    <Button style={{ textTransform: 'none' }} autoFocus color="inherit" onClick={handleClose}>
+                        Assign
+                    </Button>
+                </Toolbar>
+            </AppBar>
                 <Box sx={{ mt: 10 }}>
                     <Paper elevation={3} className={classes.paperStyle}>
-                        <Grid container>
+                        <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <TextField id="filled-basic"
                                            label="exam title"
@@ -139,12 +142,26 @@ function Quiz(props) {
                                            variant="filled" />
                             </Grid>
                             <Grid item xs={6}>
-                                {/*<LocalizationProvider dateAdapter={DateAdapter}>*/}
-                                {/*/!*<DateTimePicker*!/*/}
-                                {/*/!*    label="Date&Time picker"*!/*/}
-                                {/*/!*    renderInput={(params) => <TextField {...params} />}*!/*/}
-                                {/*/!*    />*!/*/}
-                                {/*</LocalizationProvider>*/}
+                            <TextField
+                                id="datetime-local"
+                                label="Starting At"
+                                type="datetime-local"
+                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="datetime-local"
+                                    label="Ending At"
+                                    type="datetime-local"
+                                    fullWidth
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
                             </Grid>
                         </Grid>
                     </Paper>
@@ -169,7 +186,7 @@ function Quiz(props) {
                     }
                 </Box>
 
-        </div>
+        </ThemeProvider>
     );
 }
 const mapDispatchToProps = dispatch => {

@@ -71,6 +71,7 @@ function  QuizBody(props) {
         }else {
             let questionObject = props.questions[props.id - 1]
             questionObject["questionText"] = e.target.value
+            props.questions[props.id - 1] = questionObject
             console.log(props.questions)
         }
     }
@@ -86,17 +87,23 @@ function  QuizBody(props) {
             setOptions([...options, addOptionText]);
             let questionObject = props.questions[props.id - 1]
             questionObject["options"] = [...options, addOptionText]
+            props.questions[props.id - 1] = questionObject
+
 
         }else
             toast("4 options maximum")
         console.log(props.questions)
     }
 
+    const deleteQuestionContainer = (e) => {
+
+    }
+
         return (
             <Paper elevation={3} className={classes.paperStyle}>
 
                 <Grid container spacing={2}>
-                    <Grid xs={5} item>
+                    <Grid xs={6} item>
                         <TextField id="filled-basic"
                                    label="question text"
                                    size="small"
@@ -107,7 +114,7 @@ function  QuizBody(props) {
 
                     </Grid>
                     {/*<ImageIcon style={{ height: '40px', width: '40px',margin: '20px 5px',cursor: "pointer" }}/>*/}
-                    <Grid xs={4} item>
+                    <Grid xs={3} item>
                         <FormControl fullWidth variant="standard" >
                             <InputLabel id="type">Question Type</InputLabel>
                             <Select
@@ -160,7 +167,7 @@ function  QuizBody(props) {
                                 </RadioGroup>
                             </Grid> : null}
                         {selectedType == 2 ?
-                            <div                                   style={{marginLeft:12}}
+                            <div style={{marginLeft:12}}
                             >
                                 <TextField id="filled-basic"
                                            label="long answer text"
@@ -198,22 +205,20 @@ function  QuizBody(props) {
                         {selectedType == 4 ?
                             <Grid container
                                   style={{marginLeft:12}}
+                                  spacing={2}
                             >
                                 <Grid item xs={4}>
-                                <FormControl fullWidth variant="standard" >
+                                <FormControl fullWidth variant="standard" margin={'normal'}>
                                     <InputLabel id="type">Question Options</InputLabel>
                                     <Select
                                         labelId="type"
                                         id="type"
-                                        value={selectedType}
                                         label="Question Options"
                                     >
                                     {
                                       matchingOptions.map((val,index)=>{
                                          return <MenuItem
                                              value={index}
-                                             onClickCapture={(e)=>(console.log("a"))}
-                                             onKeyDown={(e)=>(console.log("a"))}
                                          >{val}</MenuItem>
                                       })
                                     }
@@ -233,21 +238,23 @@ function  QuizBody(props) {
                                     </Select>
                                 </FormControl>
                                 </Grid>
-                                <Grid item xs={7}>
+                                <Grid item xs={7} >
+                                    <FormControl fullWidth margin={'normal'}>
                                     <TextField
                                         label="question text"
                                         size="small"
                                         fullWidth
-                                        variant="filled"/>
+                                        variant="standard"/>
+                                    </FormControl>
                                 </Grid>
                                 <br/>
-                                <Grid item xs={12}>
-                                    <Button
-                                        variant={"outlined"}
-                                        variant="contained"
-                                        fullWidth
-                                        size={"medium"}>Add matching</Button>
-                                </Grid>
+                                {/*<Grid item xs={12}>*/}
+                                {/*    <Button*/}
+                                {/*        variant={"outlined"}*/}
+                                {/*        variant="contained"*/}
+                                {/*        fullWidth*/}
+                                {/*        size={"medium"}>Add matching</Button>*/}
+                                {/*</Grid>*/}
                             </Grid> : null}
                         {selectedType == 5 ?
                             <RadioGroup style={{marginLeft:12}}
@@ -261,7 +268,9 @@ function  QuizBody(props) {
                 </Grid>
 
                 <Grid xs={12}>
-                <DeleteOutlinedIcon className={classes.deleteIcon}/>
+                {/*<DeleteOutlinedIcon*/}
+                {/*    onClick={deleteQuestionContainer}*/}
+                {/*    className={classes.deleteIcon}/>*/}
                 </Grid>
             </Paper>
         );

@@ -22,6 +22,9 @@ import MenuItem from '@mui/material/MenuItem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import Link from '@mui/material/Link';
+import Grid from "@material-ui/core/Grid";
+import AnnouncementComponent from "../Components/AnnouncementComponent";
+import index from "@mui/material/darkScrollbar";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -83,7 +86,8 @@ const theme2 = createTheme({
 function Course1() {
     const classes = useStyles();
     const [value, setValue] = React.useState('1');
-
+    const [announcements,setAnnouncements] = React.useState([])
+    const [announcementText,setAnnouncementText] = React.useState('')
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -96,7 +100,9 @@ function Course1() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
+    const postAnnouncement = (e) =>{
+        setAnnouncements([...announcements,announcementText])
+    }
     return (
         <div>
             <ThemeProvider theme={theme2}>
@@ -129,14 +135,23 @@ function Course1() {
                                 </IconButton>
                                 <InputBase
                                     sx={{ ml: 1, flex: 1 }}
+                                    onChange={(e)=>(setAnnouncementText(e.target.value))}
                                     placeholder="Announce something to your class"
                                     inputProps={{ 'aria-label': 'search google maps' }}
                                 />
                                 <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-                                <IconButton type="submit" sx={{ p: '10px' }}>
+                                <IconButton type="submit" sx={{ p: '10px' }}onClick={postAnnouncement}>
                                     <PublishIcon />
                                 </IconButton>
                             </Paper>
+                            <Grid>
+                                {
+                                    announcements.map((val,index)=>{
+                                        return <AnnouncementComponent text={val}/>
+                                    })
+                                }
+
+                            </Grid>
                         </TabPanel>
 
 
