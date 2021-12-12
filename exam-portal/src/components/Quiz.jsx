@@ -30,7 +30,10 @@ import {toast} from "react-toastify";
 import QuizBody from "./QuizBody";
 import index from "@mui/material/darkScrollbar";
 import {connect} from "react-redux";
-import * as Actions from '../store/actions'
+import * as Actions from '../store/actions';
+
+
+
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -124,6 +127,7 @@ function Quiz(props) {
                                            label="exam title"
                                            size="small"
                                            fullWidth
+                                           required
                                            variant="filled" />
                             </Grid>
                             <Grid item xs={6}>
@@ -131,7 +135,16 @@ function Quiz(props) {
                                            label="points"
                                            size="small"
                                            fullWidth
+                                           required
                                            variant="filled" />
+                            </Grid>
+                            <Grid item xs={6}>
+                                {/*<LocalizationProvider dateAdapter={DateAdapter}>*/}
+                                {/*/!*<DateTimePicker*!/*/}
+                                {/*/!*    label="Date&Time picker"*!/*/}
+                                {/*/!*    renderInput={(params) => <TextField {...params} />}*!/*/}
+                                {/*/!*    />*!/*/}
+                                {/*</LocalizationProvider>*/}
                             </Grid>
                         </Grid>
                     </Paper>
