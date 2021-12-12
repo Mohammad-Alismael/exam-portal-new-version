@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import moment from 'moment'
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 20,
@@ -19,26 +20,25 @@ const useStyles = makeStyles((theme) => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        justifyItems: 'center',
-        backgroundColor: "red",
+        alignSelf: 'center',
+        // backgroundColor: "Red",
     },
 
 }));
 function AnnouncementComponent(props)  {
     const classes = useStyles();
+
         return (
             <Paper elevation={3} className={classes.paperStyle}>
                 <Grid container>
-                    <Grid item xs={11}>
+                    <Grid item xs={10} className={classes.container}>
                         <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
                             {props.text}
                         </Typography>
                     </Grid>
-                    <Grid item xs={1} className={classes.container}>
-                        <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6" >
-                            1min
+                    <Grid item xs={2} className={classes.container}>
+                        <Typography style={{color:"black",fontSize:'16px'}} sx={{ ml: 1, flex: 1 }} variant="h6" >
+                            {moment(props.createdAt).fromNow()}
                         </Typography>
                     </Grid>
                 </Grid>

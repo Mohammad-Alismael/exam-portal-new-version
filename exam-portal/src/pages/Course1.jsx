@@ -101,7 +101,9 @@ function Course1() {
         setAnchorEl(null);
     };
     const postAnnouncement = (e) =>{
-        setAnnouncements([...announcements,announcementText])
+        setAnnouncements([...announcements,{announcementText,createAt : new Date().getTime()}],function () {
+            console.log(announcements)
+        })
     }
     return (
         <div>
@@ -147,7 +149,11 @@ function Course1() {
                             <Grid>
                                 {
                                     announcements.map((val,index)=>{
-                                        return <AnnouncementComponent text={val}/>
+                                        console.log(val)
+                                        return <AnnouncementComponent
+                                            key={index}
+                                            text={val.announcementText}
+                                            createdAt={val.createAt}/>
                                     })
                                 }
 
