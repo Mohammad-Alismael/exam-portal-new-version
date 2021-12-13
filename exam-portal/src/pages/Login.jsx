@@ -96,8 +96,8 @@ function Login(props) {
             password
         }).then((res)=>{
             props.setUserId(res.data[0]['userId']);
-            props.setUsername(username)
-            props.setRoleId(res.data[0]['roleId'])
+            props.setUsername(username);
+            props.setRoleId(res.data[0]['roleId']);
             navigate("/course1");
         }).catch((error)=>{
             if(error.response.status == 400)
