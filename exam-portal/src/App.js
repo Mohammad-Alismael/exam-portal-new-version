@@ -5,7 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Classes from './pages/Classes'
 import Course1 from './pages/Course1'
-import Quiz from './Components/Quiz'
+import Quiz from './Components/Quiz';
+import Logout from "./pages/Logout";
 
 import React from "react";
 // import Home from "./pages/Home";
@@ -16,7 +17,7 @@ function App() {
       <ToastContainer />
     <Routes>
       <Route exact path="/" element={<Login/>}/>
-      {/*<Route path="/" element={<Home/>} />*/}
+      <Route path="/logout" element={<Logout/>} />
       <Route exact path="/signup" element={<Signup/>}/>
       <Route exact path="/classes" element={<Classes/>}/>
       <Route exact path="/course1" element={<Course1/>}/>

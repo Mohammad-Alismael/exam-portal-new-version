@@ -15,7 +15,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import logo from '../img/logo.png'
 import {toast } from 'react-toastify';
 import axios from "axios";
-
+import * as Actions from "../store/actions";
+import {connect} from "react-redux";
+import {useNavigate} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -82,18 +84,21 @@ const theme2 = createTheme({
 })
 
 
-function Login() {
+function Login(props) {
     const classes = useStyles();
-    const [username,setUsername] = useState('')
-    const [password,setPassword] = useState('')
+    const [username,setUsername] = useState('');
+    const [password,setPassword] = useState('');
+    const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault()
         axios.post('http://localhost:8080/authenticate',{
-            username : username,
-            password : password
+            username,
+            password
         }).then((res)=>{
-            localStorage.setItem('userId',res.data[0]['userId']);
-            localStorage.setItem('username',username);
+            props.setUserId(res.data[0]['userId']);
+            props.setUsername(username)
+            props.setRoleId(res.data[0]['roleId'])
+            navigate("/course1");
         }).catch((error)=>{
             if(error.response.status == 400)
                 toast.info("incorrect username or password")
@@ -179,5 +184,20 @@ function Login() {
         </div>
     );
 }
+const mapStateToProps = state => {
+    return {
+        questions : state.ExamReducer.questions,
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
+            payload : {user_id}}),
+        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
+            payload : {username}}),
+        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
+            payload : {role_id}})
 
-export default Login ;
+    }
+}
+export default connect(null,mapDispatchToProps)(Login) ;

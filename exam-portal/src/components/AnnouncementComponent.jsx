@@ -33,13 +33,18 @@ function AnnouncementComponent(props)  {
                 <Grid container>
                     <Grid item xs={10} className={classes.container}>
                         <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
-                            {props.text}
+                            username
                         </Typography>
                     </Grid>
                     <Grid item xs={2} className={classes.container}>
-                        <Typography style={{color:"black",fontSize:'16px'}} sx={{ ml: 1, flex: 1 }} variant="h6" >
+                        <Typography style={{color:"black",fontSize:'16px'}} sx={{ ml: 1, flex: 1 }} variant="subtitle2" >
                             {moment(props.createdAt).fromNow()}
                         </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                            <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
+                                {props.text}
+                            </Typography>
                     </Grid>
                 </Grid>
 

@@ -25,7 +25,10 @@ import Link from '@mui/material/Link';
 import Grid from "@material-ui/core/Grid";
 import AnnouncementComponent from "../Components/AnnouncementComponent";
 import index from "@mui/material/darkScrollbar";
-
+import {useEffect} from "react";
+import axios from 'axios'
+import {connect} from "react-redux";
+import {toast} from "react-toastify";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -83,9 +86,10 @@ const theme2 = createTheme({
 
 
 
-function Course1() {
+function Course1(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState('1');
+    const [isLoading, setIsLoading] = React.useState(false);
     const [announcements,setAnnouncements] = React.useState([])
     const [announcementText,setAnnouncementText] = React.useState('')
     const handleChange = (event, newValue) => {
@@ -101,10 +105,26 @@ function Course1() {
         setAnchorEl(null);
     };
     const postAnnouncement = (e) =>{
-        setAnnouncements([...announcements,{announcementText,createAt : new Date().getTime()}],function () {
-            console.log(announcements)
+        axios.post('http://localhost:8080/set-announcement-to-students',{
+            instructorId: props.user.user_id,
+            announcementText,
+
+        }).then((data)=>{
+            setAnnouncements([...announcements,{announcementText,createdAt : new Date().getTime()}])
+
+        }).catch((error)=>{
+            console.log(error)
+            toast.error("error happened!")
         })
     }
+    const loadAnnouncements = async () => {
+        const Announcements = await axios.get(`http://localhost:8080/get-announcements?id=${props.user.user_id}`)
+        setAnnouncements(Announcements.data)
+    }
+    useEffect(()=>{
+        console.log(props.user.user_id)
+        loadAnnouncements()
+    },[])
     return (
         <div>
             <ThemeProvider theme={theme2}>
@@ -149,11 +169,10 @@ function Course1() {
                             <Grid>
                                 {
                                     announcements.map((val,index)=>{
-                                        console.log(val)
                                         return <AnnouncementComponent
                                             key={index}
                                             text={val.announcementText}
-                                            createdAt={val.createAt}/>
+                                            createdAt={val.createdAt}/>
                                     })
                                 }
 
@@ -198,5 +217,9 @@ function Course1() {
         </div>
     );
 }
-
-export default Course1
+const mapStateToProps = state => {
+    return {
+        user : state.UserReducer,
+    }
+}
+export default connect(mapStateToProps,null)(Course1)
