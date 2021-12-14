@@ -29,6 +29,7 @@ import {useEffect} from "react";
 import axios from 'axios'
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
+import Participants from "../Components/Participants";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -151,7 +152,7 @@ function Course1(props) {
                                 </Typography>
                             </Paper>
 
-                            <Paper elevation={5} className={classes.textPaper} sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
+                            {props.user.role_id == 1 ? <Paper elevation={5} className={classes.textPaper} sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
                                 <IconButton sx={{ p: '10px' }}>
                                     <AccountCircle color="primary" size="large" />
                                 </IconButton>
@@ -165,7 +166,7 @@ function Course1(props) {
                                 <IconButton type="submit" sx={{ p: '10px' }}onClick={postAnnouncement}>
                                     <PublishIcon />
                                 </IconButton>
-                            </Paper>
+                            </Paper>:null}
                             <Grid>
                                 {
                                     announcements.map((val,index)=>{
@@ -209,7 +210,16 @@ function Course1(props) {
                             </Paper>
                         </TabPanel>
 
-                        <TabPanel value="3">People</TabPanel>
+                        <TabPanel value="3">
+                            <Paper fullwidth elevation={0} >
+
+                                <Participants />
+                                <Participants />
+                                <Participants />
+                                <Participants />
+
+                            </Paper>
+                        </TabPanel>
                         <TabPanel value="4">Grades</TabPanel>
                     </TabContext>
                 </Box>
