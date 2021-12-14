@@ -10,14 +10,14 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import PublishIcon from "@mui/icons-material/Publish";
+import Box from "@mui/material/Box";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
-        padding: 20,
+        padding: 10,
         height:'5vh',
-        width: '48%',
-        margin: "10px",
-        borderBottom: '1px solid black',
-        borderRadius: 0
+        width: '50%',
+        margin: "5px",
+        borderBottom: '1px solid rgba(217, 217, 217, 1)',
 
     },
     textField: {
@@ -34,14 +34,14 @@ function Participants () {
     const classes = useStyles();
 
         return (
-            <Paper elevation={0} className={classes.paperStyle} sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
+            <Box elevation={0} className={classes.paperStyle} sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
                 <IconButton sx={{ p: '10px' }}>
                     <AccountCircle color="primary" size="large" />
                 </IconButton>
                 <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
                     username
                 </Typography>
-            </Paper>
+            </Box>
 
         );
 
