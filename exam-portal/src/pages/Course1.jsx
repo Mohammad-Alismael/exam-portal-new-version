@@ -30,6 +30,8 @@ import axios from 'axios'
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
 import Participants from "../Components/Participants";
+import {Title} from "@mui/icons-material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -46,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     textPaper: {
         padding: 20,
         height: '8vh',
-        width: '50%',
+        width: '50.5%',
         margin: "30px auto",
 
     },
@@ -162,10 +164,12 @@ function Course1(props) {
                                     placeholder="Announce something to your class"
                                     inputProps={{ 'aria-label': 'search google maps' }}
                                 />
-                                <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+
                                 <IconButton type="submit" sx={{ p: '10px' }}onClick={postAnnouncement}>
                                     <PublishIcon />
                                 </IconButton>
+                                <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+                                <MoreVertIcon/>
                             </Paper>:null}
                             <Grid>
                                 {
@@ -212,12 +216,38 @@ function Course1(props) {
 
                         <TabPanel value="3">
                             <Paper fullwidth elevation={0} >
-
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Grid item xs={12}>
+                                    <Typography variant="h2">
+                                        Teachers
+                                    </Typography>
+                                    </Grid>
                                 <Participants />
                                 <Participants />
                                 <Participants />
                                 <Participants />
-
+                                </Grid>
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Typography variant="h2">
+                                        Classmates
+                                    </Typography>
+                                    <Participants />
+                                    <Participants />
+                                    <Participants />
+                                    <Participants />
+                                </Grid>
                             </Paper>
                         </TabPanel>
                         <TabPanel value="4">Grades</TabPanel>
