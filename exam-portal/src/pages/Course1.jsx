@@ -125,7 +125,7 @@ function Course1(props) {
         setAnnouncements(Announcements.data)
     }
     useEffect(()=>{
-        console.log(props.user.user_id)
+
         loadAnnouncements()
     },[])
     return (
@@ -174,8 +174,10 @@ function Course1(props) {
                             <Grid>
                                 {
                                     announcements.map((val,index)=>{
+                                        console.log(val)
                                         return <AnnouncementComponent
                                             key={index}
+                                            user_id={val.instructorId}
                                             text={val.announcementText}
                                             createdAt={val.createdAt}/>
                                     })
