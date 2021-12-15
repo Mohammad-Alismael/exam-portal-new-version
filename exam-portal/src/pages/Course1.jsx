@@ -113,20 +113,43 @@ function Course1(props) {
             announcementText,
 
         }).then((data)=>{
-            setAnnouncements([...announcements,{announcementText,createdAt : new Date().getTime()}])
 
         }).catch((error)=>{
             console.log(error)
-            toast.error("error happened!")
+            // toast.error("error happened!")
         })
+        setAnnouncements([...announcements,{announcementText,instructorId:props.user.user_id,createdAt : new Date().getTime()}])
+
     }
     const loadAnnouncements = async () => {
         const Announcements = await axios.get(`http://localhost:8080/get-announcements?id=${props.user.user_id}`)
         setAnnouncements(Announcements.data)
     }
-    useEffect(()=>{
+    const getClassroom = async () => {
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/get-class-students', {
+                instructorId: props.user_id
+            }).then((data) => {
+                console.log(data)
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error)
+                    reject('no class room students!')
+                })
+        })
 
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
+    }
+    useEffect(()=>{
         loadAnnouncements()
+        getClassroom().then((data)=>{
+            console.log(data)
+        })
     },[])
     return (
         <div>
@@ -174,7 +197,7 @@ function Course1(props) {
                             <Grid>
                                 {
                                     announcements.map((val,index)=>{
-                                        console.log(val)
+
                                         return <AnnouncementComponent
                                             key={index}
                                             user_id={val.instructorId}
@@ -230,10 +253,8 @@ function Course1(props) {
                                         Teachers
                                     </Typography>
                                     </Grid>
-                                <Participants />
-                                <Participants />
-                                <Participants />
-                                <Participants />
+                                <Participants username={props.user.username} />
+
                                 </Grid>
                                 <Grid
                                     container
