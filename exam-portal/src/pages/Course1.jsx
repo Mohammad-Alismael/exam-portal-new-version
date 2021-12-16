@@ -95,7 +95,8 @@ function Course1(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState('1');
     const [isLoading, setIsLoading] = React.useState(false);
-    const [announcements,setAnnouncements] = React.useState([])
+    const [announcements,setAnnouncements] = React.useState([]);
+    const [exams,setExams] = React.useState([]);
     const [announcementText,setAnnouncementText] = React.useState('')
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -148,11 +149,38 @@ function Course1(props) {
             return Promise.resolve(e)
         }
     }
+
+    const getExamsList = async () => {
+        console.log(props.user.user_id)
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/list-all-exams-creator-id', {
+                creatorId: props.user.user_id
+            }).then((data) => {
+
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error)
+                    reject('no exams found!')
+                })
+        })
+
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
+    }
     useEffect(()=>{
 
         loadAnnouncements()
         getClassroom().then((data)=>{
             console.log('classroom =>',data)
+
+        })
+        getExamsList().then((data)=>{
+            console.log('Exams =>',data)
+            setExams(data)
             setIsLoading(false)
         })
 
@@ -220,9 +248,18 @@ function Course1(props) {
 
                         { !isLoading ? <TabPanel value="2">
                             <Paper elevation={0} className={classes.classworkPaper}>
-                                <Exam/>
-                                <Exam/>
-                                <Exam/>
+                                {
+                                    exams.map((val,index)=>{
+                                        console.log(val)
+                                        return <Exam
+                                            key={index}
+                                            examTitle={val.title}
+                                            examId={val.examId}
+                                            startingAt={val.startingAt}
+                                            endingAt={val.endingAt}
+                                                    />
+                                    })
+                                }
                                 <Button
                                     variant="contained"
                                     id="basic-button"

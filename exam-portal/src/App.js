@@ -9,6 +9,7 @@ import Quiz from './Components/Quiz';
 import Logout from "./pages/Logout";
 
 import React from "react";
+import PreviewExam from "./pages/PreviewExam";
 // import Home from "./pages/Home";
 
 function App() {
