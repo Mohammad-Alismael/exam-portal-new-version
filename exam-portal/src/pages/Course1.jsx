@@ -33,6 +33,7 @@ import Participants from "../Components/Participants";
 import {Title} from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
+import Exam from "../Components/Exam";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -219,6 +220,9 @@ function Course1(props) {
 
                         { !isLoading ? <TabPanel value="2">
                             <Paper elevation={0} className={classes.classworkPaper}>
+                                <Exam/>
+                                <Exam/>
+                                <Exam/>
                                 <Button
                                     variant="contained"
                                     id="basic-button"

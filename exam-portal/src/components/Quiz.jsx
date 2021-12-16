@@ -31,6 +31,7 @@ import QuizBody from "./QuizBody";
 import index from "@mui/material/darkScrollbar";
 import {connect} from "react-redux";
 import * as Actions from '../store/actions';
+import {useEffect} from "react";
 
 
 
@@ -75,6 +76,20 @@ function Quiz(props) {
     };
 
     const handleClose = () => {
+        let sumPoints = 0;
+        const len = props.questions.questions.length
+        for (let i = 0; i < len; i++) {
+            let points = props.questions.questions[i]['points'];
+            sumPoints += points
+        }
+        console.log('total points =>', sumPoints)
+        console.log('exceed total points =>', sumPoints > totalPoints)
+        if (sumPoints -1 <= totalPoints){
+            console.log(props.questions.questions)
+        }else {
+            toast.warn('you exceeded total points')
+        }
+
         setOpen(false);
     };
     const [questionContainer,setQuestionContainer] = React.useState([<QuizBody/>]);
@@ -85,6 +100,7 @@ function Quiz(props) {
     const [checkboxText, setCheckboxText] = React.useState('');
     const [howManyQuestions, setHowManyQuestions] = React.useState(1);
     const [examQuestions, setExamQuestions] = React.useState([]);
+    const [totalPoints,setTotalPoints] = React.useState(0);
     const handleChange = (event) => {
         setSelectedType(event.target.value);
     };
@@ -107,6 +123,9 @@ function Quiz(props) {
         }else
             toast("that's beyond our limit")
     }
+    useEffect(()=>{
+        props.setTotalPoints(0)
+    },[])
     return (
         <ThemeProvider theme={theme2}>
             <AppBar
@@ -117,7 +136,8 @@ function Quiz(props) {
                     <Typography style={{color:"black"}} sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                         Exam / Quiz
                     </Typography>
-                    <Button style={{ textTransform: 'none' }} autoFocus color="inherit" onClick={handleClose}>
+                    <Button style={{ textTransform: 'none' }}
+                             color="inherit" onClick={handleClose}>
                         Assign
                     </Button>
                 </Toolbar>
@@ -134,11 +154,15 @@ function Quiz(props) {
                                            variant="filled" />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField id="filled-basic"
+                                <TextField
                                            label="points"
                                            size="small"
+                                           type="number"
                                            fullWidth
-                                           required
+                                           inputProps={{ min: 1 }}
+                                           onChange={(e)=>
+                                               (setTotalPoints(parseInt(e.target.value)))}
+                                               required
                                            variant="filled" />
                             </Grid>
                             <Grid item xs={6}>
@@ -189,11 +213,20 @@ function Quiz(props) {
         </ThemeProvider>
     );
 }
+const mapStateToProps = state => {
+    return {
+        questions : state.ExamReducer
+    }
+}
 const mapDispatchToProps = dispatch => {
     return {
         setMaxNumberQuestions: (questions) => dispatch({type:Actions.SET_MAX_QUESTIONS,
             payload : {questions}}),
+        setTotalPoints : (points) => dispatch({type: Actions.SET_TOTAL_POINTS,
+            payload : {points}}),
+        checkTotalPoints : (points) => dispatch({type: Actions.CHECK_TOTAL_POINTS,
+            payload : {points}})
 
     }
 }
-export default connect(null,mapDispatchToProps)(Quiz)
+export default connect(mapStateToProps,mapDispatchToProps)(Quiz)
