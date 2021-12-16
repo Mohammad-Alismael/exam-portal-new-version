@@ -6,6 +6,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import classes from "../img/classes.jpg";
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import {useNavigate} from "react-router-dom";
+import moment from 'moment'
+
 const useStyles = makeStyles((theme) => ({
 
     container : {
@@ -30,15 +32,15 @@ function Exam (props){
             <div style={{display:'inline-flex',gap:'5px',alignItems: 'center'}}>
                 <ContentPasteIcon  />
                 <Typography variant="h6" >
-                    <b>exam title</b>
+                    <b>{props.examTitle}</b>
                 </Typography>
             </div>
             <div>
             <Typography variant="subtitle1">
-                starting at
+                {moment(props.startingAt).format('MMMM Do YYYY, h:mm:ss a')}
             </Typography>
             <Typography variant="subtitle1">
-                ending at
+                {moment(props.endingAt).format('MMMM Do YYYY, h:mm:ss a')}
             </Typography>
             </div>
         </Paper>

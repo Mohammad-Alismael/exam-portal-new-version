@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
         alignSelf: 'center'
     },
     largeIcon: {
-        width: 60,
-        height: 60,
+        width: 40,
+        height: 40,
     },
     textField: {
         width: '100%',
