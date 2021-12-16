@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions'
 const initialState = {
-    maxQuestions: 0,
+    maxQuestions: -1,
+    totalPoints: 0,
    questions : []
 }
 const ExamReducer  = (state = initialState, action) => {
@@ -19,6 +20,22 @@ const ExamReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 questions: action.payload.questionAr
+            }
+        case actionTypes.SET_TOTAL_POINTS:
+            return {
+                ...state,
+                totalPoints: action.payload.points
+            }
+        case actionTypes.CHECK_TOTAL_POINTS:
+            let totalPoints = 0;
+            for (let i = 0; i < state.length; i++) {
+                let points = state.questions[i]['points'];
+                totalPoints += points
+            }
+            console.log(totalPoints)
+            return {
+                ...state,
+                totalPoints: totalPoints
             }
         default:
             break;

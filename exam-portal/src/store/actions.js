@@ -4,3 +4,5 @@ export const SET_QUESTION_ARRAY = 'SET_QUESTION_ARRAY';
 export const SET_USER_ID = 'SET_USER_ID';
 export const SET_USERNAME = 'SET_USERNAME';
 export const SET_ROLE_ID = 'SET_ROLE_ID';
+export const SET_TOTAL_POINTS = 'SET_TOTAL_POINTS';
+export const CHECK_TOTAL_POINTS = 'CHECK_TOTAL_POINTS';

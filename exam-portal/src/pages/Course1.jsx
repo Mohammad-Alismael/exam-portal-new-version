@@ -32,6 +32,7 @@ import {toast} from "react-toastify";
 import Participants from "../Components/Participants";
 import {Title} from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import LinearProgress from '@mui/material/LinearProgress';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -126,6 +127,7 @@ function Course1(props) {
         setAnnouncements(Announcements.data)
     }
     const getClassroom = async () => {
+        setIsLoading(true)
         const promise = new Promise((resolve, reject) => {
             axios.post('http://localhost:8080/get-class-students', {
                 instructorId: props.user_id
@@ -146,15 +148,19 @@ function Course1(props) {
         }
     }
     useEffect(()=>{
+
         loadAnnouncements()
         getClassroom().then((data)=>{
-            console.log(data)
+            console.log('classroom =>',data)
+            setIsLoading(false)
         })
+
     },[])
     return (
         <div>
             <ThemeProvider theme={theme2}>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
+
                     <TabContext value={value}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs onChange={handleChange} centered>
@@ -166,8 +172,8 @@ function Course1(props) {
                                 </TabList>
                             </Tabs>
                         </Box>
-
-                        <TabPanel value="1">
+                        { isLoading ? <LinearProgress /> : null}
+                        { !isLoading ? <TabPanel value="1">
                             <Paper elevation={5} className={classes.paperStyle}>
                                 <Typography variant="h4" color="primary" style={{ marginTop: '15%' }}>
                                     <b>CS 434</b>
@@ -196,7 +202,9 @@ function Course1(props) {
                             </Paper>:null}
                             <Grid>
                                 {
-                                    announcements.map((val,index)=>{
+                                    announcements.sort(function(a, b) {
+                                        return b.createdAt - a.createdAt;
+                                    }).map((val,index)=>{
 
                                         return <AnnouncementComponent
                                             key={index}
@@ -207,10 +215,9 @@ function Course1(props) {
                                 }
 
                             </Grid>
-                        </TabPanel>
+                        </TabPanel> : null}
 
-
-                        <TabPanel value="2">
+                        { !isLoading ? <TabPanel value="2">
                             <Paper elevation={0} className={classes.classworkPaper}>
                                 <Button
                                     variant="contained"
@@ -237,9 +244,9 @@ function Course1(props) {
                                     <MenuItem onClick={handleClose}><LiveHelpIcon sx={{ p: 1 }} />Question</MenuItem>
                                 </Menu>
                             </Paper>
-                        </TabPanel>
+                        </TabPanel> : null}
 
-                        <TabPanel value="3">
+                        { !isLoading ? <TabPanel value="3">
                             <Paper fullwidth elevation={0} >
                                 <Grid
                                     container
@@ -272,11 +279,14 @@ function Course1(props) {
                                     <Participants />
                                 </Grid>
                             </Paper>
-                        </TabPanel>
-                        <TabPanel value="4">Grades</TabPanel>
+                        </TabPanel> : null}
+
+                        { !isLoading ? <TabPanel value="4">Grades</TabPanel> : null}
                     </TabContext>
+
                 </Box>
             </ThemeProvider>
+
         </div>
     );
 }

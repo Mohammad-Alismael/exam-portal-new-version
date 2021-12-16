@@ -45,26 +45,42 @@ const useStyles = makeStyles((theme) => ({
 function  QuizBody(props) {
     const classes = useStyles();
     const [selectedType, setSelectedType] = React.useState('');
+    const [whoCanSee, setWhoCanSee] = React.useState('');
     const [options,setOptions] = React.useState([]);
     const [checkbox,setCheckbox] = React.useState([]);
-    const [matchingOptions,setMatchingOptions] = React.useState([]);
     const [matchingOptionText,setMatchingOptionText] = React.useState("");
+    const [matchingOptions,setMatchingOptions] = React.useState([]);
     const [addOptionText, setAddOptionText] = React.useState('');
     const [checkboxText, setCheckboxText] = React.useState('');
-    const handleChange = (event) => {
+    const [point,setPoint] = React.useState(0);
+    const setTrueFalseOptions = () =>{
+        let questionObject = props.questions[props.id - 1]
+        questionObject["options"] = ['True','False']
+        props.questions[props.id - 1] = questionObject
+    }
+    const handleQuestionType = (event) => {
         setSelectedType(event.target.value);
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
         }else {
             let questionObject = props.questions[props.id - 1]
-            questionObject["questionText"] = event.target.value
-            console.log(props.questions)
-            console.log(selectedType)
-            if (selectedType == 4) {
-                questionObject["options"] = ["True", "False"]
-            }
+            questionObject["QuestionType"] = event.target.value
         }
+
+        if (event.target.value == 5){
+            setTrueFalseOptions()
+        }
+
     };
+    const handleWhoCanSee = (event) => {
+        setWhoCanSee(event.target.value)
+        if(props.questions[props.id - 1] == null){
+            props.appendQuestion({id: props.id,WhoCanSee: event.target.value})
+        }else {
+            let questionObject = props.questions[props.id - 1]
+            questionObject["WhoCanSee"] = event.target.value
+        }
+    }
     const appendQuestion = (e) =>{
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
@@ -72,7 +88,6 @@ function  QuizBody(props) {
             let questionObject = props.questions[props.id - 1]
             questionObject["questionText"] = e.target.value
             props.questions[props.id - 1] = questionObject
-            console.log(props.questions)
         }
     }
     const setOptionText = (e) =>{
@@ -88,28 +103,52 @@ function  QuizBody(props) {
             let questionObject = props.questions[props.id - 1]
             questionObject["options"] = [...options, addOptionText]
             props.questions[props.id - 1] = questionObject
-
-
         }else
             toast("4 options maximum")
-        console.log(props.questions)
+
     }
 
-    const deleteQuestionContainer = (e) => {
+    const handleCheckBoxOptions = (e) => {
 
+        setCheckbox([...checkbox,checkboxText])
+        let questionObject = props.questions[props.id - 1]
+        questionObject["options"] = [...checkbox,checkboxText]
+        props.questions[props.id - 1] = questionObject
+
+    }
+
+    const addMatchingOptions = (e) =>{
+        if(!matchingOptions.includes(matchingOptionText)) {
+            setMatchingOptions([...matchingOptions, matchingOptionText])
+            let questionObject = props.questions[props.id - 1]
+            questionObject["options"] = [...matchingOptions, matchingOptionText]
+            props.questions[props.id - 1] = questionObject
+        }else
+            toast.info("you already have this option in your list")
+    }
+
+    const setPoints = (e) => {
+        if(props.questions[props.id - 1] == null){
+            props.appendQuestion({id: props.id})
+        }else {
+            let questionObject = props.questions[props.id - 1]
+            questionObject["points"] = parseInt(e.target.value);
+            props.questions[props.id - 1] = questionObject
+            console.log(questionObject)
+
+        }
     }
 
         return (
             <Paper elevation={3} className={classes.paperStyle}>
 
                 <Grid container spacing={2}>
-                    <Grid xs={6} item>
+                    <Grid xs={4} item>
                         <TextField id="filled-basic"
-                                   label="question text"
+                                   label="Question text"
                                    size="small"
                                    fullWidth
                                    onChange={appendQuestion}
-                                   disabled={selectedType == 4 ? true : false}
                                    variant="standard" />
 
                     </Grid>
@@ -122,7 +161,7 @@ function  QuizBody(props) {
                                 id="type"
                                 value={selectedType}
                                 label="Question type"
-                                onChange={handleChange}
+                                onChange={handleQuestionType}
                             >
                                 <MenuItem value={1}>MCQs</MenuItem>
                                 <MenuItem value={2}>Text</MenuItem>
@@ -133,14 +172,31 @@ function  QuizBody(props) {
                         </FormControl>
                     </Grid>
                     <Grid xs={3} item>
+                        <FormControl fullWidth variant="standard" >
+                            <InputLabel id="type">Who can see</InputLabel>
+                            <Select
+                                value={whoCanSee}
+                                label="Who can see"
+                                onChange={handleWhoCanSee}
+                            >
+                                <MenuItem value={1}>Undergraduate</MenuItem>
+                                <MenuItem value={2}>Graduate</MenuItem>
+                                <MenuItem value={3}>Undergraduate & Graduate</MenuItem>
+
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid xs={2} item>
                         <TextField
                             className={classes.dropDown}
                             type="number"
                             fullWidth
+                            onChange={(e)=>(setPoints(e))}
                             variant="standard"
                             inputProps={{ min: 1, max: 100 }}
                              label={"points"}/>
                     </Grid>
+
                     <Grid xs={12} container>
                         {selectedType == 1 ?
                             <Grid item
@@ -167,14 +223,14 @@ function  QuizBody(props) {
                                 </RadioGroup>
                             </Grid> : null}
                         {selectedType == 2 ?
-                            <div style={{marginLeft:12}}
+                            <Grid xs={12} style={{marginLeft:12}}
                             >
                                 <TextField id="filled-basic"
                                            label="long answer text"
                                            fullWidth
                                            disabled
                                            variant="standard" />
-                            </div> : null}
+                            </Grid> : null}
                         {selectedType == 3 ?
                             <Grid container
                                   style={{marginLeft:12}}
@@ -183,7 +239,7 @@ function  QuizBody(props) {
                                 {
                                     checkbox.map((val,index)=>{
                                         return  <Grid item xs={6}>
-                                            <FormControlLabel control={<Checkbox />} label={val} />
+                                            <FormControlLabel key={index} control={<Checkbox />} label={val} />
                                         </Grid>
                                     })
                                 }
@@ -198,8 +254,7 @@ function  QuizBody(props) {
                                 <Button
                                     variant={"outlined"}
                                     variant="contained"
-                                    size={"medium"} onClick={(e)=>
-                                    (setCheckbox([...checkbox,checkboxText]))}>submit option</Button>
+                                    size={"medium"} onClick={handleCheckBoxOptions}>submit option</Button>
 
                             </Grid> : null}
                         {selectedType == 4 ?
@@ -222,39 +277,28 @@ function  QuizBody(props) {
                                          >{val}</MenuItem>
                                       })
                                     }
+
+                                    </Select>
+                                </FormControl>
+                                </Grid>
+                                <Grid item xs={7} >
+                                    <FormControl fullWidth margin={'normal'}>
                                         <TextField
                                             label="Add Option"
                                             size="small"
                                             fullWidth
                                             onChange={(e)=>
                                                 (setMatchingOptionText(e.target.value))}
-                                            variant="filled"/>
-                                        <Button
-                                            variant={"outlined"}
-                                            variant="contained"
-                                            fullWidth
-                                            onClick={(e)=>(setMatchingOptions([...matchingOptions,matchingOptionText]))}
-                                            size={"small"}>Add option</Button>
-                                    </Select>
-                                </FormControl>
-                                </Grid>
-                                <Grid item xs={7} >
-                                    <FormControl fullWidth margin={'normal'}>
-                                    <TextField
-                                        label="question text"
-                                        size="small"
-                                        fullWidth
-                                        variant="standard"/>
+                                            variant="standard"/>
                                     </FormControl>
                                 </Grid>
-                                <br/>
-                                {/*<Grid item xs={12}>*/}
-                                {/*    <Button*/}
-                                {/*        variant={"outlined"}*/}
-                                {/*        variant="contained"*/}
-                                {/*        fullWidth*/}
-                                {/*        size={"medium"}>Add matching</Button>*/}
-                                {/*</Grid>*/}
+                                <Grid item xs={12}>
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={addMatchingOptions}
+                                    size={"small"}>Add option</Button>
+                                </Grid>
                             </Grid> : null}
                         {selectedType == 5 ?
                             <RadioGroup style={{marginLeft:12}}

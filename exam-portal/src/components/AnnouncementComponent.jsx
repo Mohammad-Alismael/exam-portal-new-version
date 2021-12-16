@@ -6,6 +6,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import moment from 'moment'
 import axios from "axios";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import IconButton from "@mui/material/IconButton";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 20,
@@ -14,6 +16,16 @@ const useStyles = makeStyles((theme) => ({
         width: '48%',
         margin: "30px auto",
 
+    },
+    userContainer : {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'start',
+        alignSelf: 'center'
+    },
+    largeIcon: {
+        width: 60,
+        height: 60,
     },
     textField: {
         width: '100%',
@@ -57,7 +69,9 @@ function AnnouncementComponent(props)  {
         return (
             <Paper elevation={3} className={classes.paperStyle}>
                 <Grid container>
-                    <Grid item xs={10} className={classes.container}>
+                    <Grid xs={10} className={classes.userContainer}>
+                        <AccountCircle className={classes.largeIcon}
+                                        size="large" />
                         <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
                             {username}
                         </Typography>

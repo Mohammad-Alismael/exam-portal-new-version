@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
 }));
-function Participants () {
+function Participants (props) {
     const classes = useStyles();
 
         return (
@@ -39,7 +39,7 @@ function Participants () {
                     <AccountCircle color="primary" size="large" />
                 </IconButton>
                 <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
-                    username
+                    {props.username}
                 </Typography>
             </Box>
 
