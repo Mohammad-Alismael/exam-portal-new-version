@@ -164,6 +164,17 @@ function  QuizBody(props) {
         }
     }
 
+    const correctAnswer = (e) =>{
+        let deepCopy = [...props.questions]
+        let questionObject = deepCopy[props.id - 1]
+        questionObject["correctAnswer"] = parseInt(e.target.value);
+        deepCopy[props.id - 1] = questionObject;
+        props.setQuestionArray(deepCopy)
+    }
+    const [activeFilter, setActiveFilter] = React.useState([]);
+
+
+
         return (
             <Paper elevation={3} className={classes.paperStyle}>
 
@@ -190,7 +201,7 @@ function  QuizBody(props) {
                             >
                                 <MenuItem value={1}>MCQs</MenuItem>
                                 <MenuItem value={2}>Text</MenuItem>
-                                <MenuItem value={3}>Checkbox</MenuItem>
+                                {/*<MenuItem value={3}>Checkbox</MenuItem>*/}
                                 <MenuItem value={4}>Matching</MenuItem>
                                 <MenuItem value={5}>True/False</MenuItem>
                             </Select>
@@ -229,7 +240,7 @@ function  QuizBody(props) {
                                   justifyContent="center"
                                   alignItems="center"
                                   xs={12}>
-                                <RadioGroup >
+                                <RadioGroup onChange={correctAnswer}>
                                     {
                                         options.map((val,index)=>{
                                             return <FormControlLabel key={index} value={index} control={<Radio />} label={val} />
@@ -256,32 +267,33 @@ function  QuizBody(props) {
                                            disabled
                                            variant="standard" />
                             </Grid> : null}
-                        {selectedType == 3 ?
-                            <Grid container
-                                  style={{marginLeft:12}}
-                            >
-
-                                {
-                                    checkbox.map((val,index)=>{
-                                        return  <Grid item xs={6}>
-                                            <FormControlLabel key={index} control={<Checkbox />} label={val} />
-                                        </Grid>
-                                    })
-                                }
-
-                                <TextField id="filled-basic"
-                                           label="Add Option"
-                                           size="small"
-                                           variant="standard"
-                                           onChange={(e)=>
-                                               (setCheckboxText(e.target.value))}/>
-                                <br/>
-                                <Button
-                                    variant={"outlined"}
-                                    variant="contained"
-                                    size={"medium"} onClick={handleCheckBoxOptions}>submit option</Button>
-
-                            </Grid> : null}
+                        {selectedType == 3 ? null
+                            // <Grid container
+                            //       style={{marginLeft:12}}
+                            // >
+                            //
+                            //     {
+                            //         checkbox.map((val,index)=>{
+                            //             return  <Grid item xs={6}>
+                            //                 <FormControlLabel key={index} control={<Checkbox />} label={val} />
+                            //             </Grid>
+                            //         })
+                            //     }
+                            //
+                            //     <TextField id="filled-basic"
+                            //                label="Add Option"
+                            //                size="small"
+                            //                variant="standard"
+                            //                onChange={(e)=>
+                            //                    (setCheckboxText(e.target.value))}/>
+                            //     <br/>
+                            //     <Button
+                            //         variant={"outlined"}
+                            //         variant="contained"
+                            //         size={"medium"} onClick={handleCheckBoxOptions}>submit option</Button>
+                            //
+                            // </Grid>
+                            : null}
                         {selectedType == 4 ?
                             <Grid container
                                   style={{marginLeft:12}}
@@ -293,6 +305,7 @@ function  QuizBody(props) {
                                     <Select
                                         labelId="type"
                                         id="type"
+                                        onChange={correctAnswer}
                                         label="Question Options"
                                     >
                                     {
@@ -326,7 +339,9 @@ function  QuizBody(props) {
                                 </Grid>
                             </Grid> : null}
                         {selectedType == 5 ?
-                            <RadioGroup style={{marginLeft:12}}
+                            <RadioGroup
+                                onChange={correctAnswer}
+                                style={{marginLeft:12}}
                             >
                                 <FormControlLabel value={1} control={<Radio />} label={"True"} />
                                 <FormControlLabel value={0} control={<Radio />} label={"False"} />

@@ -52,7 +52,7 @@ function Mcq(props) {
         return(
             <>
                 <Grid item xs={1}>
-                    <FormControlLabel value={options[index]} control={<Radio />} label="" />
+                    <FormControlLabel value={options[index]} control={<Radio checked={index == props.correctAnswer ? true : false}/>}  label="" />
                 </Grid>
                 <Grid item xs={11}>
                 <TextField

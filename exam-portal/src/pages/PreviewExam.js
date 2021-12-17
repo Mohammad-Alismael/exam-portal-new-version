@@ -220,7 +220,7 @@ function PreviewExam(props) {
                 </Paper>
                 {
                     questions.map((val,index)=>{
-                        console.log(val.questionType)
+                        console.log(val)
                         if (val.questionType === 1){
                             return <Mcq
                                 questionText={val.questionText}

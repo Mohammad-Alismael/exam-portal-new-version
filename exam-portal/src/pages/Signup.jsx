@@ -19,6 +19,9 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import axios from "axios";
 import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
+import * as Actions from "../store/actions";
+import {connect} from "react-redux";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -89,18 +92,22 @@ function Signup() {
     const [type, setType] = React.useState('');
     const [username,setUsername] = useState('');
     const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+    const [password,setPassword] = useState('');
+    const navigate = useNavigate();
     const submit = (e) => {
         if (username != '' && password != '') {
 
             e.preventDefault()
-            axios.post('http://localhost:8080/add', {
+            axios.post('http://localhost:8080/add-user', {
                 username,
                 password,
                 emailId: email,
                 roleId: type
             }).then((res) => {
-                console.log(res.data)
+                props.setUserId(res.data[0]['userId']);
+                props.setUsername(username);
+                props.setRoleId(res.data[0]['roleId']);
+                navigate("/course1");
             }).catch((error) => {
                 if (error.response.status == 409)
                     toast.warn("username already taken")
@@ -207,4 +214,15 @@ function Signup() {
     );
 }
 
-export default Signup;
+const mapDispatchToProps = dispatch => {
+    return {
+        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
+            payload : {user_id}}),
+        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
+            payload : {username}}),
+        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
+            payload : {role_id}})
+    }
+}
+
+export default connect(null,mapDispatchToProps)(Signup);
