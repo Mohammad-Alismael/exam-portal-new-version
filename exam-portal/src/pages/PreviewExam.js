@@ -200,7 +200,7 @@ function PreviewExam(props) {
                                 isActive={val.isActive}
                                 whoCanSee={val.whoCanSee}
                             />
-                        }else {
+                        }else if (val.questionType === 2){
                             return <Text
                                 questionText={val.questionText}
                                 points={val.points}
@@ -208,37 +208,26 @@ function PreviewExam(props) {
                                 isActive={val.isActive}
                                 whoCanSee={val.whoCanSee}
                             />
+                        }else if (val.questionType === 4){
+                            return <Matching
+                                questionText={val.questionText}
+                                points={val.points}
+                                options={val.options}
+                                isActive={val.isActive}
+                                whoCanSee={val.whoCanSee}
+                            />
+                        }else if (val.questionType === 5){
+                            return <Truth
+                                questionText={val.questionText}
+                                points={val.points}
+                                options={val.options}
+                                isActive={true}
+                                whoCanSee={val.whoCanSee}
+                            />
                         }
                     })
                 }
-                <Text
-                    questionText={"lololol"}
-                    points={15}
-                    options={[]}
-                    isActive={true}
-                    whoCanSee={2}
-                />
-                <Truth
-                    questionText={"lololol"}
-                    points={15}
-                    options={['True','False']}
-                    isActive={true}
-                    whoCanSee={2}
-                />
-                {/*<CheckBoxComp*/}
-                {/*    questionText={"lololol checkbox"}*/}
-                {/*    points={15}*/}
-                {/*    options={['options','ahmed','mamadd','ffff']}*/}
-                {/*    isActive={true}*/}
-                {/*    whoCanSee={2}*/}
-                {/*/>*/}
-                <Matching
-                    questionText={"this is matching question"}
-                    points={15}
-                    options={['True','False','fff']}
-                    isActive={true}
-                    whoCanSee={2}
-                />
+
             </Box>
         );
     }

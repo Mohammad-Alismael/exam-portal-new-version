@@ -32,8 +32,11 @@ import index from "@mui/material/darkScrollbar";
 import {connect} from "react-redux";
 import * as Actions from '../store/actions';
 import {useEffect} from "react";
+import axios from "axios";
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-
+import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -82,49 +85,100 @@ function Quiz(props) {
             let points = props.questions.questions[i]['points'];
             sumPoints += points
         }
-        console.log('total points =>', sumPoints)
-        console.log('exceed total points =>', sumPoints > totalPoints)
-        if (sumPoints -1 <= totalPoints){
-            console.log(props.questions.questions)
+        console.log("sum points => ", sumPoints)
+        console.log("total points => ", totalPoints)
+        if (sumPoints <= totalPoints){
+            assignExamsInfo().then((data)=>{
+                setExamId(data['examId'])
+            })
+            console.log(examId)
+            console.log("questions array =>", props.questions.questions)
+            props.questions.questions.map(((val, index1) => {
+                assignQuestion(val.QuestionType
+                ,val.questionText
+                ,val.points
+                ,val.WhoCanSee).then((data)=>{
+                    console.log(data)
+                })
+            }))
         }else {
             toast.warn('you exceeded total points')
         }
 
         setOpen(false);
     };
-    const [questionContainer,setQuestionContainer] = React.useState([<QuizBody/>]);
-    const [selectedType, setSelectedType] = React.useState('');
-    const [options,setOptions] = React.useState([]);
-    const [checkbox,setCheckbox] = React.useState([])
-    const [addOptionText, setAddOptionText] = React.useState('');
-    const [checkboxText, setCheckboxText] = React.useState('');
+
     const [howManyQuestions, setHowManyQuestions] = React.useState(1);
-    const [examQuestions, setExamQuestions] = React.useState([]);
     const [totalPoints,setTotalPoints] = React.useState(0);
-    const handleChange = (event) => {
-        setSelectedType(event.target.value);
-    };
-    const setOptionText = (e) =>{
-        const optionText = e.target.value;
-        // setOptions([...options,optionText])
-        setAddOptionText(optionText)
+    const [examTitle,setExamTitle] = React.useState('');
+    const [startingAt,setStartingAt] =  React.useState(0);
+    const [endingAt,setEndingAt] =  React.useState(0);
+    const [examId,setExamId] = React.useState('')
+    const assignExamsInfo = async () => {
+
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/add-exam', {
+                title: examTitle,
+                score: totalPoints,
+                creatorId: props.user.user_id,
+                startingAt,
+                endingAt
+            }).then((data) => {
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error.response)
+                    reject('no exams found!')
+                })
+        })
+
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
     }
-    const addOption = (e) => {
-        if (options.length < 4)
-            setOptions([...options, addOptionText])
-        else
-            toast("4 options maximum")
+
+    const assignQuestion = async (questionType,questionText,points,whoCanSee) => {
+        console.log(examId)
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/add-question', {
+                questionType,
+                creatorExamId: props.user.user_id,
+                questionText,
+                points,
+                examId,
+                isActive: 1,
+                whoCanSee
+            }).then((data) => {
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error)
+                    reject('no question found!')
+                })
+        })
+
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
     }
 
     const addQuestionContainer = (e) => {
         if (parseInt(e.target.value) < 101 && parseInt(e.target.value) > 0) {
             setHowManyQuestions(parseInt(e.target.value))
             props.setMaxNumberQuestions(parseInt(e.target.value))
+
         }else
             toast("that's beyond our limit")
     }
     useEffect(()=>{
         props.setTotalPoints(0)
+        props.emptyQuestions([])
+        console.log("questions array =>", props.questions.questions)
+
     },[])
     return (
         <ThemeProvider theme={theme2}>
@@ -151,6 +205,8 @@ function Quiz(props) {
                                            size="small"
                                            fullWidth
                                            required
+                                           onChange={(e)=>
+                                               (setExamTitle((e.target.value)))}
                                            variant="filled" />
                             </Grid>
                             <Grid item xs={6}>
@@ -166,25 +222,23 @@ function Quiz(props) {
                                            variant="filled" />
                             </Grid>
                             <Grid item xs={6}>
-                            <TextField
-                                id="datetime-local"
-                                label="Starting At"
-                                type="datetime-local"
-                                fullWidth
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </Grid>
-                            <Grid item xs={6}>
-                                <TextField
+                                <input
                                     id="datetime-local"
-                                    label="Ending At"
+                                    placeholder="Starting At"
                                     type="datetime-local"
-                                    fullWidth
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
+                                    onChange={(e)=>
+                                        (setStartingAt(new Date(e.target.value).valueOf()))}
+
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <input
+                                    id="datetime-local"
+                                    placeholder="Ending At"
+                                    type="datetime-local"
+                                    onChange={(e)=>
+                                        (setEndingAt(new Date(e.target.value).valueOf()))}
+
                                 />
                             </Grid>
                         </Grid>
@@ -198,7 +252,8 @@ function Quiz(props) {
                                 fullWidth
                                 label={"How many questions"}
                                 inputProps={{ min: 1, max: 100 }}
-                                onChange={addQuestionContainer}/>
+                                onChange={addQuestionContainer}
+                            />
                         </Grid>
                         </Grid>
                     </Paper>
@@ -215,7 +270,8 @@ function Quiz(props) {
 }
 const mapStateToProps = state => {
     return {
-        questions : state.ExamReducer
+        questions : state.ExamReducer,
+        user : state.UserReducer
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -224,8 +280,8 @@ const mapDispatchToProps = dispatch => {
             payload : {questions}}),
         setTotalPoints : (points) => dispatch({type: Actions.SET_TOTAL_POINTS,
             payload : {points}}),
-        checkTotalPoints : (points) => dispatch({type: Actions.CHECK_TOTAL_POINTS,
-            payload : {points}})
+        emptyQuestions : (questions) => dispatch({type: Actions.SET_QUESTION_ARRAY,
+            payload : {questions}})
 
     }
 }

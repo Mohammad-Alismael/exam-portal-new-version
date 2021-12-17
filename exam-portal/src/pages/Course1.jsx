@@ -97,7 +97,8 @@ function Course1(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [announcements,setAnnouncements] = React.useState([]);
     const [exams,setExams] = React.useState([]);
-    const [announcementText,setAnnouncementText] = React.useState('')
+    const [announcementText,setAnnouncementText] = React.useState('');
+    const [classroom,setClassroom] = React.useState([]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -125,16 +126,15 @@ function Course1(props) {
 
     }
     const loadAnnouncements = async () => {
+        setIsLoading(true)
         const Announcements = await axios.get(`http://localhost:8080/get-announcements?id=${props.user.user_id}`)
         setAnnouncements(Announcements.data)
     }
     const getClassroom = async () => {
-        setIsLoading(true)
         const promise = new Promise((resolve, reject) => {
             axios.post('http://localhost:8080/get-class-students', {
-                instructorId: props.user_id
+                instructorId: props.user.user_id
             }).then((data) => {
-                console.log(data)
                 resolve(data.data)
             })
                 .catch((error) => {
@@ -174,10 +174,12 @@ function Course1(props) {
     useEffect(()=>{
 
         loadAnnouncements()
+
         getClassroom().then((data)=>{
             console.log('classroom =>',data)
-
+            setClassroom(data)
         })
+
         getExamsList().then((data)=>{
             console.log('Exams =>',data)
             setExams(data)
@@ -280,9 +282,7 @@ function Course1(props) {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <MenuItem onClick={handleClose}><AssignmentIcon sx={{ p: 1 }} /> Assignment</MenuItem>
-                                    <Link href="/quiz"><MenuItem ><AssignmentIcon/>Quiz Assignment</MenuItem></Link>
-                                    <MenuItem onClick={handleClose}><LiveHelpIcon sx={{ p: 1 }} />Question</MenuItem>
+                                    <Link href="/quiz"><MenuItem ><AssignmentIcon/>Exam/Quiz Assignment</MenuItem></Link>
                                 </Menu>
                             </Paper>
                         </TabPanel> : null}
@@ -314,10 +314,12 @@ function Course1(props) {
                                     <Typography variant="h2">
                                         Classmates
                                     </Typography>
-                                    <Participants />
-                                    <Participants />
-                                    <Participants />
-                                    <Participants />
+                                    {
+                                        classroom.map((val,index)=>{
+                                            return <Participants username={val.username}/>
+                                        })
+                                    }
+
                                 </Grid>
                             </Paper>
                         </TabPanel> : null}

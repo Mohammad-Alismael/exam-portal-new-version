@@ -11,15 +11,20 @@ const ExamReducer  = (state = initialState, action) => {
                 ...state,
                 questions: [...state.questions, action.payload.question]
             }
+        case actionTypes.SET_QUESTION_ARRAY:
+            return {
+                ...state,
+                questions: []
+            }
         case actionTypes.SET_MAX_QUESTIONS:
             return {
                 ...state,
                 maxQuestions: action.payload.maxQuestions
             }
-        case actionTypes.SET_QUESTION_ARRAY:
+        case actionTypes.SET_NEW_QUESTION_ARRAY:
             return {
                 ...state,
-                questions: action.payload.questionAr
+                questions: action.payload.newQuestionArray
             }
         case actionTypes.SET_TOTAL_POINTS:
             return {
