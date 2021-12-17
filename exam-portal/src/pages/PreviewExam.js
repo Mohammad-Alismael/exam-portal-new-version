@@ -8,7 +8,50 @@ import Text from "../Components/QuestionsPreview/Text";
 import Truth from "../Components/QuestionsPreview/Truth";
 import CheckBoxComp from "../Components/QuestionsPreview/CheckBoxComp";
 import Matching from "../Components/QuestionsPreview/Matching";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import {Box} from "@mui/material";
+import {createTheme, makeStyles} from "@material-ui/core/styles";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import AppBar from "@mui/material/AppBar";
+
+const useStyles = makeStyles((theme) => ({
+    paperStyle: {
+        padding: 30,
+        height: '15vh auto',
+        width: '50%',
+        margin: "30px auto",
+        position: 'relative'
+    },
+    textField: {
+        width: '100%',
+    }
+
+}));
+
+const theme2 = createTheme({
+    typography: {
+        h6: {
+            fontSize: 32,
+            marginTop: -40,
+            color: '#161b22'
+        },
+    },
+    palette: {
+        primary: {
+            main: 'rgb(22,27,34)',
+        },
+        secondary: {
+            main: '#ffd05e',
+        }
+    }
+})
+
 function PreviewExam(props) {
+    const classes = useStyles();
     const {examId} = useParams();
     const [questions,setQuestions] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
@@ -54,12 +97,7 @@ function PreviewExam(props) {
             return Promise.resolve(e)
         }
     }
-    const wrapper = async (questionId) => {
-        const options = await getQuestionOptions(questionId);
-        console.log(options)
-        return options;
 
-    }
     const get = async (data) => {
         for (let i = 0; i < data.length; i++) {
             const options = await getQuestionOptions(data[i].questionId);
@@ -88,8 +126,69 @@ function PreviewExam(props) {
 
     }else {
         return (
-            <div>
-                this is exam preview for {examId}
+            <Box sx={{ mt: 10 }}>
+                <AppBar
+                    sx={{ position: 'fixed',bgcolor:"#ffd05e"}}
+
+                >
+                    <Toolbar>
+                        <Typography style={{color:"black"}} sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                            Exam id : {examId}
+                        </Typography>
+                        <Button style={{ textTransform: 'none' }}
+                                color="inherit"
+                                // onClick={handleClose}
+                        >
+                            Assign
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <Paper elevation={3} className={classes.paperStyle}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <TextField id="filled-basic"
+                                       label="exam title"
+                                       size="small"
+                                       fullWidth
+                                       required
+                                       variant="filled" />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="points"
+                                size="small"
+                                type="number"
+                                fullWidth
+                                inputProps={{ min: 1 }}
+                                // onChange={(e)=>
+//                                    (setTotalPoints(parseInt(e.target.value)))}
+                                required
+                                variant="filled" />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id="datetime-local"
+                                label="Starting At"
+                                type="datetime-local"
+                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id="datetime-local"
+                                label="Ending At"
+                                type="datetime-local"
+                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </Paper>
                 {
                     questions.map((val,index)=>{
                         console.log(val.questionType)
@@ -140,7 +239,7 @@ function PreviewExam(props) {
                     isActive={true}
                     whoCanSee={2}
                 />
-            </div>
+            </Box>
         );
     }
 }
