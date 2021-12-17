@@ -98,6 +98,33 @@ function PreviewExam(props) {
         }
     }
 
+    const correctOption = async (questionId) => {
+
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/get-answer-key', {
+                questionId
+            }).then((data) => {
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error)
+                    reject('no question found!')
+                })
+        })
+
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
+    }
+    const getCorrectOption = async (data) => {
+        for (let i = 0; i < data.length; i++) {
+            const correctAnswer = await correctOption(data[i].questionId);
+            data[i]['correctAnswer'] = correctAnswer['correctAnswer']
+        }
+        return data
+    }
     const get = async (data) => {
         for (let i = 0; i < data.length; i++) {
             const options = await getQuestionOptions(data[i].questionId);
@@ -114,9 +141,11 @@ function PreviewExam(props) {
         getExamQuestions().then((data)=>{
             console.log(data)
             get(data).then((data)=>{
-                console.log(data)
-                setQuestions([...data])
-                setIsLoading(false)
+                getCorrectOption(data).then((data2)=>{
+                    setQuestions([...data2])
+                    setIsLoading(false)
+                })
+
             })
         })
     },[])
@@ -195,6 +224,7 @@ function PreviewExam(props) {
                         if (val.questionType === 1){
                             return <Mcq
                                 questionText={val.questionText}
+                                correctAnswer={val.correctAnswer}
                                 points={val.points}
                                 options={val.options}
                                 isActive={val.isActive}
@@ -203,6 +233,7 @@ function PreviewExam(props) {
                         }else if (val.questionType === 2){
                             return <Text
                                 questionText={val.questionText}
+                                correctAnswer={val.correctAnswer}
                                 points={val.points}
                                 options={val.options}
                                 isActive={val.isActive}
@@ -211,6 +242,7 @@ function PreviewExam(props) {
                         }else if (val.questionType === 4){
                             return <Matching
                                 questionText={val.questionText}
+                                correctAnswer={val.correctAnswer}
                                 points={val.points}
                                 options={val.options}
                                 isActive={val.isActive}
@@ -219,6 +251,7 @@ function PreviewExam(props) {
                         }else if (val.questionType === 5){
                             return <Truth
                                 questionText={val.questionText}
+                                correctAnswer={val.correctAnswer}
                                 points={val.points}
                                 options={val.options}
                                 isActive={true}

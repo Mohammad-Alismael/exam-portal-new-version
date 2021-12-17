@@ -37,6 +37,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
+import {useNavigate} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -73,6 +74,7 @@ const theme2 = createTheme({
 
 function Quiz(props) {
     const classes = useStyles();
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -80,27 +82,49 @@ function Quiz(props) {
 
     const handleClose = () => {
         let sumPoints = 0;
-        const len = props.questions.questions.length
-        for (let i = 0; i < len; i++) {
-            let points = props.questions.questions[i]['points'];
-            sumPoints += points
-        }
+        // const len = props.questions.questions.length
+        // for (let i = 0; i < len; i++) {
+        //     let points = props.questions.questions[i]['points'];
+        //     console.log(points)
+        //     sumPoints += points
+        // }
         console.log("sum points => ", sumPoints)
         console.log("total points => ", totalPoints)
         if (sumPoints <= totalPoints){
             assignExamsInfo().then((data)=>{
                 setExamId(data['examId'])
+                props.questions.questions.map(((val, index1) => {
+                    assignQuestion(
+                        data['examId'],
+                        val.QuestionType
+                        ,val.questionText
+                        ,val.points
+                        ,val.WhoCanSee).then((data)=>{
+                        console.log("question data => " , data)
+                        // console.log("question => ",data['questionId'])
+                        if (data['questionType'] != 2) {
+                            console.log("this is not a text question")
+                            console.log("options=>", val['options'])
+                            val['options'].map((val, index) => {
+                                console.log(val)
+                                assignOptions(data['questionId'], val).then((data)=>{
+                                    console.log("assignOptions => ",data);
+                                })
+                            })
+                        }
+
+                        assignCorrectAnswer(data['questionId'],val['correctAnswer']).then((data)=>{
+                            console.log("assignCorrectAnswer =>",data);
+                            props.emptyQuestions([])
+                            navigate("/course1");
+                        })
+
+                    })
+                }))
             })
-            console.log(examId)
+
             console.log("questions array =>", props.questions.questions)
-            props.questions.questions.map(((val, index1) => {
-                assignQuestion(val.QuestionType
-                ,val.questionText
-                ,val.points
-                ,val.WhoCanSee).then((data)=>{
-                    console.log(data)
-                })
-            }))
+
         }else {
             toast.warn('you exceeded total points')
         }
@@ -139,8 +163,7 @@ function Quiz(props) {
         }
     }
 
-    const assignQuestion = async (questionType,questionText,points,whoCanSee) => {
-        console.log(examId)
+    const assignQuestion = async (examId,questionType,questionText,points,whoCanSee) => {
         const promise = new Promise((resolve, reject) => {
             axios.post('http://localhost:8080/add-question', {
                 questionType,
@@ -156,6 +179,50 @@ function Quiz(props) {
                 .catch((error) => {
                     console.log(error)
                     reject('no question found!')
+                })
+        })
+
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
+    }
+
+    const assignOptions = async (questionId,optionValue) => {
+        console.log(examId)
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/set-question-options', {
+                questionId,
+                optionValue
+            }).then((data) => {
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error)
+                    reject('no question found!')
+                })
+        })
+
+        try {
+            return await promise
+        } catch (e) {
+            return Promise.resolve(e)
+        }
+    }
+
+    const assignCorrectAnswer = async (questionId,correctAnswer) => {
+        console.log(examId)
+        const promise = new Promise((resolve, reject) => {
+            axios.post('http://localhost:8080/set-answer-key', {
+                questionId,
+                correctAnswer
+            }).then((data) => {
+                resolve(data.data)
+            })
+                .catch((error) => {
+                    console.log(error)
+                    reject('no answer key found!')
                 })
         })
 
