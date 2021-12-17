@@ -54,17 +54,27 @@ function  QuizBody(props) {
     const [checkboxText, setCheckboxText] = React.useState('');
     const [point,setPoint] = React.useState(0);
     const setTrueFalseOptions = () =>{
-        let questionObject = props.questions[props.id - 1]
+        let deepCopy = [...props.questions]
+        let questionObject = deepCopy[props.id - 1]
         questionObject["options"] = ['True','False']
-        props.questions[props.id - 1] = questionObject
+        deepCopy[props.id - 1] = questionObject;
+        props.setQuestionArray(deepCopy)
+
     }
     const handleQuestionType = (event) => {
         setSelectedType(event.target.value);
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
         }else {
-            let questionObject = props.questions[props.id - 1]
-            questionObject["QuestionType"] = event.target.value
+            let deepCopy = [...props.questions]
+            let questionObject = deepCopy[props.id - 1]
+            questionObject["QuestionType"] = event.target.value;
+            deepCopy[props.id - 1] = questionObject;
+            props.setQuestionArray(deepCopy)
+        }
+
+        if (event.target.value == 5){
+            setTrueFalseOptions()
         }
 
         if (event.target.value == 5){
@@ -77,17 +87,23 @@ function  QuizBody(props) {
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id,WhoCanSee: event.target.value})
         }else {
-            let questionObject = props.questions[props.id - 1]
-            questionObject["WhoCanSee"] = event.target.value
+            let deepCopy = [...props.questions]
+            let questionObject = deepCopy[props.id - 1]
+            questionObject["WhoCanSee"] = event.target.value;
+            deepCopy[props.id - 1] = questionObject;
+            props.setQuestionArray(deepCopy)
         }
     }
     const appendQuestion = (e) =>{
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
         }else {
-            let questionObject = props.questions[props.id - 1]
+            let deepCopy = [...props.questions]
+            let questionObject = deepCopy[props.id - 1]
             questionObject["questionText"] = e.target.value
-            props.questions[props.id - 1] = questionObject
+            deepCopy[props.id - 1] = questionObject
+            props.setQuestionArray(deepCopy)
+
         }
     }
     const setOptionText = (e) =>{
@@ -100,9 +116,12 @@ function  QuizBody(props) {
     const addOption = (e) => {
         if (options.length < 4) {
             setOptions([...options, addOptionText]);
-            let questionObject = props.questions[props.id - 1]
+            let deepCopy = [...props.questions]
+            let questionObject = deepCopy[props.id - 1]
             questionObject["options"] = [...options, addOptionText]
-            props.questions[props.id - 1] = questionObject
+            deepCopy[props.id - 1] = questionObject;
+            props.setQuestionArray(deepCopy)
+
         }else
             toast("4 options maximum")
 
@@ -111,18 +130,23 @@ function  QuizBody(props) {
     const handleCheckBoxOptions = (e) => {
 
         setCheckbox([...checkbox,checkboxText])
-        let questionObject = props.questions[props.id - 1]
+        let deepCopy = [...props.questions]
+        let questionObject = deepCopy[props.id - 1]
         questionObject["options"] = [...checkbox,checkboxText]
-        props.questions[props.id - 1] = questionObject
+        deepCopy[props.id - 1] = questionObject;
+        props.setQuestionArray(deepCopy)
 
     }
 
     const addMatchingOptions = (e) =>{
         if(!matchingOptions.includes(matchingOptionText)) {
             setMatchingOptions([...matchingOptions, matchingOptionText])
-            let questionObject = props.questions[props.id - 1]
+            let deepCopy = [...props.questions]
+            let questionObject = deepCopy[props.id - 1]
             questionObject["options"] = [...matchingOptions, matchingOptionText]
-            props.questions[props.id - 1] = questionObject
+            props.questions[props.id - 1] = questionObject;
+            deepCopy[props.id - 1] = questionObject;
+            props.setQuestionArray(deepCopy)
         }else
             toast.info("you already have this option in your list")
     }
@@ -131,10 +155,11 @@ function  QuizBody(props) {
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
         }else {
-            let questionObject = props.questions[props.id - 1]
+            let deepCopy = [...props.questions]
+            let questionObject = deepCopy[props.id - 1]
             questionObject["points"] = parseInt(e.target.value);
-            props.questions[props.id - 1] = questionObject
-            console.log(questionObject)
+            deepCopy[props.id - 1] = questionObject;
+            props.setQuestionArray(deepCopy)
 
         }
     }
@@ -330,8 +355,8 @@ const mapDispatchToProps = dispatch => {
     return {
         appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
             payload : {question}}),
-        setQuestionArray: (questionAr) => dispatch({type:Actions.SET_QUESTION_ARRAY,
-            payload : {questionAr}})
+        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_NEW_QUESTION_ARRAY,
+            payload : {newQuestionArray}})
 
     }
 }
