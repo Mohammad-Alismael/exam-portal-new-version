@@ -5,7 +5,9 @@ import index from "@mui/material/darkScrollbar";
 import CircularProgress from '@mui/material/CircularProgress';
 import Mcq from "../Components/QuestionsPreview/Mcq";
 import Text from "../Components/QuestionsPreview/Text";
-
+import Truth from "../Components/QuestionsPreview/Truth";
+import CheckBoxComp from "../Components/QuestionsPreview/CheckBoxComp";
+import Matching from "../Components/QuestionsPreview/Matching";
 function PreviewExam(props) {
     const {examId} = useParams();
     const [questions,setQuestions] = React.useState([]);
@@ -114,6 +116,27 @@ function PreviewExam(props) {
                     questionText={"lololol"}
                     points={15}
                     options={[]}
+                    isActive={true}
+                    whoCanSee={2}
+                />
+                <Truth
+                    questionText={"lololol"}
+                    points={15}
+                    options={['True','False']}
+                    isActive={true}
+                    whoCanSee={2}
+                />
+                {/*<CheckBoxComp*/}
+                {/*    questionText={"lololol checkbox"}*/}
+                {/*    points={15}*/}
+                {/*    options={['options','ahmed','mamadd','ffff']}*/}
+                {/*    isActive={true}*/}
+                {/*    whoCanSee={2}*/}
+                {/*/>*/}
+                <Matching
+                    questionText={"this is matching question"}
+                    points={15}
+                    options={['True','False','fff']}
                     isActive={true}
                     whoCanSee={2}
                 />
