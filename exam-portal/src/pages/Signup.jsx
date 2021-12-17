@@ -87,7 +87,7 @@ const theme2 = createTheme({
 })
 
 
-function Signup() {
+function Signup(props) {
     const classes = useStyles();
     const [type, setType] = React.useState('');
     const [username,setUsername] = useState('');
@@ -104,11 +104,13 @@ function Signup() {
                 emailId: email,
                 roleId: type
             }).then((res) => {
-                props.setUserId(res.data[0]['userId']);
+                console.log(res.data)
+                props.setUserId(res.data['userId']);
                 props.setUsername(username);
-                props.setRoleId(res.data[0]['roleId']);
+                props.setRoleId(res.data['roleId']);
                 navigate("/course1");
             }).catch((error) => {
+                console.log(error)
                 if (error.response.status == 409)
                     toast.warn("username already taken")
                 else
