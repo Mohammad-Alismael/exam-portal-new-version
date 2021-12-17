@@ -34,16 +34,16 @@ const useStyles = makeStyles((theme) => ({
 function QuestionHeader(props) {
     const classes = useStyles();
     return (
-
-            <Grid container spacing={2}>
+            <>
                 <Grid xs={4} item>
-                    <TextField id="filled-basic"
-                               label="Question text"
-                               size="small"
-                               value={props.questionText}
-                               fullWidth
-                               // onChange={appendQuestion}
-                               variant="standard" />
+                    <TextField
+                        id="filled-basic"
+                        label="Question text"
+                        size="small"
+                        value={props.questionText}
+                        fullWidth
+                        // onChange={appendQuestion}
+                        variant="standard" />
 
                 </Grid>
                 {/*<ImageIcon style={{ height: '40px', width: '40px',margin: '20px 5px',cursor: "pointer" }}/>*/}
@@ -53,6 +53,7 @@ function QuestionHeader(props) {
                         <Select
                             labelId="type"
                             id="type"
+                            disabled={true}
                             value={props.selectedType}
                             label="Question type"
                             // onChange={handleQuestionType}
@@ -81,8 +82,8 @@ function QuestionHeader(props) {
                     </FormControl>
                 </Grid>
                 <Grid xs={2} item>
+                    <FormControl fullWidth variant="standard" >
                     <TextField
-                        className={classes.dropDown}
                         type="number"
                         fullWidth
                         value={props.points}
@@ -90,9 +91,9 @@ function QuestionHeader(props) {
                         variant="standard"
                         inputProps={{ min: 1, max: 100 }}
                         label={"points"}/>
+                    </FormControl>
                 </Grid>
-            </Grid>
-        </Paper>
+            </>
         )
 
 }

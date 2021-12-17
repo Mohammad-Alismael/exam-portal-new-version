@@ -3,6 +3,8 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import index from "@mui/material/darkScrollbar";
 import CircularProgress from '@mui/material/CircularProgress';
+import Mcq from "../Components/QuestionsPreview/Mcq";
+import Text from "../Components/QuestionsPreview/Text";
 
 function PreviewExam(props) {
     const {examId} = useParams();
@@ -59,7 +61,11 @@ function PreviewExam(props) {
     const get = async (data) => {
         for (let i = 0; i < data.length; i++) {
             const options = await getQuestionOptions(data[i].questionId);
-            data[i]['options'] = options
+            const optionValue = []
+            for (let j = 0; j < options.length; j++) {
+                optionValue.push(options[j]['optionValue'])
+            }
+            data[i]['options'] = optionValue
         }
         return data
     }
@@ -68,7 +74,8 @@ function PreviewExam(props) {
         getExamQuestions().then((data)=>{
             console.log(data)
             get(data).then((data)=>{
-                setQuestions(data)
+                console.log(data)
+                setQuestions([...data])
                 setIsLoading(false)
             })
         })
@@ -83,9 +90,33 @@ function PreviewExam(props) {
                 this is exam preview for {examId}
                 {
                     questions.map((val,index)=>{
-                        return <p>{val.questionText}</p>
+                        console.log(val.questionType)
+                        if (val.questionType === 1){
+                            return <Mcq
+                                questionText={val.questionText}
+                                points={val.points}
+                                options={val.options}
+                                isActive={val.isActive}
+                                whoCanSee={val.whoCanSee}
+                            />
+                        }else {
+                            return <Text
+                                questionText={val.questionText}
+                                points={val.points}
+                                options={val.options}
+                                isActive={val.isActive}
+                                whoCanSee={val.whoCanSee}
+                            />
+                        }
                     })
                 }
+                <Text
+                    questionText={"lololol"}
+                    points={15}
+                    options={[]}
+                    isActive={true}
+                    whoCanSee={2}
+                />
             </div>
         );
     }
