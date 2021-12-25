@@ -11,6 +11,7 @@ import Logout from "./pages/Logout";
 import React from "react";
 import PreviewExam from "./pages/PreviewExam";
 import ExamStudent from "./pages/ExamStudent";
+import Invitation from "./pages/Invitation";
 // import Home from "./pages/Home";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <Route exact path="/course1" element={<Course1/>}/>
       <Route exact path="/preview/:examId" element={<PreviewExam/>}/>
       <Route exact path="/exam/:examId" element={<ExamStudent/>}/>
+      <Route exact path="/invitation/:invitationHash" element={<Invitation />}/>
       <Route exact path="/quiz" element={<Quiz/>}/>
     </Routes>
     </div>
