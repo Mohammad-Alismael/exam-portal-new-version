@@ -7,6 +7,8 @@ import classes from "../img/classes.jpg";
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import {useNavigate} from "react-router-dom";
 import moment from 'moment'
+import {toast} from "react-toastify";
+import {connect} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -25,7 +27,15 @@ function Exam (props){
     const classes = useStyles();
     const navigate = useNavigate();
     const redirect = (e) => {
-        navigate(`/preview/${props.examId}`);
+        if (props.user.role_id == 1) {
+            navigate(`/preview/${props.examId}`);
+        }else {
+
+            if (props.endingAt > Date.now())
+                navigate(`/exam/${props.examId}`);
+            else
+                toast.info("you are too late to take this exam!")
+        }
     }
     return (
         <Paper elevation={5} className={classes.container} onClick={redirect}>
@@ -49,5 +59,9 @@ function Exam (props){
 }
 
 Exam.propTypes = {};
-
-export default Exam;
+const mapStateToProps = state => {
+    return {
+        user : state.UserReducer,
+    }
+}
+export default connect(mapStateToProps,null)(Exam);
