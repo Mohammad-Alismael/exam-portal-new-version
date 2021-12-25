@@ -35,6 +35,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
 import Exam from "../Components/Exam";
 import useClipboard from 'react-hook-clipboard'
+import {getTableSortLabelUtilityClass} from "@mui/material";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -132,6 +133,16 @@ function Course1(props) {
         const Announcements = await axios.get(`http://localhost:8080/get-announcements?id=${props.user.user_id}`)
         setAnnouncements(Announcements.data)
     }
+    const loadAnnouncementsForStudents = async () => {
+        const Announcements = await axios.post('http://localhost:8080/get-announcement-student-id', {
+            studentId: props.user.user_id
+        })
+        console.log(Announcements)
+        Announcements.data.map((val,index)=>{
+            console.log(val[0],val[1],val[2])
+            setAnnouncements([...announcements,{instructorId:val[0],announcementText:val[1],createdAt:val[2]}])
+        })
+    }
     const getClassroom = async () => {
         const promise = new Promise((resolve, reject) => {
             axios.post('http://localhost:8080/get-class-students', {
@@ -174,8 +185,10 @@ function Course1(props) {
         }
     }
     useEffect(()=>{
-
-        loadAnnouncements()
+        if (props.user.role_id == 1)
+            loadAnnouncements()
+        else
+            loadAnnouncementsForStudents()
 
         getClassroom().then((data)=>{
             console.log('classroom =>',data)
@@ -271,7 +284,7 @@ function Course1(props) {
                                                     />
                                     })
                                 }
-                                <Button
+                                {props.user.role_id == 1 ? <Button
                                     variant="contained"
                                     id="basic-button"
                                     aria-controls="basic-menu"
@@ -281,7 +294,7 @@ function Course1(props) {
                                 >
                                     <AddIcon />
                                     Dashboard
-                                </Button>
+                                </Button> : null }
                                 <Menu
                                     id="basic-menu"
                                     anchorEl={anchorEl}
