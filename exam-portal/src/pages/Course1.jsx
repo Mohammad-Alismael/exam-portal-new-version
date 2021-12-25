@@ -163,6 +163,24 @@ function Course1(props) {
         }
     }
 
+    const getClassRoomForStudents = async () => {
+        const classroom1 = await axios.post('http://localhost:8080/get-instructor-id-from-student-id', {
+            studentId: props.user.user_id
+        })
+
+        const instructorId = classroom1.data['instructorId']
+        console.log(instructorId)
+        const classroomStudents = await axios.post('http://localhost:8080/get-class-students', {
+            instructorId
+        })
+        console.log(classroomStudents.data)
+        classroomStudents.data.map((val,index)=>{
+            if (val != null){
+                setClassroom([...classroom,val])
+            }
+        })
+    }
+
     const getExamsList = async () => {
         console.log(props.user.user_id)
         const promise = new Promise((resolve, reject) => {
@@ -207,17 +225,19 @@ function Course1(props) {
                 setExams(data)
                 setIsLoading(false)
             })
+            getClassroom().then((data)=>{
+                console.log('classroom =>',data)
+                setClassroom(data)
+            })
         }
         else{
             loadAnnouncementsForStudents()
             getExamListForStudents()
+            getClassRoomForStudents()
         }
 
 
-        getClassroom().then((data)=>{
-            console.log('classroom =>',data)
-            setClassroom(data)
-        })
+
 
 
 
