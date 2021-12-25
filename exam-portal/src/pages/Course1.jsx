@@ -184,22 +184,42 @@ function Course1(props) {
             return Promise.resolve(e)
         }
     }
+    const getExamListForStudents = async () => {
+        const examss = await axios.post('http://localhost:8080/get-exam-id-student-id', {
+            studentId: props.user.user_id
+        })
+        examss.data.map((val,index)=>{
+            // console.log(val)
+            setExams([...exams,{
+                title: val[1],
+                examId:val[0],
+                points: val[2],
+                startingAt: val[3],
+                endingAt: val[4]
+            }])
+        })
+    }
     useEffect(()=>{
-        if (props.user.role_id == 1)
+        if (props.user.role_id == 1){
             loadAnnouncements()
-        else
+            getExamsList().then((data)=>{
+                console.log('Exams =>',data)
+                setExams(data)
+                setIsLoading(false)
+            })
+        }
+        else{
             loadAnnouncementsForStudents()
+            getExamListForStudents()
+        }
+
 
         getClassroom().then((data)=>{
             console.log('classroom =>',data)
             setClassroom(data)
         })
 
-        getExamsList().then((data)=>{
-            console.log('Exams =>',data)
-            setExams(data)
-            setIsLoading(false)
-        })
+
 
     },[])
 
