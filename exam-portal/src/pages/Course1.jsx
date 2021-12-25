@@ -34,6 +34,7 @@ import {Title} from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
 import Exam from "../Components/Exam";
+import useClipboard from 'react-hook-clipboard'
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -99,6 +100,7 @@ function Course1(props) {
     const [exams,setExams] = React.useState([]);
     const [announcementText,setAnnouncementText] = React.useState('');
     const [classroom,setClassroom] = React.useState([]);
+    const [clipboard, copyToClipboard] = useClipboard()
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -187,6 +189,13 @@ function Course1(props) {
         })
 
     },[])
+
+    const copyInvitationLink = () =>{
+        const textBeforeHash = `${props.user.user_id}:${props.user.username}`;
+        const b64 = Buffer.from(textBeforeHash).toString('base64');
+        copyToClipboard("http://localhost:3000/invitation/"+b64)
+        toast.info("copied to clipboard");
+    }
     return (
         <div>
             <ThemeProvider theme={theme2}>
@@ -229,7 +238,7 @@ function Course1(props) {
                                     <PublishIcon />
                                 </IconButton>
                                 <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-                                <MoreVertIcon/>
+                                <MoreVertIcon onClick={copyInvitationLink} style={{courser: 'pointer'}}/>
                             </Paper>:null}
                             <Grid>
                                 {

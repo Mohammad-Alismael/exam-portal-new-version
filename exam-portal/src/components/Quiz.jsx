@@ -33,10 +33,7 @@ import {connect} from "react-redux";
 import * as Actions from '../store/actions';
 import {useEffect} from "react";
 import axios from "axios";
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
 import {useNavigate} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
