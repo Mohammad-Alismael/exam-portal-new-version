@@ -146,15 +146,15 @@ function ExamStudent(props) {
         })
     },[])
 
-    const chooseBody = (questionType,index,options) => {
-        if (questionType == 1){
-            return  <Mcq key={index+1} options={options}/>
-        }else if(questionType == 2){
-            return <Text key={index+1}/>;
-        }else if(questionType == 3){
-            return <CheckboxComp key={index+1} options={options}/>
+    const chooseBody = (val,index) => {
+        if (val.questionType == 1){
+            return  <Mcq key={index+1} questionId={val.questionId} options={val.options}/>
+        }else if(val.questionType == 2){
+            return <Text key={index+1} questionId={val.questionId}/>;
+        }else if(val.questionType == 3){
+            return <CheckboxComp key={index+1} questionId={val.questionId} options={val.options}/>
         }else {
-            return <Truth/>
+            return <Truth questionId={val.questionId}/>
         }
     }
     if (isLoading){
@@ -189,12 +189,13 @@ function ExamStudent(props) {
                                     key={index + 1}
                                     questionText={val.questionText}
                                     points={val.points}
-                                    body={chooseBody(val.questionType, index, val.options)}/>
+                                    body={chooseBody(val, index)}/>
                             }else {
                                 return <Matching
                                     key={index+1}
                                     options={val.options}
                                     questionText={val.questionText}
+                                    questionId={val.questionId}
                                     points={val.points}
                                 />;
                             }

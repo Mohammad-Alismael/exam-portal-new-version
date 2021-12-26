@@ -3,6 +3,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {toast} from "react-toastify";
+import * as Actions from "../../store/actions";
+import {connect} from "react-redux";
 function CheckboxComp(props) {
     const [selectedAnswer,setSelectedAnswer] = React.useState([]);
     const handleChange = (e) => {
@@ -14,7 +16,7 @@ function CheckboxComp(props) {
         }else {
             setSelectedAnswer([...selectedAnswer,a])
         }
-        
+
         toast.info(e.target.value)
     }
 
@@ -32,5 +34,15 @@ function CheckboxComp(props) {
         </FormGroup>
     );
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        setMaxNumberQuestions: (questions) => dispatch({type:Actions.SET_MAX_QUESTIONS,
+            payload : {questions}}),
+        setTotalPoints : (points) => dispatch({type: Actions.SET_TOTAL_POINTS,
+            payload : {points}}),
+        emptyQuestions : (questions) => dispatch({type: Actions.SET_QUESTION_ARRAY,
+            payload : {questions}})
 
-export default CheckboxComp;
+    }
+}
+export default connect(null,mapDispatchToProps)(CheckboxComp);

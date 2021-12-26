@@ -11,10 +11,10 @@ const ExamStudentReducer  = (state = initialState, action) => {
                 answeredQuestions: []
             }
 
-        case actionTypes.SET_NEW_QUESTION_ARRAY:
+        case actionTypes.SET_NEW_ANSWER_QUESTION_ARRAY:
             return {
                 ...state,
-                questions: action.payload.newAnswerQuestionArray
+                answeredQuestions: action.payload.questions
             }
 
         default:
