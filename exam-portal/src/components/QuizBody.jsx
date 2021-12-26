@@ -201,7 +201,7 @@ function  QuizBody(props) {
                             >
                                 <MenuItem value={1}>MCQs</MenuItem>
                                 <MenuItem value={2}>Text</MenuItem>
-                                {/*<MenuItem value={3}>Checkbox</MenuItem>*/}
+                                {/*<MenuItem value={3}>CheckboxComp</MenuItem>*/}
                                 <MenuItem value={4}>Matching</MenuItem>
                                 <MenuItem value={5}>True/False</MenuItem>
                             </Select>
@@ -275,7 +275,7 @@ function  QuizBody(props) {
                             //     {
                             //         checkbox.map((val,index)=>{
                             //             return  <Grid item xs={6}>
-                            //                 <FormControlLabel key={index} control={<Checkbox />} label={val} />
+                            //                 <FormControlLabel key={index} control={<CheckboxComp />} label={val} />
                             //             </Grid>
                             //         })
                             //     }

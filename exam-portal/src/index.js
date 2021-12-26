@@ -8,10 +8,12 @@ import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
 import UserReducer from "./store/reducers/UserReducer";
+import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
 import {BrowserRouter} from "react-router-dom";
 const rootReducer = combineReducers({
     ExamReducer,
-    UserReducer
+    UserReducer,
+    ExamStudentReducer
 });
 
 function saveToLocalStorage(store) {

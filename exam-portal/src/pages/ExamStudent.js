@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import Text from "../Components/QuestionBodyStudents/Text";
 import Truth from "../Components/QuestionBodyStudents/Truth";
 import Matching from "../Components/QuestionBodyStudents/Matching";
+import CheckboxComp from "../Components/QuestionBodyStudents/CheckboxComp";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -151,7 +152,7 @@ function ExamStudent(props) {
         }else if(questionType == 2){
             return <Text key={index+1}/>;
         }else if(questionType == 3){
-
+            return <CheckboxComp key={index+1} options={options}/>
         }else {
             return <Truth/>
         }

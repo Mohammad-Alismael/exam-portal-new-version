@@ -66,14 +66,12 @@ function Matching(props) {
                     </Grid>
                     <Grid item xs={8} fullwidth sx={{ ml: 1, flex: 1 }}
                           style={{display:'flex',justifyContent:'start',justifyItems:'center',alignItems:'center'}}>
-                        <item>
+                        {/*<item>*/}
                             <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
                                 {props.questionText}
                             </Typography>
-                        </item>
+                        {/*</item>*/}
                     </Grid>
-
-
 
               </Grid>
           </Paper>
