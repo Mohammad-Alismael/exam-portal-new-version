@@ -31,10 +31,10 @@ function Exam (props){
             navigate(`/preview/${props.examId}`);
         }else {
 
-            if (props.endingAt > Date.now())
+            // if (props.endingAt > Date.now())
                 navigate(`/exam/${props.examId}`);
-            else
-                toast.info("you are too late to take this exam!")
+            // else
+            //     toast.info("you are too late to take this exam!")
         }
     }
     return (
@@ -45,7 +45,7 @@ function Exam (props){
                     <b>{props.examTitle}</b>
                 </Typography>
             </div>
-            <div>
+            <div style={{display:'inline-flex',alignItems: 'center',flexDirection:'column',marginTop:'10px'}}>
             <Typography variant="subtitle1">
                 {moment(props.startingAt).format('MMMM Do YYYY, h:mm:ss a')}
             </Typography>

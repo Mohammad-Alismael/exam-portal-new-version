@@ -11,6 +11,10 @@ import Box from "@mui/material/Box";
 import QuizHeaderStudent from "../Components/QuizHeaderStudent";
 import Mcq from "../Components/QuestionBodyStudents/Mcq";
 import CircularProgress from "@mui/material/CircularProgress";
+import {connect} from "react-redux";
+import Text from "../Components/QuestionBodyStudents/Text";
+import Truth from "../Components/QuestionBodyStudents/Truth";
+import Matching from "../Components/QuestionBodyStudents/Matching";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -73,14 +77,15 @@ function ExamStudent(props) {
     const getExamQuestions = async () => {
         setIsLoading(true)
         const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/list-questions', {
-                examId
+            axios.post('http://localhost:8080/list-questions-randomly', {
+                examId,
+                whoCanSee: props.user.role_id
             }).then((data) => {
                 resolve(data.data)
             })
                 .catch((error) => {
                     console.log(error)
-                    reject('no exam questions found!')
+                    reject([])
                 })
         })
 
@@ -139,6 +144,18 @@ function ExamStudent(props) {
 
         })
     },[])
+
+    const chooseBody = (questionType,index,options) => {
+        if (questionType == 1){
+            return  <Mcq key={index+1} options={options}/>
+        }else if(questionType == 2){
+            return <Text key={index+1}/>;
+        }else if(questionType == 3){
+
+        }else {
+            return <Truth/>
+        }
+    }
     if (isLoading){
         return <CircularProgress />
     }else {
@@ -166,10 +183,20 @@ function ExamStudent(props) {
                 <Box sx={{mt: 10}}>
                     {
                         questions.map((val,index)=>{
-                            return <QuizHeaderStudent
+                            if (val.questionType != 4 ) {
+                                return <QuizHeaderStudent
+                                    key={index + 1}
                                     questionText={val.questionText}
                                     points={val.points}
-                                    body={<Mcq options={val.options}/>}/>
+                                    body={chooseBody(val.questionType, index, val.options)}/>
+                            }else {
+                                return <Matching
+                                    key={index+1}
+                                    options={val.options}
+                                    questionText={val.questionText}
+                                    points={val.points}
+                                />;
+                            }
                         })
                     }
 
@@ -179,4 +206,10 @@ function ExamStudent(props) {
     }
 }
 
-export default ExamStudent;
+const mapStateToProps = state => {
+    return {
+        user : state.UserReducer,
+    }
+}
+
+export default connect(mapStateToProps,null)(ExamStudent);
