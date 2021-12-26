@@ -101,7 +101,8 @@ function Course1(props) {
     const [exams,setExams] = React.useState([]);
     const [announcementText,setAnnouncementText] = React.useState('');
     const [classroom,setClassroom] = React.useState([]);
-    const [clipboard, copyToClipboard] = useClipboard()
+    const [clipboard, copyToClipboard] = useClipboard();
+    const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -137,7 +138,7 @@ function Course1(props) {
         const Announcements = await axios.post('http://localhost:8080/get-announcement-student-id', {
             studentId: props.user.user_id
         })
-        console.log(Announcements)
+
         Announcements.data.map((val,index)=>{
             console.log(val[0],val[1],val[2])
             setAnnouncements([...announcements,{instructorId:val[0],announcementText:val[1],createdAt:val[2]}])
@@ -168,8 +169,12 @@ function Course1(props) {
             studentId: props.user.user_id
         })
 
-        const instructorId = classroom1.data['instructorId']
-        console.log(instructorId)
+        const instructorId = classroom1.data['instructorId'];
+        const instructorInfo = await axios.post('http://localhost:8080/get-user-by-id', {
+            userId: instructorId
+        })
+        console.log(instructorInfo)
+        setAdminUsername(instructorInfo.data['username'])
         const classroomStudents = await axios.post('http://localhost:8080/get-class-students', {
             instructorId
         })
@@ -363,8 +368,7 @@ function Course1(props) {
                                         Teachers
                                     </Typography>
                                     </Grid>
-                                <Participants username={props.user.username} />
-
+                                <Participants  username={adminUsername}/>
                                 </Grid>
                                 <Grid
                                     container
