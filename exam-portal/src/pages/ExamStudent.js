@@ -95,6 +95,11 @@ function ExamStudent(props) {
         } catch (e) {
             return Promise.resolve(e)
         }
+        // const examQuestions = await axios.post('http://localhost:8080/list-questions-randomly', {
+        //             examId,
+        //             whoCanSee: props.user.role_id
+        //         })
+        // examQuestions.data.map((val,index))
     }
 
     const getQuestionOptions = async (questionId) => {
@@ -129,32 +134,40 @@ function ExamStudent(props) {
         }
         return data
     }
-    useEffect( ()=>{
-        getExamInfo().then((data)=>{
-            console.log(data)
-            setExamTitle(data['title'])
-            setEndingAt(moment(data['endingAt']).format('h:mm a'));
-            getExamQuestions().then((data)=>{
-                console.log(data)
-                get(data).then((data)=>{
-                    console.log(data)
-                    setQuestions([...data])
-                    setIsLoading(false)
-                })
-            })
-
+    const getExamQuestionsv2 = async () => {
+        const questions = await axios.post('http://localhost:8080/list-questions-randomly', {
+            examId,
+            whoCanSee: props.user.role_id
         })
+        setQuestions(questions.data)
+        console.log(questions.data)
+    }
+    useEffect( ()=>{
+        // getExamInfo().then((data)=>{
+        //     console.log(data)
+        //     setExamTitle(data['title'])
+        //     setEndingAt(moment(data['endingAt']).format('h:mm a'));
+        //     getExamQuestions().then((data)=>{
+        //         console.log(data)
+        //         get(data).then((data)=>{
+        //             console.log(data)
+        //             setQuestions([...data])
+        //             setIsLoading(false)
+        //         })
+        //     })
+        getExamQuestionsv2();
+        // })
     },[])
 
     const chooseBody = (val,index) => {
-        if (val.questionType == 1){
-            return  <Mcq key={index+1} questionId={val.questionId} options={val.options}/>
-        }else if(val.questionType == 2){
-            return <Text key={index+1} questionId={val.questionId}/>;
-        }else if(val.questionType == 3){
-            return <CheckboxComp key={index+1} questionId={val.questionId} options={val.options}/>
+        if (val['question'].questionType == 1){
+            return  <Mcq key={index+1} questionId={val['question'].questionId} options={val['questionOptions']}/>
+        }else if(val['question'].questionType == 2){
+            return <Text key={index+1} questionId={val['question'].questionId}/>;
+        }else if(val['question'].questionType == 3){
+            return <CheckboxComp key={index+1} questionId={val['question'].questionId} options={val['questionOptions']}/>
         }else {
-            return <Truth questionId={val.questionId}/>
+            return <Truth questionId={val['question'].questionId}/>
         }
     }
     if (isLoading){
@@ -163,9 +176,7 @@ function ExamStudent(props) {
         return (
             <>
                 <AppBar
-                    sx={{position: 'fixed', bgcolor: "#ffd05e"}}
-
-                >
+                    sx={{position: 'fixed', bgcolor: "#ffd05e"}}>
                     <Toolbar>
                         <Typography style={{color: "black"}} sx={{ml: 2, flex: 1}} variant="h6" component="div">
                             {examTitle}
@@ -174,7 +185,6 @@ function ExamStudent(props) {
                             ends at {endingAt}
                         </Typography>
                         <Button style={{ textTransform: 'none' }}
-                                color="inherit"
                                 // onClick={handleClose}
                         >
                             Submit
@@ -184,19 +194,20 @@ function ExamStudent(props) {
                 <Box sx={{mt: 10}}>
                     {
                         questions.map((val,index)=>{
-                            if (val.questionType != 4 ) {
+                            console.log(val)
+                            if (val['question'].questionType != 4 ) {
                                 return <QuizHeaderStudent
                                     key={index + 1}
-                                    questionText={val.questionText}
-                                    points={val.points}
+                                    questionText={val['question'].questionText}
+                                    points={val['question'].points}
                                     body={chooseBody(val, index)}/>
                             }else {
                                 return <Matching
                                     key={index+1}
-                                    options={val.options}
-                                    questionText={val.questionText}
-                                    questionId={val.questionId}
-                                    points={val.points}
+                                    options={val['questionOptions']}
+                                    questionText={val['question'].questionText}
+                                    questionId={val['question'].questionId}
+                                    points={val['question'].points}
                                 />;
                             }
                         })
@@ -211,6 +222,7 @@ function ExamStudent(props) {
 const mapStateToProps = state => {
     return {
         user : state.UserReducer,
+        examStudent: state.ExamStudentReducer
     }
 }
 

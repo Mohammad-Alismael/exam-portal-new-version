@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import {makeStyles} from "@material-ui/core/styles";
+import * as Actions from "../../store/actions";
+import {connect} from "react-redux";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -32,6 +34,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Matching(props) {
     const classes = useStyles();
+    const handleChange = (e) => {
+        // [{questionId:"",userAnswer:""}]
+        const deepCopy = [...props.examStudent.answeredQuestions]
+        const questionFound = deepCopy.findIndex(function(item,index){
+            if (item.questionId === props.questionId)
+                return true;
+        })
+        console.log(questionFound)
+        if(questionFound == -1){
+            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: e.target.value})
+            props.setAnsweredQuestionsArray(deepCopy)
+        }else {
+            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer: e.target.value}
+            props.setAnsweredQuestionsArray(deepCopy)
+        }
+
+    }
     return (
         <>
           <Paper elevation={3} className={classes.paperStyle}>
@@ -46,18 +65,19 @@ function Matching(props) {
                   </Grid>
 
                     <Grid item xs={4} fullwidth style={{height:'40px'}}>
-                          <FormControl fullWidth variant="standard">
+                          <FormControl fullWidth variant="standard" >
                               <Select
                                   labelId="type"
                                   id="type"
                                   label="Question Options"
+                                  onChange={handleChange}
                               >
                                     {
                                         props.options.map((val,index)=>{
                                             return <MenuItem
                                                 key={index+1}
                                                 value={index}
-                                            >{val}</MenuItem>
+                                            >{val['optionValue']}</MenuItem>
                                         })
                                     }
 
@@ -66,11 +86,9 @@ function Matching(props) {
                     </Grid>
                     <Grid item xs={8} fullwidth sx={{ ml: 1, flex: 1 }}
                           style={{display:'flex',justifyContent:'start',justifyItems:'center',alignItems:'center'}}>
-                        {/*<item>*/}
                             <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
                                 {props.questionText}
                             </Typography>
-                        {/*</item>*/}
                     </Grid>
 
               </Grid>
@@ -78,5 +96,17 @@ function Matching(props) {
         </>
     );
 }
+const mapStateToProps = state => {
+    return {
+        user : state.UserReducer,
+        examStudent: state.ExamStudentReducer
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        setAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_NEW_ANSWER_QUESTION_ARRAY,
+            payload : {questions}})
 
-export default Matching;
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Matching);
