@@ -7,42 +7,76 @@ import * as Actions from "../../store/actions";
 import {connect} from "react-redux";
 function CheckboxComp(props) {
     const [selectedAnswer,setSelectedAnswer] = React.useState([]);
-    const handleChange = (e) => {
-        const a = parseInt(e.target.value)
-        if (selectedAnswer.includes(a)){
-            const deepCopy = [...selectedAnswer]
-            deepCopy.splice(deepCopy.indexOf(a))
-            setSelectedAnswer(deepCopy)
-        }else {
-            setSelectedAnswer([...selectedAnswer,a])
-        }
 
-        toast.info(e.target.value)
+    const handleOnChangePart2 = () =>{
+        const deepCopy = [...props.examStudent.answeredQuestions]
+        const questionFound = deepCopy.findIndex(function(item,index){
+            if (item.questionId === props.questionId)
+                return true;
+        })
+
+
+        console.log(JSON.parse(JSON.stringify(getIndex())))
+        console.log(JSON.parse(JSON.stringify(getIndex())))
+        if(questionFound == -1){
+
+            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: [...getIndex()]})
+            props.setAnsweredQuestionsArray(deepCopy)
+        }else {
+            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer: [...getIndex()]}
+            props.setAnsweredQuestionsArray(deepCopy)
+        }
     }
 
+    const getIndex = () => {
+        const tmp = []
+        for (let i = 0; i < props.options.length; i++) {
+            if (selectedAnswer[i]['checked']){
+                tmp.push(i)
+            }
+        }
+        return tmp
+    }
+    const handleChangev2 = (e) =>{
+        const deepCopy = [...selectedAnswer]
+        const a = parseInt(e.target.value)
+        console.log(e.target.checked)
+
+        deepCopy[a] = Object.assign(deepCopy[a],{checked:e.target.checked})
+        setSelectedAnswer([...deepCopy])
+        console.log(selectedAnswer)
+        handleOnChangePart2()
+    }
+    useEffect(()=>{
+
+        setSelectedAnswer([...props.options])
+
+    },[])
     return (
-        <FormGroup onChange={handleChange}>
+        <FormGroup>
             {
                 props.options.map((val,index)=> {
                     return (<FormControlLabel
+                        onChange={handleChangev2}
                         value={index}
                         control={<Checkbox/>}
-                        label={val} />)
+                        label={val['optionValue']} />)
                 })
             }
-            <button onClick={()=>(console.log(selectedAnswer))}>click</button>
         </FormGroup>
     );
 }
+const mapStateToProps = state => {
+    return {
+        user : state.UserReducer,
+        examStudent: state.ExamStudentReducer
+    }
+}
 const mapDispatchToProps = dispatch => {
     return {
-        setMaxNumberQuestions: (questions) => dispatch({type:Actions.SET_MAX_QUESTIONS,
-            payload : {questions}}),
-        setTotalPoints : (points) => dispatch({type: Actions.SET_TOTAL_POINTS,
-            payload : {points}}),
-        emptyQuestions : (questions) => dispatch({type: Actions.SET_QUESTION_ARRAY,
+        setAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_NEW_ANSWER_QUESTION_ARRAY,
             payload : {questions}})
 
     }
 }
-export default connect(null,mapDispatchToProps)(CheckboxComp);
+export default connect(mapStateToProps,mapDispatchToProps)(CheckboxComp);

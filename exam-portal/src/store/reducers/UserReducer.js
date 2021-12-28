@@ -3,6 +3,7 @@ import * as actionTypes from '../actions'
 const initialState = {
     user_id: 0,
     role_id: 0,
+    classroom_id:0,
     username : ""
 }
 const UserReducer  = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const UserReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 username: action.payload.username
+            }
+        case actionTypes.SET_CLASSROOM_ID:
+            return {
+                ...state,
+                classroom_id: action.payload.classroom_id
             }
         case actionTypes.SET_ROLE_ID:
             return {

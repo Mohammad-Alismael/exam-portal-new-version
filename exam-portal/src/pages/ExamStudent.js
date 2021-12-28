@@ -16,6 +16,7 @@ import Text from "../Components/QuestionBodyStudents/Text";
 import Truth from "../Components/QuestionBodyStudents/Truth";
 import Matching from "../Components/QuestionBodyStudents/Matching";
 import CheckboxComp from "../Components/QuestionBodyStudents/CheckboxComp";
+import * as Actions from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -75,65 +76,9 @@ function ExamStudent(props) {
             return Promise.resolve(e)
         }
     }
-    const getExamQuestions = async () => {
-        setIsLoading(true)
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/list-questions-randomly', {
-                examId,
-                whoCanSee: props.user.role_id
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject([])
-                })
-        })
 
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-        // const examQuestions = await axios.post('http://localhost:8080/list-questions-randomly', {
-        //             examId,
-        //             whoCanSee: props.user.role_id
-        //         })
-        // examQuestions.data.map((val,index))
-    }
 
-    const getQuestionOptions = async (questionId) => {
 
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-question-options', {
-                questionId
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no question found!')
-                })
-        })
-
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-    }
-
-    const get = async (data) => {
-        for (let i = 0; i < data.length; i++) {
-            const options = await getQuestionOptions(data[i].questionId);
-            const optionValue = []
-            for (let j = 0; j < options.length; j++) {
-                optionValue.push(options[j]['optionValue'])
-            }
-            data[i]['options'] = optionValue
-        }
-        return data
-    }
     const getExamQuestionsv2 = async () => {
         const questions = await axios.post('http://localhost:8080/list-questions-randomly', {
             examId,
@@ -141,22 +86,18 @@ function ExamStudent(props) {
         })
         setQuestions(questions.data)
         console.log(questions.data)
+        setIsLoading(false)
     }
     useEffect( ()=>{
-        // getExamInfo().then((data)=>{
-        //     console.log(data)
-        //     setExamTitle(data['title'])
-        //     setEndingAt(moment(data['endingAt']).format('h:mm a'));
-        //     getExamQuestions().then((data)=>{
-        //         console.log(data)
-        //         get(data).then((data)=>{
-        //             console.log(data)
-        //             setQuestions([...data])
-        //             setIsLoading(false)
-        //         })
-        //     })
-        getExamQuestionsv2();
-        // })
+        getExamInfo().then((data)=>{
+            console.log(data)
+            setExamTitle(data['title'])
+            setEndingAt(moment(data['endingAt']).format('h:mm a'));
+            getExamQuestionsv2();
+
+            })
+
+
     },[])
 
     const chooseBody = (val,index) => {
@@ -169,6 +110,42 @@ function ExamStudent(props) {
         }else {
             return <Truth questionId={val['question'].questionId}/>
         }
+    }
+
+    const submitExam = () => {
+        props.examStudent.answeredQuestions.map((val,index)=>{
+            console.log(val);
+            console.log(typeof val['userAnswer'] == "string")
+            if(!Array.isArray(val['userAnswer'])){
+                if(typeof val['userAnswer'] == "string"){
+                    submitQuestionAnswerText(val['questionId'],val['userAnswer'])
+                    submitQuestionAnswer(val['questionId'],-1)
+                }
+                submitQuestionAnswer(val['questionId'],val['userAnswer'])
+            }
+            else {
+                val['userAnswer'].map((val2,index)=>{
+                    submitQuestionAnswer(val['questionId'],val2)
+                })
+
+            }
+        })
+        props.resetAnsweredQuestionsArray()
+    }
+    const submitQuestionAnswer = (questionId,userAnswer) => {
+        axios.post('http://localhost:8080/set-user-answer', {
+            userId: props.user.user_id,
+            questionId,
+            userAnswer: parseInt(userAnswer)
+        })
+    }
+
+    const submitQuestionAnswerText = (questionId,userAnswer) => {
+        axios.post('http://localhost:8080/set-user-answer-text', {
+            userId: props.user.user_id,
+            qid: questionId,
+            userAnswer: userAnswer
+        })
     }
     if (isLoading){
         return <CircularProgress />
@@ -185,7 +162,7 @@ function ExamStudent(props) {
                             ends at {endingAt}
                         </Typography>
                         <Button style={{ textTransform: 'none' }}
-                                // onClick={handleClose}
+                                onClick={submitExam}
                         >
                             Submit
                         </Button>
@@ -225,5 +202,13 @@ const mapStateToProps = state => {
         examStudent: state.ExamStudentReducer
     }
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        setAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_NEW_ANSWER_QUESTION_ARRAY,
+            payload : {questions}}),
+        resetAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_ANSWER_QUESTION_ARRAY,
+            payload : {questions:[]}}),
 
-export default connect(mapStateToProps,null)(ExamStudent);
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ExamStudent);
