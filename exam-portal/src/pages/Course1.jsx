@@ -36,6 +36,9 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Exam from "../Components/Exam";
 import useClipboard from 'react-hook-clipboard'
 import {getTableSortLabelUtilityClass} from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import {useNavigate} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -102,9 +105,14 @@ function Course1(props) {
     const [announcementText,setAnnouncementText] = React.useState('');
     const [classroom,setClassroom] = React.useState([]);
     const [clipboard, copyToClipboard] = useClipboard();
+    const navigate = useNavigate();
     const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        if (newValue == 5) {
+            navigate("/courses")
+        }else {
+            setValue(newValue);
+        }
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -136,13 +144,11 @@ function Course1(props) {
     }
     const loadAnnouncementsForStudents = async () => {
         const Announcements = await axios.post('http://localhost:8080/get-announcement-student-id', {
-            studentId: props.user.user_id
+            studentId: props.user.user_id,
+            classroomId: props.user.classroom_id
         })
 
-        Announcements.data.map((val,index)=>{
-            console.log(val[0],val[1],val[2])
-            setAnnouncements([...announcements,{instructorId:val[0],announcementText:val[1],createdAt:val[2]}])
-        })
+        setAnnouncements(Announcements.data)
     }
     const getClassroom = async () => {
         const promise = new Promise((resolve, reject) => {
@@ -166,7 +172,7 @@ function Course1(props) {
 
     const getClassRoomForStudents = async () => {
         const classroom1 = await axios.post('http://localhost:8080/get-instructor-id-from-student-id', {
-            studentId: props.user.user_id
+            classroomId: props.user.classroom_id
         })
 
         const instructorId = classroom1.data['instructorId'];
@@ -176,9 +182,9 @@ function Course1(props) {
         console.log(instructorInfo)
         setAdminUsername(instructorInfo.data['username'])
         const classroomStudents = await axios.post('http://localhost:8080/get-class-students-from-student-id', {
-            studentId: props.user.user_id
+            classroomId: props.user.classroom_id
         })
-        console.log("classroom =>",classroomStudents.data)
+        console.log("classmates =>",classroomStudents.data)
         setClassroom([...classroomStudents.data])
     }
 
@@ -238,11 +244,6 @@ function Course1(props) {
             getClassRoomForStudents()
         }
 
-
-
-
-
-
     },[])
 
     const copyInvitationLink = () =>{
@@ -255,11 +256,11 @@ function Course1(props) {
         <div>
             <ThemeProvider theme={theme2}>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
-
                     <TabContext value={value}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs onChange={handleChange} centered>
                                 <TabList>
+                                    {props.user.role_id != 1 ? <Tab label="Classrooms" value="5" /> : null}
                                     <Tab label="Stream" value="1" />
                                     <Tab label="Classwork" value="2" />
                                     <Tab label="People" value="3" />
@@ -390,7 +391,6 @@ function Course1(props) {
 
                         { !isLoading ? <TabPanel value="4">Grades</TabPanel> : null}
                     </TabContext>
-
                 </Box>
             </ThemeProvider>
 
