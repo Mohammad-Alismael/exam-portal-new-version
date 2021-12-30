@@ -43,10 +43,10 @@ function Matching(props) {
         })
         console.log(questionFound)
         if(questionFound == -1){
-            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: e.target.value})
+            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: parseInt(e.target.value)})
             props.setAnsweredQuestionsArray(deepCopy)
         }else {
-            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer: e.target.value}
+            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer:parseInt(e.target.value)}
             props.setAnsweredQuestionsArray(deepCopy)
         }
 

@@ -175,15 +175,11 @@ function Course1(props) {
         })
         console.log(instructorInfo)
         setAdminUsername(instructorInfo.data['username'])
-        const classroomStudents = await axios.post('http://localhost:8080/get-class-students', {
-            instructorId
+        const classroomStudents = await axios.post('http://localhost:8080/get-class-students-from-student-id', {
+            studentId: props.user.user_id
         })
-        console.log(classroomStudents.data)
-        classroomStudents.data.map((val,index)=>{
-            if (val != null){
-                setClassroom([...classroom,val])
-            }
-        })
+        console.log("classroom =>",classroomStudents.data)
+        setClassroom([...classroomStudents.data])
     }
 
     const getExamsList = async () => {
@@ -209,7 +205,8 @@ function Course1(props) {
     }
     const getExamListForStudents = async () => {
         const examss = await axios.post('http://localhost:8080/get-exam-id-student-id', {
-            studentId: props.user.user_id
+            studentId: props.user.user_id,
+            classroomId: props.user.classroom_id
         })
         examss.data.map((val,index)=>{
             // console.log(val)
@@ -382,6 +379,7 @@ function Course1(props) {
                                     </Typography>
                                     {
                                         classroom.map((val,index)=>{
+                                            console.log(val)
                                             return <Participants username={val.username}/>
                                         })
                                     }
