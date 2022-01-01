@@ -39,6 +39,10 @@ import {getTableSortLabelUtilityClass} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import {useNavigate} from "react-router-dom";
+import { styled } from '@mui/material/styles';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import AppBar from '@mui/material/AppBar';
+import * as Actions from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -95,7 +99,15 @@ const theme2 = createTheme({
 })
 
 
-
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+    alignItems: 'flex-start',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
+    // Override media queries injected by theme.mixins.toolbar
+    '@media all': {
+        minHeight: 128,
+    },
+}));
 function Course1(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState('1');
@@ -152,7 +164,7 @@ function Course1(props) {
     }
     const getClassroom = async () => {
         const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-class-students', {
+            axios.post('http://localhost:8080/get-class-students-from-instructor', {
                 instructorId: props.user.user_id
             }).then((data) => {
                 resolve(data.data)
@@ -246,10 +258,21 @@ function Course1(props) {
 
     },[])
 
-    const copyInvitationLink = () =>{
-        const textBeforeHash = `${props.user.user_id}:${props.user.username}`;
+    const copyInvitationLink = async () => {
+        const classroom = await axios.post('http://localhost:8080/get-classroom-id-by-instructor-id', {
+            instructorId: props.user.user_id
+        })
+        let classroomId = classroom.data['id'];
+        if (classroom.data['id'] == null){
+            const classroom = await axios.post('http://localhost:8080/set-classroom-to-students', {
+                instructorId: props.user.user_id
+            })
+            classroomId = classroom.data['id'];
+        }
+        props.setClassroomId(classroomId)
+        const textBeforeHash = `${classroomId}:${props.user.username}`;
         const b64 = Buffer.from(textBeforeHash).toString('base64');
-        copyToClipboard("http://localhost:3000/invitation/"+b64)
+        copyToClipboard("http://localhost:3000/invitation/" + b64)
         toast.info("copied to clipboard");
     }
     return (
@@ -266,6 +289,7 @@ function Course1(props) {
                                     <Tab label="People" value="3" />
                                     <Tab label="Grades" value="4" />
                                 </TabList>
+                                <MoreIcon />
                             </Tabs>
                         </Box>
                         { isLoading ? <LinearProgress /> : null}
@@ -278,7 +302,6 @@ function Course1(props) {
                                     OzU
                                 </Typography>
                             </Paper>
-
                             {props.user.role_id == 1 ? <Paper elevation={5} className={classes.textPaper} sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
                                 <IconButton sx={{ p: '10px' }}>
                                     <AccountCircle color="primary" size="large" />
@@ -402,4 +425,16 @@ const mapStateToProps = state => {
         user : state.UserReducer,
     }
 }
-export default connect(mapStateToProps,null)(Course1)
+const mapDispatchToProps = dispatch => {
+    return {
+        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
+            payload : {user_id}}),
+        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
+            payload : {username}}),
+        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
+            payload : {role_id}}),
+        setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
+            payload : {classroom_id}})
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Course1)

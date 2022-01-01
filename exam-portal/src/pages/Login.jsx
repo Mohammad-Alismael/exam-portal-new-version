@@ -95,9 +95,11 @@ function Login(props) {
             username,
             password
         }).then((res)=>{
+            console.log("before setting =>",props.user.role_id)
             props.setUserId(res.data[0]['userId']);
             props.setUsername(username);
             props.setRoleId(res.data[0]['roleId']);
+            console.log("after setting =>",props.user.role_id)
             navigate("/course1");
         }).catch((error)=>{
             if(error.response.status == 400)
@@ -186,7 +188,7 @@ function Login(props) {
 }
 const mapStateToProps = state => {
     return {
-        questions : state.ExamReducer.questions,
+        user : state.UserReducer,
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -197,7 +199,6 @@ const mapDispatchToProps = dispatch => {
             payload : {username}}),
         setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
             payload : {role_id}})
-
     }
 }
-export default connect(null,mapDispatchToProps)(Login) ;
+export default connect(mapStateToProps,mapDispatchToProps)(Login);

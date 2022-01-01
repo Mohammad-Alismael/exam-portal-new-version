@@ -74,14 +74,20 @@ function Courses(props) {
                 </Toolbar>
             </AppBar>
 
-            <Grid container spacing={2} style={{ backgroundColor: '#161b22', padding: '7%',height:'100vh' }}>
+            {classrooms.length != 0 ? <Grid container spacing={2} style={{ backgroundColor: '#161b22', padding: '7%',height:'100vh' }}>
                 {
                     classrooms.map((val,index)=>{
                         return <CourseCard key={index} index={index} classroom_id={val['classroomId']}/>
                     })
                 }
-            </Grid>
-
+            </Grid> : null }
+            {classrooms.length == 0 ? <Grid container spacing={2} style={{ backgroundColor: '#161b22', padding: '7%',height:'100vh' }}>
+                <Grid item style={{backgroundColor:'white'}}>
+                    <Typography color={"default"}  variant="h6">
+                        you don't have any courses
+                    </Typography>
+                </Grid>
+                </Grid> : null}
 
         </div>
     );

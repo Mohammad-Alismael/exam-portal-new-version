@@ -16,7 +16,7 @@ function Invitation(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [open, setOpen] = React.useState(true);
     const navigate = useNavigate();
-    const [instructorId,setInstructorId] = React.useState(0)
+    const [classroomId,setClassroomId] = React.useState(0);
     const [instructorEmailId,setInstructorEmailId] = React.useState("");
     const [instructorusername,setInstructorusername] = React.useState("");
     const handleClickOpen = () => {
@@ -30,10 +30,13 @@ function Invitation(props) {
     const handleClose = () => {
         navigate("/course1");
     };
-    const getInstructorInfo = async (userId) => {
+    const handleClickOk = () => {
+        navigate("/course1");
+    }
+    const getInstructorInfo = async (username) => {
         const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-user-by-id', {
-                userId
+            axios.post('http://localhost:8080/get-user-info-by-username', {
+                username
             }).then((data) => {
                 resolve(data.data)
             })
@@ -52,8 +55,8 @@ function Invitation(props) {
 
     const addUserToClassroom = async () => {
         const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/set-classroom-to-students', {
-                instructorId,
+            axios.post('http://localhost:8080/set-classroom-to-students-v2', {
+                classroomId,
                 studentId: props.user.user_id
             }).then((data) => {
                 resolve(data.data)
@@ -71,19 +74,17 @@ function Invitation(props) {
         }
     }
     useEffect(()=>{
-        if (props.user.user_id != 1) {
+        if (props.user.role_id != 1) {
             setIsLoading(true)
             const decrypt = Buffer.from(invitationHash, 'base64').toString();
-            const userId = decrypt.split(":")[0];
-            setInstructorId(parseInt(userId));
+            const classroomId = decrypt.split(":")[0];
+            setClassroomId(parseInt(classroomId));
             const username = decrypt.split(":")[1];
             setInstructorusername(username)
-            getInstructorInfo(userId).then((data) => {
+            getInstructorInfo(username).then((data) => {
                 setInstructorEmailId(data['emailId'])
                 setIsLoading(false)
             })
-        }else {
-            toast.warn("invitation link works only for students!")
         }
     },[])
 
@@ -97,21 +98,24 @@ function Invitation(props) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    Is (s)/he your instructor?
+                    {props.user.role_id != 1 ? "Is (s)/he your instructor?": "invitation link works only for students!"}
                 </DialogTitle>
-                <DialogContent>
+                {props.user.role_id != 1 ? <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         email id : {instructorEmailId}
                     </DialogContentText>
                     <DialogContentText id="alert-dialog-description">
                         username : {instructorusername}
                     </DialogContentText>
-                </DialogContent>
+                </DialogContent> : null }
                 <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleClickOpen} autoFocus>
+                    {props.user.role_id != 1 ? <Button onClick={handleClose}>No</Button> : null}
+                        {props.user.role_id != 1 ? <Button onClick={handleClickOpen} autoFocus>
                         Yes
-                    </Button>
+                    </Button> : null }
+                    {props.user.role_id == 1 ?<Button onClick={handleClickOk} autoFocus>
+                            ok
+                        </Button> : null }
                 </DialogActions>
             </Dialog> : null }
         </div>
