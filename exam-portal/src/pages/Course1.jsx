@@ -110,7 +110,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 function Course1(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState('1');
+    const [value, setValue] = React.useState();
     const [isLoading, setIsLoading] = React.useState(false);
     const [announcements,setAnnouncements] = React.useState([]);
     const [exams,setExams] = React.useState([]);
@@ -125,6 +125,7 @@ function Course1(props) {
         }else {
             setValue(newValue);
         }
+        props.setTab(newValue)
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -238,6 +239,7 @@ function Course1(props) {
         })
     }
     useEffect(()=>{
+        setValue(props.user.tab)
         if (props.user.role_id == 1){
             loadAnnouncements()
             getExamsList().then((data)=>{
@@ -434,7 +436,9 @@ const mapDispatchToProps = dispatch => {
         setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
             payload : {role_id}}),
         setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
-            payload : {classroom_id}})
+            payload : {classroom_id}}),
+        setTab: (tab) => dispatch({type:Actions.SET_TAB,
+            payload : {tab}})
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Course1)

@@ -4,7 +4,8 @@ const initialState = {
     user_id: 0,
     role_id: 0,
     classroom_id:0,
-    username : ""
+    username : "",
+    tab:1
 }
 const UserReducer  = (state = initialState, action) => {
     switch (action.type) {
@@ -27,6 +28,12 @@ const UserReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 role_id: action.payload.role_id
+            }
+        case actionTypes.SET_TAB:
+            console.log(action.payload.tab)
+            return {
+                ...state,
+                tab: action.payload.tab
             }
         default:
             break;

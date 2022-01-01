@@ -9,7 +9,8 @@ import {useNavigate} from "react-router-dom";
 import moment from 'moment'
 import {toast} from "react-toastify";
 import {connect} from "react-redux";
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
 
     container : {
@@ -37,15 +38,26 @@ function Exam (props){
             //     toast.info("you are too late to take this exam!")
         }
     }
+    const handleDelete = () =>{
+        axios.post('http://localhost:8080/delete-exam', {
+            creatorId: props.user.user_id,
+            examId: props.examId
+        }).then((data)=>{
+            console.log(data)
+        }).catch((error)=>{
+            console.log(error)
+        })
+        window.location.reload();
+    }
     return (
-        <Paper elevation={5} className={classes.container} onClick={redirect}>
-            <div style={{display:'inline-flex',gap:'5px',alignItems: 'center'}}>
+        <Paper elevation={5} className={classes.container} >
+            <div style={{display:'inline-flex',gap:'5px',alignItems: 'center'}} onClick={redirect}>
                 <ContentPasteIcon  />
                 <Typography variant="h6" >
                     <b>{props.examTitle}</b>
                 </Typography>
             </div>
-            <div style={{display:'inline-flex',alignItems: 'center',flexDirection:'column',marginTop:'10px'}}>
+            <div style={{display:'inline-flex',alignItems: 'center',flexDirection:'column',marginTop:'5px'}}>
             <Typography variant="subtitle1">
                 {moment(props.startingAt).format('MMMM Do YYYY, h:mm:ss a')}
             </Typography>
@@ -53,6 +65,9 @@ function Exam (props){
                 {moment(props.endingAt).format('MMMM Do YYYY, h:mm:ss a')}
             </Typography>
             </div>
+            {props.user.role_id == 1 ? <div onClick={handleDelete} style={{display:'inline-flex',gap:'5px',alignItems: 'center'}}>
+                <DeleteIcon/>
+            </div> : null }
         </Paper>
         );
 
