@@ -248,7 +248,6 @@ function Quiz(props) {
         <ThemeProvider theme={theme2}>
             <AppBar
                 sx={{ position: 'fixed',bgcolor:"#ffd05e"}}
-
             >
                 <Toolbar>
                     <Typography style={{color:"black"}} sx={{ ml: 2, flex: 1 }} variant="h6" component="div">

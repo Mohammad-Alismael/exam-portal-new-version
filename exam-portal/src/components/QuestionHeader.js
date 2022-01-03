@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -8,6 +8,8 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import {makeStyles} from "@material-ui/core/styles";
+import * as Actions from "../store/actions";
+import {connect} from "react-redux";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -33,6 +35,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 function QuestionHeader(props) {
     const classes = useStyles();
+    const [questionText,setQuestionText] = React.useState("");
+    const [whoCanSee,setWhoCanSee] = React.useState(0);
+    const [points,setPoints] = React.useState(0)
+    const updateQuestionText = (e) =>{
+        setQuestionText(e.target.value)
+        const deepCopy = [...props.questions]
+        const questionFound = deepCopy.findIndex(function(item,index){
+            if (item.question.questionId === props.questionId)
+                return true;
+        })
+        deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],questionText:e.target.value}
+        props.setQuestionArray(deepCopy)
+    }
+    const handleWhoCanSee = (e) => {
+        setWhoCanSee(parseInt(e.target.value))
+        const deepCopy = [...props.questions]
+        const questionFound = deepCopy.findIndex(function(item,index){
+            if (item.question.questionId === props.questionId)
+                return true;
+        })
+        deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],whoCanSee:parseInt(e.target.value)}
+        props.setQuestionArray(deepCopy)
+    }
+    const handlePoints = (e) =>{
+        setPoints(parseInt(e.target.value))
+        const deepCopy = [...props.questions]
+        const questionFound = deepCopy.findIndex(function(item,index){
+            if (item.question.questionId === props.questionId)
+                return true;
+        })
+        deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],points:parseInt(e.target.value)}
+        props.setQuestionArray(deepCopy)
+    }
+    useEffect(()=>{
+        setQuestionText(props.questionText)
+        setWhoCanSee(props.whoCanSee)
+        setPoints(props.points)
+    },[])
     return (
             <>
                 <Grid xs={4} item>
@@ -40,9 +80,9 @@ function QuestionHeader(props) {
                         id="filled-basic"
                         label="Question text"
                         size="small"
-                        value={props.questionText}
+                        value={questionText}
                         fullWidth
-                        // onChange={appendQuestion}
+                        onChange={updateQuestionText}
                         variant="standard" />
 
                 </Grid>
@@ -56,7 +96,6 @@ function QuestionHeader(props) {
                             disabled={true}
                             value={props.selectedType}
                             label="Question type"
-                            // onChange={handleQuestionType}
                         >
                             <MenuItem value={1}>MCQs</MenuItem>
                             <MenuItem value={2}>Text</MenuItem>
@@ -70,9 +109,9 @@ function QuestionHeader(props) {
                     <FormControl fullWidth variant="standard" >
                         <InputLabel id="type">Who can see</InputLabel>
                         <Select
-                            value={props.whoCanSee}
+                            value={whoCanSee}
                             label="Who can see"
-                            // onChange={handleWhoCanSee}
+                            onChange={handleWhoCanSee}
                         >
                             <MenuItem value={1}>Undergraduate</MenuItem>
                             <MenuItem value={2}>Graduate</MenuItem>
@@ -86,8 +125,8 @@ function QuestionHeader(props) {
                     <TextField
                         type="number"
                         fullWidth
-                        value={props.points}
-                        // onChange={(e)=>(setPoints(e))}
+                        value={points}
+                        onChange={handlePoints}
                         variant="standard"
                         inputProps={{ min: 1, max: 100 }}
                         label={"points"}/>
@@ -98,6 +137,18 @@ function QuestionHeader(props) {
 
 }
 
-QuestionHeader.propTypes = {};
+const mapStateToProps = state => {
+    return {
+        questions : state.ExamReducer.questions,
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
+            payload : {question}}),
+        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_NEW_QUESTION_ARRAY,
+            payload : {newQuestionArray}})
+    }
+}
 
-export default QuestionHeader;
+export default connect(mapStateToProps,mapDispatchToProps)(QuestionHeader);

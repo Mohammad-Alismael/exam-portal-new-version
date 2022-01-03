@@ -19,6 +19,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import {withMobileDialog} from "@material-ui/core";
 import {connect} from "react-redux";
 import * as Actions from "../store/actions";
+import CheckBoxComp from "./QuestionsPreview/CheckBoxComp";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -54,8 +55,12 @@ function  QuizBody(props) {
     const [checkboxText, setCheckboxText] = React.useState('');
     const [point,setPoint] = React.useState(0);
     const setTrueFalseOptions = () =>{
+        if(props.questions[props.id - 1] == null){
+            props.appendQuestion({id: props.id})
+        }
         let deepCopy = [...props.questions]
-        let questionObject = deepCopy[props.id - 1]
+        let questionObject = deepCopy[props.id - 1];
+
         questionObject["options"] = ['True','False']
         deepCopy[props.id - 1] = questionObject;
         props.setQuestionArray(deepCopy)
@@ -63,23 +68,23 @@ function  QuizBody(props) {
     }
     const handleQuestionType = (event) => {
         setSelectedType(event.target.value);
+        let deepCopy = [...props.questions]
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
         }else {
-            let deepCopy = [...props.questions]
             let questionObject = deepCopy[props.id - 1]
             questionObject["QuestionType"] = event.target.value;
             deepCopy[props.id - 1] = questionObject;
-            props.setQuestionArray(deepCopy)
         }
-
+        if (event.target.value == 2){
+            if (deepCopy[props.id - 1]['options'] != null){
+                delete deepCopy[props.id - 1]['options']
+            }
+        }
         if (event.target.value == 5){
             setTrueFalseOptions()
         }
-
-        if (event.target.value == 5){
-            setTrueFalseOptions()
-        }
+        props.setQuestionArray(deepCopy)
 
     };
     const handleWhoCanSee = (event) => {
@@ -267,32 +272,31 @@ function  QuizBody(props) {
                                            disabled
                                            variant="standard" />
                             </Grid> : null}
-                        {selectedType == 3 ? null
-                            // <Grid container
-                            //       style={{marginLeft:12}}
-                            // >
-                            //
-                            //     {
-                            //         checkbox.map((val,index)=>{
-                            //             return  <Grid item xs={6}>
-                            //                 <FormControlLabel key={index} control={<CheckboxComp />} label={val} />
-                            //             </Grid>
-                            //         })
-                            //     }
-                            //
-                            //     <TextField id="filled-basic"
-                            //                label="Add Option"
-                            //                size="small"
-                            //                variant="standard"
-                            //                onChange={(e)=>
-                            //                    (setCheckboxText(e.target.value))}/>
-                            //     <br/>
-                            //     <Button
-                            //         variant={"outlined"}
-                            //         variant="contained"
-                            //         size={"medium"} onClick={handleCheckBoxOptions}>submit option</Button>
-                            //
-                            // </Grid>
+                        {selectedType == 3 ?
+                            <Grid container
+                                  style={{marginLeft:12}}
+                            >
+                                {
+                                    checkbox.map((val,index)=>{
+                                        return  <Grid item xs={6}>
+                                            <FormControlLabel key={index} control={<CheckBoxComp />} label={val} />
+                                        </Grid>
+                                    })
+                                }
+
+                                <TextField id="filled-basic"
+                                           label="Add Option"
+                                           size="small"
+                                           variant="standard"
+                                           onChange={(e)=>
+                                               (setCheckboxText(e.target.value))}/>
+                                <br/>
+                                <Button
+                                    variant={"outlined"}
+                                    variant="contained"
+                                    size={"medium"} onClick={handleCheckBoxOptions}>submit option</Button>
+
+                            </Grid>
                             : null}
                         {selectedType == 4 ?
                             <Grid container

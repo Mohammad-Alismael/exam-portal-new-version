@@ -50,8 +50,8 @@ function Exam (props){
         window.location.reload();
     }
     return (
-        <Paper elevation={5} className={classes.container} >
-            <div style={{display:'inline-flex',gap:'5px',alignItems: 'center'}} onClick={redirect}>
+        <Paper elevation={5} className={classes.container} onClick={redirect}>
+            <div style={{display:'inline-flex',gap:'5px',alignItems: 'center'}}>
                 <ContentPasteIcon  />
                 <Typography variant="h6" >
                     <b>{props.examTitle}</b>

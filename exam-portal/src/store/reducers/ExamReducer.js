@@ -1,6 +1,8 @@
 import * as actionTypes from '../actions'
 const initialState = {
-    maxQuestions: -1,
+    examTitle:"",
+    startingAt:0,
+    endingAt:0,
     totalPoints: 0,
    questions : []
 }
@@ -30,6 +32,21 @@ const ExamReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 totalPoints: action.payload.points
+            }
+        case actionTypes.SET_EXAM_TITLE:
+            return {
+                ...state,
+                examTitle: action.payload.examTitle
+            }
+        case actionTypes.SET_ENDING_AT:
+            return {
+                ...state,
+                endingAt: action.payload.endingAt
+            }
+        case actionTypes.SET_STARTING_AT:
+            return {
+                ...state,
+                startingAt: action.payload.startingAt
             }
         case actionTypes.CHECK_TOTAL_POINTS:
             let totalPoints = 0;

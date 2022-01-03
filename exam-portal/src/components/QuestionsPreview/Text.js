@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Text (props) {
     const classes = useStyles();
-    const [options,setOptions] = React.useState([...props.options])
     return (
         <Paper elevation={3} className={classes.paperStyle}>
             <Grid container spacing={2}>
                 <QuestionHeader
+                    questionId={props.questionId}
                     points={props.points}
                     whoCanSee={props.whoCanSee}
                     questionText={props.questionText}
@@ -51,15 +51,6 @@ function Text (props) {
                                fullWidth
                                disabled
                                variant="standard" />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button
-                        variant={"outlined"}
-                        variant="contained"
-                        size={"medium"}
-                        fullWidth
-                        // onClick={updateQuestion}
-                    >update question</Button>
                 </Grid>
             </Grid>
         </Paper>

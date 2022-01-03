@@ -17,6 +17,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import AppBar from "@mui/material/AppBar";
+import moment from 'moment'
+import * as Actions from "../store/actions";
+import {connect} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -55,120 +58,62 @@ function PreviewExam(props) {
     const {examId} = useParams();
     const [questions,setQuestions] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [examTitle,setExamTitle] = React.useState('');
+    const [examPoints,setExamPoints] = React.useState(0);
+    const [startingAt,setStartingAt] = React.useState(0);
+    const [endingAt,setEndingAt] = React.useState(0);
 
-    const getExamQuestions = async () => {
-        setIsLoading(true)
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/list-questions', {
-                examId
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no exam questions found!')
-                })
+    const getExamInfo = async () => {
+        setIsLoading(false)
+        const examInfo = await axios.post('http://localhost:8080/get-exam-id-info', {
+            examId
+        })
+        console.log("exam info=>", examInfo.data)
+        setExamTitle(examInfo.data['title'])
+        setExamPoints(examInfo.data['score'])
+        setStartingAt(examInfo.data['startingAt'])
+        setEndingAt(examInfo.data['endingAt'])
+    }
+    const getExamQuestionsv2 = async () => {
+
+        const questionss = await axios.post('http://localhost:8080/list-questions', {
+            examId,
         })
 
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
+       return questionss.data
+
     }
-
-    const getQuestionOptions = async (questionId) => {
-
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-question-options', {
-                questionId
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no question found!')
-                })
-        })
-
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-    }
-
-    const correctOption = async (questionId) => {
-
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-answer-key', {
-                questionId
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no question found!')
-                })
-        })
-
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-    }
-    const getCorrectOption = async (data) => {
-        for (let i = 0; i < data.length; i++) {
-            const correctAnswer = await correctOption(data[i].questionId);
-            data[i]['correctAnswer'] = correctAnswer['correctAnswer']
-        }
-        return data
-    }
-    const get = async (data) => {
-        for (let i = 0; i < data.length; i++) {
-            const options = await getQuestionOptions(data[i].questionId);
-            const optionValue = []
-            for (let j = 0; j < options.length; j++) {
-                optionValue.push(options[j]['optionValue'])
-            }
-            data[i]['options'] = optionValue
-        }
-        return data
-    }
-
     useEffect( ()=>{
-        getExamQuestions().then((data)=>{
-            console.log(data)
-            get(data).then((data)=>{
-                getCorrectOption(data).then((data2)=>{
-                    setQuestions([...data2])
-                    setIsLoading(false)
-                })
 
-            })
+        getExamInfo().then(console.log)
+        getExamQuestionsv2().then((data)=>{
+            console.log("questions =>",data)
+            setQuestions([...data])
+            props.setQuestionArray([...data])
+            setIsLoading(true)
         })
+
+
     },[])
-
-    if (isLoading){
+    const updateExam = () =>{
+        console.log(questions)
+    }
+    if (!isLoading){
         return <CircularProgress />
-
     }else {
         return (
             <Box sx={{ mt: 10 }}>
                 <AppBar
-                    sx={{ position: 'fixed',bgcolor:"#ffd05e"}}
-
-                >
+                    sx={{ position: 'fixed',bgcolor:"#ffd05e"}}>
                     <Toolbar>
                         <Typography style={{color:"black"}} sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                             Exam id : {examId}
                         </Typography>
                         <Button style={{ textTransform: 'none' }}
                                 color="inherit"
-                                // onClick={handleClose}
+                                onClick={updateExam}
                         >
-                            Assign
+                            update exam
                         </Button>
                     </Toolbar>
                 </AppBar>
@@ -180,6 +125,7 @@ function PreviewExam(props) {
                                        size="small"
                                        fullWidth
                                        required
+                                       value={examTitle}
                                        variant="filled" />
                         </Grid>
                         <Grid item xs={6}>
@@ -188,6 +134,7 @@ function PreviewExam(props) {
                                 size="small"
                                 type="number"
                                 fullWidth
+                                value={examPoints}
                                 inputProps={{ min: 1 }}
                                 // onChange={(e)=>
 //                                    (setTotalPoints(parseInt(e.target.value)))}
@@ -195,14 +142,11 @@ function PreviewExam(props) {
                                 variant="filled" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField
+                            <input
                                 id="datetime-local"
-                                label="Starting At"
+                                placeholder="Starting At"
                                 type="datetime-local"
-                                fullWidth
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
+                                value={new Date(startingAt).toDateString()}
                             />
                         </Grid>
                         <Grid item xs={6}>
@@ -211,6 +155,7 @@ function PreviewExam(props) {
                                 label="Ending At"
                                 type="datetime-local"
                                 fullWidth
+                                value={endingAt}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -220,42 +165,51 @@ function PreviewExam(props) {
                 </Paper>
                 {
                     questions.map((val,index)=>{
-                        console.log(val)
-                        if (val.questionType === 1){
+                        if (val.question.questionType === 1){
                             return <Mcq
-                                questionText={val.questionText}
-                                correctAnswer={val.correctAnswer}
-                                points={val.points}
-                                options={val.options}
-                                isActive={val.isActive}
-                                whoCanSee={val.whoCanSee}
+                                questionId={val.question.questionId}
+                                questionText={val.question.questionText}
+                                correctAnswer={val['answerKeys']}
+                                points={val.question.points}
+                                options={val.questionOptions}
+                                isActive={val.question.isActive}
+                                whoCanSee={val.question.whoCanSee}
                             />
-                        }else if (val.questionType === 2){
+                        }else if (val.question.questionType === 2){
                             return <Text
-                                questionText={val.questionText}
-                                correctAnswer={val.correctAnswer}
-                                points={val.points}
-                                options={val.options}
-                                isActive={val.isActive}
-                                whoCanSee={val.whoCanSee}
+                                questionId={val.question.questionId}
+                                questionText={val.question.questionText}
+                                correctAnswer={val['answerKeys']}
+                                points={val.question.points}
+                                isActive={val.question.isActive}
+                                whoCanSee={val.question.whoCanSee}
                             />
-                        }else if (val.questionType === 4){
+                        }else if (val.question.questionType === 3){
+                            return <CheckBoxComp
+                                questionId={val.question.questionId}
+                                questionText={val.question.questionText}
+                                correctAnswer={val['answerKeys']}
+                                points={val.question.points}
+                                options={val.questionOptions}
+                                isActive={val.question.isActive}
+                                whoCanSee={val.question.whoCanSee}
+                            />
+                        }else if (val.question.questionType === 4){
                             return <Matching
-                                questionText={val.questionText}
-                                correctAnswer={val.correctAnswer}
-                                points={val.points}
-                                options={val.options}
-                                isActive={val.isActive}
-                                whoCanSee={val.whoCanSee}
+                                questionId={val.question.questionId}
+                                questionText={val.question.questionText}
+                                correctAnswer={val['answerKeys']}
+                                points={val.question.points}
+                                options={val.questionOptions}
+                                isActive={val.question.isActive}
+                                whoCanSee={val.question.whoCanSee}
                             />
-                        }else if (val.questionType === 5){
+                        }else if (val.question.questionType === 5){
                             return <Truth
-                                questionText={val.questionText}
-                                correctAnswer={val.correctAnswer}
-                                points={val.points}
-                                options={val.options}
-                                isActive={true}
-                                whoCanSee={val.whoCanSee}
+                                questionId={val.question.questionId}
+                                questionText={val.question.questionText}
+                                points={val.question.points}
+                                whoCanSee={val.question.whoCanSee}
                             />
                         }
                     })
@@ -265,5 +219,18 @@ function PreviewExam(props) {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        questions : state.ExamReducer.questions,
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
+            payload : {question}}),
+        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_NEW_QUESTION_ARRAY,
+            payload : {newQuestionArray}})
+    }
+}
 
-export default PreviewExam;
+export default connect(mapStateToProps,mapDispatchToProps)(PreviewExam);
