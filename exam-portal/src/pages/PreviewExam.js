@@ -1,5 +1,5 @@
 import React, {Component, useEffect} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import index from "@mui/material/darkScrollbar";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -20,6 +20,7 @@ import AppBar from "@mui/material/AppBar";
 import moment from 'moment'
 import * as Actions from "../store/actions";
 import {connect} from "react-redux";
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -56,6 +57,7 @@ const theme2 = createTheme({
 function PreviewExam(props) {
     const classes = useStyles();
     const {examId} = useParams();
+    const navigate = useNavigate();
     const [questions,setQuestions] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [examTitle,setExamTitle] = React.useState('');
@@ -93,10 +95,80 @@ function PreviewExam(props) {
             setIsLoading(true)
         })
 
-
     },[])
     const updateExam = () =>{
-        console.log(questions)
+        console.log(props.questions)
+        updateExamInfo()
+        props.questions.map((val,index)=>{
+            updateQuestion(val['question'])
+            if (val['question']['questionType'] != 3 &&
+                val['question']['questionType'] != 5){
+                val['questionOptions'].map((val,index)=>{
+                    updateOptions(val)
+                })
+            }
+            if (val['question']['questionType'] != 2){
+                val['answerKeys'].map((val,index)=>{
+                    updateAnswerKey(val)
+                })
+            }
+        })
+        props.setQuestionArray([])
+        navigate('/course1')
+    }
+    const updateExamInfo = () => {
+        axios.post('http://localhost:8080/update-exam',{
+            examId,
+            creatorId: props.user.user_id,
+            title: examTitle ,
+            score:examPoints,
+            startingAt: startingAt,
+            endingAt: endingAt
+
+    }).then(console.log).catch(console.log)
+    }
+    const updateQuestion = (data) =>{
+        axios.post('http://localhost:8080/update-question', {
+            questionId:data['questionId'],
+            questionType: data['questionType'],
+            creatorExamId: props.user.user_id,
+            questionText: data['questionText'],
+            points: data['points'],
+            examId,
+            isActive: 1,
+            whoCanSee: data['whoCanSee']
+        }).then(console.log).catch(console.log)
+    }
+    const updateOptions = (data) =>{
+        axios.post('http://localhost:8080/update-question-options',{
+            id: data['id'],
+            questionId: data['questionId'],
+            optionValue: data['optionValue']
+        }).then(console.log).catch(console.log)
+    }
+
+    const updateAnswerKey = (data) => {
+        if (data['id'] != -1) {
+            axios.post('http://localhost:8080/update-answer-key', {
+                id: data['id'],
+                questionId: data['questionId'],
+                correctAnswer: data['correctAnswer']
+            }).then(console.log).catch(console.log)
+        }else{
+            setAnswerKeyForCheckBox(data)
+        }
+    }
+    const setAnswerKeyForCheckBox = (data) => {
+        axios.post('http://localhost:8080/set-answer-key',{
+            questionId: data['questionId'],
+            correctAnswer: data['correctAnswer']
+        }).then(console.log).catch(console.log)
+    }
+    const updateStartingAt = (e) => {
+        setStartingAt(Date.parse(e.target.value))
+    }
+    const updateEndingAt = (e) => {
+        setEndingAt(Date.parse(e.target.value))
     }
     if (!isLoading){
         return <CircularProgress />
@@ -110,7 +182,7 @@ function PreviewExam(props) {
                             Exam id : {examId}
                         </Typography>
                         <Button style={{ textTransform: 'none' }}
-                                color="inherit"
+                                color="primary"
                                 onClick={updateExam}
                         >
                             update exam
@@ -126,6 +198,7 @@ function PreviewExam(props) {
                                        fullWidth
                                        required
                                        value={examTitle}
+                                       onChange={(e) =>(setExamTitle(e.target.value))}
                                        variant="filled" />
                         </Grid>
                         <Grid item xs={6}>
@@ -136,17 +209,21 @@ function PreviewExam(props) {
                                 fullWidth
                                 value={examPoints}
                                 inputProps={{ min: 1 }}
-                                // onChange={(e)=>
-//                                    (setTotalPoints(parseInt(e.target.value)))}
+                                onChange={(e) =>(setExamPoints(parseInt(e.target.value)))}
                                 required
                                 variant="filled" />
                         </Grid>
                         <Grid item xs={6}>
-                            <input
+                            <TextField
                                 id="datetime-local"
-                                placeholder="Starting At"
+                                label="Ending At"
                                 type="datetime-local"
-                                value={new Date(startingAt).toDateString()}
+                                fullWidth
+                                defaultValue={new Date(startingAt).toISOString().slice(0,16)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onChange={updateStartingAt}
                             />
                         </Grid>
                         <Grid item xs={6}>
@@ -155,7 +232,8 @@ function PreviewExam(props) {
                                 label="Ending At"
                                 type="datetime-local"
                                 fullWidth
-                                value={endingAt}
+                                onChange={updateEndingAt}
+                                defaultValue={new Date(endingAt).toISOString().slice(0,16)}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -190,7 +268,7 @@ function PreviewExam(props) {
                                 questionText={val.question.questionText}
                                 correctAnswer={val['answerKeys']}
                                 points={val.question.points}
-                                options={val.questionOptions}
+                                options={val['questionOptions']}
                                 isActive={val.question.isActive}
                                 whoCanSee={val.question.whoCanSee}
                             />
@@ -222,6 +300,7 @@ function PreviewExam(props) {
 const mapStateToProps = state => {
     return {
         questions : state.ExamReducer.questions,
+        user : state.UserReducer
     }
 }
 const mapDispatchToProps = dispatch => {

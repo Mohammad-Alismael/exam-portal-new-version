@@ -10,6 +10,9 @@ import Paper from "@mui/material/Paper";
 import {makeStyles} from "@material-ui/core/styles";
 import * as Actions from "../store/actions";
 import {connect} from "react-redux";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import axios from "axios";
+
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -45,8 +48,12 @@ function QuestionHeader(props) {
             if (item.question.questionId === props.questionId)
                 return true;
         })
-        deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],questionText:e.target.value}
-        props.setQuestionArray(deepCopy)
+        console.log(questionFound)
+        if(questionFound != -1){
+            deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],questionText:e.target.value}
+            props.setQuestionArray(deepCopy)
+        }
+
     }
     const handleWhoCanSee = (e) => {
         setWhoCanSee(parseInt(e.target.value))
@@ -67,6 +74,13 @@ function QuestionHeader(props) {
         })
         deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],points:parseInt(e.target.value)}
         props.setQuestionArray(deepCopy)
+    }
+    const deleteQuestion = () => {
+        axios.post('http://localhost:8080/delete-question', {
+            questionId: props.questionId,
+            creatorExamId: props.user.user_id
+        }).then(console.log).catch(console.log)
+        // window.location.reload();
     }
     useEffect(()=>{
         setQuestionText(props.questionText)
@@ -131,6 +145,9 @@ function QuestionHeader(props) {
                         inputProps={{ min: 1, max: 100 }}
                         label={"points"}/>
                     </FormControl>
+                    <DeleteOutlinedIcon
+                        onClick={deleteQuestion}
+                        className={classes.deleteIcon}/>
                 </Grid>
             </>
         )
@@ -140,6 +157,7 @@ function QuestionHeader(props) {
 const mapStateToProps = state => {
     return {
         questions : state.ExamReducer.questions,
+        user : state.UserReducer
     }
 }
 const mapDispatchToProps = dispatch => {

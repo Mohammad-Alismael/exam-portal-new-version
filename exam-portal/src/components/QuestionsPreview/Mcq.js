@@ -107,11 +107,10 @@ function Mcq(props) {
         })
         setQuestionIndex(questionFound)
         setOptions([...props.options])
-        console.log(props.options)
+
         setAnswerKey(props.questions[questionIndex]['answerKeys'])
         console.log("from mcqs",props.correctAnswer)
-        console.log("question found =>",questionIndex)
-        console.log(props.questions[questionIndex]['answerKeys'][0]['correctAnswer'])
+
     },[])
 
     return (

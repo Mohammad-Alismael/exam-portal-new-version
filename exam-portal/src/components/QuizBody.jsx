@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -15,7 +15,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@mui/material/Paper";
 import {toast} from "react-toastify";
 import {makeStyles} from "@material-ui/core/styles";
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import {withMobileDialog} from "@material-ui/core";
 import {connect} from "react-redux";
 import * as Actions from "../store/actions";
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         cursor: "pointer",
         position: 'absolute',
         top: 15,
-        right: 15
+        right: 55
         // paddingTop: 20
     }
 }));
@@ -133,7 +132,7 @@ function  QuizBody(props) {
     }
 
     const handleCheckBoxOptions = (e) => {
-
+        toast.info(checkboxText)
         setCheckbox([...checkbox,checkboxText])
         let deepCopy = [...props.questions]
         let questionObject = deepCopy[props.id - 1]
@@ -176,10 +175,10 @@ function  QuizBody(props) {
         deepCopy[props.id - 1] = questionObject;
         props.setQuestionArray(deepCopy)
     }
-    const [activeFilter, setActiveFilter] = React.useState([]);
 
-
-
+    useEffect(()=>{
+        console.log("wtf=>",props.questions)
+    },[])
         return (
             <Paper elevation={3} className={classes.paperStyle}>
 
@@ -206,7 +205,7 @@ function  QuizBody(props) {
                             >
                                 <MenuItem value={1}>MCQs</MenuItem>
                                 <MenuItem value={2}>Text</MenuItem>
-                                {/*<MenuItem value={3}>CheckboxComp</MenuItem>*/}
+                                <MenuItem value={3}>Checkbox</MenuItem>
                                 <MenuItem value={4}>Matching</MenuItem>
                                 <MenuItem value={5}>True/False</MenuItem>
                             </Select>
@@ -356,9 +355,7 @@ function  QuizBody(props) {
                 </Grid>
 
                 <Grid xs={12}>
-                {/*<DeleteOutlinedIcon*/}
-                {/*    onClick={deleteQuestionContainer}*/}
-                {/*    className={classes.deleteIcon}/>*/}
+
                 </Grid>
             </Paper>
         );
@@ -367,14 +364,13 @@ function  QuizBody(props) {
 
 const mapStateToProps = state => {
     return {
-        questions : state.ExamReducer.questions,
+        questions : state.CreateReducer.questionsC,
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
-            payload : {question}}),
-        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_NEW_QUESTION_ARRAY,
+
+        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_CREATE_EXAM_ARRAY,
             payload : {newQuestionArray}})
 
     }

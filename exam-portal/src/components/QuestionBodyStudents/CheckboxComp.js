@@ -41,7 +41,6 @@ function CheckboxComp(props) {
         const deepCopy = [...selectedAnswer]
         const a = parseInt(e.target.value)
         console.log(e.target.checked)
-
         deepCopy[a] = Object.assign(deepCopy[a],{checked:e.target.checked})
         setSelectedAnswer([...deepCopy])
         console.log(selectedAnswer)

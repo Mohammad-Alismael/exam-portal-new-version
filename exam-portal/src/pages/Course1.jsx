@@ -129,12 +129,30 @@ function Course1(props) {
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const [anchorEl2, setAnchorEl2] = React.useState(null);
+    const [anchorEl3, setAnchorEl3] = React.useState(null);
+
+    const openMore = Boolean(anchorEl);
+    const openSettings = Boolean(anchorEl2);
+    const openQuiz = Boolean(anchorEl3);
+
+    const handleClickMore = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleCloseMore = () => {
         setAnchorEl(null);
+    };
+    const handleClickSettings = (event) => {
+        setAnchorEl2(event.currentTarget);
+    };
+    const handleCloseSettings = () => {
+        setAnchorEl2(null);
+    };
+    const handleClickQuiz = (event) => {
+        setAnchorEl3(event.currentTarget);
+    };
+    const handleCloseQuiz = () => {
+        setAnchorEl3(null);
     };
     const postAnnouncement = (e) =>{
         axios.post('http://localhost:8080/set-announcement-to-students',{
@@ -199,6 +217,7 @@ function Course1(props) {
         })
         console.log("classmates =>",classroomStudents.data)
         setClassroom([...classroomStudents.data])
+        setIsLoading(false)
     }
 
     const getExamsList = async () => {
@@ -227,16 +246,7 @@ function Course1(props) {
             studentId: props.user.user_id,
             classroomId: props.user.classroom_id
         })
-        examss.data.map((val,index)=>{
-            // console.log(val)
-            setExams([...exams,{
-                title: val[1],
-                examId:val[0],
-                points: val[2],
-                startingAt: val[3],
-                endingAt: val[4]
-            }])
-        })
+        return examss.data
     }
     useEffect(()=>{
         setValue(props.user.tab)
@@ -245,16 +255,29 @@ function Course1(props) {
             getExamsList().then((data)=>{
                 console.log('Exams =>',data)
                 setExams(data)
-                setIsLoading(false)
+
             })
             getClassroom().then((data)=>{
                 console.log('classroom =>',data)
                 setClassroom(data)
+                setIsLoading(false)
             })
         }
         else{
             loadAnnouncementsForStudents()
-            getExamListForStudents()
+            getExamListForStudents().then((data)=>{
+                const tmp = []
+                data.map((val,index)=>{
+                    tmp.push({
+                            title: val[1],
+                            examId:val[0],
+                            points: val[2],
+                            startingAt: val[3],
+                            endingAt: val[4]
+                        })
+                })
+                setExams([...tmp])
+            })
             getClassRoomForStudents()
         }
 
@@ -276,6 +299,7 @@ function Course1(props) {
         const b64 = Buffer.from(textBeforeHash).toString('base64');
         copyToClipboard("http://localhost:3000/invitation/" + b64)
         toast.info("copied to clipboard");
+        setAnchorEl2(null);
     }
     return (
         <div>
@@ -291,7 +315,40 @@ function Course1(props) {
                                     <Tab label="People" value="3" />
                                     <Tab label="Grades" value="4" />
                                 </TabList>
-                                <MoreIcon />
+                                <IconButton
+                                    aria-label="more"
+                                    id="long-button"
+                                    aria-controls={openSettings ? "long-menu" : undefined}
+                                    aria-expanded={openSettings ? "true" : undefined}
+                                    aria-haspopup="true"
+                                    onClick={handleClickMore}
+                                >
+                                    <MoreVertIcon />
+                                </IconButton>
+                                <Menu
+                                    id="long-menu2"
+                                    MenuListProps={{
+                                        "aria-labelledby": "long-button"
+                                    }}
+                                    anchorEl={anchorEl2}
+                                    open={openSettings}
+                                    onClose={handleCloseSettings}
+                                    PaperProps={{
+                                        style: {
+                                            Height: 2 *4.5,
+                                            width: "20ch"
+                                        }
+                                    }}
+                                >
+
+                                    <MenuItem
+                                        onClick={()=>(navigate('/logout'))}
+                                        key={"logout"}
+                                    >
+                                        logout
+                                    </MenuItem>
+
+                                </Menu>
                             </Tabs>
                         </Box>
                         { isLoading ? <LinearProgress /> : null}
@@ -319,7 +376,40 @@ function Course1(props) {
                                     <PublishIcon />
                                 </IconButton>
                                 <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-                                <MoreVertIcon onClick={copyInvitationLink} style={{courser: 'pointer'}}/>
+                                <IconButton
+                                    aria-label="more"
+                                    id="long-button"
+                                    aria-controls={openMore ? "long-menu" : undefined}
+                                    aria-expanded={openMore ? "true" : undefined}
+                                    aria-haspopup="true"
+                                    onClick={handleClickMore}
+                                >
+                                    <MoreVertIcon />
+                                </IconButton>
+                                <Menu
+                                    id="long-menu"
+                                    MenuListProps={{
+                                        "aria-labelledby": "long-button"
+                                    }}
+                                    anchorEl={anchorEl}
+                                    open={openMore}
+                                    onClose={handleCloseMore}
+                                    PaperProps={{
+                                        style: {
+                                            Height: 2 *4.5,
+                                            width: "20ch"
+                                        }
+                                    }}
+                                >
+                                    {["copy invitation link"].map((option) => (
+                                        <MenuItem
+                                            key={option}
+                                            onClick={copyInvitationLink}
+                                        >
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
                             </Paper>:null}
                             <Grid>
                                 {
@@ -354,20 +444,22 @@ function Course1(props) {
                                 }
                                 {props.user.role_id == 1 ? <Button
                                     variant="contained"
-                                    id="basic-button"
-                                    aria-controls="basic-menu"
+                                    aria-label="more"
+                                    id="long-button"
+                                    aria-controls={openQuiz ? "long-menu" : undefined}
+                                    aria-expanded={openQuiz ? "true" : undefined}
                                     aria-haspopup="true"
-                                    aria-expanded={open ? 'true' : undefined}
-                                    onClick={handleClick}
+
+                                    onClick={handleClickQuiz}
                                 >
                                     <AddIcon />
                                     Dashboard
                                 </Button> : null }
                                 <Menu
                                     id="basic-menu"
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
+                                    anchorEl={anchorEl3}
+                                    open={openQuiz}
+                                    onClose={handleClickQuiz}
                                     MenuListProps={{
                                         'aria-labelledby': 'basic-button',
                                     }}

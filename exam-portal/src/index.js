@@ -9,11 +9,13 @@ import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
 import UserReducer from "./store/reducers/UserReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
+import CreateReducer from "./store/reducers/CreateReducer";
 import {BrowserRouter} from "react-router-dom";
 const rootReducer = combineReducers({
     ExamReducer,
     UserReducer,
-    ExamStudentReducer
+    ExamStudentReducer,
+    CreateReducer
 });
 
 function saveToLocalStorage(store) {
