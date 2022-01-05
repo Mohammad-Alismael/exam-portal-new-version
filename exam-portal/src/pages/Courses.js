@@ -19,7 +19,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import {connect} from "react-redux";
 import axios from "axios";
-import CourseCard from "../Components/CourseCard";
+import CourseCard from "../components/CourseCard";
 const useStyles = makeStyles((theme) => ({
 
     paper: {
@@ -55,7 +55,7 @@ function Courses(props) {
     const classes = useStyles();
     const [classrooms, setClassrooms] = React.useState([]);
     const getClassrooms = async () => {
-        const classrooms = await axios.post('http://localhost:8080//get-classroom-ids-from-student-id', {
+        const classrooms = await axios.post('http://localhost:8080/get-classroom-ids-from-student-id', {
             studentId: props.user.user_id,
             classroomId: props.user.classroom_id
         })

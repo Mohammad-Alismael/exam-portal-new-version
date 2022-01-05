@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Classes from './pages/Classes'
 import Course1 from './pages/Course1'
-import Quiz from './Components/Quiz';
+import Quiz from './components/Quiz';
 import Logout from "./pages/Logout";
 
 import React from "react";

@@ -23,27 +23,30 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import Link from '@mui/material/Link';
 import Grid from "@material-ui/core/Grid";
-import AnnouncementComponent from "../Components/AnnouncementComponent";
+import AnnouncementComponent from "../components/AnnouncementComponent";
 import index from "@mui/material/darkScrollbar";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import axios from 'axios'
-import {connect} from "react-redux";
-import {toast} from "react-toastify";
-import Participants from "../Components/Participants";
-import {Title} from "@mui/icons-material";
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
+import Participants from "../components/Participants";
+import { Title } from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
-import Exam from "../Components/Exam";
+import Exam from "../components/Exam";
 import useClipboard from 'react-hook-clipboard'
-import {getTableSortLabelUtilityClass} from "@mui/material";
+import { getTableSortLabelUtilityClass } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AppBar from '@mui/material/AppBar';
 import * as Actions from "../store/actions";
-import ExamCard from "../Components/ExamCard";
+import ExamCard from "../components/ExamCard";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import ListItemText from "@material-ui/core/ListItemText";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -113,21 +116,38 @@ function Course1(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState();
     const [isLoading, setIsLoading] = React.useState(false);
-    const [announcements,setAnnouncements] = React.useState([]);
-    const [exams,setExams] = React.useState([]);
-    const [submission,setSubmission] = React.useState([]);
-    const [announcementText,setAnnouncementText] = React.useState('');
-    const [classroom,setClassroom] = React.useState([]);
+    const [announcements, setAnnouncements] = React.useState([]);
+    const [exams, setExams] = React.useState([]);
+    const [submission, setSubmission] = React.useState([]);
+    const [announcementText, setAnnouncementText] = React.useState('');
+    const [classroom, setClassroom] = React.useState([]);
     const [clipboard, copyToClipboard] = useClipboard();
     const navigate = useNavigate();
-    const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
+    const [adminUsername, setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
     const handleChange = (event, newValue) => {
         if (newValue == 5) {
             navigate("/courses")
-        }else {
+        } else {
             setValue(newValue);
         }
         props.setTab(newValue)
+    };
+
+    const [anchorEl4, setAnchorEl4] = React.useState(null);
+    const open = Boolean(anchorEl4);
+    const handleClick1 = (event) => {
+        setAnchorEl4(event.currentTarget);
+    };
+    const handleClose1 = () => {
+        setAnchorEl4(null);
+    };
+
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -156,18 +176,18 @@ function Course1(props) {
     const handleCloseQuiz = () => {
         setAnchorEl3(null);
     };
-    const postAnnouncement = (e) =>{
-        axios.post('http://localhost:8080/set-announcement-to-students',{
+    const postAnnouncement = (e) => {
+        axios.post('http://localhost:8080/set-announcement-to-students', {
             instructorId: props.user.user_id,
             announcementText,
 
-        }).then((data)=>{
+        }).then((data) => {
 
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error)
             // toast.error("error happened!")
         })
-        setAnnouncements([...announcements,{announcementText,instructorId:props.user.user_id,createdAt : new Date().getTime()}])
+        setAnnouncements([...announcements, { announcementText, instructorId: props.user.user_id, createdAt: new Date().getTime() }])
 
     }
     const loadAnnouncements = async () => {
@@ -217,7 +237,7 @@ function Course1(props) {
         const classroomStudents = await axios.post('http://localhost:8080/get-class-students-from-student-id', {
             classroomId: props.user.classroom_id
         })
-        console.log("classmates =>",classroomStudents.data)
+        console.log("classmates =>", classroomStudents.data)
         setClassroom([...classroomStudents.data])
         setIsLoading(false)
     }
@@ -250,36 +270,37 @@ function Course1(props) {
         })
         return examss.data
     }
-    useEffect(()=>{
+    useEffect(() => {
         setValue(props.user.tab)
-        if (props.user.role_id == 1){
+        if (props.user.role_id == 1) {
             loadAnnouncements()
-            getExamsList().then((data)=>{
-                console.log('Exams =>',data)
+            getExamsList().then((data) => {
+                console.log('Exams =>', data)
                 setExams(data)
 
             })
-            getClassroom().then((data)=>{
-                console.log('classroom =>',data)
+            getClassroom().then((data) => {
+                console.log('classroom =>', data)
                 setClassroom(data)
                 setIsLoading(false)
             })
         }
-        else{
+        else {
             loadAnnouncementsForStudents()
-            getExamListForStudents().then((data)=>{
+            getExamListForStudents().then((data) => {
+                console.log("exams=>", data)
                 const tmp = []
-                data.map((val,index)=>{
+                data.map((val, index) => {
                     tmp.push({
-                            title: val[1],
-                            examId:val[0],
-                            points: val[2],
-                            startingAt: val[3],
-                            endingAt: val[4]
-                        })
-                    listSubmissionForStudents(val[0]).then((data)=>{
-                        if (data){
-                            setSubmission([...submission, {examId:val[0],title:val[1]}])
+                        title: val[1],
+                        examId: val[0],
+                        points: val[2],
+                        startingAt: val[3],
+                        endingAt: val[4]
+                    })
+                    listSubmissionForStudents(val[0]).then((data) => {
+                        if (data) {
+                            setSubmission([...submission, { examId: val[0], title: val[1] }])
                         }
                     })
                 })
@@ -288,7 +309,7 @@ function Course1(props) {
             getClassRoomForStudents()
         }
 
-    },[])
+    }, [])
     const listSubmissionForStudents = async (examId) => {
         const submission = await axios.post('http://localhost:8080/check-submission', {
             creatorId: props.user.user_id,
@@ -301,7 +322,7 @@ function Course1(props) {
             instructorId: props.user.user_id
         })
         let classroomId = classroom.data['id'];
-        if (classroom.data['id'] == null){
+        if (classroom.data['id'] == null) {
             const classroom = await axios.post('http://localhost:8080/set-classroom-to-students', {
                 instructorId: props.user.user_id
             })
@@ -328,6 +349,34 @@ function Course1(props) {
                                     <Tab label="People" value="3" />
                                     <Tab label="Grades" value="4" />
                                 </TabList>
+
+                                <IconButton
+                                    aria-controls="customized-menu"
+                                    aria-haspopup="true"
+                                    onClick={handleClick1}
+                                    color="primary"
+                                >
+                                    <NotificationsIcon />
+                                </IconButton>
+                                <Menu
+                                    id="customized-menu"
+                                    anchorEl={anchorEl4}
+                                    keepMounted
+                                    open={Boolean(anchorEl4)}
+                                    onClose={handleClose1}
+                                    elevation={5}
+                                >
+                                    <MenuItem>
+                                        <ListItemText primary="Notification" />
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <ListItemText primary="Notification" />
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <ListItemText primary="Notification" />
+                                    </MenuItem>
+                                </Menu>
+
                                 <IconButton
                                     aria-label="more"
                                     id="long-button"
@@ -339,33 +388,19 @@ function Course1(props) {
                                     <MoreVertIcon />
                                 </IconButton>
                                 <Menu
-                                    id="long-menu2"
-                                    MenuListProps={{
-                                        "aria-labelledby": "long-button"
-                                    }}
-                                    anchorEl={anchorEl2}
-                                    open={openSettings}
-                                    onClose={handleCloseSettings}
-                                    PaperProps={{
-                                        style: {
-                                            Height: 2 *4.5,
-                                            width: "20ch"
-                                        }
-                                    }}
+                                    id="long-button"
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}
                                 >
-
-                                    <MenuItem
-                                        onClick={()=>(navigate('/logout'))}
-                                        key={"logout"}
-                                    >
-                                        logout
-                                    </MenuItem>
-
+                                    <Link href="/logout"><MenuItem >Logout</MenuItem></Link>
                                 </Menu>
+
+
                             </Tabs>
                         </Box>
-                        { isLoading ? <LinearProgress /> : null}
-                        { !isLoading ? <TabPanel value="1">
+                        {isLoading ? <LinearProgress /> : null}
+                        {!isLoading ? <TabPanel value="1">
                             <Paper elevation={5} className={classes.paperStyle}>
                                 <Typography variant="h4" color="primary" style={{ marginTop: '15%' }}>
                                     <b>CS 434</b>
@@ -380,12 +415,12 @@ function Course1(props) {
                                 </IconButton>
                                 <InputBase
                                     sx={{ ml: 1, flex: 1 }}
-                                    onChange={(e)=>(setAnnouncementText(e.target.value))}
+                                    onChange={(e) => (setAnnouncementText(e.target.value))}
                                     placeholder="Announce something to your class"
                                     inputProps={{ 'aria-label': 'search google maps' }}
                                 />
 
-                                <IconButton type="submit" sx={{ p: '10px' }}onClick={postAnnouncement}>
+                                <IconButton type="submit" sx={{ p: '10px' }} onClick={postAnnouncement}>
                                     <PublishIcon />
                                 </IconButton>
                                 <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
@@ -409,7 +444,7 @@ function Course1(props) {
                                     onClose={handleCloseMore}
                                     PaperProps={{
                                         style: {
-                                            Height: 2 *4.5,
+                                            Height: 2 * 4.5,
                                             width: "20ch"
                                         }
                                     }}
@@ -423,28 +458,28 @@ function Course1(props) {
                                         </MenuItem>
                                     ))}
                                 </Menu>
-                            </Paper>:null}
+                            </Paper> : null}
                             <Grid>
                                 {
-                                    announcements.sort(function(a, b) {
+                                    announcements.sort(function (a, b) {
                                         return b.createdAt - a.createdAt;
-                                    }).map((val,index)=>{
+                                    }).map((val, index) => {
 
                                         return <AnnouncementComponent
                                             key={index}
                                             user_id={val.instructorId}
                                             text={val.announcementText}
-                                            createdAt={val.createdAt}/>
+                                            createdAt={val.createdAt} />
                                     })
                                 }
 
                             </Grid>
                         </TabPanel> : null}
 
-                        { !isLoading ? <TabPanel value="2">
+                        {!isLoading ? <TabPanel value="2">
                             <Paper elevation={0} className={classes.classworkPaper}>
                                 {
-                                    exams.map((val,index)=>{
+                                    exams.map((val, index) => {
                                         console.log(val)
                                         return <Exam
                                             key={index}
@@ -452,7 +487,7 @@ function Course1(props) {
                                             examId={val.examId}
                                             startingAt={val.startingAt}
                                             endingAt={val.endingAt}
-                                                    />
+                                        />
                                     })
                                 }
                                 {props.user.role_id == 1 ? <Button
@@ -467,7 +502,7 @@ function Course1(props) {
                                 >
                                     <AddIcon />
                                     Dashboard
-                                </Button> : null }
+                                </Button> : null}
                                 <Menu
                                     id="basic-menu"
                                     anchorEl={anchorEl3}
@@ -477,12 +512,12 @@ function Course1(props) {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <Link href="/quiz"><MenuItem ><AssignmentIcon/>Exam/Quiz Assignment</MenuItem></Link>
+                                    <Link href="/quiz"><MenuItem ><AssignmentIcon />Exam/Quiz Assignment</MenuItem></Link>
                                 </Menu>
                             </Paper>
                         </TabPanel> : null}
 
-                        { !isLoading ? <TabPanel value="3">
+                        {!isLoading ? <TabPanel value="3">
                             <Paper fullwidth elevation={0} >
                                 <Grid
                                     container
@@ -492,11 +527,11 @@ function Course1(props) {
                                     justifyContent="center"
                                 >
                                     <Grid item xs={12}>
-                                    <Typography variant="h2">
-                                        Teachers
-                                    </Typography>
+                                        <Typography variant="h2">
+                                            Teachers
+                                        </Typography>
                                     </Grid>
-                                <Participants  username={adminUsername}/>
+                                    <Participants username={adminUsername} />
                                 </Grid>
                                 <Grid
                                     container
@@ -509,9 +544,9 @@ function Course1(props) {
                                         Classmates
                                     </Typography>
                                     {
-                                        classroom.map((val,index)=>{
+                                        classroom.map((val, index) => {
                                             console.log(val)
-                                            return <Participants username={val.username}/>
+                                            return <Participants username={val.username} />
                                         })
                                     }
 
@@ -519,10 +554,10 @@ function Course1(props) {
                             </Paper>
                         </TabPanel> : null}
 
-                        { !isLoading ? <TabPanel value="4">
+                        {!isLoading ? <TabPanel value="4">
                             {
-                                submission.map(({examId,title},index)=>{
-                                    return (<ExamCard examId={examId} examTitle={title}/>)
+                                submission.map(({ examId, title }, index) => {
+                                    return (<ExamCard examId={examId} examTitle={title} />)
                                 })
                             }
                         </TabPanel> : null}
@@ -535,21 +570,31 @@ function Course1(props) {
 }
 const mapStateToProps = state => {
     return {
-        user : state.UserReducer,
+        user: state.UserReducer,
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
-            payload : {user_id}}),
-        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
-            payload : {username}}),
-        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-            payload : {role_id}}),
-        setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
-            payload : {classroom_id}}),
-        setTab: (tab) => dispatch({type:Actions.SET_TAB,
-            payload : {tab}})
+        setUserId: (user_id) => dispatch({
+            type: Actions.SET_USER_ID,
+            payload: { user_id }
+        }),
+        setUsername: (username) => dispatch({
+            type: Actions.SET_USERNAME,
+            payload: { username }
+        }),
+        setRoleId: (role_id) => dispatch({
+            type: Actions.SET_ROLE_ID,
+            payload: { role_id }
+        }),
+        setClassroomId: (classroom_id) => dispatch({
+            type: Actions.SET_CLASSROOM_ID,
+            payload: { classroom_id }
+        }),
+        setTab: (tab) => dispatch({
+            type: Actions.SET_TAB,
+            payload: { tab }
+        })
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Course1)
+export default connect(mapStateToProps, mapDispatchToProps)(Course1)

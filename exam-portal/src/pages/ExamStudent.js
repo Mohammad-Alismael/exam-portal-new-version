@@ -8,14 +8,14 @@ import AppBar from "@mui/material/AppBar";
 import axios from "axios";
 import moment from "moment";
 import Box from "@mui/material/Box";
-import QuizHeaderStudent from "../Components/QuizHeaderStudent";
-import Mcq from "../Components/QuestionBodyStudents/Mcq";
+import QuizHeaderStudent from "../components/QuizHeaderStudent";
+import Mcq from "../components/QuestionBodyStudents/Mcq";
 import CircularProgress from "@mui/material/CircularProgress";
 import {connect} from "react-redux";
-import Text from "../Components/QuestionBodyStudents/Text";
-import Truth from "../Components/QuestionBodyStudents/Truth";
-import Matching from "../Components/QuestionBodyStudents/Matching";
-import CheckboxComp from "../Components/QuestionBodyStudents/CheckboxComp";
+import Text from "../components/QuestionBodyStudents/Text";
+import Truth from "../components/QuestionBodyStudents/Truth";
+import Matching from "../components/QuestionBodyStudents/Matching";
+import CheckboxComp from "../components/QuestionBodyStudents/CheckboxComp";
 import * as Actions from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
