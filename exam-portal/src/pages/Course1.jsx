@@ -43,6 +43,7 @@ import { styled } from '@mui/material/styles';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AppBar from '@mui/material/AppBar';
 import * as Actions from "../store/actions";
+import ExamCard from "../Components/ExamCard";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -114,6 +115,7 @@ function Course1(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [announcements,setAnnouncements] = React.useState([]);
     const [exams,setExams] = React.useState([]);
+    const [submission,setSubmission] = React.useState([]);
     const [announcementText,setAnnouncementText] = React.useState('');
     const [classroom,setClassroom] = React.useState([]);
     const [clipboard, copyToClipboard] = useClipboard();
@@ -275,6 +277,11 @@ function Course1(props) {
                             startingAt: val[3],
                             endingAt: val[4]
                         })
+                    listSubmissionForStudents(val[0]).then((data)=>{
+                        if (data){
+                            setSubmission([...submission, {examId:val[0],title:val[1]}])
+                        }
+                    })
                 })
                 setExams([...tmp])
             })
@@ -282,7 +289,13 @@ function Course1(props) {
         }
 
     },[])
-
+    const listSubmissionForStudents = async (examId) => {
+        const submission = await axios.post('http://localhost:8080/check-submission', {
+            creatorId: props.user.user_id,
+            examId
+        })
+        return submission.data
+    }
     const copyInvitationLink = async () => {
         const classroom = await axios.post('http://localhost:8080/get-classroom-id-by-instructor-id', {
             instructorId: props.user.user_id
@@ -506,7 +519,13 @@ function Course1(props) {
                             </Paper>
                         </TabPanel> : null}
 
-                        { !isLoading ? <TabPanel value="4">Grades</TabPanel> : null}
+                        { !isLoading ? <TabPanel value="4">
+                            {
+                                submission.map(({examId,title},index)=>{
+                                    return (<ExamCard examId={examId} examTitle={title}/>)
+                                })
+                            }
+                        </TabPanel> : null}
                     </TabContext>
                 </Box>
             </ThemeProvider>
