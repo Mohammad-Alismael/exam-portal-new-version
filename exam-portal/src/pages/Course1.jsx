@@ -313,7 +313,7 @@ function Course1(props) {
         props.setClassroomId(classroomId)
         const textBeforeHash = `${classroomId}:${props.user.username}`;
         const b64 = Buffer.from(textBeforeHash).toString('base64');
-        copyToClipboard("http://localhost:3000/invitation/" + b64)
+        copyToClipboard("http://localhost:3000/invitation/" + b64);
         toast.info("copied to clipboard");
         setAnchorEl2(null);
     }

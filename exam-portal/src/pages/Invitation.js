@@ -21,9 +21,12 @@ function Invitation(props) {
     const [instructorusername,setInstructorusername] = React.useState("");
     const handleClickOpen = () => {
         addUserToClassroom().then((data)=>{
-            console.log(data)
+            console.log(data);
+            if (data['id'] != null)
+                toast.success("you've been added to the class successfully")
+            else
+                toast.error('you already signed in to this class!')
             navigate("/course1");
-            toast.success("you've been added to the class successfully")
         })
     };
 

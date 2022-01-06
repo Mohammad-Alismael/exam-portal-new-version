@@ -169,9 +169,9 @@ function ExamStudent(props) {
                     </Toolbar>
                 </AppBar>
                 <Box sx={{mt: 10}}>
+
                     {
                         questions.map((val,index)=>{
-                            console.log(val)
                             if (val['question'].questionType != 4 ) {
                                 return <QuizHeaderStudent
                                     key={index + 1}
@@ -189,7 +189,6 @@ function ExamStudent(props) {
                             }
                         })
                     }
-
                 </Box>
             </>
         )

@@ -9,6 +9,12 @@ import AppBar from "@material-ui/core/AppBar";
 import {createTheme, makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Mcq from "../Components/ResultQuestions/Mcq";
+import QuizHeaderStudent from "../Components/QuizHeaderStudent";
+import Matching from "../Components/ResultQuestions/Matching";
+import Text from "../Components/ResultQuestions/Text";
+import CheckboxComp from "../Components/ResultQuestions/CheckboxComp";
+import Truth from "../Components/ResultQuestions/Truth";
 const useStyles = makeStyles((theme) => ({
 
     paper: {
@@ -59,15 +65,35 @@ function ResultExam(props) {
         })
         return question.data;
     }
+    const chooseBody = (val,index) => {
+        if (val['question'].questionType == 1){
+            return  <Mcq
+                key={index+1}
+                questionId={val['question'].questionId}
+                userAnswer={val['userAnswer'][0]['userAnswer']}
+                options={val['questionOptions']}
+            />
+        }else if(val['question'].questionType == 2){
+            return <Text key={index+1} questionId={val['question'].questionId}/>;
+        }else if(val['question'].questionType == 3){
+            return <CheckboxComp
+                key={index+1}
+                questionId={val['question'].questionId}
+                userAnswer={val['userAnswer']}
+                options={val['questionOptions']}
+            />
+        }else {
+            return <Truth
+                questionId={val['question'].questionId}
+                userAnswer={val['userAnswer'][0]['userAnswer']}
+                answerKey={val['answerKeys'][0]['correctAnswer']}
+            />
+        }
+    }
     useEffect(()=>{
         fetchingMetaQuestions().then((data)=>{
             console.log("meta questions=>", data)
-            data.map((val,index)=>{
-                fetchQuestion(val['questionId']).then((data)=>{
-                    val['questionData'] = data
-                })
-            })
-            console.log("meta questions after=>", data)
+            setQuestions(data)
         })
     },[])
     return (
@@ -78,7 +104,26 @@ function ResultExam(props) {
                 </Toolbar>
             </AppBar>
             <Grid container spacing={2} style={{ backgroundColor: '#161b22', padding: '7%',height:'100vh' }}>
-
+                {
+                    questions.map((val,index)=>{
+                        if (val['question'].questionType != 4 ) {
+                            return <QuizHeaderStudent
+                                key={index + 1}
+                                questionText={val['question'].questionText}
+                                points={val['question'].points}
+                                body={chooseBody(val, index)}/>
+                        }else {
+                            return <Matching
+                                key={index+1}
+                                options={val['questionOptions']}
+                                userAnswer={val['userAnswer']}
+                                questionText={val['question'].questionText}
+                                questionId={val['question'].questionId}
+                                points={val['question'].points}
+                            />;
+                        }
+                    })
+                }
             </Grid>
         </div>
     );

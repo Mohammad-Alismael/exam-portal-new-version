@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import {useNavigate} from "react-router-dom";
 import * as Actions from "../store/actions";
 import {connect} from "react-redux";
-
+import course from "../img/course.png"
 
 function CourseCard(props) {
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ function CourseCard(props) {
                 <CardMedia
                     component="img"
                     height="140"
-                    image={logo}
+                    image={course}
                     alt="green iguana"
                 />
                 <CardContent>
