@@ -101,7 +101,6 @@ const CheckBoxComp = (props) => {
 
     }
     const loadCheckboxOptions = (index) =>{
-        console.log("options =>",boolAr[index])
         return (
             <Grid>
                 <Grid item xs={1}>
@@ -131,14 +130,11 @@ const CheckBoxComp = (props) => {
         )
     }
     useEffect(()=>{
-        // index == props.correctAnswer[index]['correctAnswer']
         let tmp = []
         for (let i= 0 ;i < props.options.length;i++){
             tmp[i] = isChecked(i)
         }
         setBoolAr(tmp)
-
-        console.log("from checkbox tmp=>",boolAr)
         setSelectedAnswer(props.correctAnswer)
     },[])
     return (

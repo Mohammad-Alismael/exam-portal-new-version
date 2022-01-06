@@ -1,13 +1,19 @@
 import React from 'react';
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
+import PropTypes from 'prop-types';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Grid from "@mui/material/Grid";
 import {toast} from "react-toastify";
-import * as Actions from "../../store/actions";
 import {connect} from "react-redux";
+import * as Actions from "../../store/actions";
 import { Typography } from '@mui/material';
 
-const Truth = (props) => {
+
+
+function Mcq(props) {
     const handleChange = (e) => {
         // [{questionId:"",userAnswer:""}]
         const deepCopy = [...props.examStudent.answeredQuestions]
@@ -25,12 +31,26 @@ const Truth = (props) => {
         }
     }
     return (
-        <RadioGroup style={{marginLeft:12}} onChange={handleChange}>
-            <FormControlLabel value={1} control={<Radio />} label={<Typography>True</Typography> } />
-            <FormControlLabel value={0} control={<Radio />} label={<Typography>False</Typography>} />
+        <RadioGroup
+            name="radio-buttons-group"
+            onChange={handleChange}
+        >
+            { props.options.map((val,index)=>{
+                return (
+                    <Grid item fullwidth>
+                        <FormControlLabel
+                            value={index}
+                            control={<Radio />}
+                            label={<Typography>{val['optionValue']}</Typography>} />
+                    </Grid>
+                )
+            })
+
+            }
+
         </RadioGroup>
     );
-};
+}
 const mapStateToProps = state => {
     return {
         user : state.UserReducer,
@@ -44,4 +64,4 @@ const mapDispatchToProps = dispatch => {
 
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Truth);
+export default connect(mapStateToProps,mapDispatchToProps)(Mcq);

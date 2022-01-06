@@ -53,6 +53,7 @@ function  QuizBody(props) {
     const [addOptionText, setAddOptionText] = React.useState('');
     const [checkboxText, setCheckboxText] = React.useState('');
     const [point,setPoint] = React.useState(0);
+    const [checkboxBools,setCheckboxBools] = React.useState([]);
     const setTrueFalseOptions = () =>{
         if(props.questions[props.id - 1] == null){
             props.appendQuestion({id: props.id})
@@ -132,6 +133,7 @@ function  QuizBody(props) {
     }
 
     const handleCheckBoxOptions = (e) => {
+        setCheckboxBools([...checkboxBools,false])
         toast.info(checkboxText)
         setCheckbox([...checkbox,checkboxText])
         let deepCopy = [...props.questions]
@@ -175,9 +177,39 @@ function  QuizBody(props) {
         deepCopy[props.id - 1] = questionObject;
         props.setQuestionArray(deepCopy)
     }
+    const handleChangeCheckBox = (e) =>{
+        const deepCopyB = [...checkboxBools]
+        const i = parseInt(e.target.value);
+        toast.info(i)
+        deepCopyB[i] = !deepCopyB[i]
+        setCheckboxBools(deepCopyB)
+        let deepCopy = [...props.questions]
+        let questionObject = deepCopy[props.id - 1]
 
+        if (e.target.checked) {
+
+            questionObject["correctAnswer"] = getIndex(checkboxBools);
+            deepCopy[props.id - 1] = questionObject;
+
+        }else {
+            questionObject["correctAnswer"] = questionObject["correctAnswer"].filter(item=> item !== i)
+        }
+        props.setQuestionArray(deepCopy)
+        deepCopyB[i] = !deepCopyB[i]
+        setCheckboxBools([...deepCopyB])
+    }
+    const getIndex = (array) => {
+        console.log(array)
+        const tmp = []
+        for (let i= 0; i< array.length; i++){
+            if (array[i]){
+                tmp.push(i)
+            }
+        }
+        console.log(tmp)
+        return tmp
+    }
     useEffect(()=>{
-        console.log("wtf=>",props.questions)
     },[])
         return (
             <Paper elevation={3} className={classes.paperStyle}>
@@ -278,7 +310,16 @@ function  QuizBody(props) {
                                 {
                                     checkbox.map((val,index)=>{
                                         return  <Grid item xs={6}>
-                                            <FormControlLabel key={index} control={<CheckBoxComp />} label={val} />
+                                            <FormControlLabel
+                                                key={index}
+                                                id={index}
+                                                onChange={handleChangeCheckBox}
+                                                control={<Checkbox
+                                                    key={index}
+                                                    value={index}
+                                                />}
+
+                                                label={val} />
                                         </Grid>
                                     })
                                 }
@@ -371,7 +412,9 @@ const mapDispatchToProps = dispatch => {
     return {
 
         setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_CREATE_EXAM_ARRAY,
-            payload : {newQuestionArray}})
+            payload : {newQuestionArray}}),
+        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION_EXAM,
+            payload : {question}})
 
     }
 }

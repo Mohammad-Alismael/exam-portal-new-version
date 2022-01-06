@@ -90,7 +90,7 @@ function Quiz(props) {
         if (sumPoints <= totalPoints){
             assignExamsInfo().then((data)=>{
                 setExamId(data['examId'])
-                props.questions.questions.map(((val, index1) => {
+                props.questions.map(((val, index1) => {
                     assignQuestion(
                         data['examId'],
                         val.QuestionType
@@ -240,7 +240,7 @@ function Quiz(props) {
     }
     useEffect(()=>{
         props.setTotalPoints(0)
-        props.emptyQuestions([])
+        props.setQuestionArray([])
         console.log("questions array =>", props.questions.questions)
 
     },[])
@@ -333,7 +333,7 @@ function Quiz(props) {
 }
 const mapStateToProps = state => {
     return {
-        questions : state.ExamReducer,
+        questions : state.CreateReducer.questionsC,
         user : state.UserReducer
     }
 }
@@ -344,7 +344,9 @@ const mapDispatchToProps = dispatch => {
         setTotalPoints : (points) => dispatch({type: Actions.SET_TOTAL_POINTS,
             payload : {points}}),
         emptyQuestions : (questions) => dispatch({type: Actions.SET_QUESTION_ARRAY,
-            payload : {questions}})
+            payload : {questions}}),
+        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_CREATE_EXAM_ARRAY,
+            payload : {newQuestionArray}})
 
     }
 }

@@ -122,6 +122,9 @@ function Course1(props) {
     const navigate = useNavigate();
     const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
     const handleChange = (event, newValue) => {
+        if (props.user.role_id == 1 && newValue == 2){
+            props.setQuestionArray([])
+        }
         if (newValue == 5) {
             navigate("/courses")
         }else {
@@ -536,6 +539,7 @@ function Course1(props) {
 const mapStateToProps = state => {
     return {
         user : state.UserReducer,
+        questions : state.CreateReducer.questionsC
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -549,7 +553,9 @@ const mapDispatchToProps = dispatch => {
         setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
             payload : {classroom_id}}),
         setTab: (tab) => dispatch({type:Actions.SET_TAB,
-            payload : {tab}})
+            payload : {tab}}),
+        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_CREATE_EXAM_ARRAY,
+            payload : {newQuestionArray}})
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Course1)

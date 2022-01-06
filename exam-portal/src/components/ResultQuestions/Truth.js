@@ -26,8 +26,8 @@ const Truth = (props) => {
     }
     return (
         <RadioGroup style={{marginLeft:12}} onChange={handleChange}>
-            <FormControlLabel value={1} control={<Radio />} label={<Typography>True</Typography> } />
-            <FormControlLabel value={0} control={<Radio />} label={<Typography>False</Typography>} />
+            <FormControlLabel value={1} control={<Radio />} label={<Typography color={"green"}>True</Typography> } />
+            <FormControlLabel value={0} control={<Radio />} label={<Typography color={"red"}>False</Typography>} />
         </RadioGroup>
     );
 };

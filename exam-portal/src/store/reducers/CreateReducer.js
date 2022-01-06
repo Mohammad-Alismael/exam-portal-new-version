@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions'
 const initialState = {
-    questionsC: ["l"],
+    totalPoints: 0,
+    questionsC: [],
 
 }
 
@@ -9,11 +10,16 @@ const CreateReducer = (state = initialState, action) => {
         case actionTypes.SET_CREATE_EXAM_ARRAY:
             return {
                 ...state,
-                questionsC: action.payload.ar
+                questionsC: action.payload.newQuestionArray
+            }
+        case actionTypes.APPEND_QUESTION_EXAM:
+            console.log("from redux=>", state)
+            return {
+                ...state,
+                questionsC: [...state.questionsC, action.payload.question]
             }
         default:
-            break;
+            return state
     }
-    return state
 }
 export default CreateReducer;

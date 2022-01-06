@@ -95,11 +95,9 @@ function Login(props) {
             username,
             password
         }).then((res)=>{
-            console.log("before setting =>",props.user.role_id)
             props.setUserId(res.data[0]['userId']);
             props.setUsername(username);
             props.setRoleId(res.data[0]['roleId']);
-            console.log("after setting =>",props.user.role_id)
             navigate("/course1");
         }).catch((error)=>{
             if(error.response.status == 400)
@@ -108,6 +106,9 @@ function Login(props) {
                 toast.error('error happened!')
         })
 
+
+    }
+    const fetchClassroomId = () => {
 
     }
     return (
@@ -198,7 +199,9 @@ const mapDispatchToProps = dispatch => {
         setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
             payload : {username}}),
         setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-            payload : {role_id}})
+            payload : {role_id}}),
+        setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
+            payload: {classroom_id}})
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

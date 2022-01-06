@@ -55,7 +55,7 @@ function Courses(props) {
     const classes = useStyles();
     const [classrooms, setClassrooms] = React.useState([]);
     const getClassrooms = async () => {
-        const classrooms = await axios.post('http://localhost:8080//get-classroom-ids-from-student-id', {
+        const classrooms = await axios.post('http://localhost:8080/get-classroom-ids-from-student-id', {
             studentId: props.user.user_id,
             classroomId: props.user.classroom_id
         })
@@ -81,7 +81,8 @@ function Courses(props) {
                     })
                 }
             </Grid> : null }
-            {classrooms.length == 0 ? <Grid container spacing={2} style={{ backgroundColor: '#161b22', padding: '7%',height:'100vh' }}>
+            {classrooms.length == 0 ?
+                <Grid container spacing={2} style={{ backgroundColor: '#161b22', padding: '7%',height:'100vh' }}>
                 <Grid item style={{backgroundColor:'white'}}>
                     <Typography color={"default"}  variant="h6">
                         you don't have any courses
