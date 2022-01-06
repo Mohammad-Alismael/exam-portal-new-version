@@ -24,10 +24,29 @@ const Truth = (props) => {
             props.setAnsweredQuestionsArray(deepCopy)
         }
     }
+    const selectColor = (index) =>{
+        console.log("index =>", index)
+        console.log("user answer=>", props.userAnswer);
+        console.log("correct Answer=>", props.userAnswer);
+        console.log("first condition=>",props.userAnswer == index && props.userAnswer == props.correctAnswer)
+        console.log("second condition=>",props.userAnswer == index && props.userAnswer != props.correctAnswer)
+        console.log("second condition=>",props.correctAnswer == index)
+        if (props.userAnswer == index && props.userAnswer != props.correctAnswer){
+            return "green"
+        }
+        if (props.userAnswer == index && props.userAnswer == props.correctAnswer){
+            return "red"
+        }
+        if (props.correctAnswer == index){
+            return "green"
+        }
+
+
+    }
     return (
-        <RadioGroup style={{marginLeft:12}} onChange={handleChange}>
-            <FormControlLabel value={1} control={<Radio />} label={<Typography color={"green"}>True</Typography> } />
-            <FormControlLabel value={0} control={<Radio />} label={<Typography color={"red"}>False</Typography>} />
+        <RadioGroup style={{marginLeft:12}}>
+            <FormControlLabel value={1} control={<Radio checked={props.userAnswer == 0} />} label={<Typography color={selectColor(0)}>True</Typography> } />
+            <FormControlLabel value={0} control={<Radio checked={props.userAnswer == 1}/>} label={<Typography color={selectColor(1)}>False</Typography>} />
         </RadioGroup>
     );
 };

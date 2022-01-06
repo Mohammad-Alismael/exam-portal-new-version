@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -35,23 +35,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Matching(props) {
     const classes = useStyles();
-    const handleChange = (e) => {
-        // [{questionId:"",userAnswer:""}]
-        const deepCopy = [...props.examStudent.answeredQuestions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.questionId === props.questionId)
-                return true;
-        })
-        console.log(questionFound)
-        if(questionFound == -1){
-            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: parseInt(e.target.value)})
-            props.setAnsweredQuestionsArray(deepCopy)
-        }else {
-            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer:parseInt(e.target.value)}
-            props.setAnsweredQuestionsArray(deepCopy)
+    const [colors,setColors] = React.useState([])
+    useEffect(()=>{
+        const tmp =[]
+        for (let index = 0; index < props.options.length; index++) {
+            if (props.userAnswer == index && props.userAnswer != props.correctAnswer){
+                tmp.push("green")
+            }
+            else if (props.userAnswer == index && props.userAnswer == props.correctAnswer){
+                tmp.push("red")
+            }
+            else if (props.correctAnswer == index){
+                tmp.push("green")
+            }
+            else {
+                tmp.push("black")
+            }
         }
+        setColors([...tmp])
+    })
 
-    }
     return (
         <>
           <Paper elevation={3} className={classes.paperStyle}>
@@ -71,15 +74,16 @@ function Matching(props) {
                                   labelId="type"
                                   id="type"
                                   label="Question Options"
-                                  onChange={handleChange}
+
                               >
                                     {
                                         props.options.map((val,index)=>{
                                             return <MenuItem
                                                 key={index+1}
                                                 value={index}
+                                                selected={props.userAnswer == index}
                                             >
-                                                <Typography>{val['optionValue']}</Typography>
+                                                <Typography color={colors[index]}>{val['optionValue']}</Typography>
                                             </MenuItem>
                                         })
                                     }

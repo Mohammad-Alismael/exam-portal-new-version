@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -14,34 +14,37 @@ import { Typography } from '@mui/material';
 
 
 function Mcq(props) {
-    const handleChange = (e) => {
-        // [{questionId:"",userAnswer:""}]
-        const deepCopy = [...props.examStudent.answeredQuestions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.questionId === props.questionId)
-                return true;
-        })
-        console.log(questionFound)
-        if(questionFound == -1){
-            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: parseInt(e.target.value)})
-            props.setAnsweredQuestionsArray(deepCopy)
-        }else {
-            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer: parseInt(e.target.value)}
-            props.setAnsweredQuestionsArray(deepCopy)
+    const [colors,setColors] = React.useState([])
+    useEffect(()=>{
+        const tmp =[]
+        for (let index = 0; index < props.options.length; index++) {
+            if (props.userAnswer == index && props.userAnswer != props.correctAnswer){
+                tmp.push("green")
+            }
+            else if (props.userAnswer == index && props.userAnswer == props.correctAnswer){
+                tmp.push("red")
+            }
+            else if (props.correctAnswer == index){
+                tmp.push("green")
+            }
+            else {
+                tmp.push("black")
+            }
         }
-    }
+        setColors([...tmp])
+    })
     return (
         <RadioGroup
             name="radio-buttons-group"
-            onChange={handleChange}
         >
             { props.options.map((val,index)=>{
                 return (
                     <Grid item fullwidth>
                         <FormControlLabel
                             value={index}
-                            control={<Radio />}
-                            label={<Typography>{val['optionValue']}</Typography>} />
+                            control={<Radio checked={props.userAnswer == index}/>}
+                            label={<Typography color={colors[index]}>{val['optionValue']}</Typography>}
+                        />
                     </Grid>
                 )
             })
