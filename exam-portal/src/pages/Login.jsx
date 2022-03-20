@@ -18,6 +18,8 @@ import axios from "axios";
 import * as Actions from "../store/actions";
 import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {loginAction} from "../actions/LoginAcion"
+import Navbar from "../Container/Navbar";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -28,8 +30,6 @@ const useStyles = makeStyles((theme) => ({
         height: '70vh',
         width: '35%',
         margin: "30px auto"
-
-
     },
     paper: {
         marginTop: theme.spacing(7),
@@ -42,14 +42,15 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         maxWidth: '320px',
-        // marginTop: theme.spacing(1),
         align: 'center',
     },
-
-    signin: {
+    signInBtn: {
         margin: theme.spacing(3, 0, 2),
         textTransform: 'none',
-        fontSize: 17
+        fontSize: 17,
+        maxWidth: '40%',
+        maxHeight: '50px',
+        padding: '16px'
     },
     title: {
         flexGrow: 1,
@@ -91,37 +92,13 @@ function Login(props) {
     const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault()
-        axios.post('http://localhost:8080/authenticate',{
-            username,
-            password
-        }).then((res)=>{
-            props.setUserId(res.data[0]['userId']);
-            props.setUsername(username);
-            props.setRoleId(res.data[0]['roleId']);
-            navigate("/course1");
-        }).catch((error)=>{
-            if(error.response.status == 400)
-                toast.info("incorrect username or password")
-            else
-                toast.error('error happened!')
-        })
-
-
-    }
-    const fetchClassroomId = () => {
+        props.setUserData(username, password);
+        console.log("user v2",props.userV2)
 
     }
     return (
         <div>
-            <AppBar position="fixed" color="white" elevation={0} >
-                <Toolbar style={{ marginLeft: '12%', marginRight: '12%', }}>
-                    <img src={logo} className={classes.logo} alt="Exam Portal" />
-                    <Typography variant="body2" className={classes.title} style={{ color: '#666666' }} align="right">
-                        Don't have an account? <Link href="/signup">Sign up</Link>
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-
+            <Navbar type={1}/>
             <Grid item md={12} sm={12} style={{ backgroundColor: '#161b22', padding: '7%' }}>
                 <Paper elevation={10} className={classes.paperStyle}>
                     <div className={classes.paper}>
@@ -176,9 +153,9 @@ function Login(props) {
                                 color="secondary"
                                 type="submit"
                                 fullWidth
-                                className={classes.signin}
+                                className={classes.signInBtn}
                                 size="large"
-                                style={{ maxWidth: '40%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>Login</b>
+                                ><b>Login</b>
                             </Button>
                         </ThemeProvider>
                     </div>
@@ -190,18 +167,20 @@ function Login(props) {
 const mapStateToProps = state => {
     return {
         user : state.UserReducer,
+        userV2: state.UserReducerV2
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
-            payload : {user_id}}),
-        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
-            payload : {username}}),
-        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-            payload : {role_id}}),
-        setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
-            payload: {classroom_id}})
+        // setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
+        //     payload : {user_id}}),
+        // setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
+        //     payload : {username}}),
+        // setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
+        //     payload : {role_id}}),
+        // setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
+        //     payload: {classroom_id}}),
+        setUserData : (username,password) => dispatch(loginAction(username,password))
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

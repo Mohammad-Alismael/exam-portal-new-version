@@ -1,18 +1,12 @@
 import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import logo from '../img/logo.png'
-
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -22,6 +16,7 @@ import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import * as Actions from "../store/actions";
 import {connect} from "react-redux";
+import Navbar from "../Container/Navbar";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -32,8 +27,6 @@ const useStyles = makeStyles((theme) => ({
         height: '70vh',
         width: '35%',
         margin: "30px auto"
-
-
     },
     paper: {
         marginTop: theme.spacing(5),
@@ -41,23 +34,18 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    logo: {
-        maxWidth: '20%',
-    },
     form: {
         maxWidth: '320px',
         align: 'center',
     },
-
-    signin: {
+    signUpBtn: {
         margin: theme.spacing(3, 0, 2),
         textTransform: 'none',
-        fontSize: 17
+        fontSize: 17,
+        maxWidth: '40%',
+        maxHeight: '50px',
+        padding: '16px'
     },
-    title: {
-        flexGrow: 1,
-    },
-
     container: {
         display: "flex",
         alignItems: "center"
@@ -96,7 +84,6 @@ function Signup(props) {
     const navigate = useNavigate();
     const submit = (e) => {
         if (username != '' && password != '') {
-
             e.preventDefault()
             axios.post('http://localhost:8080/add-user', {
                 username,
@@ -123,18 +110,7 @@ function Signup(props) {
     }
     return (
         <div>
-
-            <AppBar position="fixed" color="white" elevation={0} >
-                <Toolbar style={{ marginLeft: '12%', marginRight: '12%', }}>
-
-                    <img src={logo} className={classes.logo} alt="Exam Portal" />
-
-                    <Typography variant="body2" className={classes.title} style={{ color: '#666666' }} align="right">
-                        Already have an account? <Link href="/">Login</Link>
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-
+            <Navbar type={2}/>
             <Grid item md={12} sm={12} style={{ backgroundColor: '#161b22', padding: '7%' }}>
                 <Paper elevation={10} className={classes.paperStyle}>
                     <div className={classes.paper}>
@@ -205,8 +181,15 @@ function Signup(props) {
                             </ThemeProvider>
                         </Grid>
                         <ThemeProvider theme={theme2}>
-                            <Button onClick={submit} variant="contained" color="secondary" type="submit" fullWidth className={classes.signin} size="large"
-                                    style={{ maxWidth: '40%', maxHeight: '50px', margin: '40px 0px 40px', padding: '16px' }}><b>sign up</b>
+                            <Button
+                                onClick={submit}
+                                variant="contained"
+                                color="secondary"
+                                type="submit"
+                                fullWidth
+                                className={classes.signUpBtn}
+                                size="large"
+                                ><b>sign up</b>
                             </Button>
                         </ThemeProvider>
                     </div>

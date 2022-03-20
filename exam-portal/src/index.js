@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import thunk from "redux-thunk";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers,applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
 import UserReducer from "./store/reducers/UserReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
 import CreateReducer from "./store/reducers/CreateReducer";
+import UserReducerV2 from "./store/reducers/UserReducerV2";
 import {BrowserRouter} from "react-router-dom";
 const rootReducer = combineReducers({
     ExamReducer,
     UserReducer,
+    UserReducerV2,
     ExamStudentReducer,
     CreateReducer
 });
@@ -40,7 +42,7 @@ function loadFromLocalStorage() {
 
 const persistedState = loadFromLocalStorage();
 
-const store = createStore(rootReducer,persistedState);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 store.subscribe(() => saveToLocalStorage(store.getState()));
 ReactDOM.render(
     <Provider store={store}>
