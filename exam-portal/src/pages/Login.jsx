@@ -7,15 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import logo from '../img/logo.png'
-import {toast } from 'react-toastify';
-import axios from "axios";
-import * as Actions from "../store/actions";
 import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {loginAction} from "../actions/LoginAcion"
@@ -172,14 +166,6 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        // setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
-        //     payload : {user_id}}),
-        // setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
-        //     payload : {username}}),
-        // setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-        //     payload : {role_id}}),
-        // setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
-        //     payload: {classroom_id}}),
         setUserData : (username,password) => dispatch(loginAction(username,password))
     }
 }

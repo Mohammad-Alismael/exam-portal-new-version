@@ -17,6 +17,8 @@ import {useNavigate} from "react-router-dom";
 import * as Actions from "../store/actions";
 import {connect} from "react-redux";
 import Navbar from "../Container/Navbar";
+import {SignUpAction} from "../actions/SignUpAction"
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -85,28 +87,18 @@ function Signup(props) {
     const submit = (e) => {
         if (username != '' && password != '') {
             e.preventDefault()
-            axios.post('http://localhost:8080/add-user', {
+            const data = {
                 username,
                 password,
                 emailId: email,
                 roleId: type
-            }).then((res) => {
-                console.log(res.data)
-                props.setUserId(res.data['userId']);
-                props.setUsername(username);
-                props.setRoleId(res.data['roleId']);
-                navigate("/course1");
-            }).catch((error) => {
-                console.log(error)
-                if (error.response.status == 409)
-                    toast.warn("username already taken")
-                else
-                    toast.error('error happened!')
-            })
+            }
+            props.signUp(data)
+            navigate("/course1");
+            console.log("user v2",props.userV2)
         }else{
             toast.warn('you cannot leave username or password field empty!')
         }
-
     }
     return (
         <div>
@@ -198,7 +190,11 @@ function Signup(props) {
         </div>
     );
 }
-
+const mapStateToProps = state => {
+    return {
+        userV2: state.UserReducerV2
+    }
+}
 const mapDispatchToProps = dispatch => {
     return {
         setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
@@ -206,8 +202,9 @@ const mapDispatchToProps = dispatch => {
         setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
             payload : {username}}),
         setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-            payload : {role_id}})
+            payload : {role_id}}),
+        signUp : (data) => dispatch(SignUpAction(data))
     }
 }
 
-export default connect(null,mapDispatchToProps)(Signup);
+export default connect(mapStateToProps,mapDispatchToProps)(Signup);
