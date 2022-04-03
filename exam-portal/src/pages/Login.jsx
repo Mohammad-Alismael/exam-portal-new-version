@@ -14,6 +14,7 @@ import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {loginAction} from "../actions/LoginAcion"
 import Navbar from "../Container/Navbar";
+import Box from "@mui/material/Box";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
     paperStyle: {
         padding: 30,
-        height: '70vh',
+        height: "100%",
         width: '35%',
         margin: "30px auto"
     },
@@ -45,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '40%',
         maxHeight: '50px',
         padding: '16px'
+    },
+    forgotPasswordBox : {
+        display: 'flex',
+        justifyContent: 'center'
     },
     title: {
         flexGrow: 1,
@@ -91,9 +96,9 @@ function Login(props) {
 
     }
     return (
-        <div>
+        <div style={{ backgroundColor: '#161b22',height: '100vh'}}>
             <Navbar type={1}/>
-            <Grid item md={12} sm={12} style={{ backgroundColor: '#161b22', padding: '7%' }}>
+            <Grid container xl={12} md={12} sm={12} style={{padding: '7%'}}>
                 <Paper elevation={10} className={classes.paperStyle}>
                     <div className={classes.paper}>
                         <ThemeProvider theme={theme2}>
@@ -133,7 +138,6 @@ function Login(props) {
                                         autoComplete="current-password"
                                     />
                                 </form>
-
                             </ThemeProvider>
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
@@ -153,6 +157,12 @@ function Login(props) {
                             </Button>
                         </ThemeProvider>
                     </div>
+                    <Divider style={{ margin: '0px 0px 20px' }} />
+                        <Box className={classes.forgotPasswordBox}>
+                            <Link href="#">
+                                {"Forgot your password?"}
+                            </Link>
+                        </Box>
                 </Paper>
             </Grid>
         </div>
