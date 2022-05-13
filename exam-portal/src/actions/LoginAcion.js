@@ -1,27 +1,24 @@
 import axios from "axios"
 import * as Actions from "../store/actions";
 import {toast } from 'react-toastify';
+import userApi from "../Classes/UserApi";
 
-export function loginAction(username,password){
+export function loginAction(username,password,callback){
+
     return (dispatch) => {
-        return axios.post('http://localhost:8080/authenticate',{
-            username,
-            password
-        }).then((res)=> {
-            console.log(res.data)
-            dispatch(login(res.data))
-        }).catch((error)=>{
-                if(error.response.status == 500)
-                    toast.info("incorrect username or password")
-                else
-                    toast.error('error happened!')
-            })
+        return userApi.userAuth(username,password)
+            .then( res => {
+                callback(res.data)
+                dispatch(login(res.data))
+            }).catch(error => {
+                toast.info(error.response.data.message)
+            });
     }
 }
 
 export function login(data){
     return {
         type: Actions.AUTHENTICATE,
-        user_data : data
+        access_token : data
     }
 }

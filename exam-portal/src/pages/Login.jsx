@@ -12,9 +12,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {loginAction} from "../actions/LoginAcion"
 import Navbar from "../Container/Navbar";
 import Box from "@mui/material/Box";
+import {loginAction} from "../actions/LoginAcion";
+import axios from "axios";
+import {toast} from "react-toastify";
+import Token from "../store/reducers/Token";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -91,8 +94,13 @@ function Login(props) {
     const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault()
-        props.setUserData(username, password);
-        console.log("user v2",props.userV2)
+        if (username !== '' && password !== '') {
+            props.setUserData(username, password, (res)=> {
+                navigate('/classes')
+            })
+        }else {
+            toast('username or password field is missing!')
+        }
 
     }
     return (
@@ -170,13 +178,12 @@ function Login(props) {
 }
 const mapStateToProps = state => {
     return {
-        user : state.UserReducer,
-        userV2: state.UserReducerV2
+        token: state.Token
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setUserData : (username,password) => dispatch(loginAction(username,password))
+        setUserData : (username,password,callback) => dispatch(loginAction(username,password,callback))
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

@@ -94,7 +94,7 @@ function Signup(props) {
                 roleId: type
             }
             props.signUp(data)
-            navigate("/course1");
+            navigate("/");
             console.log("user v2",props.userV2)
         }else{
             toast.warn('you cannot leave username or password field empty!')
