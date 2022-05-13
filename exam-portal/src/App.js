@@ -14,6 +14,7 @@ import ExamStudent from "./pages/ExamStudent";
 import Invitation from "./pages/Invitation";
 import Courses from "./pages/Courses";
 import ResultExam from "./pages/ResultExam";
+import ForgotPassword from "./pages/ForgotPassword";
 // import Home from "./pages/Home";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route exact path="/" element={<Login/>}/>
       <Route path="/logout" element={<Logout/>} />
       <Route exact path="/signup" element={<Signup/>}/>
+      <Route exact path="/forgot-password" element={<ForgotPassword/>}/>
       <Route exact path="/classes" element={<Classes/>}/>
       <Route exact path="/course1" element={<Course1/>}/>
       <Route exact path="/courses" element={<Courses/>}/>

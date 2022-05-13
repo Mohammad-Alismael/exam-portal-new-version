@@ -93,9 +93,9 @@ function Signup(props) {
                 emailId: email,
                 roleId: type
             }
-            props.signUp(data)
-            navigate("/");
-            console.log("user v2",props.userV2)
+            props.signUp(data,()=>{
+                navigate("/");
+            })
         }else{
             toast.warn('you cannot leave username or password field empty!')
         }
@@ -197,13 +197,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
-            payload : {user_id}}),
-        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
-            payload : {username}}),
-        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-            payload : {role_id}}),
-        signUp : (data) => dispatch(SignUpAction(data))
+        signUp : (data,callback) => dispatch(SignUpAction(data,callback))
     }
 }
 

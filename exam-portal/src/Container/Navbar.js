@@ -21,7 +21,7 @@ function Navbar(props) {
                 <img src={logo} className={classes.logo} alt="Exam Portal" />
                 <Typography variant="body2" className={classes.title} style={{ color: '#666666' }} align="right">
                     {props.type == 1 ? "Don't have an account?" : "Already have an account?"}
-                    <Link href={props.type == 1 ?"/signup": "/"}>Sign up</Link>
+                    <Link href={props.type == 1 ?"/signup": "/"}>{props.type == 1 ?"Sign up": "Login"}</Link>
                 </Typography>
             </Toolbar>
         </AppBar>

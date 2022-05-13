@@ -167,7 +167,7 @@ function Login(props) {
                     </div>
                     <Divider style={{ margin: '0px 0px 20px' }} />
                         <Box className={classes.forgotPasswordBox}>
-                            <Link href="#">
+                            <Link href="/forgot-password">
                                 {"Forgot your password?"}
                             </Link>
                         </Box>
