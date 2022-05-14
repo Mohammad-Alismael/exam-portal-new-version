@@ -20,8 +20,11 @@ import {toast} from "react-toastify";
 import Token from "../store/reducers/Token";
 const useStyles = makeStyles((theme) => ({
     root: {
+        display: 'flex',
+        height: '100vh',
         flexGrow: 1,
-        backgroundColor: 'blue',
+        backgroundColor: '#1a1a1a',
+        padding: '7%'
     },
     paperStyle: {
         padding: 30,
@@ -72,8 +75,8 @@ const theme2 = createTheme({
     typography: {
         h3: {
             fontSize: 32,
-            marginTop: -40,
-            color: '#161b22'
+            color: '#161b22',
+            textAlign: 'center'
         },
     },
     palette: {
@@ -104,21 +107,20 @@ function Login(props) {
 
     }
     return (
-        <div style={{ backgroundColor: '#161b22',height: '100vh'}}>
+        <div>
+            <ThemeProvider theme={theme2}>
             <Navbar type={1}/>
-            <Grid container xl={12} md={12} sm={12} style={{padding: '7%'}}>
+            <Grid className={classes.root} container xl={12} md={12} sm={12} >
                 <Paper elevation={10} className={classes.paperStyle}>
                     <div className={classes.paper}>
-                        <ThemeProvider theme={theme2}>
-                            <Typography variant="h3">
-                                <b>Login</b>
-                            </Typography>
-                        </ThemeProvider>
+                        <Typography variant="h3">
+                            <b>Login</b>
+                        </Typography>
                     </div>
                     <Divider style={{ margin: '30px 0px 0px' }} />
                     <div className={classes.paper}>
                         <Grid item md={12} sm={12} xs={6}>
-                            <ThemeProvider theme={theme2}>
+
                                 <form className={classes.form} noValidate>
                                     <TextField
                                         onChange={e => (setUsername(e.target.value))}
@@ -146,13 +148,11 @@ function Login(props) {
                                         autoComplete="current-password"
                                     />
                                 </form>
-                            </ThemeProvider>
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Remember me"
                             />
                         </Grid>
-                        <ThemeProvider theme={theme2}>
                             <Button
                                 onClick={submit}
                                 variant="contained"
@@ -163,7 +163,6 @@ function Login(props) {
                                 size="large"
                                 ><b>Login</b>
                             </Button>
-                        </ThemeProvider>
                     </div>
                     <Divider style={{ margin: '0px 0px 20px' }} />
                         <Box className={classes.forgotPasswordBox}>
@@ -173,6 +172,7 @@ function Login(props) {
                         </Box>
                 </Paper>
             </Grid>
+            </ThemeProvider>
         </div>
     );
 }

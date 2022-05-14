@@ -15,6 +15,8 @@ import Invitation from "./pages/Invitation";
 import Courses from "./pages/Courses";
 import ResultExam from "./pages/ResultExam";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from './pages/ResetPassword'
+import ActivateEmail from "./pages/ActivateEmail";
 // import Home from "./pages/Home";
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
       <Route path="/logout" element={<Logout/>} />
       <Route exact path="/signup" element={<Signup/>}/>
       <Route exact path="/forgot-password" element={<ForgotPassword/>}/>
+      <Route exact path="/reset-password/:reset_token" element={<ResetPassword/>}/>
+      <Route exact path="/activation/:email_token" element={<ActivateEmail/>}/>
       <Route exact path="/classes" element={<Classes/>}/>
       <Route exact path="/course1" element={<Course1/>}/>
       <Route exact path="/courses" element={<Courses/>}/>
