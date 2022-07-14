@@ -1,8 +1,6 @@
 import axios from "axios";
-import {toast} from "react-toastify";
-import {login} from "../actions/LoginAcion";
 
-class UserApi {
+class User {
     static userAuth(username, password) {
         return axios.post('http://localhost:8081/user/auth',{
             username,
@@ -31,4 +29,4 @@ class UserApi {
     }
 }
 
-export default UserApi;
+export default User;

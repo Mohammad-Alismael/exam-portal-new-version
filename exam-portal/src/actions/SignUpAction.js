@@ -1,7 +1,6 @@
-import axios from "axios"
 import * as Actions from "../store/actions";
 import {toast } from 'react-toastify';
-import userApi from "../Classes/UserApi";
+import userApi from "../api/services/User";
 
 export function SignUpAction({username,password,emailId,roleId},callback){
     return (dispatch) => {

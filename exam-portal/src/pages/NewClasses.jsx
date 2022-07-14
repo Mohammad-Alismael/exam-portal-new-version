@@ -11,13 +11,15 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import ClassCard from "../Components/ClassCard";
 import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
         top: "10%",
         padding: '1rem',
         backgroundColor: '#1a1a1a',
-        height: '92vh',
+        height: '91.98vh',
+        width: '100vw',
         overflow: 'hidden'
     },
     createClass: {
@@ -28,7 +30,10 @@ const useStyles = makeStyles((theme) => ({
             transform: 'translate(-50%,-175%)'
         }
     },
-
+    noClass: {
+        marginTop: '50% !important',
+        transform: 'translate(0%,-100%)'
+    }
 }));
 export default function NewClasses() {
     const classes = useStyles();
@@ -44,7 +49,7 @@ export default function NewClasses() {
     return (
         <>
            <ResponsiveAppBar/>
-            <Grid
+            { true ? <Grid
                 container
                   spacing={2} className={classes.root}>
                 <ClassCard/>
@@ -55,7 +60,19 @@ export default function NewClasses() {
                         <Button variant="contained" onClick={handleClickOpen}>New Class</Button>
                     </Card>
                 </Grid>
-            </Grid>
+            </Grid> : null}
+            { true ? <Grid
+                container
+                spacing={2} className={classes.root}>
+                <ClassCard/>
+                <ClassCard/>
+                <ClassCard/>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card className={classes.createClass}>
+                        <Typography variant={'h5'} align={'center'} className={classes.noClass}>you haven't join any courses yet.</Typography>
+                    </Card>
+                </Grid>
+            </Grid> : null}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Create New Class</DialogTitle>
                 <DialogContent>
