@@ -12,12 +12,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import Navbar from "../Container/Navbar";
+import Navbar from "../layouts/Navbar";
 import Box from "@mui/material/Box";
 import {loginAction} from "../actions/LoginAcion";
 import axios from "axios";
 import {toast} from "react-toastify";
 import Token from "../store/reducers/Token";
+import {theme,authStyles} from '../utils/Global/useStyles'
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
     paperStyle: {
         padding: 30,
-        height: "100%",
+        height: '70vh',
         width: '35%',
         margin: "30px auto"
     },
@@ -71,25 +73,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const theme2 = createTheme({
-    typography: {
-        h3: {
-            fontSize: 32,
-            color: '#161b22',
-            textAlign: 'center'
-        },
-    },
-    palette: {
-        primary: {
-            main: 'rgb(22,27,34)',
-        },
-        secondary: {
-            main: 'rgb(255,208,94)',
-        }
-    }
-})
-
-
 function Login(props) {
     const classes = useStyles();
     const [username,setUsername] = useState('');
@@ -108,9 +91,9 @@ function Login(props) {
     }
     return (
         <div>
-            <ThemeProvider theme={theme2}>
+            <ThemeProvider theme={theme}>
             <Navbar type={1}/>
-            <Grid className={classes.root} container xl={12} md={12} sm={12} >
+            <Grid item md={12} sm={12} style={{ backgroundColor: '#161b22', padding: '7%' }} >
                 <Paper elevation={10} className={classes.paperStyle}>
                     <div className={classes.paper}>
                         <Typography variant="h3">
