@@ -14,20 +14,23 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {makeStyles} from "@material-ui/core/styles";
 import {theme,authStyles} from '../utils/Global/useStyles'
-import { withStyles } from "@material-ui/core/styles";
+import {connect} from "react-redux";
+import {useEffect} from "react";
+import jwt from "jwt-decode";
 const pages = ['home', 'exams', 'classmates'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 const useStyles = makeStyles((theme) => ({
     logo: {
         marginTop: '-5px',
         maxWidth: '13%',
     },
 }));
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = (props) => {
     const classes = useStyles();
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+    const [username,setUsername] = React.useState('');
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -42,7 +45,10 @@ const ResponsiveAppBar = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-
+    useEffect(()=>{
+        const user_data = jwt(props.token['access_token']['accessToken'])
+        setUsername(user_data['username'])
+    },[])
     return (
         <ThemeProvider theme={theme} color={"light"}>
         <AppBar position="static">
@@ -100,7 +106,7 @@ const ResponsiveAppBar = () => {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="mohammad alismael" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt={username} src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -132,4 +138,9 @@ const ResponsiveAppBar = () => {
         </ThemeProvider>
     );
 };
-export default ResponsiveAppBar;
+const mapStateToProps = state => {
+    return {
+        token : state.TokenReducer
+    }
+}
+export default connect(mapStateToProps,null)(ResponsiveAppBar);

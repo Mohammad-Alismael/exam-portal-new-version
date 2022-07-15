@@ -117,7 +117,7 @@ function Signup(props) {
                             <Button
                                 onClick={submit}
                                 variant="contained"
-                                color="secondary"
+                                color="warning"
                                 type="submit"
                                 fullWidth
                                 className={classes.signUpBtn}

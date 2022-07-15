@@ -6,7 +6,6 @@ class User {
             username,
             password
         }).then((res)=> {
-            console.log('data from backend',res)
             return res
         }).catch((error)=>{
             // console.log(error)

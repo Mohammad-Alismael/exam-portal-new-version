@@ -17,7 +17,7 @@ import Box from "@mui/material/Box";
 import {loginAction} from "../actions/LoginAcion";
 import axios from "axios";
 import {toast} from "react-toastify";
-import Token from "../store/reducers/Token";
+import TokenReducer from "../store/reducers/TokenReducer";
 import {theme,authStyles} from '../utils/Global/useStyles'
 
 const useStyles = makeStyles((theme) => ({
@@ -82,7 +82,7 @@ function Login(props) {
         e.preventDefault()
         if (username !== '' && password !== '') {
             props.setUserData(username, password, (res)=> {
-                navigate('/classes')
+                navigate('/courses')
             })
         }else {
             toast('username or password field is missing!')
@@ -161,7 +161,7 @@ function Login(props) {
 }
 const mapStateToProps = state => {
     return {
-        token: state.Token
+        token: state.TokenReducer
     }
 }
 const mapDispatchToProps = dispatch => {

@@ -72,9 +72,9 @@ export const theme = createTheme({
         },
     },
     palette: {
-        primary: {
-            main: 'rgb(255,255,255)',
-        },
+        // primary: {
+        //     // main: 'rgb(255,255,255)',
+        // },
         secondary: {
             main: 'rgb(0,0,0)',
         },

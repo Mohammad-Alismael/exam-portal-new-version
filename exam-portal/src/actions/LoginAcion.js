@@ -7,8 +7,8 @@ export function loginAction(username,password,callback){
     return (dispatch) => {
         return userApi.userAuth(username,password)
             .then( res => {
-                callback(res.data)
                 dispatch(login(res.data))
+                callback(res.data)
             }).catch(error => {
                 toast.info(error.response.data.message)
             });

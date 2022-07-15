@@ -13,12 +13,10 @@ class Course {
             throw error
         })
     }
-    static createCourse({username,password,emailId,roleId}) {
-        return axios.post('http://localhost:8081/user/create',{
-            username,
-            password,
-            email_id: emailId,
-            role_id: roleId
+    static createCourse({course_name, user_id}) {
+        return axios.post('http://localhost:8081/classroom/create',{
+            class_name: course_name,
+            instructor_id: user_id,
         }).then((res)=> {
             console.log('data from backend',res)
             return res

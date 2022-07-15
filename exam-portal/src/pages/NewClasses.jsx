@@ -7,11 +7,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import ClassCard from "../Components/ClassCard";
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
+import jwt from 'jwt-decode';
+import {connect} from "react-redux";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
@@ -35,33 +38,39 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translate(0%,-100%)'
     }
 }));
-export default function NewClasses() {
+function NewClasses(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-
+    const [roleID,setRoleID] = React.useState(null);
+    const [newClassName,setNewClassName] = useState('');
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
+        alert(newClassName);
         setOpen(false);
     };
+    useEffect(()=>{
+        const user_data = jwt(props.token['access_token']['accessToken'])
+        setRoleID(user_data['role_id'])
+    },[])
     return (
         <>
            <ResponsiveAppBar/>
-            { true ? <Grid
+             <Grid
                 container
                   spacing={2} className={classes.root}>
                 <ClassCard/>
                 <ClassCard/>
                 <ClassCard/>
-                <Grid item xs={12} sm={6} md={3}>
+                 { roleID == 3 ? <Grid item xs={12} sm={6} md={3}>
                     <Card className={classes.createClass}>
                         <Button variant="contained" onClick={handleClickOpen}>New Class</Button>
                     </Card>
-                </Grid>
-            </Grid> : null}
-            { true ? <Grid
+                </Grid> : null}
+            </Grid>
+            { false ? <Grid
                 container
                 spacing={2} className={classes.root}>
                 <ClassCard/>
@@ -81,6 +90,7 @@ export default function NewClasses() {
                         will send updates occasionally.
                     </DialogContentText>
                     <TextField
+                        onChange={e => (setNewClassName(e.target.value))}
                         autoFocus
                         margin="dense"
                         id="name"
@@ -98,3 +108,9 @@ export default function NewClasses() {
         </>
     )
 }
+const mapStateToProps = state => {
+    return {
+        token : state.TokenReducer
+    }
+}
+export default connect(mapStateToProps,null)(NewClasses);
