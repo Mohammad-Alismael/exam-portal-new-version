@@ -29,7 +29,7 @@ function App() {
       <Route exact path="/forgot-password" element={<ForgotPassword/>}/>
       <Route exact path="/reset-password/:reset_token" element={<ResetPassword/>}/>
       <Route exact path="/activation/:email_token" element={<ActivateEmail/>}/>
-      <Route exact path="/course1" element={<Course1/>}/>
+      <Route exact path="/courses/:course_id" element={<Course1/>}/>
       <Route exact path="/courses" element={<NewClasses/>}/>
       <Route exact path="/preview/:examId" element={<PreviewExam/>}/>
       <Route exact path="/result/:examId" element={<ResultExam/>}/>
