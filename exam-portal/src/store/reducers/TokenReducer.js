@@ -1,19 +1,24 @@
 import * as actionTypes from '../actions'
+import jwt from "jwt-decode";
 
 const initialState = {
-   access_token : {}
+   access_token : {},
+    isExpired: null
 }
 
 const TokenReducer  = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.AUTHENTICATE:
-            console.log("checking wtf",{
-                ...state,
-                access_token: action.access_token
-            } )
             return {
                 ...state,
                 access_token: action.access_token
+            }
+        case actionTypes.isExpired:
+            const user_data = jwt(state.access_token['accessToken'])
+            const current_time = new Date().getTime() / 1000;
+            return {
+                ...state,
+                isExpired: current_time < user_data['exp']
             }
         default:
             break;

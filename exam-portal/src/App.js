@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Course1 from './pages/Course1'
 import Quiz from './Components/Quiz';
 import Logout from "./pages/Logout";
-
-import React from "react";
+import {connect} from "react-redux";
+import React, {useEffect,useState} from "react";
 import PreviewExam from "./pages/PreviewExam";
 import ExamStudent from "./pages/ExamStudent";
 import Invitation from "./pages/Invitation";
@@ -16,9 +16,19 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from './pages/ResetPassword'
 import ActivateEmail from "./pages/ActivateEmail";
 import NewClasses from "./pages/NewClasses"
+import jwt from "jwt-decode";
+import Protected from "./utils/Protected";
+import * as Actions from "./store/actions";
 // import Home from "./pages/Home";
 
-function App() {
+function App(props) {
+  const [isLoggedIn, setisLoggedIn] = useState(null);
+  useEffect(()=>{
+    props.isTokenExpired()
+    alert(props.token.isExpired)
+    setisLoggedIn(props.token.isExpired)
+
+  },[])
   return (
     <>
       <ToastContainer />
@@ -30,7 +40,11 @@ function App() {
       <Route exact path="/reset-password/:reset_token" element={<ResetPassword/>}/>
       <Route exact path="/activation/:email_token" element={<ActivateEmail/>}/>
       <Route exact path="/courses/:course_id" element={<Course1/>}/>
-      <Route exact path="/courses" element={<NewClasses/>}/>
+      <Route exact path="/courses" element={
+        <Protected isLoggedIn={isLoggedIn}>
+          <NewClasses/>
+        </Protected>
+      }/>
       <Route exact path="/preview/:examId" element={<PreviewExam/>}/>
       <Route exact path="/result/:examId" element={<ResultExam/>}/>
       <Route exact path="/exam/:examId" element={<ExamStudent/>}/>
@@ -40,5 +54,14 @@ function App() {
     </>
   );
 }
-
-export default App;
+const mapStateToProps = state => {
+  return {
+    token : state.TokenReducer
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    isTokenExpired: () => dispatch({type:Actions.isExpired})
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(App);

@@ -17,4 +17,4 @@ export const SET_STARTING_AT = 'SET_STARTING_AT';
 export const SET_ENDING_AT = 'SET_ENDING_AT';
 export const SET_EXAM_TITLE = 'SET_EXAM_TITLE';
 export const AUTHENTICATE = 'AUTHENTICATE';
-export const USER_DATA = 'USER_DATA';
+export const isExpired = 'IS_Expired';

@@ -17,6 +17,7 @@ import {connect} from "react-redux";
 import Course from '../api/services/Course'
 import {toast} from "react-toastify";
 import LinearProgress from '@mui/material/LinearProgress';
+import * as Actions from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
@@ -66,16 +67,16 @@ function NewClasses(props) {
     };
     useEffect(()=>{
         const user_data = jwt(props.token['access_token']['accessToken'])
-        const current_time = new Date().getTime() / 1000;
-        if (current_time < user_data['exp']) {
+        props.isTokenExpired()
+        if (props.token.isExpired) {
             setUserID(user_data['user_id'])
             setRoleID(user_data['role_id'])
             course.fetchCourses()
                 .then((res) => {
                     if(res['message'] == null){
                         setCourses(res)
-                        setLoading(false)
                     }
+                    setLoading(false)
                 })
         }else {
             toast('user timed out!')
@@ -135,4 +136,9 @@ const mapStateToProps = state => {
         token : state.TokenReducer
     }
 }
-export default connect(mapStateToProps,null)(NewClasses);
+const mapDispatchToProps = dispatch => {
+    return {
+        isTokenExpired: () => dispatch({type:Actions.isExpired})
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(NewClasses);

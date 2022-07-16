@@ -16,20 +16,19 @@ const useStyles = makeStyles((theme) => ({
         height: 120,
     },
 }));
-export default function ClassCard (){
+export default function ClassCard (props){
     const classes = useStyles();
-
     return (
         <Grid item xs={12} sm={6} md={3}>
         <Card className={classes.root}>
-            <CardActionArea href='/course1'>
+            <CardActionArea href={`/courses/${props.id}`}>
                 <CardMedia
                     className={classes.media}
                     image="https://www.gstatic.com/classroom/themes/img_code.jpg"
                 />
                 <CardContent>
                     <Typography align="left" style={{ fontSize: 22, marginBottom: 20 }}>
-                        <b>CS 434</b>
+                        <b>{props.classname}</b>
                     </Typography>
                     <Divider />
                     <Typography align="left" style={{ fontSize: 15, marginTop: 20 }}>
