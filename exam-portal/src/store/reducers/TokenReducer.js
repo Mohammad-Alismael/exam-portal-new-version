@@ -11,6 +11,7 @@ const TokenReducer  = (state = initialState, action) => {
         case actionTypes.AUTHENTICATE:
             return {
                 ...state,
+                isExpired: true,
                 access_token: action.access_token
             }
         case actionTypes.isExpired:

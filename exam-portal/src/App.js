@@ -25,7 +25,6 @@ function App(props) {
   const [isLoggedIn, setisLoggedIn] = useState(null);
   useEffect(()=>{
     props.isTokenExpired()
-    alert(props.token.isExpired)
     setisLoggedIn(props.token.isExpired)
 
   },[])
@@ -41,7 +40,7 @@ function App(props) {
       <Route exact path="/activation/:email_token" element={<ActivateEmail/>}/>
       <Route exact path="/courses/:course_id" element={<Course1/>}/>
       <Route exact path="/courses" element={
-        <Protected isLoggedIn={isLoggedIn}>
+        <Protected isLoggedIn={props.token.isExpired}>
           <NewClasses/>
         </Protected>
       }/>

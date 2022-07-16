@@ -19,6 +19,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import TokenReducer from "../store/reducers/TokenReducer";
 import {theme,authStyles} from '../utils/Global/useStyles'
+import * as Actions from "../store/actions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -139,7 +140,7 @@ function Login(props) {
                             <Button
                                 onClick={submit}
                                 variant="contained"
-                                color="secondary"
+                                color="warning"
                                 type="submit"
                                 fullWidth
                                 className={classes.signInBtn}
@@ -166,7 +167,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setUserData : (username,password,callback) => dispatch(loginAction(username,password,callback))
+        setUserData : (username,password,callback) => dispatch(loginAction(username,password,callback)),
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

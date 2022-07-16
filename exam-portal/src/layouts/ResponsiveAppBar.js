@@ -17,7 +17,7 @@ import {theme,authStyles} from '../utils/Global/useStyles'
 import {connect} from "react-redux";
 import {useEffect} from "react";
 import jwt from "jwt-decode";
-const pages = ['home', 'exams', 'classmates'];
+const pages = ['courses', 'stream', 'exams','people','grades'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const useStyles = makeStyles((theme) => ({

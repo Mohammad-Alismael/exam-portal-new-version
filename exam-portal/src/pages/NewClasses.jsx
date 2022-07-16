@@ -29,11 +29,10 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'hidden'
     },
     createClass: {
-        height: 250,
+        height: 185,
         "& button": {
             marginLeft: '50%',
-            marginTop: '50%',
-            transform: 'translate(-50%,-175%)'
+            transform: 'translate(-50%,200%)'
         }
     },
     noClass: {
