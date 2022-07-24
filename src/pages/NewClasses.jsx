@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import ClassCard from "../Components/ClassCard";
+import ClassCard from "../components/ClassCard";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
 import jwt from "jwt-decode";

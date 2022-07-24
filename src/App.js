@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Course from "./pages/Course";
-import Quiz from "./Components/Quiz";
+import Quiz from "./components/Quiz";
 import Logout from "./pages/Logout";
 import { connect, useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -44,7 +44,6 @@ function App(props) {
               element={<ResetPassword />}
           />
           <Route
-              exact
               path="/activation/:email_token"
               element={<ActivateEmail />}
           />
@@ -58,13 +57,13 @@ function App(props) {
                 </Protected>
               }
           />
-          <Route exact path="/preview/:examId" element={<PreviewExam />} />
+          <Route path="/preview/:examId" element={<PreviewExam />} />
           <Route exact path="/result/:examId" element={<ResultExam />} />
           <Route exact path="/exam/:examId" element={<ExamStudent />} />
           <Route exact path="/invitation/:invitationHash" element={
-            <Protected>
-              <Invitation />
-            </Protected>
+              <Protected>
+                <Invitation />
+              </Protected>
           }/>
           <Route exact path="/quiz" element={<Quiz />} />
           <Route exact path="/refresh" element={<Refresh />} />

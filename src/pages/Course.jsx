@@ -23,17 +23,17 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import Link from '@mui/material/Link';
 import Grid from "@material-ui/core/Grid";
-import AnnouncementComponent from "../Components/AnnouncementComponent";
+// import AnnouncementComponent from "../Components/AnnouncementComponent";
 import index from "@mui/material/darkScrollbar";
 import {useEffect} from "react";
 import axios from 'axios'
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
-import Participants from "../Components/Participants";
+import Participants from "../components/Participants";
 import {Title} from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
-import Exam from "../Components/Exam";
+import Exam from "../components/Exam";
 import useClipboard from 'react-hook-clipboard'
 import {getTableSortLabelUtilityClass} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -43,7 +43,7 @@ import { styled } from '@mui/material/styles';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AppBar from '@mui/material/AppBar';
 import * as Actions from "../store/actions";
-import ExamCard from "../Components/ExamCard";
+import ExamCard from "../components/ExamCard";
 import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -254,45 +254,45 @@ function Course(props) {
         })
         return examss.data
     }
-    useEffect(()=>{
-        setValue(props.user.tab)
-        if (props.user.role_id == 1){
-            loadAnnouncements()
-            getExamsList().then((data)=>{
-                console.log('Exams =>',data)
-                setExams(data)
-
-            })
-            getClassroom().then((data)=>{
-                console.log('classroom =>',data)
-                setClassroom(data)
-                setIsLoading(false)
-            })
-        }
-        else{
-            loadAnnouncementsForStudents()
-            getExamListForStudents().then((data)=>{
-                const tmp = []
-                data.map((val,index)=>{
-                    tmp.push({
-                            title: val[1],
-                            examId:val[0],
-                            points: val[2],
-                            startingAt: val[3],
-                            endingAt: val[4]
-                        })
-                    listSubmissionForStudents(val[0]).then((data)=>{
-                        if (data){
-                            setSubmission([...submission, {examId:val[0],title:val[1]}])
-                        }
-                    })
-                })
-                setExams([...tmp])
-            })
-            getClassRoomForStudents()
-        }
-
-    },[])
+    // useEffect(()=>{
+    //     setValue(props.user.tab)
+    //     if (props.user.role_id == 1){
+    //         loadAnnouncements()
+    //         getExamsList().then((data)=>{
+    //             console.log('Exams =>',data)
+    //             setExams(data)
+    //
+    //         })
+    //         getClassroom().then((data)=>{
+    //             console.log('classroom =>',data)
+    //             setClassroom(data)
+    //             setIsLoading(false)
+    //         })
+    //     }
+    //     else{
+    //         loadAnnouncementsForStudents()
+    //         getExamListForStudents().then((data)=>{
+    //             const tmp = []
+    //             data.map((val,index)=>{
+    //                 tmp.push({
+    //                         title: val[1],
+    //                         examId:val[0],
+    //                         points: val[2],
+    //                         startingAt: val[3],
+    //                         endingAt: val[4]
+    //                     })
+    //                 listSubmissionForStudents(val[0]).then((data)=>{
+    //                     if (data){
+    //                         setSubmission([...submission, {examId:val[0],title:val[1]}])
+    //                     }
+    //                 })
+    //             })
+    //             setExams([...tmp])
+    //         })
+    //         getClassRoomForStudents()
+    //     }
+    //
+    // },[])
     const listSubmissionForStudents = async (examId) => {
         const submission = await axios.post('http://localhost:8080/check-submission', {
             creatorId: props.user.user_id,

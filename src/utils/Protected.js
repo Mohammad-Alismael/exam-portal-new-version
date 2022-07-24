@@ -35,7 +35,7 @@ const Protected = ({ isLoggedIn, children }) => {
         return () => clearInterval(interval);
     },[])
     if (user == null) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/" replace state={{ path: location.pathname }}/>;
     }
     return children;
 };

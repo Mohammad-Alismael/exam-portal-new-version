@@ -9,12 +9,13 @@ import AppBar from "@material-ui/core/AppBar";
 import {createTheme, makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Mcq from "../Components/ResultQuestions/Mcq";
-import QuizHeaderStudent from "../Components/QuizHeaderStudent";
-import Matching from "../Components/ResultQuestions/Matching";
-import Text from "../Components/ResultQuestions/Text";
-import CheckboxComp from "../Components/ResultQuestions/CheckboxComp";
-import Truth from "../Components/ResultQuestions/Truth";
+import Mcq from "../components/ResultQuestions/Mcq";
+import QuizHeaderStudent from "../components/QuizHeaderStudent";
+import Matching from "../components/ResultQuestions/Matching";
+import Text from "../components/ResultQuestions/Text";
+// import CheckboxComp from "../";
+import Truth from "../components/ResultQuestions/Truth";
+import CheckboxComp from "../components/ResultQuestions/CheckboxComp";
 const useStyles = makeStyles((theme) => ({
 
     paper: {

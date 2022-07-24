@@ -15,6 +15,7 @@ import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
 import {Button, TextField} from "@mui/material";
 import {theme} from "../utils/global/useStyles";
+import {useLocation} from "react-router";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -74,11 +75,12 @@ function Login(props) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const { state } = useLocation();
     const submit = (e) => {
         e.preventDefault();
         if (username !== "" && password !== "") {
             props.setUserData(username, password, (res) => {
-                navigate("/courses");
+                navigate(state?.path || "/courses");
             });
         } else {
             toast("username or password field is missing!");

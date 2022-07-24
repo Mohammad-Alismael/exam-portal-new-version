@@ -39,7 +39,19 @@ class Course {
             }
         })
     }
+    enrollToCourse(course_id) {
+        return axiosPrivate.post('/classroom/enroll',{
+            classroom_id : course_id
+        },this.config).then((res)=> {
+            return res.data
+        }).catch((error)=>{
+            console.log(error)
+            if (error.response.status == 403){
+                toast('user timed out!')
+            }
+        })
 
+    }
 }
 
 export default Course;

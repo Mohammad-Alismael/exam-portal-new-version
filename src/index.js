@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
 function saveToLocalStorage(store) {
     try {
         const serializedStore = JSON.stringify(store);
-        window.localStorage.setItem('1store1', serializedStore);
+        sessionStorage.setItem('1store1', serializedStore);
     } catch(e) {
         console.log(e);
     }
@@ -34,7 +34,7 @@ function saveToLocalStorage(store) {
 
 function loadFromLocalStorage() {
     try {
-        const serializedStore = window.localStorage.getItem('1store1');
+        const serializedStore = sessionStorage.getItem('1store1');
         if(serializedStore === null) return undefined;
         return JSON.parse(serializedStore);
     } catch(e) {
