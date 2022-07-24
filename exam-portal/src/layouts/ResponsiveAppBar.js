@@ -13,12 +13,14 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {makeStyles} from "@material-ui/core/styles";
-import {theme,authStyles} from '../utils/Global/useStyles'
-import {connect} from "react-redux";
+import {theme,authStyles} from '../utils/global/useStyles'
+import {connect, useSelector} from "react-redux";
 import {useEffect} from "react";
 import jwt from "jwt-decode";
+import {useNavigate} from "react-router-dom";
 const pages = ['courses', 'stream', 'exams','people','grades'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = [{title: 'Logout', url: '/logout'}];
 
 const useStyles = makeStyles((theme) => ({
     logo: {
@@ -31,6 +33,8 @@ const ResponsiveAppBar = (props) => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [username,setUsername] = React.useState('');
+    const user = useSelector(state => state.UserReducerV2).user;
+    const navigate = useNavigate();
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -45,9 +49,13 @@ const ResponsiveAppBar = (props) => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleCloseUserMenuItem = (link) => {
+        setAnchorElUser(null);
+        navigate(link)
+    };
     useEffect(()=>{
-        const user_data = jwt(props.token['access_token']['accessToken'])
-        setUsername(user_data['username'])
+        setUsername(user['username'])
     },[])
     return (
         <ThemeProvider theme={theme} color={"light"}>
@@ -125,9 +133,10 @@ const ResponsiveAppBar = (props) => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                            {settings.map((val) => (
+                                <MenuItem key={val.title}
+                                          onClick={() => {handleCloseUserMenuItem(val.url)}}>
+                                    <Typography textAlign="center">{val.title}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -138,9 +147,5 @@ const ResponsiveAppBar = (props) => {
         </ThemeProvider>
     );
 };
-const mapStateToProps = state => {
-    return {
-        token : state.TokenReducer
-    }
-}
-export default connect(mapStateToProps,null)(ResponsiveAppBar);
+
+export default ResponsiveAppBar;

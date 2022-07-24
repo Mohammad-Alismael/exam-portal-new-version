@@ -1,26 +1,48 @@
 import * as actionTypes from '../actions'
-import jwt from "jwt-decode";
+import { isExpired } from "react-jwt";
+import {UPDATE_REFRESH_TOKEN} from "../actions";
+import axios from "axios";
+import {axiosPrivate} from "../../api/axios";
 
 const initialState = {
-   access_token : {},
-    isExpired: null
+   access_token : "",
 }
-
+const refresh = async () => {
+    const response = await axiosPrivate.get('user/refresh')
+    return response.data;
+}
 const TokenReducer  = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.AUTHENTICATE:
+            axiosPrivate.interceptors.request.use(function (config) {
+                const token = action.token;
+                config.headers.Authorization =  token ? `Bearer ${token}` : '';
+                return config;
+            })
             return {
                 ...state,
-                isExpired: true,
-                access_token: action.access_token
+                access_token: action.token,
             }
-        case actionTypes.isExpired:
-            const user_data = jwt(state.access_token['accessToken'])
-            const current_time = new Date().getTime() / 1000;
-            return {
-                ...state,
-                isExpired: current_time < user_data['exp']
-            }
+        case actionTypes.REFRESH_TOKEN:
+            refresh().then((res)=>{
+                alert(res['accessToken'])
+                axiosPrivate.interceptors.request.use(function (config) {
+                    const token = res['accessToken'];
+                    config.headers.Authorization =  token ? `Bearer ${token}` : '';
+                    return config;
+                })
+                return {
+                    ...state,
+                    access_token: res['accessToken'],
+                }
+            }).catch((err)=>{
+                console.log(err)
+                return {
+                    ...state,
+                    access_token: '',
+                }
+            })
+
         default:
             break;
     }

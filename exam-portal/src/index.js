@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import thunk from "redux-thunk";
 import './index.css';
@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
     UserReducerV2,
     ExamStudentReducer,
     CreateReducer,
-    TokenReducer
+    // TokenReducer
 });
 
 function saveToLocalStorage(store) {
@@ -46,7 +46,12 @@ function loadFromLocalStorage() {
 const persistedState = loadFromLocalStorage();
 
 const store = createStore(rootReducer, persistedState, composeWithDevTools(applyMiddleware(thunk)));
-store.subscribe(() => saveToLocalStorage(store.getState()));
+store.subscribe(() => {
+    const obj = store.getState()
+    // delete obj['TokenReducer']
+    saveToLocalStorage(obj)
+});
+
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>

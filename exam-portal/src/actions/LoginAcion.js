@@ -1,15 +1,19 @@
 import * as Actions from "../store/actions";
 import {toast } from 'react-toastify';
 import userApi from "../api/services/User";
+import jwt from "jwt-decode";
 
 export function loginAction(username,password,callback){
 
     return (dispatch) => {
         return userApi.userAuth(username,password)
             .then( res => {
-                dispatch(login(res.data))
-                callback(res.data)
+                const token_data = jwt(res.data['accessToken'] )
+                dispatch(login(token_data))
+                sessionStorage.setItem('key',res.data['accessToken'] )
+                callback()
             }).catch(error => {
+                console.log(error)
                 toast.info(error.response.data.message)
             });
     }
@@ -17,7 +21,7 @@ export function loginAction(username,password,callback){
 
 export function login(data){
     return {
-        type: Actions.AUTHENTICATE,
-        access_token : data
+        type: Actions.SET_USER,
+        user: data
     }
 }

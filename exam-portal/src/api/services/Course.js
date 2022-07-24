@@ -1,32 +1,33 @@
 import axios from "axios";
 import {toast} from "react-toastify";
+import {axiosPrivate} from "../axios";
+import User from './User';
+import {isExpired} from "react-jwt";
+import jwt from "jwt-decode";
 
 class Course {
-    static config;
-    constructor(token) {
+    constructor() {
         this.config = {
             headers: {
-                'Authorization': 'Bearer ' + token,
+                'Authorization': 'Bearer ' + sessionStorage.getItem('key'),
                 'Content-Type': 'application/json'
             }
         }
     }
     fetchCourses() {
-        return axios.get('http://localhost:8081/classroom/classes',
-            this.config).then((res)=> {
+        return axiosPrivate.get('/classroom/classes', this.config).then((res)=> {
             console.log('data from backend',res)
-            if (res['data']['result'] == null)  return res['data']
             return res['data']['result']
         }).catch((error)=>{
-            console.log(error)
+            console.log(error.response.data)
             if (error.response.status == 403){
-                toast('user timed out!')
+                // window.location.href = "/refresh"
             }
         })
     }
      createCourse(course_name, user_id) {
 
-        return axios.post('http://localhost:8081/classroom/create',{
+        return axiosPrivate.post('/classroom/create',{
             class_name: course_name,
             instructor_id: user_id,
         },this.config).then((res)=> {

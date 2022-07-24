@@ -64,6 +64,7 @@ export const authStyles = makeStyles((theme) => ({
 }));
 
 export const theme = createTheme({
+    spacing: 4,
     typography: {
         h3: {
             fontSize: 32,

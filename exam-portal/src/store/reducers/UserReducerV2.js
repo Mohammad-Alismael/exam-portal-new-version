@@ -1,15 +1,17 @@
 import * as actionTypes from '../actions'
+import jwt from "jwt-decode";
 
 const initialState = {
-    user_data : []
+    user: null
 }
 
 const UserReducerV2  = (state = initialState, action) => {
+    console.log('userReducer', action.user)
     switch (action.type) {
-        case actionTypes.AUTHENTICATE:
+        case actionTypes.SET_USER:
             return {
                 ...state,
-                user_data: action.user_data
+                user: action.user
             }
         default:
             break;

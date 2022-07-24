@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {makeStyles} from "@material-ui/core/styles";
-import {theme,authStyles} from '../utils/Global/useStyles'
+import {theme,authStyles} from '../utils/global/useStyles'
 import { withStyles } from "@material-ui/core/styles";
 const pages = ['home', 'exams', 'classmates'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
