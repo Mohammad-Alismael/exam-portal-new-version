@@ -9,10 +9,10 @@ class User {
             password
         }).then((res)=> {
             const token = res.data['accessToken'];
-            axiosPrivate.interceptors.request.use(function (config) {
-                config.headers.Authorization =  token ? `Bearer ${token}` : '';
-                return config;
-            })
+            // axiosPrivate.interceptors.request.use(function (config) {
+            //     config.headers.Authorization =  token ? `Bearer ${token}` : '';
+            //     return config;
+            // })
             return res
         }).catch((error)=>{
             // console.log(error)

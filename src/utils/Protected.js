@@ -15,9 +15,6 @@ const Protected = ({ isLoggedIn, children }) => {
     const user = useSelector((state) => state.UserReducerV2).user;
 
     useEffect(()=>{
-        // if (isExpired(sessionStorage.getItem('key'))){
-        //     navigate('/refresh')
-        // }
         const interval = setInterval(() => {
             axiosPrivate.get('/user/refresh').then((res)=>{
                 const newAccessToken = res.data['accessToken']
@@ -34,8 +31,10 @@ const Protected = ({ isLoggedIn, children }) => {
         }, ((user['exp'] - user['iat']) * 1000) - 5000 );
         return () => clearInterval(interval);
     },[])
+
     if (user == null) {
-        return <Navigate to="/" replace state={{ path: location.pathname }}/>;
+        // state={{ path: location.pathname }}
+        return <Navigate to="/" replace />;
     }
     return children;
 };

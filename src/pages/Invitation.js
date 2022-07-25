@@ -38,9 +38,6 @@ function Invitation(props) {
     const handleClickOk = () => {
         navigate("/courses");
     };
-    const getInstructorInfo = async (username) => {
-       axiosPrivate('')
-    };
 
     useEffect(() => {
         if (user.role_id != 3) {

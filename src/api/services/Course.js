@@ -15,7 +15,7 @@ class Course {
         }
     }
     fetchCourses() {
-        return axiosPrivate.get('/classroom/classes', this.config).then((res)=> {
+        return axiosPrivate.get('/classroom/classes').then((res)=> {
             console.log('data from backend',res)
             return res['data']['result']
         }).catch((error)=>{

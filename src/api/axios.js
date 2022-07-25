@@ -1,20 +1,29 @@
 import axios from "axios";
 const BASE_URL = 'http://localhost:8081';
-
-// export default axios.create({
-//     baseURL: BASE_URL
-// });
-
-export const axiosPrivate = axios.create({
-    baseURL: BASE_URL,
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true
-});
-
 let token = null
 
 export function updateToken(_token) {
     token = _token
+    console.log("global token set to", token)
 }
 
-export default token
+const axiosPrivate = axios.create({
+    baseURL: BASE_URL,
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true
+})
+
+axiosPrivate.interceptors.request.use(
+    config => {
+        // const token = localStorageService.getAccessToken()
+        if (token) {
+            config.headers['Authorization'] = 'Bearer ' + token
+        }
+        // config.headers['Content-Type'] = 'application/json';
+        return config
+    },
+    error => {
+        Promise.reject(error)
+    }
+);
+export {token,axiosPrivate}

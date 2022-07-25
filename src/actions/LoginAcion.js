@@ -2,6 +2,7 @@ import * as Actions from "../store/actions";
 import {toast } from 'react-toastify';
 import userApi from "../api/services/User";
 import jwt from "jwt-decode";
+import {updateToken} from "../api/axios";
 
 export function loginAction(username,password,callback){
 
@@ -10,7 +11,8 @@ export function loginAction(username,password,callback){
             .then( res => {
                 const token_data = jwt(res.data['accessToken'] )
                 dispatch(login(token_data))
-                sessionStorage.setItem('key',res.data['accessToken'] )
+                updateToken(res.data['accessToken'])
+                // sessionStorage.setItem('key',res.data['accessToken'] )
                 callback()
             }).catch(error => {
                 console.log(error)

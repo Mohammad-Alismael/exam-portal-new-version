@@ -1,6 +1,6 @@
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { Routes, Route } from "react-router-dom";
+import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Course from "./pages/Course";
@@ -23,13 +23,34 @@ import Refresh from "./pages/Refresh";
 import axios from "axios";
 import TestDashboard from "./pages/TestDashboard";
 import { isExpired } from "react-jwt";
-import { axiosPrivate } from "./api/axios";
+import {axiosPrivate, updateToken} from "./api/axios";
 import {theme} from "./utils/global/useStyles";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 function App(props) {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true)
+
+    useEffect(()=>{
+      axiosPrivate.post('/user/refresh').then((res)=>{
+          const newAccessToken = res.data['accessToken']
+          updateToken(newAccessToken)
+          setLoading(false)
+      }).catch((err)=>{
+          console.log(err)
+          if (err.response.status == 406){
+              navigate('/logout')
+              toast("session expired, you must log in again!")
+          }
+      })
+
+  },[])
+    if(loading){
+        return <p>loading...</p>
+    }
   return (
       <ThemeProvider theme={theme}>
         <ToastContainer />
