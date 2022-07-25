@@ -8,13 +8,14 @@ import moment from 'moment'
 import axios from "axios";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
-        padding: 20,
+        padding: '10px',
         minHeight: '3vh',
-        maxHeight: '8vh',
-        width: '48%',
-        margin: "30px auto",
+        // maxHeight: '8vh',
+        // width: '48%',
+        margin: "0.8rem auto",
 
     },
     userContainer : {
@@ -62,18 +63,17 @@ function AnnouncementComponent(props)  {
     }
 
     useEffect(()=>{
-        getUserInfoById(props.user_id).then((data)=>{
-            setUsername(data)
-        })
+        // getUserInfoById(props.user_id).then((data)=>{
+        //     setUsername(data)
+        // })
     },[])
         return (
             <Paper elevation={3} className={classes.paperStyle}>
                 <Grid container>
                     <Grid xs={10} className={classes.userContainer}>
-                        <AccountCircle className={classes.largeIcon}
-                                        size="large" />
-                        <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
-                            {username}
+                        <Avatar alt={'m'} src="/static/images/avatar/2.jpg" />
+                        <Typography style={{color:"black",margin: '0.2rem 1rem'}} variant="h6">
+                            username
                         </Typography>
                     </Grid>
                     <Grid item xs={2} className={classes.container}>

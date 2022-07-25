@@ -11,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import {toast} from "react-toastify";
 import {useNavigate, useParams} from "react-router-dom";
+import {axiosPrivate} from "../api/axios";
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -70,7 +71,7 @@ const ActivateEmail = () => {
     const navigate = useNavigate();
     useEffect(()=>{
 
-        axios.post('http://localhost:8081/user/activate',{
+        axiosPrivate.post('/user/activate',{
             email_token
         }).then((res)=> {
             console.log('data from backend',res);
@@ -82,12 +83,10 @@ const ActivateEmail = () => {
     },[])
     return (
         <div>
-            <ThemeProvider theme={theme2}>
-                <Navbar type={2}/>
-                <Grid className={classes.root} item md={12} sm={12} >
+            <Navbar type={2}/>
+            <Grid className={classes.root} item md={12} sm={12} >
 
-                </Grid>
-            </ThemeProvider>
+            </Grid>
         </div>
     );
 };

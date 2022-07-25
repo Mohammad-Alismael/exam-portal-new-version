@@ -18,7 +18,7 @@ import {connect, useSelector} from "react-redux";
 import {useEffect} from "react";
 import jwt from "jwt-decode";
 import {useNavigate} from "react-router-dom";
-const pages = ['courses', 'stream', 'exams','people','grades'];
+const pages = ['courses', 'exams','people','grades'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const settings = [{title: 'Logout', url: '/logout'}];
 
@@ -62,7 +62,7 @@ const ResponsiveAppBar = (props) => {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <img src={'./images/logo.png'} className={classes.logo} alt="Exam Portal" />
+                    <img src={process.env.PUBLIC_URL +'/images/logo.png'} className={classes.logo} alt="Exam Portal" />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"

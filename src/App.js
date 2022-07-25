@@ -3,7 +3,7 @@ import Signup from "./pages/Signup";
 import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Course from "./pages/Course";
+import Course from "./pages/course/Course";
 import Quiz from "./components/Quiz";
 import Logout from "./pages/Logout";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -20,13 +20,12 @@ import jwt from "jwt-decode";
 import Protected from "./utils/Protected";
 import * as Actions from "./store/actions";
 import Refresh from "./pages/Refresh";
-import axios from "axios";
-import TestDashboard from "./pages/TestDashboard";
 import { isExpired } from "react-jwt";
 import {axiosPrivate, updateToken} from "./api/axios";
 import {theme} from "./utils/global/useStyles";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {CircularProgress} from "@material-ui/core";
 
 function App(props) {
     const dispatch = useDispatch();
@@ -49,7 +48,7 @@ function App(props) {
 
   },[])
     if(loading){
-        return <p>loading...</p>
+        return <CircularProgress />
     }
   return (
       <ThemeProvider theme={theme}>

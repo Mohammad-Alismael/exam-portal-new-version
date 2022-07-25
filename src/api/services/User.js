@@ -1,6 +1,7 @@
 import axios from "axios";
-import {axiosPrivate, updateToken} from "../axios";
+import {axiosPrivate, token, updateToken} from "../axios";
 import {toast} from "react-toastify";
+import {isExpired} from "react-jwt";
 
 class User {
     static userAuth(username, password) {
@@ -34,11 +35,9 @@ class User {
         })
     }
     static refreshToken(){
-        axiosPrivate.get('/user/refresh').then((res)=>{
+        axiosPrivate.post('/user/refresh').then((res)=>{
             const newAccessToken = res.data['accessToken']
-            return newAccessToken
-            // sessionStorage.setItem('key',newAccessToken)
-            // console.log("newAccessToken from user", newAccessToken)
+            updateToken(newAccessToken)
         }).catch((err)=>{
             console.log(err)
             if (err.response.status == 406){
@@ -46,6 +45,11 @@ class User {
                 toast("session expired, you must log in again!")
             }
         })
+    }
+    static checkTokenExpiration(){
+        if (isExpired(token)){
+            User.refreshToken()
+        }
     }
 }
 

@@ -70,7 +70,7 @@ function NewClasses(props) {
     useEffect(() => {
         course.fetchCourses().then((res) => {
             if (res != null) {
-                setCourses([...res]);
+                setCourses(res);
                 setLoading(false);
             }
         });

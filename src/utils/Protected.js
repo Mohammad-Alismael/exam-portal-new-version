@@ -14,27 +14,26 @@ const Protected = ({ isLoggedIn, children }) => {
     const location = useLocation();
     const user = useSelector((state) => state.UserReducerV2).user;
 
-    useEffect(()=>{
-        const interval = setInterval(() => {
-            axiosPrivate.get('/user/refresh').then((res)=>{
-                const newAccessToken = res.data['accessToken']
-                sessionStorage.setItem('key',newAccessToken)
-                console.log("newAccessToken", newAccessToken)
-            }).catch((err)=>{
-                console.log(err)
-                if (err.response.status == 406){
-                    navigate('/logout')
-                    toast("session expired, you must log in again!")
-                }
-            })
-            // requesting new access token before 5 sec of expiration
-        }, ((user['exp'] - user['iat']) * 1000) - 5000 );
-        return () => clearInterval(interval);
-    },[])
+    // useEffect(()=>{
+    //     const interval = setInterval(() => {
+    //         axiosPrivate.get('/user/refresh').then((res)=>{
+    //             const newAccessToken = res.data['accessToken']
+    //             sessionStorage.setItem('key',newAccessToken)
+    //             console.log("newAccessToken", newAccessToken)
+    //         }).catch((err)=>{
+    //             console.log(err)
+    //             if (err.response.status == 406){
+    //                 navigate('/logout')
+    //                 toast("session expired, you must log in again!")
+    //             }
+    //         })
+    //         // requesting new access token before 5 sec of expiration
+    //     }, ((user['exp'] - user['iat']) * 1000) - 5000 );
+    //     return () => clearInterval(interval);
+    // },[])
 
     if (user == null) {
-        // state={{ path: location.pathname }}
-        return <Navigate to="/" replace />;
+        return <Navigate to="/" replace state={{ path: location.pathname }}/>;
     }
     return children;
 };

@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Tabs from '@mui/material/Tabs';
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import classes from '../img/classes.jpg'
+import classes from '../../img/classes.jpg'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
@@ -23,28 +23,29 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import Link from '@mui/material/Link';
 import Grid from "@material-ui/core/Grid";
-// import AnnouncementComponent from "../Components/AnnouncementComponent";
 import index from "@mui/material/darkScrollbar";
 import {useEffect} from "react";
 import axios from 'axios'
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import Participants from "../components/Participants";
 import {Title} from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
-import Exam from "../components/Exam";
 import useClipboard from 'react-hook-clipboard'
 import {getTableSortLabelUtilityClass} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import {useNavigate} from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AppBar from '@mui/material/AppBar';
-import * as Actions from "../store/actions";
-import ExamCard from "../components/ExamCard";
-import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
+import * as Actions from "../../store/actions";
+import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
+import Container from "@mui/material/Container";
+import AnnouncementComponent from "../../components/AnnouncementComponent";
+import InputAdornment from '@mui/material/InputAdornment';
+import Avatar from "@mui/material/Avatar";
+import TextField from '@mui/material/TextField';
+import Announcement from "./Announcement/Announcement";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -55,8 +56,15 @@ const useStyles = makeStyles((theme) => ({
         height: '28vh',
         width: '63%',
         margin: "30px auto",
-        backgroundImage: `url(${classes})`
-
+        backgroundImage: `url(${classes})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+    },
+    mainGrid: {
+        // padding: 10,
+        // height: '28vh',
+        width: '68%',
+        margin: "30px auto",
     },
     textPaper: {
         padding: 20,
@@ -82,39 +90,15 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const theme2 = createTheme({
-    typography: {
-        h3: {
-            fontSize: 32,
-            marginTop: -40,
-            color: '#161b22'
-        },
-    },
-    palette: {
-        primary: {
-            main: '#FFFFFF',
-        },
-        secondary: {
-            main: 'rgb(255,208,94)',
-        }
-    }
-})
-
-
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-    alignItems: 'flex-start',
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(2),
-    // Override media queries injected by theme.mixins.toolbar
-    '@media all': {
-        minHeight: 128,
-    },
-}));
 function Course(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState();
     const [isLoading, setIsLoading] = React.useState(false);
-    const [announcements,setAnnouncements] = React.useState([]);
+    const [announcements,setAnnouncements] = React.useState([
+        {instructorId: 10,announcementText: "tmrw we have a quiz!",createdAt: 1658749897526},
+        {instructorId: 10,announcementText: "tmrw we have a final!tmrw we have a final!tmrw we have a final!tmrw we have a final!",createdAt: 1658749899526}
+    ]);
+    const user = useSelector(state => state.UserReducerV2).user;
     const [exams,setExams] = React.useState([]);
     const [submission,setSubmission] = React.useState([]);
     const [announcementText,setAnnouncementText] = React.useState('');
@@ -122,44 +106,7 @@ function Course(props) {
     const [clipboard, copyToClipboard] = useClipboard();
     const navigate = useNavigate();
     const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
-    const handleChange = (event, newValue) => {
-        if (props.user.role_id == 1 && newValue == 2){
-            props.setQuestionArray([])
-        }
-        if (newValue == 5) {
-            navigate("/courses")
-        }else {
-            setValue(newValue);
-        }
-        props.setTab(newValue)
-    };
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [anchorEl2, setAnchorEl2] = React.useState(null);
-    const [anchorEl3, setAnchorEl3] = React.useState(null);
-
-    const openMore = Boolean(anchorEl);
-    const openSettings = Boolean(anchorEl2);
-    const openQuiz = Boolean(anchorEl3);
-
-    const handleClickMore = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleCloseMore = () => {
-        setAnchorEl(null);
-    };
-    const handleClickSettings = (event) => {
-        setAnchorEl2(event.currentTarget);
-    };
-    const handleCloseSettings = () => {
-        setAnchorEl2(null);
-    };
-    const handleClickQuiz = (event) => {
-        setAnchorEl3(event.currentTarget);
-    };
-    const handleCloseQuiz = () => {
-        setAnchorEl3(null);
-    };
     const postAnnouncement = (e) =>{
         axios.post('http://localhost:8080/set-announcement-to-students',{
             instructorId: props.user.user_id,
@@ -174,86 +121,7 @@ function Course(props) {
         setAnnouncements([...announcements,{announcementText,instructorId:props.user.user_id,createdAt : new Date().getTime()}])
 
     }
-    const loadAnnouncements = async () => {
-        setIsLoading(true)
-        const Announcements = await axios.get(`http://localhost:8080/get-announcements?id=${props.user.user_id}`)
-        setAnnouncements(Announcements.data)
-    }
-    const loadAnnouncementsForStudents = async () => {
-        const Announcements = await axios.post('http://localhost:8080/get-announcement-student-id', {
-            studentId: props.user.user_id,
-            classroomId: props.user.classroom_id
-        })
 
-        setAnnouncements(Announcements.data)
-    }
-    const getClassroom = async () => {
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-class-students-from-instructor', {
-                instructorId: props.user.user_id
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no class room students!')
-                })
-        })
-
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-    }
-
-    const getClassRoomForStudents = async () => {
-        const classroom1 = await axios.post('http://localhost:8080/get-instructor-id-from-student-id', {
-            classroomId: props.user.classroom_id
-        })
-
-        const instructorId = classroom1.data['instructorId'];
-        const instructorInfo = await axios.post('http://localhost:8080/get-user-by-id', {
-            userId: instructorId
-        })
-        console.log(instructorInfo)
-        setAdminUsername(instructorInfo.data['username'])
-        const classroomStudents = await axios.post('http://localhost:8080/get-class-students-from-student-id', {
-            classroomId: props.user.classroom_id
-        })
-        console.log("classmates =>",classroomStudents.data)
-        setClassroom([...classroomStudents.data])
-        setIsLoading(false)
-    }
-
-    const getExamsList = async () => {
-        console.log(props.user.user_id)
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/list-all-exams-creator-id', {
-                creatorId: props.user.user_id
-            }).then((data) => {
-
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no exams found!')
-                })
-        })
-
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-    }
-    const getExamListForStudents = async () => {
-        const examss = await axios.post('http://localhost:8080/get-exam-id-student-id', {
-            studentId: props.user.user_id,
-            classroomId: props.user.classroom_id
-        })
-        return examss.data
-    }
     // useEffect(()=>{
     //     setValue(props.user.tab)
     //     if (props.user.role_id == 1){
@@ -300,27 +168,53 @@ function Course(props) {
         })
         return submission.data
     }
-    const copyInvitationLink = async () => {
-        const classroom = await axios.post('http://localhost:8080/get-classroom-id-by-instructor-id', {
-            instructorId: props.user.user_id
-        })
-        let classroomId = classroom.data['id'];
-        if (classroom.data['id'] == null){
-            const classroom = await axios.post('http://localhost:8080/set-classroom-to-students', {
-                instructorId: props.user.user_id
-            })
-            classroomId = classroom.data['id'];
-        }
-        props.setClassroomId(classroomId)
-        const textBeforeHash = `${classroomId}:${props.user.username}`;
-        const b64 = Buffer.from(textBeforeHash).toString('base64');
-        copyToClipboard("http://localhost:3000/invitation/" + b64);
-        toast.info("copied to clipboard");
-        setAnchorEl2(null);
-    }
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(2),
+        // color: theme.palette.text.secondary,
+    }));
     return (
         <div>
             <ResponsiveAppBar />
+            <Box>
+                <Paper elevation={5} className={classes.paperStyle}>
+                  <Typography variant="h4" color="white" style={{ marginTop: '15%' }}>
+                     <b>course name</b>
+                  </Typography>
+                  <Typography variant="h4" color="white" style={{ fontSize: '25px' }}>
+                      section A
+                  </Typography>
+                </Paper>
+                <Grid container spacing={2} className={classes.mainGrid}>
+                    <Grid item xs={3}>
+                        <Item>
+                            <Typography variant="h6">Upcoming</Typography>
+                            <Typography variant="caption">Woohoo, no work due soon!</Typography>
+                        </Item>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <Announcement/>
+                        <Grid item>
+                            {
+                                announcements.sort(function(a, b) {
+                                    return b.createdAt - a.createdAt;
+                                }).map((val,index)=>{
+
+                                    return <AnnouncementComponent
+                                        key={index}
+                                        user_id={val.instructorId}
+                                        text={val.announcementText}
+                                        createdAt={val.createdAt}/>
+                                })
+                            }
+
+                        </Grid>
+                    </Grid>
+
+
+                </Grid>
+            </Box>
             {/*<Box sx={{ width: '100%', typography: 'body1' }}>*/}
             {/*        <TabContext value={value}>*/}
             {/*            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>*/}

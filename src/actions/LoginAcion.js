@@ -12,7 +12,6 @@ export function loginAction(username,password,callback){
                 const token_data = jwt(res.data['accessToken'] )
                 dispatch(login(token_data))
                 updateToken(res.data['accessToken'])
-                // sessionStorage.setItem('key',res.data['accessToken'] )
                 callback()
             }).catch(error => {
                 console.log(error)

@@ -19,6 +19,7 @@ import {connect, useSelector} from "react-redux";
 import useClipboard from "react-hook-clipboard";
 import SimpleCrypto from "simple-crypto-js";
 import CryptoJS from 'crypto-js'
+import {token} from "../api/axios";
 const useStyles = makeStyles((theme) => ({
     root: {
         // maxWidth: 300,
@@ -47,7 +48,7 @@ function ClassCard(props) {
     };
     const generateInvitationLink = () => {
         const simpleCrypto = new SimpleCrypto(process.env.REACT_APP_INVITATION_KEY);
-        const user_data = jwt(sessionStorage.getItem("key"));
+        const user_data = jwt(token);
         const textBeforeHash = `${props.id}:${user_data.username}`;
         let encrypted = encodeURIComponent(CryptoJS.AES.encrypt(textBeforeHash, process.env.REACT_APP_INVITATION_KEY)).toString();
         const chiperText = simpleCrypto.encrypt(textBeforeHash);
