@@ -20,6 +20,7 @@ import useClipboard from "react-hook-clipboard";
 import SimpleCrypto from "simple-crypto-js";
 import CryptoJS from 'crypto-js'
 import {token} from "../api/axios";
+import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
     root: {
         // maxWidth: 300,
@@ -60,6 +61,11 @@ function ClassCard(props) {
             <Card className={classes.root}>
                 <CardActionArea href={`/courses/${props.id}`}>
                     <CardHeader
+                        avatar={
+                            <Avatar alt={user.role_id == 3 ? user.username : props.instructor['username']}
+                                    src="/static/images/avatar/2.jpg"/>
+                        }
+
                         action={
                             <div>
                                 <IconButton
@@ -96,13 +102,9 @@ function ClassCard(props) {
                                 </Menu>
                             </div>
                         }
-                        title={
-                            <Typography align="left" style={{ fontSize: 22 }}>
-                                <b>{props.classname}</b>
-                            </Typography>
-                        }
+                        title={props.classname}
+                        subheader={"Section " + props.section.toUpperCase()}
                     />
-
                     <CardMedia
                         className={classes.media}
                         image="https://www.gstatic.com/classroom/themes/img_code.jpg"
@@ -115,11 +117,6 @@ function ClassCard(props) {
 const mapStateToProps = (state) => {
     return {
         token: state.TokenReducer,
-    };
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-        isTokenExpired: () => dispatch({ type: Actions.isExpired }),
     };
 };
 export default connect(mapStateToProps, null)(ClassCard);

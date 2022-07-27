@@ -12,15 +12,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "../components/ClassCard";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
-import jwt from "jwt-decode";
 import { connect, useSelector } from "react-redux";
 import Course from "../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
-import * as Actions from "../store/actions";
-import {isExpired} from "react-jwt";
-import User from '../api/services/User'
-import {axiosPrivate} from "../api/axios";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
@@ -32,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
         overflow: "hidden",
     },
     createClass: {
-        height: 185,
+        height: 190,
         "& button": {
             marginLeft: "50%",
             transform: "translate(-50%,200%)",
@@ -80,8 +75,13 @@ function NewClasses(props) {
             <ResponsiveAppBar />
             {!loading ? (
                 <Grid container spacing={2} className={classes.root}>
-                    {courses.map(({ class_name, id }, index) => {
-                        return <ClassCard key={index} id={id} classname={class_name} />;
+                    {courses.map(({ class_name, classroom_id,section }, index) => {
+                        return <ClassCard
+                            key={index}
+                            id={classroom_id}
+                            classname={class_name}
+                            section={section}
+                        />;
                     })}
                     {courses.length == 0 ? (
                         <Grid item xs={12} sm={6} md={3}>

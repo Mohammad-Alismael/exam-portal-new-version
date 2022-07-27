@@ -46,6 +46,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Avatar from "@mui/material/Avatar";
 import TextField from '@mui/material/TextField';
 import Announcement from "./Announcement/Announcement";
+import { withStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -89,7 +91,11 @@ const useStyles = makeStyles((theme) => ({
         margin: "30px auto",
     }
 }));
-
+const WhiteTextTypography = withStyles({
+    root: {
+        color: "#FFFFFF"
+    }
+})(Typography);
 function Course(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState();
@@ -179,12 +185,12 @@ function Course(props) {
             <ResponsiveAppBar />
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
-                  <Typography variant="h4" color="white" style={{ marginTop: '15%' }}>
+                  <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
                      <b>course name</b>
-                  </Typography>
-                  <Typography variant="h4" color="white" style={{ fontSize: '25px' }}>
+                  </WhiteTextTypography>
+                  <WhiteTextTypography variant="h4" style={{ fontSize: '25px' }}>
                       section A
-                  </Typography>
+                  </WhiteTextTypography>
                 </Paper>
                 <Grid container spacing={2} className={classes.mainGrid}>
                     <Grid item xs={3}>
