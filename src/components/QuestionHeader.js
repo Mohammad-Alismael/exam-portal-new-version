@@ -83,9 +83,9 @@ function QuestionHeader(props) {
         // window.location.reload();
     }
     useEffect(()=>{
-        setQuestionText(props.questionText)
-        setWhoCanSee(props.whoCanSee)
-        setPoints(props.points)
+        // setQuestionText(props.questionText)
+        // setWhoCanSee(props.whoCanSee)
+        // setPoints(props.points)
     },[])
     return (
             <>

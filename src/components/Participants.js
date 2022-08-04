@@ -10,6 +10,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import PublishIcon from "@mui/icons-material/Publish";
+import Avatar from '@mui/material/Avatar'
 import Box from "@mui/material/Box";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -17,28 +18,17 @@ const useStyles = makeStyles((theme) => ({
         height:'5vh',
         width: '50%',
         margin: "5px",
-        borderBottom: '1px solid rgba(217, 217, 217, 1)',
-
-    },
-    textField: {
-        width: '100%',
-    },
-    container: {
         display: 'flex',
-        flexDirection: 'column',
-        alignSelf: 'center'
+        alignItems: 'center'
     },
-
 }));
 function Participants (props) {
     const classes = useStyles();
 
         return (
-            <Box elevation={0} className={classes.paperStyle} sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
-                <IconButton sx={{ p: '10px' }}>
-                    <AccountCircle color="primary" size="large" />
-                </IconButton>
-                <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
+            <Box elevation={0} className={classes.paperStyle} sx={{ p: '2px 4px'}}>
+                <Avatar alt={'h'} src="/static/images/avatar/2.jpg" />
+                <Typography style={{color:"black"}} sx={{ ml: 4, flex: 1 }} variant="h6">
                     {props.username}
                 </Typography>
             </Box>

@@ -5,11 +5,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
-import axios from "axios";
 import { connect, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import SimpleCrypto from "simple-crypto-js";
 import {axiosPrivate} from "../api/axios";
 import CryptoJS from 'crypto-js'
 import {Button, CircularProgress} from "@material-ui/core";
@@ -60,7 +57,7 @@ function Invitation(props) {
             navigate('/')
         }
 
-    }, []);
+    }, [invitationHash, navigate, user.role_id]);
 
     return (
         <div>

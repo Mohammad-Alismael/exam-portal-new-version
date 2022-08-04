@@ -17,7 +17,6 @@ import jwt from "jwt-decode";
 import * as Actions from "../store/actions";
 import {connect, useSelector} from "react-redux";
 import useClipboard from "react-hook-clipboard";
-import SimpleCrypto from "simple-crypto-js";
 import CryptoJS from 'crypto-js'
 import {token} from "../api/axios";
 import Avatar from "@mui/material/Avatar";
@@ -48,11 +47,9 @@ function ClassCard(props) {
         setAnchorEl(null);
     };
     const generateInvitationLink = () => {
-        const simpleCrypto = new SimpleCrypto(process.env.REACT_APP_INVITATION_KEY);
         const user_data = jwt(token);
         const textBeforeHash = `${props.id}:${user_data.username}`;
         let encrypted = encodeURIComponent(CryptoJS.AES.encrypt(textBeforeHash, process.env.REACT_APP_INVITATION_KEY)).toString();
-        const chiperText = simpleCrypto.encrypt(textBeforeHash);
         copyToClipboard(window.location.origin + "/invitation/" + encrypted);
         toast.info("copied to clipboard");
     };
@@ -62,7 +59,8 @@ function ClassCard(props) {
                 <CardActionArea href={`/courses/${props.id}`}>
                     <CardHeader
                         avatar={
-                            <Avatar alt={user.role_id == 3 ? user.username : props.instructor['username']}
+                            // alt={user.role_id == 3 ? user.username : props.instructor['username']}
+                            <Avatar alt={'t'}
                                     src="/static/images/avatar/2.jpg"/>
                         }
 

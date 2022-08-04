@@ -15,10 +15,11 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {makeStyles} from "@material-ui/core/styles";
 import {theme,authStyles} from '../utils/global/useStyles'
 import {connect, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import jwt from "jwt-decode";
-import {useNavigate} from "react-router-dom";
-const pages = ['courses', 'exams','people','grades'];
+import {useLocation, useNavigate} from "react-router-dom";
+import {axiosPrivate, token, updateToken} from "../api/axios";
+import {toast} from "react-toastify";
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const settings = [{title: 'Logout', url: '/logout'}];
 
@@ -30,11 +31,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ResponsiveAppBar = (props) => {
     const classes = useStyles();
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [username,setUsername] = React.useState('');
+    const [pages,setPages] = useState([])
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const [username,setUsername] = useState('');
     const user = useSelector(state => state.UserReducerV2).user;
     const navigate = useNavigate();
+    const location = useLocation();
+
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -42,8 +46,17 @@ const ResponsiveAppBar = (props) => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = (link) => {
         setAnchorElNav(null);
+        const str = location.pathname
+        const words = str.split('/')
+        let navigateTo;
+        if (link == "/courses"){
+            navigateTo = link
+        }else {
+            navigateTo = `/${words[1]}/${words[2]}${link}`
+        }
+        navigate(navigateTo)
     };
 
     const handleCloseUserMenu = () => {
@@ -55,10 +68,26 @@ const ResponsiveAppBar = (props) => {
         navigate(link)
     };
     useEffect(()=>{
-        setUsername(user['username'])
+
+        // hiding other routes
+        if (location.pathname === "/courses"){
+            setPages([{title: 'courses', url: '/courses'}])
+        }else {
+            setPages([{title: 'courses', url: '/courses'},
+                {title: 'exams', url: '/exams'},
+                {title: 'people', url: '/people'},
+                {title: 'grades', url: '/grades'}])
+        }
+    },[navigate])
+
+    useEffect(()=>{
+        if (token != null) {
+            setUsername(user['username'])
+        }else {
+            navigate("/");
+        }
     },[])
     return (
-        <ThemeProvider theme={theme} color={"light"}>
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
@@ -92,8 +121,8 @@ const ResponsiveAppBar = (props) => {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                <MenuItem key={page.title} onClick={() => handleCloseNavMenu(page.url)}>
+                                    <Typography textAlign="center">{page.title}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -102,11 +131,11 @@ const ResponsiveAppBar = (props) => {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
                             <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
+                                key={page.title}
+                                onClick={() => handleCloseNavMenu(page.url)}
                                 sx={{ my: 2, color: 'black', display: 'block' }}
                             >
-                                {page}
+                                {page.title}
                             </Button>
                         ))}
                     </Box>
@@ -144,7 +173,6 @@ const ResponsiveAppBar = (props) => {
                 </Toolbar>
             </Container>
         </AppBar>
-        </ThemeProvider>
     );
 };
 

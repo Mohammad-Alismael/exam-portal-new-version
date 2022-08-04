@@ -1,6 +1,14 @@
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
+
+import {
+    BrowserRouter as Router,
+    Link,
+    Routes,
+    Route,
+    useLocation,
+    useNavigate,
+} from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Course from "./pages/course/Course";
@@ -19,91 +27,125 @@ import NewClasses from "./pages/NewClasses";
 import jwt from "jwt-decode";
 import Protected from "./utils/Protected";
 import * as Actions from "./store/actions";
-import Refresh from "./pages/Refresh";
 import { isExpired } from "react-jwt";
-import {axiosPrivate, updateToken} from "./api/axios";
-import {theme} from "./utils/global/useStyles";
+import {axiosPrivate, token, updateToken} from "./api/axios";
+import { theme } from "./utils/global/useStyles";
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {CircularProgress} from "@material-ui/core";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { CircularProgress } from "@material-ui/core";
+import ExamPage from "./pages/ExamPage";
+import PeoplePage from "./pages/PeoplePage";
+import GradesPage from "./pages/GradesPage";
+import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
+import Show from "./pages/Show";
 
 function App(props) {
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
 
-    useEffect(()=>{
-      axiosPrivate.post('/user/refresh').then((res)=>{
-          const newAccessToken = res.data['accessToken']
-          updateToken(newAccessToken)
-          setLoading(false)
-      }).catch((err)=>{
-          console.log(err)
-          if (err.response.status == 406){
-              navigate('/logout')
-              toast("session expired, you must log in again!")
-          }
-      })
+    // useEffect(() => {
+    //     let isMounted = true;
+    //     if (token != null) {
+    //         axiosPrivate
+    //             .post("/user/refresh")
+    //             .then((res) => {
+    //                 const newAccessToken = res.data["accessToken"];
+    //                 updateToken(newAccessToken);
+    //                 isMounted && setLoading(false);
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err);
+    //                 if (err.response.status === 406) {
+    //                     navigate("/");
+    //                     toast("session expired, you must log in again!");
+    //                     isMounted && setLoading(false);
+    //                 }
+    //             });
+    //     }
+    //     isMounted && setLoading(false);
+    //     // alert("from refresh")
+    //     return () => isMounted = false
+    //
+    // }, []);
+    // if (loading) {
+    //     return <CircularProgress size={200}/>;
+    // }
+    return (
+        <ThemeProvider theme={theme}>
+            <ToastContainer />
+            <ResponsiveAppBar />
 
-  },[])
-    if(loading){
-        return <CircularProgress />
-    }
-  return (
-      <ThemeProvider theme={theme}>
-        <ToastContainer />
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route exact path="/signup" element={<Signup />} />
-          <Route exact path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-              exact
-              path="/reset-password/:reset_token"
-              element={<ResetPassword />}
-          />
-          <Route
-              path="/activation/:email_token"
-              element={<ActivateEmail />}
-          />
-          <Route exact path="/courses/:course_id" element={<Course />} />
-          <Route
-              exact
-              path="/courses"
-              element={
-                <Protected>
-                  <NewClasses />
-                </Protected>
-              }
-          />
-          <Route path="/preview/:examId" element={<PreviewExam />} />
-          <Route exact path="/result/:examId" element={<ResultExam />} />
-          <Route exact path="/exam/:examId" element={<ExamStudent />} />
-          <Route exact path="/invitation/:invitationHash" element={
-              <Protected>
-                <Invitation />
-              </Protected>
-          }/>
-          <Route exact path="/quiz" element={<Quiz />} />
-          <Route exact path="/refresh" element={<Refresh />} />
-          {/*<Route exact path="/courses" element={*/}
-          {/*  <Protected isLoggedIn={isLogged}>*/}
-          {/*    <TestDashboard/>*/}
-          {/*  </Protected>  }*/}
-          {/*/>*/}
-        </Routes>
-      </ThemeProvider>
-  );
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route
+                    path="/reset-password/:reset_token"
+                    element={<ResetPassword />}
+                />
+                <Route path="/activation/:email_token" element={<ActivateEmail />} />
+                <Route
+                    path="/courses"
+                    element={
+                        <Protected>
+                            <NewClasses />
+                        </Protected>
+                    }
+                />
+                <Route path="/courses/:course_id">
+                    <Route
+                        index={true}
+                        element={
+                            <Protected>
+                                <Course />
+                            </Protected>
+                        }
+                    />
+                    <Route
+                        path="exams"
+                        element={
+                            <Protected>
+                                <ExamPage />
+                            </Protected>
+                        }
+                    />
+                    <Route
+                        path="people"
+                        element={
+                            <Protected>
+                                <PeoplePage />
+                            </Protected>
+                        }
+                    />
+                    <Route
+                        path="grades"
+                        element={
+                            <Protected>
+                                <GradesPage />
+                            </Protected>
+                        }
+                    />
+                </Route>
+                {/*<Route path="/preview/:examId" element={<PreviewExam />} />*/}
+                {/*<Route exact path="/result/:examId" element={<ResultExam />} />*/}
+                {/*<Route exact path="/exam/:examId" element={<ExamStudent />} />*/}
+                <Route
+                    exact
+                    path="/invitation/:invitationHash"
+                    element={
+                        <Protected>
+                            <Invitation />
+                        </Protected>
+                    }
+                />
+                {/*<Route exact path="/show" element={<Show />} />*/}
+                {/*<Route exact path="/quiz" element={<Quiz />} />*/}
+            </Routes>
+        </ThemeProvider>
+    );
 }
-const mapStateToProps = (state) => {
-  return {
-    token: state.TokenReducer,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    isTokenExpired: () => dispatch({ type: Actions.isExpired }),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+export default App;

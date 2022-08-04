@@ -62,7 +62,6 @@ function Announcement(props) {
                         focusColor={'rgb(255,208,94)'}
                         id="filled-basic"
                         variant="filled"
-                        // style={{height: '100px'}}
                         // onChange={(e)=>(setAnnouncementText(e.target.value))}
                         label="Announce something to your class"
                         // startAdornment={

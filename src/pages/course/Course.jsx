@@ -182,7 +182,6 @@ function Course(props) {
     }));
     return (
         <div>
-            <ResponsiveAppBar />
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
                   <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
@@ -383,43 +382,6 @@ function Course(props) {
             {/*                    >*/}
             {/*                        <Link href="/quiz"><MenuItem ><AssignmentIcon/>Exam/Quiz Assignment</MenuItem></Link>*/}
             {/*                    </Menu>*/}
-            {/*                </Paper>*/}
-            {/*            </TabPanel> : null}*/}
-
-            {/*            { !isLoading ? <TabPanel value="3">*/}
-            {/*                <Paper fullwidth elevation={0} >*/}
-            {/*                    <Grid*/}
-            {/*                        container*/}
-            {/*                        spacing={0}*/}
-            {/*                        direction="column"*/}
-            {/*                        alignItems="center"*/}
-            {/*                        justifyContent="center"*/}
-            {/*                    >*/}
-            {/*                        <Grid item xs={12}>*/}
-            {/*                        <Typography variant="h2">*/}
-            {/*                            Teachers*/}
-            {/*                        </Typography>*/}
-            {/*                        </Grid>*/}
-            {/*                    <Participants  username={adminUsername}/>*/}
-            {/*                    </Grid>*/}
-            {/*                    <Grid*/}
-            {/*                        container*/}
-            {/*                        spacing={0}*/}
-            {/*                        direction="column"*/}
-            {/*                        alignItems="center"*/}
-            {/*                        justifyContent="center"*/}
-            {/*                    >*/}
-            {/*                        <Typography variant="h2">*/}
-            {/*                            Classmates*/}
-            {/*                        </Typography>*/}
-            {/*                        {*/}
-            {/*                            classroom.map((val,index)=>{*/}
-            {/*                                console.log(val)*/}
-            {/*                                return <Participants username={val.username}/>*/}
-            {/*                            })*/}
-            {/*                        }*/}
-
-            {/*                    </Grid>*/}
             {/*                </Paper>*/}
             {/*            </TabPanel> : null}*/}
 

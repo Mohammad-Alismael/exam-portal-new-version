@@ -85,17 +85,17 @@ function PreviewExam(props) {
        return questionss.data
 
     }
-    useEffect( ()=>{
-
-        getExamInfo().then(console.log)
-        getExamQuestionsv2().then((data)=>{
-            console.log("questions =>",data)
-            setQuestions([...data])
-            props.setQuestionArray([...data])
-            setIsLoading(true)
-        })
-
-    },[])
+    // useEffect( ()=>{
+    //
+    //     getExamInfo().then(console.log)
+    //     getExamQuestionsv2().then((data)=>{
+    //         console.log("questions =>",data)
+    //         setQuestions([...data])
+    //         props.setQuestionArray([...data])
+    //         setIsLoading(true)
+    //     })
+    //
+    // },[])
     const updateExam = () =>{
         console.log(props.questions)
         updateExamInfo()

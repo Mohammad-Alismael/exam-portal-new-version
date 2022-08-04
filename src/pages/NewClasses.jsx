@@ -16,6 +16,7 @@ import { connect, useSelector } from "react-redux";
 import Course from "../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
+import {Outlet} from "react-router";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
@@ -72,7 +73,6 @@ function NewClasses(props) {
     }, [loading]);
     return (
         <>
-            <ResponsiveAppBar />
             {!loading ? (
                 <Grid container spacing={2} className={classes.root}>
                     {courses.map(({ class_name, classroom_id,section }, index) => {

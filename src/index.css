@@ -29,3 +29,13 @@ code {
   cursor: pointer;
   color: #282c34;
 }
+/*progress circle*/
+.MuiCircularProgress-colorPrimary {
+  color: rgb(255,208,94) !important;
+}
+
+.MuiCircularProgress-root {
+  position: absolute;
+  left: 43%;
+  top: 44vh;
+}
