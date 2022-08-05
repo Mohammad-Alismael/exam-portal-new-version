@@ -15,11 +15,9 @@ const axiosPrivate = axios.create({
 
 axiosPrivate.interceptors.request.use(
     config => {
-        // const token = localStorageService.getAccessToken()
-        if (token) {
+        if (token != null) {
             config.headers['Authorization'] = 'Bearer ' + token
         }
-        // config.headers['Content-Type'] = 'application/json';
         return config
     },
     error => {

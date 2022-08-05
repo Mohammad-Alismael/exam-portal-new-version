@@ -13,7 +13,7 @@ import Navbar from "../layouts/Navbar";
 import Box from "@mui/material/Box";
 import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
-import {Button, TextField} from "@mui/material";
+import {Button, TextField} from "@material-ui/core";
 import {theme} from "../utils/global/useStyles";
 import {useLocation} from "react-router";
 import {token} from "../api/axios";
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         height: "100vh",
         flexGrow: 1,
-        backgroundColor: "#1a1a1a",
         padding: "7%",
     },
     paperStyle: {
@@ -136,7 +135,7 @@ function Login(props) {
                         <Button
                             onClick={submit}
                             variant="contained"
-                            color="warning"
+                            color="error"
                             type="submit"
                             fullWidth
                             className={classes.signInBtn}

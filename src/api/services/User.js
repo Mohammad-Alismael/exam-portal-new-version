@@ -10,10 +10,17 @@ class User {
             password
         }).then((res)=> {
             const token = res.data['accessToken'];
-            // axiosPrivate.interceptors.request.use(function (config) {
-            //     config.headers.Authorization =  token ? `Bearer ${token}` : '';
-            //     return config;
-            // })
+            axiosPrivate.interceptors.request.use(
+                config => {
+                    if (token) {
+                        config.headers['Authorization'] = 'Bearer ' + token
+                    }
+                    return config
+                },
+                error => {
+                    Promise.reject(error)
+                }
+            );
             return res
         }).catch((error)=>{
             // console.log(error)
@@ -38,6 +45,17 @@ class User {
         axiosPrivate.post('/user/refresh').then((res)=>{
             const newAccessToken = res.data['accessToken']
             updateToken(newAccessToken)
+            axiosPrivate.interceptors.request.use(
+                config => {
+                    console.log(newAccessToken)
+                    config.headers['Authorization'] = 'Bearer ' + newAccessToken
+                    return config
+                },
+                error => {
+                    Promise.reject(error)
+                }
+            );
+
         }).catch((err)=>{
             console.log(err)
             if (err.response.status == 406){
@@ -46,8 +64,35 @@ class User {
             }
         })
     }
-    static checkTokenExpiration(){
-        if (isExpired(token)){
+    static async refreshTokenv2() {
+        try {
+            const {data} = await axiosPrivate.post('/user/refresh')
+            updateToken(data['accessToken'])
+        }catch (err) {
+            console.log(err)
+            if (err.response.status === 406) {
+                window.location.href = '/logout'
+                toast("session expired, you must log in again!")
+            }
+        }
+    }
+
+    static refreshTokenWithCallBack = async callback => {
+        try {
+            const {data} = await axiosPrivate.post('/user/refresh')
+            updateToken(data['accessToken'])
+            callback()
+        } catch (err) {
+            console.log(err)
+            if (err.response.status === 406) {
+                window.location.href = '/logout'
+                toast("session expired, you must log in again!")
+            }
+            callback()
+        }
+    };
+    static async checkTokenExpiration() {
+        if (isExpired(token)) {
             User.refreshToken()
         }
     }

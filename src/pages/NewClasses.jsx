@@ -17,6 +17,8 @@ import Course from "../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
 import {Outlet} from "react-router";
+import User from "../api/services/User";
+import {token} from "../api/axios";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
@@ -63,7 +65,8 @@ function NewClasses(props) {
             });
         setOpen(false);
     };
-    useEffect(() => {
+    useEffect(  () => {
+
         course.fetchCourses().then((res) => {
             if (res != null) {
                 setCourses(res);

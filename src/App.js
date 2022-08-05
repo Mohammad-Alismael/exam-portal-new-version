@@ -38,6 +38,7 @@ import PeoplePage from "./pages/PeoplePage";
 import GradesPage from "./pages/GradesPage";
 import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
 import Show from "./pages/Show";
+import User from "./api/services/User";
 
 function App(props) {
     const dispatch = useDispatch();
@@ -45,38 +46,28 @@ function App(props) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
 
-    // useEffect(() => {
-    //     let isMounted = true;
-    //     if (token != null) {
-    //         axiosPrivate
-    //             .post("/user/refresh")
-    //             .then((res) => {
-    //                 const newAccessToken = res.data["accessToken"];
-    //                 updateToken(newAccessToken);
-    //                 isMounted && setLoading(false);
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //                 if (err.response.status === 406) {
-    //                     navigate("/");
-    //                     toast("session expired, you must log in again!");
-    //                     isMounted && setLoading(false);
-    //                 }
-    //             });
-    //     }
-    //     isMounted && setLoading(false);
-    //     // alert("from refresh")
-    //     return () => isMounted = false
-    //
-    // }, []);
-    // if (loading) {
-    //     return <CircularProgress size={200}/>;
-    // }
+    // using async useEffect can cause memory leak but i'm using 'isMount'
+    // to prevent that
+    useEffect(   async () => {
+        let isMounted = true;
+        // this part to get new token while the user refreshes any page
+        if (token == null) {
+            await User.refreshTokenWithCallBack(() => {
+                isMounted && setLoading(false);
+            })
+        }
+        isMounted && setLoading(false);
+        return () => isMounted = false
+
+    }, []);
+
+    if (loading) {
+        return <CircularProgress size={200}/>;
+    }
     return (
         <ThemeProvider theme={theme}>
             <ToastContainer />
             <ResponsiveAppBar />
-
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/logout" element={<Logout />} />

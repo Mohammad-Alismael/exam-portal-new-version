@@ -81,11 +81,7 @@ const ResponsiveAppBar = (props) => {
     },[navigate])
 
     useEffect(()=>{
-        if (token != null) {
-            setUsername(user['username'])
-        }else {
-            navigate("/");
-        }
+        setUsername(user['username'])
     },[])
     return (
         <AppBar position="static">
