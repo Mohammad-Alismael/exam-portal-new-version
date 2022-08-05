@@ -91,7 +91,7 @@ class User {
             callback()
         }
     };
-    static async checkTokenExpiration() {
+    static checkTokenExpiration() {
         if (isExpired(token)) {
             User.refreshToken()
         }

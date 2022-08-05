@@ -15,10 +15,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { toast } from "react-toastify";
 import jwt from "jwt-decode";
 import * as Actions from "../store/actions";
-import {connect, useSelector} from "react-redux";
+import { connect, useSelector } from "react-redux";
 import useClipboard from "react-hook-clipboard";
-import CryptoJS from 'crypto-js'
-import {token} from "../api/axios";
+import CryptoJS from "crypto-js";
+import { token } from "../api/axios";
 import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,13 +43,18 @@ function ClassCard(props) {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-        generateInvitationLink();
         setAnchorEl(null);
     };
+    const handleClickOption = () => {
+        generateInvitationLink();
+        setAnchorEl(null);
+    }
     const generateInvitationLink = () => {
         const user_data = jwt(token);
         const textBeforeHash = `${props.id}:${user_data.username}`;
-        let encrypted = encodeURIComponent(CryptoJS.AES.encrypt(textBeforeHash, process.env.REACT_APP_INVITATION_KEY)).toString();
+        let encrypted = encodeURIComponent(
+            CryptoJS.AES.encrypt(textBeforeHash, process.env.REACT_APP_INVITATION_KEY)
+        ).toString();
         copyToClipboard(window.location.origin + "/invitation/" + encrypted);
         toast.info("copied to clipboard");
     };
@@ -60,10 +65,8 @@ function ClassCard(props) {
                     <CardHeader
                         avatar={
                             // alt={user.role_id == 3 ? user.username : props.instructor['username']}
-                            <Avatar alt={'t'}
-                                    src="/static/images/avatar/2.jpg"/>
+                            <Avatar alt={"t"} src="/static/images/avatar/2.jpg" />
                         }
-
                         action={
                             <div>
                                 <IconButton
@@ -93,7 +96,7 @@ function ClassCard(props) {
                                     }}
                                 >
                                     {options.map((option) => (
-                                        <MenuItem key={option} onClick={handleClose}>
+                                        <MenuItem key={option} onClick={handleClickOption}>
                                             {option}
                                         </MenuItem>
                                     ))}

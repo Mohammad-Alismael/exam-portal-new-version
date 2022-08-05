@@ -5,12 +5,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import TextField from "@mui/material/TextField";
+import {TextField} from "@material-ui/core";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "../components/ClassCard";
-import Button from "@mui/material/Button";
+import { Button } from '@material-ui/core';
 import { Typography } from "@mui/material";
 import { connect, useSelector } from "react-redux";
 import Course from "../api/services/Course";
@@ -46,16 +46,16 @@ function NewClasses(props) {
     const [open, setOpen] = React.useState(false);
     const [courses, setCourses] = React.useState([]);
     const [newClassName, setNewClassName] = useState("");
+    const [section, setSection] = useState("");
     const [loading, setLoading] = React.useState(true);
     const course = new Course();
     const handleClickOpen = () => {
         setOpen(true);
     };
-
-    const handleClose = () => {
+    const createClass = () => {
         setLoading(true);
         course
-            .createCourse(newClassName, user["user_id"])
+            .createCourse(newClassName,section, user["user_id"])
             .then((res) => {
                 toast(res["message"]);
                 setLoading(false);
@@ -64,6 +64,10 @@ function NewClasses(props) {
                 console.log(error);
             });
         setOpen(false);
+    }
+    const handleClose = () => {
+        setOpen(false);
+
     };
     useEffect(  () => {
 
@@ -120,20 +124,37 @@ function NewClasses(props) {
                         To create new class, please enter class name. We will send updates
                         occasionally.
                     </DialogContentText>
-                    <TextField
-                        onChange={(e) => setNewClassName(e.target.value)}
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="new class name"
-                        type="email"
-                        fullWidth
-                        variant="standard"
-                    />
+                    <Grid container spacing={4}>
+                        <Grid item xs={6} md={6} xl={6}>
+                            <TextField
+                                onChange={(e) => setNewClassName(e.target.value)}
+                                autoFocus
+                                margin="dense"
+                                id="class_name"
+                                label="new class name"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                            />
+                        </Grid>
+                        <Grid item xs={6} md={6} xl={6}>
+                            <TextField
+                                onChange={(e) => setSection(e.target.value)}
+                                autoFocus
+                                margin="dense"
+                                id="section"
+                                label="section"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                            />
+                        </Grid>
+                    </Grid>
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Create</Button>
+                    <Button onClick={createClass}>Create</Button>
                 </DialogActions>
             </Dialog>
         </>

@@ -20,10 +20,11 @@ class Course {
             }
         })
     }
-     createCourse(course_name, user_id) {
+     createCourse(course_name,section ,user_id) {
          User.checkTokenExpiration()
         return axiosPrivate.post('/classroom/create',{
             class_name: course_name,
+            section,
             instructor_id: user_id,
         }).then((res)=> {
             return res.data
