@@ -18,7 +18,8 @@ import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
 import {Outlet} from "react-router";
 import User from "../api/services/User";
-import {token} from "../api/axios";
+import {axiosPrivate, token} from "../api/axios";
+import {FETCH_CLASSROOMS} from "../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
@@ -70,16 +71,37 @@ function NewClasses(props) {
 
     };
     useEffect(  () => {
+        let isMounted = true;
+        const controller = new AbortController();
 
-        course.fetchCourses().then((res) => {
-            if (res != null) {
-                setCourses(res);
-                setLoading(false);
+        const getCourses = async () =>{
+            try {
+                const response = await axiosPrivate(FETCH_CLASSROOMS,{
+                    signal: controller.signal
+                })
+                isMounted && setCourses(response.data['result'])
+                isMounted && setLoading(false)
+            }catch (e) {
+                console.log(e)
             }
-        });
-    }, [loading]);
+        }
+
+        getCourses()
+
+        return ()=>{
+            isMounted = false
+            controller.abort()
+        }
+        // course.fetchCourses().then((res) => {
+        //     if (res != null) {
+        //         setCourses(res);
+        //         setLoading(false);
+        //     }
+        // });
+    }, []);
     return (
         <>
+            <ResponsiveAppBar />
             {!loading ? (
                 <Grid container spacing={2} className={classes.root}>
                     {courses.map(({ class_name, classroom_id,section }, index) => {
@@ -90,7 +112,7 @@ function NewClasses(props) {
                             section={section}
                         />;
                     })}
-                    {courses.length == 0 ? (
+                    {courses?.length == 0 ? (
                         <Grid item xs={12} sm={6} md={3}>
                             <Card className={classes.createClass}>
                                 <Typography
@@ -103,7 +125,7 @@ function NewClasses(props) {
                             </Card>
                         </Grid>
                     ) : null}
-                    {user["role_id"] == 3 ? (
+                    {user?.role_id == 3 ? (
                         <Grid item xs={12} sm={6} md={3}>
                             <Card className={classes.createClass}>
                                 <Button variant="contained" color="warning" onClick={handleClickOpen}>

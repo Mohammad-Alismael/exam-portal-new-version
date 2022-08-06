@@ -18,7 +18,7 @@ function Invitation(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [open, setOpen] = React.useState(true);
     const navigate = useNavigate();
-    const [classroomId, setClassroomId] = React.useState(0);
+    const [classroomId, setClassroomId] = React.useState("");
     const [instructorEmailId, setInstructorEmailId] = React.useState("");
     const [instructorusername, setInstructorusername] = React.useState("");
     const course = new Course()
@@ -43,7 +43,7 @@ function Invitation(props) {
         const decrypt = decrypted.toString(CryptoJS.enc.Utf8);
         console.log(decrypt)
             const classroomId = decrypt.split(":")[0];
-            setClassroomId(parseInt(classroomId));
+            setClassroomId(classroomId);
             const username = decrypt.split(":")[1];
             setInstructorusername(username);
             (async () => {

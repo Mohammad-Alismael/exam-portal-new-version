@@ -45,13 +45,14 @@ function App(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const user = useSelector(state => state.UserReducerV2).user;
 
-    // using async useEffect can cause memory leak but i'm using 'isMount'
+    // using async useEffect can cause memory leak but i'm using 'isMounted'
     // to prevent that
     useEffect(   async () => {
         let isMounted = true;
         // this part to get new token while the user refreshes any page
-        if (token == null) {
+        if (token == null && user != null) {
             await User.refreshTokenWithCallBack(() => {
                 isMounted && setLoading(false);
             })
@@ -67,7 +68,6 @@ function App(props) {
     return (
         <ThemeProvider theme={theme}>
             <ToastContainer />
-            <ResponsiveAppBar />
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/logout" element={<Logout />} />

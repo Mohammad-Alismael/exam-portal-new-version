@@ -20,6 +20,7 @@ import jwt from "jwt-decode";
 import {useLocation, useNavigate} from "react-router-dom";
 import {axiosPrivate, token, updateToken} from "../api/axios";
 import {toast} from "react-toastify";
+import User from "../api/services/User";
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const settings = [{title: 'Logout', url: '/logout'}];
 
@@ -83,6 +84,8 @@ const ResponsiveAppBar = (props) => {
     useEffect(()=>{
         setUsername(user['username'])
     },[])
+
+
     return (
         <AppBar position="static">
             <Container maxWidth="xl">

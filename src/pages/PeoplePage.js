@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import Participants from "../components/Participants";
 import {makeStyles} from "@material-ui/core/styles";
 import Divider from "@mui/material/Divider";
+import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: 30,
@@ -20,6 +21,7 @@ function PeoplePage(props) {
     const user = useSelector((state) => state.UserReducerV2).user;
     return (
         <>
+            <ResponsiveAppBar />
             <Paper fullwidth elevation={5} className={classes.container}>
                 <Grid xs={12}>
                     <Grid item xs={12}>
