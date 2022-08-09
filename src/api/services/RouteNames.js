@@ -1,1 +1,7 @@
 export const FETCH_CLASSROOMS = '/classroom/classes'
+export const UPLOAD_ANNOUNCEMENT_FILE = '/announcement/upload'
+export const CREATE_ANNOUNCEMENT = '/announcement/create'
+export const REFRESH_TOKEN = '/user/refresh'
+export const DELETE_TOKEN = '/user/logout'
+export const AUTH_USER = '/user/auth'
+export const CREATE_USER = '/user/create'

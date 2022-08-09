@@ -2,10 +2,11 @@ import axios from "axios";
 import {axiosPrivate, token, updateToken} from "../axios";
 import {toast} from "react-toastify";
 import {isExpired} from "react-jwt";
+import {AUTH_USER, CREATE_USER, REFRESH_TOKEN} from "./RouteNames";
 
 class User {
     static userAuth(username, password) {
-        return axiosPrivate.post('/user/auth',{
+        return axiosPrivate.post(AUTH_USER,{
             username,
             password
         }).then((res)=> {
@@ -28,7 +29,7 @@ class User {
         })
     }
     static createUser({username,password,emailId,roleId}) {
-        return axiosPrivate.post('/user/create',{
+        return axiosPrivate.post(CREATE_USER,{
             username,
             password,
             email_id: emailId,
@@ -42,7 +43,7 @@ class User {
         })
     }
     static refreshToken(){
-        axiosPrivate.post('/user/refresh').then((res)=>{
+        axiosPrivate.post(REFRESH_TOKEN).then((res)=>{
             const newAccessToken = res.data['accessToken']
             updateToken(newAccessToken)
             axiosPrivate.interceptors.request.use(
@@ -66,7 +67,7 @@ class User {
     }
     static async refreshTokenv2() {
         try {
-            const {data} = await axiosPrivate.post('/user/refresh')
+            const {data} = await axiosPrivate.post(REFRESH_TOKEN)
             updateToken(data['accessToken'])
         }catch (err) {
             console.log(err)
@@ -79,15 +80,15 @@ class User {
 
     static refreshTokenWithCallBack = async callback => {
         try {
-            const {data} = await axiosPrivate.post('/user/refresh')
+            const {data} = await axiosPrivate.post(REFRESH_TOKEN)
             updateToken(data['accessToken'])
             callback()
         } catch (err) {
             console.log(err)
-            if (err.response.status === 406) {
+            // if (err.response.status === 406) {
                 window.location.href = '/logout'
                 toast("session expired, you must log in again!")
-            }
+            // }
             callback()
         }
     };

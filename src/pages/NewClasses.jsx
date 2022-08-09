@@ -92,12 +92,6 @@ function NewClasses(props) {
             isMounted = false
             controller.abort()
         }
-        // course.fetchCourses().then((res) => {
-        //     if (res != null) {
-        //         setCourses(res);
-        //         setLoading(false);
-        //     }
-        // });
     }, []);
     return (
         <>

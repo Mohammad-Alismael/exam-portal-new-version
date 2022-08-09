@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Paper from "@mui/material/Paper";
 import {useSelector} from "react-redux";
 import { styled } from '@mui/material/styles';
@@ -22,9 +22,21 @@ import {Button} from "@mui/material";
 import {makeStyles} from "@material-ui/core/styles";
 import classes from "../../../img/classes.jpg";
 import Divider from "@material-ui/core/Divider";
+import {createAnnouncement, uploadFileAnnouncement} from "../../../api/services/Annoucments";
+import {toast} from "react-toastify";
 const useStyles = makeStyles((theme) => ({
     btnContainer:{
-        padding: '0 0.8rem'
+        padding: '0 0.8rem',
+        // backgroundColor: 'red'
+    },
+    btnContainer2:{
+        padding: '0.8rem',
+        // backgroundColor: 'blue'
+    },
+    uploadPreview: {
+        padding: '0.8rem',
+        maxWidth: 'calc(100% - 1.6rem)',
+        // height: '75%'
     }
 }));
 const CssTextField = styled(TextField, {
@@ -52,17 +64,55 @@ const CssTextField = styled(TextField, {
 function Announcement(props) {
     const user = useSelector(state => state.UserReducerV2).user;
     const classes = useStyles();
-
+    const [announcementText,setAnnouncementText] = React.useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [formData, setFormData] = useState(null);
+    const handleFileInput = (e) => {
+        let myFiles = e.target.files;
+        Object.assign(myFiles[0],
+            {
+                preview: URL.createObjectURL(myFiles[0]),
+            }
+        )
+        setSelectedFile(myFiles[0])
+        const formData = new FormData()
+        Object.keys(myFiles).forEach(key => {
+            formData.append(myFiles.item(key).name, myFiles.item(key))
+        })
+        // sending only one img
+        setFormData(formData)
+    }
+    const post = async (e) => {
+        e.preventDefault()
+        if (announcementText != "" || formData != null) {
+            let data = formData;
+            formData != null && data.append('announcementText', announcementText)
+            formData != null && data.append('courseId', props.courseId)
+            formData != null && await uploadFileAnnouncement(data)
+            formData == null && await createAnnouncement(announcementText,props.courseId)
+            setAnnouncementText('')
+            setFormData(null)
+            setSelectedFile(null)
+        }else {
+            toast.info("you can't post an empty text or empty file")
+        }
+    }
     return (
         <Paper elevation={5}>
             <Grid container>
+                {selectedFile != null ?
+                <Grid item xs={12}>
+                    <img className={classes.uploadPreview} src={selectedFile.preview} alt={'img'}/>
+                </Grid>
+                    : null }
                 <Grid item xs={12} className={classes.btnContainer}>
                     <CssTextField
                         fullWidth
                         focusColor={'rgb(255,208,94)'}
                         id="filled-basic"
                         variant="filled"
-                        // onChange={(e)=>(setAnnouncementText(e.target.value))}
+                        onChange={(e)=>(setAnnouncementText(e.target.value))}
+                        value={announcementText}
                         label="Announce something to your class"
                         // startAdornment={
                         //     <InputAdornment position="start">
@@ -73,24 +123,22 @@ function Announcement(props) {
 
                     <Divider style={{marginBottom: '0.8rem'}}/>
                 </Grid>
-                <Grid container  direction="row"
+                <Grid container direction="row"
                       justifyContent="space-between"
                       alignItems="center"
-                      className={classes.btnContainer}>
-                    <IconButton type="submit" title={'upload file'}>
-                        <input hidden accept="image/*" type="file" />
+                      className={classes.btnContainer2}>
+                    <IconButton aria-label="upload picture" component="label">
+                        <input onChange={handleFileInput} hidden accept="image/*" type="file" />
                         <PublishIcon />
                     </IconButton>
                     <Button
-                        // onClick={submit}
+                        onClick={post}
                         variant="contained"
                         color="warning"
                         type="submit"
-                        // className={classes.signInBtn}
                         size="large"
-                        style={{marginBottom: '0.8rem'}}
                     >
-                        post
+                        <b>post</b>
                     </Button>
                 </Grid>
             </Grid>

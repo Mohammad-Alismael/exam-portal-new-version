@@ -34,7 +34,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import useClipboard from 'react-hook-clipboard'
 import {getTableSortLabelUtilityClass} from "@mui/material";
 import Toolbar from '@mui/material/Toolbar';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AppBar from '@mui/material/AppBar';
@@ -98,6 +98,7 @@ const WhiteTextTypography = withStyles({
 })(Typography);
 function Course(props) {
     const classes = useStyles();
+    const { course_id } = useParams();
     const [value, setValue] = React.useState();
     const [isLoading, setIsLoading] = React.useState(false);
     const [announcements,setAnnouncements] = React.useState([
@@ -112,21 +113,6 @@ function Course(props) {
     const [clipboard, copyToClipboard] = useClipboard();
     const navigate = useNavigate();
     const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
-
-    const postAnnouncement = (e) =>{
-        axios.post('http://localhost:8080/set-announcement-to-students',{
-            instructorId: props.user.user_id,
-            announcementText,
-
-        }).then((data)=>{
-
-        }).catch((error)=>{
-            console.log(error)
-            // toast.error("error happened!")
-        })
-        setAnnouncements([...announcements,{announcementText,instructorId:props.user.user_id,createdAt : new Date().getTime()}])
-
-    }
 
     // useEffect(()=>{
     //     setValue(props.user.tab)
@@ -182,6 +168,7 @@ function Course(props) {
     }));
     return (
         <div>
+            <ResponsiveAppBar />
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
                   <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
@@ -199,7 +186,7 @@ function Course(props) {
                         </Item>
                     </Grid>
                     <Grid item xs={9}>
-                        <Announcement/>
+                        <Announcement courseId={course_id}/>
                         <Grid item>
                             {
                                 announcements.sort(function(a, b) {
