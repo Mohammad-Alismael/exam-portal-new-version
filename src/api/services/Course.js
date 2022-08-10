@@ -4,6 +4,7 @@ import {axiosPrivate, token} from "../axios";
 import User from './User';
 import {isExpired} from "react-jwt";
 import jwt from "jwt-decode";
+import {FETCH_COURSE_INFO} from "./RouteNames";
 
 class Course {
 
@@ -50,5 +51,15 @@ class Course {
 
     }
 }
+async function fetchCourseInfo(courseId) {
+    User.checkTokenExpiration()
+    try {
+        const response = await axiosPrivate.get(`${FETCH_COURSE_INFO}/${courseId}`)
+        return response.data
+    }catch (e) {
+        console.log(e)
+        alert("error happened while fetching course info")
+    }
 
-export default Course;
+}
+export {Course,fetchCourseInfo};

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Paper from "@mui/material/Paper";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import PublishIcon from '@mui/icons-material/Publish';
@@ -24,6 +24,9 @@ import classes from "../../../img/classes.jpg";
 import Divider from "@material-ui/core/Divider";
 import {createAnnouncement, uploadFileAnnouncement} from "../../../api/services/Annoucments";
 import {toast} from "react-toastify";
+import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_ID} from "../../../store/actions";
+import {setCourseAnnouncements} from "../../../actions/CourseAction";
+import {BASE_URL} from "../../../api/axios";
 const useStyles = makeStyles((theme) => ({
     btnContainer:{
         padding: '0 0.8rem',
@@ -63,7 +66,9 @@ const CssTextField = styled(TextField, {
 }));
 function Announcement(props) {
     const user = useSelector(state => state.UserReducerV2).user;
+    const course = useSelector(state => state.CourseReducer);
     const classes = useStyles();
+    const dispatch = useDispatch()
     const [announcementText,setAnnouncementText] = React.useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [formData, setFormData] = useState(null);
@@ -82,14 +87,28 @@ function Announcement(props) {
         // sending only one img
         setFormData(formData)
     }
+    const updateList = (data) => {
+        const tmp = [...course.announcements,data]
+        dispatch(setCourseAnnouncements(tmp))
+    }
+    const appendText = async () => {
+        const data = await createAnnouncement(announcementText, course.courseId)
+        updateList(data)
+    }
+    const uploadFile = async (data) => {
+        const res = await uploadFileAnnouncement(data)
+        let new_res  = {...res, file_path: `${BASE_URL}/${res.file_path}`}
+        const tmp = [...course.announcements,new_res]
+        dispatch(setCourseAnnouncements(tmp))
+    }
     const post = async (e) => {
         e.preventDefault()
         if (announcementText != "" || formData != null) {
             let data = formData;
             formData != null && data.append('announcementText', announcementText)
-            formData != null && data.append('courseId', props.courseId)
-            formData != null && await uploadFileAnnouncement(data)
-            formData == null && await createAnnouncement(announcementText,props.courseId)
+            formData != null && data.append('courseId', course.courseId)
+            formData != null && await uploadFile(data)
+            formData == null && await appendText()
             setAnnouncementText('')
             setFormData(null)
             setSelectedFile(null)

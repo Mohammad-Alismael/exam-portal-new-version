@@ -7,20 +7,18 @@ import reportWebVitals from './reportWebVitals';
 import { createStore, combineReducers,applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
-import UserReducer from "./store/reducers/UserReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
 import CreateReducer from "./store/reducers/CreateReducer";
 import UserReducerV2 from "./store/reducers/UserReducerV2";
-import TokenReducer from './store/reducers/TokenReducer'
 import {BrowserRouter} from "react-router-dom";
 import { composeWithDevTools } from 'redux-devtools-extension';
+import CourseReducer from "./store/reducers/CourseReducer";
 const rootReducer = combineReducers({
     ExamReducer,
-    UserReducer,
     UserReducerV2,
     ExamStudentReducer,
     CreateReducer,
-    // TokenReducer
+    CourseReducer
 });
 
 function saveToLocalStorage(store) {

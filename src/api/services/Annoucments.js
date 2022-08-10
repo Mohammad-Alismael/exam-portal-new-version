@@ -9,6 +9,7 @@ async function uploadFileAnnouncement(formData) {
         const response = await axiosPrivate
             .post(UPLOAD_ANNOUNCEMENT_FILE, formData)
         console.log(response.data)
+        return response.data
     } catch (e) {
         console.log(e.response.data)
         toast.info(e.response?.data?.message)
@@ -24,6 +25,7 @@ async function createAnnouncement(announcementText,courseId) {
             })
 
         console.log(response.data)
+        return response.data
     } catch (e) {
         console.log(e.response.data)
         toast.info(e.response?.data?.message)

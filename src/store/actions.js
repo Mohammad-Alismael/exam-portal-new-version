@@ -18,5 +18,8 @@ export const SET_STARTING_AT = 'SET_STARTING_AT';
 export const SET_ENDING_AT = 'SET_ENDING_AT';
 export const SET_EXAM_TITLE = 'SET_EXAM_TITLE';
 export const AUTHENTICATE = 'AUTHENTICATE';
-export const isExpired = 'IS_Expired';
 export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+// course actions
+export const SET_COURSE_ID = 'SET_COURSE_ID';
+export const SET_COURSE_INFO = 'SET_COURSE_INFO';
+export const SET_COURSE_ANNOUNCEMENTS = 'SET_COURSE_ANNOUNCEMENTS';

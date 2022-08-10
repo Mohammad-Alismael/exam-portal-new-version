@@ -13,7 +13,7 @@ import ClassCard from "../components/ClassCard";
 import { Button } from '@material-ui/core';
 import { Typography } from "@mui/material";
 import { connect, useSelector } from "react-redux";
-import Course from "../api/services/Course";
+import {Course} from "../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
 import {Outlet} from "react-router";

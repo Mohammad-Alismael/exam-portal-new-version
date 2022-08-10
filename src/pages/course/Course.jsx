@@ -41,12 +41,17 @@ import AppBar from '@mui/material/AppBar';
 import * as Actions from "../../store/actions";
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import Container from "@mui/material/Container";
-import AnnouncementComponent from "../../components/AnnouncementComponent";
+import AnnouncementComponent from "./Announcement/AnnouncementComponent";
 import InputAdornment from '@mui/material/InputAdornment';
 import Avatar from "@mui/material/Avatar";
 import TextField from '@mui/material/TextField';
 import Announcement from "./Announcement/Announcement";
 import { withStyles } from "@material-ui/core/styles";
+import {fetchCourseInfo} from "../../api/services/Course";
+import { useDispatch } from 'react-redux'
+import {SET_COURSE_ID} from "../../store/actions";
+import {CourseAction} from "../../actions/CourseAction";
+import {CircularProgress} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -99,60 +104,17 @@ const WhiteTextTypography = withStyles({
 function Course(props) {
     const classes = useStyles();
     const { course_id } = useParams();
-    const [value, setValue] = React.useState();
-    const [isLoading, setIsLoading] = React.useState(false);
+    const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = React.useState(true);
     const [announcements,setAnnouncements] = React.useState([
         {instructorId: 10,announcementText: "tmrw we have a quiz!",createdAt: 1658749897526},
         {instructorId: 10,announcementText: "tmrw we have a final!tmrw we have a final!tmrw we have a final!tmrw we have a final!",createdAt: 1658749899526}
     ]);
     const user = useSelector(state => state.UserReducerV2).user;
-    const [exams,setExams] = React.useState([]);
-    const [submission,setSubmission] = React.useState([]);
-    const [announcementText,setAnnouncementText] = React.useState('');
-    const [classroom,setClassroom] = React.useState([]);
+    const course = useSelector(state => state.CourseReducer);
     const [clipboard, copyToClipboard] = useClipboard();
     const navigate = useNavigate();
-    const [adminUsername,setAdminUsername] = React.useState(props.user.role_id === 1 ? props.user.username : "")
 
-    // useEffect(()=>{
-    //     setValue(props.user.tab)
-    //     if (props.user.role_id == 1){
-    //         loadAnnouncements()
-    //         getExamsList().then((data)=>{
-    //             console.log('Exams =>',data)
-    //             setExams(data)
-    //
-    //         })
-    //         getClassroom().then((data)=>{
-    //             console.log('classroom =>',data)
-    //             setClassroom(data)
-    //             setIsLoading(false)
-    //         })
-    //     }
-    //     else{
-    //         loadAnnouncementsForStudents()
-    //         getExamListForStudents().then((data)=>{
-    //             const tmp = []
-    //             data.map((val,index)=>{
-    //                 tmp.push({
-    //                         title: val[1],
-    //                         examId:val[0],
-    //                         points: val[2],
-    //                         startingAt: val[3],
-    //                         endingAt: val[4]
-    //                     })
-    //                 listSubmissionForStudents(val[0]).then((data)=>{
-    //                     if (data){
-    //                         setSubmission([...submission, {examId:val[0],title:val[1]}])
-    //                     }
-    //                 })
-    //             })
-    //             setExams([...tmp])
-    //         })
-    //         getClassRoomForStudents()
-    //     }
-    //
-    // },[])
     const listSubmissionForStudents = async (examId) => {
         const submission = await axios.post('http://localhost:8080/check-submission', {
             creatorId: props.user.user_id,
@@ -166,16 +128,29 @@ function Course(props) {
         padding: theme.spacing(2),
         // color: theme.palette.text.secondary,
     }));
+    useEffect(()=>{
+        const controller = new AbortController();
+        dispatch({ type: SET_COURSE_ID, payload : {courseId: course_id} })
+        dispatch(CourseAction(course_id))
+        setIsLoading(false)
+        // return ()=>{
+        //     controller.abort()
+        // }
+    },[])
+
+    if (isLoading) {
+        return <CircularProgress size={200}/>;
+    }
     return (
         <div>
             <ResponsiveAppBar />
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
                   <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
-                     <b>course name</b>
+                     <b>{course?.course_info['class_name']}</b>
                   </WhiteTextTypography>
                   <WhiteTextTypography variant="h4" style={{ fontSize: '25px' }}>
-                      section A
+                      section {course?.course_info['section'].toUpperCase()}
                   </WhiteTextTypography>
                 </Paper>
                 <Grid container spacing={2} className={classes.mainGrid}>
@@ -186,18 +161,18 @@ function Course(props) {
                         </Item>
                     </Grid>
                     <Grid item xs={9}>
-                        <Announcement courseId={course_id}/>
+                        <Announcement />
                         <Grid item>
                             {
-                                announcements.sort(function(a, b) {
-                                    return b.createdAt - a.createdAt;
-                                }).map((val,index)=>{
+                                course.announcements.sort(function(a, b) {
+                                    return b.created_at - a.created_at;
+                                }).map(({instructorId,announcement_text,file_path,created_at},index)=>{
 
                                     return <AnnouncementComponent
                                         key={index}
-                                        user_id={val.instructorId}
-                                        text={val.announcementText}
-                                        createdAt={val.createdAt}/>
+                                        file={file_path}
+                                        text={announcement_text}
+                                        createdAt={created_at}/>
                                 })
                             }
 
