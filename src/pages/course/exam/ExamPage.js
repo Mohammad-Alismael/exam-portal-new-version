@@ -2,21 +2,27 @@ import React from 'react';
 import ResponsiveAppBar from "../../../layouts/ResponsiveAppBar";
 import Exam from "./Exam";
 import {useSelector} from "react-redux";
-import Container from "@mui/material/Container";
 import {makeStyles} from "@material-ui/core/styles";
+import {Button} from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 const useStyles = makeStyles((theme) => ({
     container: {
-        backgroundColor: 'red',
         padding: '7% 20%',
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        gap: '1rem'
+        float: 'center',
     },
     subContainer:{
         display: 'flex',
         flexDirection: 'row',
         gap: '1rem',
+    },
+    createExamBtnContainer: {
+        width: '100%',
+        height: '30px',
+        margin: '1.2rem',
+    },
+    createExamBtn: {
+        borderRadius: '20px !important',
+        float: 'right',
     }
 }));
 const ExamPage = () => {
@@ -27,6 +33,11 @@ const ExamPage = () => {
         <>
             <ResponsiveAppBar />
             <div className={classes.container}>
+                <div className={classes.createExamBtnContainer}>
+                    <Button className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
+                        <b>create exam</b>
+                    </Button>
+                </div>
                 <Exam examTitle={'testing'}/>
                 <Exam examTitle={'final cs202'}/>
                 <Exam examTitle={'final cs350'}/>
