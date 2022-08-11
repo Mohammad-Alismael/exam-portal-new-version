@@ -1,26 +1,5 @@
-// import jwt from "jwt-decode";
-//
-// export const token = JSON.parse(localStorage.getItem('1store1'))['TokenReducer']['access_token']['accessToken']
-// export const data = jwt(token)
-
-export const cipher = salt => {
-    const textToChars = text => text.split('').map(c => c.charCodeAt(0));
-    const byteHex = n => ("0" + Number(n).toString(16)).substr(-2);
-    const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
-
-    return text => text.split('')
-        .map(textToChars)
-        .map(applySaltToChar)
-        .map(byteHex)
-        .join('');
-}
-
-export const decipher = salt => {
-    const textToChars = text => text.split('').map(c => c.charCodeAt(0));
-    const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
-    return encoded => encoded.match(/.{1,2}/g)
-        .map(hex => parseInt(hex, 16))
-        .map(applySaltToChar)
-        .map(charCode => String.fromCharCode(charCode))
-        .join('');
-}
+export const UNDERGRAD_STUDENT_ROLE = [1]
+export const GRAD_STUDENT_ROLE = [2]
+export const INSTRUCTOR_ROLE = [3]
+export const STUDENT_ROLES = [1,2]
+export const ALL_ROLES = [1,2,3]

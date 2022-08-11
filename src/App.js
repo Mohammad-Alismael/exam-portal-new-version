@@ -32,6 +32,8 @@ import PeoplePage from "./pages/course/people/PeoplePage";
 import GradesPage from "./pages/GradesPage";
 import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
 import User from "./api/services/User";
+import CreateExamPage from "./pages/CreateExamPage";
+import {ALL_ROLES, INSTRUCTOR_ROLE} from "./utils/global/GlobalConstants";
 
 function App(props) {
     const dispatch = useDispatch();
@@ -107,12 +109,17 @@ function App(props) {
                     <Route
                         path="grades"
                         element={
-                            <Protected>
+                            <Protected onlyAccessTo={ALL_ROLES}>
                                 <GradesPage />
                             </Protected>
                         }
                     />
                 </Route>
+                <Route path="/create-exam" element={
+                    <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
+                        <CreateExamPage />
+                    </Protected>
+                }/>
                 {/*<Route path="/preview/:examId" element={<PreviewExam />} />*/}
                 {/*<Route exact path="/result/:examId" element={<ResultExam />} />*/}
                 {/*<Route exact path="/exam/:examId" element={<ExamStudent />} />*/}

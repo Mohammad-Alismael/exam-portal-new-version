@@ -5,9 +5,11 @@ import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import Tooltip from "@mui/material/Tooltip";
+import {useNavigate} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     container: {
-        padding: '7% 20%',
+        padding: '7% 25%',
         float: 'center',
     },
     subContainer:{
@@ -27,16 +29,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ExamPage = () => {
     const classes = useStyles();
+    const navigate = useNavigate();
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
+    const createNewExam = (e) =>{
+        e.preventDefault()
+        navigate('/create-exam')
+    }
     return (
         <>
             <ResponsiveAppBar />
             <div className={classes.container}>
                 <div className={classes.createExamBtnContainer}>
-                    <Button className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
-                        <b>create exam</b>
-                    </Button>
+                    <Tooltip title="create new exam/quiz for this course">
+                        <Button onCkick={createNewExam} className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
+                            <b>create</b>
+                        </Button>
+                    </Tooltip>
                 </div>
                 <Exam examTitle={'testing'}/>
                 <Exam examTitle={'final cs202'}/>

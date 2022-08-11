@@ -80,7 +80,7 @@ export const theme = createTheme({
             main: 'rgb(0,0,0)',
         },
         warning: {
-            main: 'rgb(255,208,94)',
+            main: '#FFCD38',
         },
 
     },

@@ -49,7 +49,7 @@ function PeoplePage(props) {
                         </Grid>
                     </Grid>
                     <Divider sx={{ borderBottomWidth: 3,color: 'primary.main' }}/>
-                    <Participants  username={'me'}/>
+                    <Participants  username={user?.username}/>
                     <Divider/>
                     {
                         course.classmates.filter((student)=>{
