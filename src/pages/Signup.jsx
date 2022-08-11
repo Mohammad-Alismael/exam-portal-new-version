@@ -46,7 +46,7 @@ function Signup(props) {
     return (
         <div>
                 <Navbar type={2} />
-                <Grid item md={12} sm={12} style={{ backgroundColor: "#161b22", padding: "7%" }}>
+                <Grid item md={12} sm={12} style={{padding: "7%" }}>
                 <Paper elevation={10} className={classes.paperStyle}>
                         <div className={classes.paper}>
                             <Typography variant="h3">

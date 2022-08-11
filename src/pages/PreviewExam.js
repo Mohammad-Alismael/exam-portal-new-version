@@ -33,26 +33,7 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         width: '100%',
     }
-
 }));
-
-const theme2 = createTheme({
-    typography: {
-        h6: {
-            fontSize: 32,
-            marginTop: -40,
-            color: '#161b22'
-        },
-    },
-    palette: {
-        primary: {
-            main: 'rgb(22,27,34)',
-        },
-        secondary: {
-            main: '#ffd05e',
-        }
-    }
-})
 
 function PreviewExam(props) {
     const classes = useStyles();

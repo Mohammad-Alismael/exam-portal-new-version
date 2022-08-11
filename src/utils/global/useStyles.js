@@ -74,10 +74,10 @@ export const theme = createTheme({
     },
     palette: {
         primary: {
-            main: 'rgb(255,255,255)'
+            main: 'rgb(0,0,0)'
         },
         secondary: {
-            main: 'rgb(0,0,0)',
+            main: 'rgb(255,255,255)'
         },
         warning: {
             main: '#FFCD38',

@@ -42,7 +42,7 @@ const ExamPage = () => {
             <div className={classes.container}>
                 <div className={classes.createExamBtnContainer}>
                     <Tooltip title="create new exam/quiz for this course">
-                        <Button onCkick={createNewExam} className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
+                        <Button onClick={createNewExam} className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
                             <b>create</b>
                         </Button>
                     </Tooltip>

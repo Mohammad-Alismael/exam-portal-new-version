@@ -76,7 +76,7 @@ function App(props) {
                 <Route
                     path="/courses"
                     element={
-                        <Protected>
+                        <Protected onlyAccessTo={ALL_ROLES}>
                             <NewClasses />
                         </Protected>
                     }
@@ -85,7 +85,7 @@ function App(props) {
                     <Route
                         index={true}
                         element={
-                            <Protected>
+                            <Protected onlyAccessTo={ALL_ROLES}>
                                 <Course />
                             </Protected>
                         }
@@ -93,7 +93,7 @@ function App(props) {
                     <Route
                         path="exams"
                         element={
-                            <Protected>
+                            <Protected onlyAccessTo={ALL_ROLES}>
                                 <ExamPage />
                             </Protected>
                         }
@@ -101,7 +101,7 @@ function App(props) {
                     <Route
                         path="people"
                         element={
-                            <Protected>
+                            <Protected onlyAccessTo={ALL_ROLES}>
                                 <PeoplePage />
                             </Protected>
                         }
@@ -116,7 +116,7 @@ function App(props) {
                     />
                 </Route>
                 <Route path="/create-exam" element={
-                    <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
+                    <Protected onlyAccessTo={ALL_ROLES}>
                         <CreateExamPage />
                     </Protected>
                 }/>
