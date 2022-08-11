@@ -32,7 +32,7 @@ import PeoplePage from "./pages/course/people/PeoplePage";
 import GradesPage from "./pages/GradesPage";
 import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
 import User from "./api/services/User";
-import CreateExamPage from "./pages/CreateExamPage";
+import CreateExamPage from "./pages/createExamPage/CreateExamPage";
 import {ALL_ROLES, INSTRUCTOR_ROLE} from "./utils/global/GlobalConstants";
 
 function App(props) {

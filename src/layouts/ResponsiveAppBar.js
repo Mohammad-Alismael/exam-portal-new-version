@@ -87,7 +87,7 @@ const ResponsiveAppBar = (props) => {
 
 
     return (
-        <AppBar position="static" color="secondary">
+        <AppBar position="static" color="white">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <img src={process.env.PUBLIC_URL +'/images/logo.png'} className={classes.logo} alt="Exam Portal" />
