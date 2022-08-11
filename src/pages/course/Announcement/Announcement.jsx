@@ -27,6 +27,7 @@ import {toast} from "react-toastify";
 import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_ID} from "../../../store/actions";
 import {setCourseAnnouncements} from "../../../actions/CourseAction";
 import {BASE_URL} from "../../../api/axios";
+import Tooltip from "@mui/material/Tooltip";
 const useStyles = makeStyles((theme) => ({
     btnContainer:{
         padding: '0 0.8rem',
@@ -133,23 +134,19 @@ function Announcement(props) {
                         onChange={(e)=>(setAnnouncementText(e.target.value))}
                         value={announcementText}
                         label="Announce something to your class"
-                        // startAdornment={
-                        //     <InputAdornment position="start">
-                        //         <Avatar alt={user['username']} src="/static/images/avatar/2.jpg" />
-                        //     </InputAdornment>
-                        // }
                     />
-
                     <Divider style={{marginBottom: '0.8rem'}}/>
                 </Grid>
                 <Grid container direction="row"
                       justifyContent="space-between"
                       alignItems="center"
                       className={classes.btnContainer2}>
-                    <IconButton aria-label="upload picture" component="label">
-                        <input onChange={handleFileInput} hidden accept="image/*" type="file" />
-                        <PublishIcon />
-                    </IconButton>
+                    <Tooltip title="upload file">
+                        <IconButton aria-label="upload picture" component="label">
+                            <input onChange={handleFileInput} hidden accept="image/*" type="file" />
+                            <PublishIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Button
                         onClick={post}
                         variant="contained"
