@@ -1,5 +1,5 @@
 import React from 'react';
-import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
+import ResponsiveAppBar from "../../../layouts/ResponsiveAppBar";
 
 const ExamPage = () => {
     return (

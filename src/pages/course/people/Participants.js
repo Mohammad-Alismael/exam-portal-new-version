@@ -27,7 +27,7 @@ function Participants (props) {
 
         return (
             <Box elevation={0} className={classes.paperStyle} sx={{ p: '2px 4px'}}>
-                <Avatar alt={'h'} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={props.username} src="/static/images/avatar/2.jpg" />
                 <Typography style={{color:"black"}} sx={{ ml: 4, flex: 1 }} variant="h6">
                     {props.username}
                 </Typography>

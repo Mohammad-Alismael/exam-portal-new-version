@@ -1,9 +1,4 @@
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-
 import {
-    BrowserRouter as Router,
-    Link,
     Routes,
     Route,
     useLocation,
@@ -16,6 +11,8 @@ import Quiz from "./components/Quiz";
 import Logout from "./pages/Logout";
 import { connect, useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import PreviewExam from "./pages/PreviewExam";
 import ExamStudent from "./pages/ExamStudent";
 import Invitation from "./pages/Invitation";
@@ -26,18 +23,14 @@ import ActivateEmail from "./pages/ActivateEmail";
 import NewClasses from "./pages/NewClasses";
 import jwt from "jwt-decode";
 import Protected from "./utils/Protected";
-import * as Actions from "./store/actions";
-import { isExpired } from "react-jwt";
 import {axiosPrivate, token, updateToken} from "./api/axios";
 import { theme } from "./utils/global/useStyles";
-
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CircularProgress } from "@material-ui/core";
-import ExamPage from "./pages/ExamPage";
-import PeoplePage from "./pages/PeoplePage";
+import ExamPage from "./pages/course/exam/ExamPage";
+import PeoplePage from "./pages/course/people/PeoplePage";
 import GradesPage from "./pages/GradesPage";
 import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
-import Show from "./pages/Show";
 import User from "./api/services/User";
 
 function App(props) {

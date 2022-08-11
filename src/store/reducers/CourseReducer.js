@@ -3,7 +3,8 @@ import * as actionTypes from '../actions'
 const initialState = {
     courseId: "",
     course_info: null,
-    announcements: []
+    announcements: [],
+    classmates: []
 }
 
 const CourseReducer  = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const CourseReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 announcements: action.announcements
+            }
+        case actionTypes.SET_COURSE_CLASSMATES:
+            return {
+                ...state,
+                classmates: action.classmates
             }
         default:
             break;

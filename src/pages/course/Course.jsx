@@ -112,16 +112,8 @@ function Course(props) {
     ]);
     const user = useSelector(state => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
-    const [clipboard, copyToClipboard] = useClipboard();
     const navigate = useNavigate();
 
-    const listSubmissionForStudents = async (examId) => {
-        const submission = await axios.post('http://localhost:8080/check-submission', {
-            creatorId: props.user.user_id,
-            examId
-        })
-        return submission.data
-    }
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         ...theme.typography.body2,
