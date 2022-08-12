@@ -8,15 +8,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import * as Actions from "../../store/actions";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
+        position: 'relative',
         padding: 30,
-        height: '15vh auto',
-        width: '50%',
-        margin: "30px auto",
-        position: 'relative'
+        marginTop: "2rem",
     },
     textField: {
         width: '100%',
@@ -33,61 +31,50 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: 20
     }
 }));
-const Truth = props => {
+const Truth = ({id}) => {
     const classes = useStyles();
-    const [answerKey,setAnswerKey] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const handleChange = (e) =>{
-        console.log(e.target)
-        const deepCopyForAnswerKey = [...answerKey]
-        deepCopyForAnswerKey[0] = {...deepCopyForAnswerKey[0],correctAnswer:parseInt(e.target.value)}
-        setAnswerKey([...deepCopyForAnswerKey])
-        const deepCopy = [...props.questions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.question.questionId === props.questionId)
-                return true;
-        })
+    // const [answerKey,setAnswerKey] = React.useState([]);
+    // const [isLoading, setIsLoading] = React.useState(false);
+    // const handleChange = (e) =>{
+    //     console.log(e.target)
+    //     const deepCopyForAnswerKey = [...answerKey]
+    //     deepCopyForAnswerKey[0] = {...deepCopyForAnswerKey[0],correctAnswer:parseInt(e.target.value)}
+    //     setAnswerKey([...deepCopyForAnswerKey])
+    //     const deepCopy = [...props.questions]
+    //     const questionFound = deepCopy.findIndex(function(item,index){
+    //         if (item.question.questionId === props.questionId)
+    //             return true;
+    //     })
+    //
+    //     deepCopy[questionFound] = {...deepCopy[questionFound],answerKeys:deepCopyForAnswerKey[0]}
+    //     props.setQuestionArray(deepCopy)
+    // }
+    // useEffect(()=>{
+    //     setIsLoading(false)
+    //     const questionFound = props.questions.findIndex(function(item,index){
+    //         if (item.question.questionId === props.questionId)
+    //             return true;
+    //     })
+    //     console.log("answer key =>",props.questions[questionFound]['answerKeys'])
+    //     setAnswerKey([...props.questions[questionFound]['answerKeys']])
+    //     setIsLoading(true)
+    // },[])
 
-        deepCopy[questionFound] = {...deepCopy[questionFound],answerKeys:deepCopyForAnswerKey[0]}
-        props.setQuestionArray(deepCopy)
-    }
-    useEffect(()=>{
-        setIsLoading(false)
-        const questionFound = props.questions.findIndex(function(item,index){
-            if (item.question.questionId === props.questionId)
-                return true;
-        })
-        console.log("answer key =>",props.questions[questionFound]['answerKeys'])
-        setAnswerKey([...props.questions[questionFound]['answerKeys']])
-        setIsLoading(true)
-    },[])
-
-    if (!isLoading){
-        return <CircularProgress />
-    } else
         return (
             <Paper elevation={3} className={classes.paperStyle}>
                 <Grid container spacing={2}>
                     <QuestionHeader
-                        questionId={props.questionId}
-                        correctAnswer={props.answerKey}
-                        points={props.points}
-                        whoCanSee={props.whoCanSee}
-                        questionText={props.questionText}
-                        isActive={props.isActive}
-                        options={props.isActive}
-                        selectedType={5}
+                        id={id}
                     />
-                    <RadioGroup onChange={handleChange} style={{marginLeft:12}}>
+                    <RadioGroup style={{marginLeft:12}}>
                         <FormControlLabel
                             value={1}
-                            control={<Radio checked={1 == answerKey[0]['correctAnswer']}/>}
+                            control={<Radio checked={false}/>}
                             label={"True"}
-
                         />
                         <FormControlLabel
                             value={0}
-                            control={<Radio checked={0 == answerKey[0]['correctAnswer'] }/>}
+                            control={<Radio checked={true}/>}
                             label={"False"}
                         />
                     </RadioGroup>
@@ -96,18 +83,4 @@ const Truth = props => {
         );
 };
 
-const mapStateToProps = state => {
-    return {
-        questions : state.ExamReducer.questions,
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
-            payload : {question}}),
-        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_NEW_QUESTION_ARRAY,
-            payload : {newQuestionArray}})
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Truth);
+export default Truth;

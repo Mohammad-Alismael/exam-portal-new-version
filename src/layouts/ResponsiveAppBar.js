@@ -82,7 +82,7 @@ const ResponsiveAppBar = (props) => {
     },[navigate])
 
     useEffect(()=>{
-        setUsername(user['username'])
+        setUsername(user?.username)
     },[])
 
 

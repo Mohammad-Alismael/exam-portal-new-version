@@ -9,9 +9,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import {makeStyles} from "@material-ui/core/styles";
 import * as Actions from "../store/actions";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import axios from "axios";
+import ImageIcon from '@mui/icons-material/Image';
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -36,52 +37,54 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: 20
     }
 }));
-function QuestionHeader(props) {
+function QuestionHeader({id}) {
     const classes = useStyles();
     const [questionText,setQuestionText] = React.useState("");
     const [whoCanSee,setWhoCanSee] = React.useState(0);
-    const [points,setPoints] = React.useState(0)
-    const updateQuestionText = (e) =>{
-        setQuestionText(e.target.value)
-        const deepCopy = [...props.questions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.question.questionId === props.questionId)
-                return true;
-        })
-        console.log(questionFound)
-        if(questionFound != -1){
-            deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],questionText:e.target.value}
-            props.setQuestionArray(deepCopy)
-        }
+    const [points,setPoints] = React.useState(0);
+    const exam = useSelector((state) => state.ExamReducer);
 
-    }
-    const handleWhoCanSee = (e) => {
-        setWhoCanSee(parseInt(e.target.value))
-        const deepCopy = [...props.questions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.question.questionId === props.questionId)
-                return true;
-        })
-        deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],whoCanSee:parseInt(e.target.value)}
-        props.setQuestionArray(deepCopy)
-    }
-    const handlePoints = (e) =>{
-        setPoints(parseInt(e.target.value))
-        const deepCopy = [...props.questions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.question.questionId === props.questionId)
-                return true;
-        })
-        deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],points:parseInt(e.target.value)}
-        props.setQuestionArray(deepCopy)
-    }
-    const deleteQuestion = () => {
-        axios.post('http://localhost:8080/delete-question', {
-            questionId: props.questionId,
-            creatorExamId: props.user.user_id
-        }).then(console.log).catch(console.log)
-        // window.location.reload();
-    }
+    // const updateQuestionText = (e) =>{
+    //     setQuestionText(e.target.value)
+    //     const deepCopy = [...props.questions]
+    //     const questionFound = deepCopy.findIndex(function(item,index){
+    //         if (item.question.questionId === props.questionId)
+    //             return true;
+    //     })
+    //     console.log(questionFound)
+    //     if(questionFound != -1){
+    //         deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],questionText:e.target.value}
+    //         props.setQuestionArray(deepCopy)
+    //     }
+    //
+    // }
+    // const handleWhoCanSee = (e) => {
+    //     setWhoCanSee(parseInt(e.target.value))
+    //     const deepCopy = [...props.questions]
+    //     const questionFound = deepCopy.findIndex(function(item,index){
+    //         if (item.question.questionId === props.questionId)
+    //             return true;
+    //     })
+    //     deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],whoCanSee:parseInt(e.target.value)}
+    //     props.setQuestionArray(deepCopy)
+    // }
+    // const handlePoints = (e) =>{
+    //     setPoints(parseInt(e.target.value))
+    //     const deepCopy = [...props.questions]
+    //     const questionFound = deepCopy.findIndex(function(item,index){
+    //         if (item.question.questionId === props.questionId)
+    //             return true;
+    //     })
+    //     deepCopy[questionFound]['question'] = {...deepCopy[questionFound]['question'],points:parseInt(e.target.value)}
+    //     props.setQuestionArray(deepCopy)
+    // }
+    // const deleteQuestion = () => {
+    //     axios.post('http://localhost:8080/delete-question', {
+    //         questionId: props.questionId,
+    //         creatorExamId: props.user.user_id
+    //     }).then(console.log).catch(console.log)
+    //     // window.location.reload();
+    // }
     useEffect(()=>{
         // setQuestionText(props.questionText)
         // setWhoCanSee(props.whoCanSee)
@@ -94,21 +97,21 @@ function QuestionHeader(props) {
                         id="filled-basic"
                         label="Question text"
                         size="small"
-                        value={questionText}
+                        value={exam.questions[id]['questionText']}
                         fullWidth
-                        onChange={updateQuestionText}
+                        // onChange={updateQuestionText}
                         variant="standard" />
 
                 </Grid>
-                {/*<ImageIcon style={{ height: '40px', width: '40px',margin: '20px 5px',cursor: "pointer" }}/>*/}
+                <ImageIcon sx={{ height: '40px', width: '40px',margin: '20px 5px',cursor: "pointer" }}/>
                 <Grid xs={3} item>
                     <FormControl fullWidth variant="standard" >
                         <InputLabel id="type">Question Type</InputLabel>
                         <Select
                             labelId="type"
                             id="type"
-                            disabled={true}
-                            value={props.selectedType}
+                            disabled={false}
+                            value={exam.questions[id]?.selectedType}
                             label="Question type"
                         >
                             <MenuItem value={1}>MCQs</MenuItem>
@@ -123,9 +126,9 @@ function QuestionHeader(props) {
                     <FormControl fullWidth variant="standard" >
                         <InputLabel id="type">Who can see</InputLabel>
                         <Select
-                            value={whoCanSee}
+                            value={exam.questions[id]?.whoCanSee}
                             label="Who can see"
-                            onChange={handleWhoCanSee}
+                            // onChange={handleWhoCanSee}
                         >
                             <MenuItem value={1}>Undergraduate</MenuItem>
                             <MenuItem value={2}>Graduate</MenuItem>
@@ -139,14 +142,14 @@ function QuestionHeader(props) {
                     <TextField
                         type="number"
                         fullWidth
-                        value={points}
-                        onChange={handlePoints}
+                        value={exam.questions[id]?.points}
+                        // onChange={handlePoints}
                         variant="standard"
                         inputProps={{ min: 1, max: 100 }}
                         label={"points"}/>
                     </FormControl>
                     <DeleteOutlinedIcon
-                        onClick={deleteQuestion}
+                        // onClick={deleteQuestion}
                         className={classes.deleteIcon}/>
                 </Grid>
             </>
