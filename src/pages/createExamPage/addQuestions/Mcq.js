@@ -9,18 +9,19 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import * as Actions from "../../../store/actions";
-import {connect, useSelector} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import withAddQuestion from "./withAddQuestion";
 import { v4 as uuidv4 } from 'uuid';
 import {toast} from "react-toastify";
+import {SET_ANSWER_KEY, SET_OPTIONS, SET_QUESTIONS} from "../../../store/actions";
+import {store} from "../../../index";
 
 function Mcq({ updateQuestionArray }) {
     const [options, setOptions] = React.useState([]);
-    const [answerKey, setAnswerKey] = React.useState([]);
-    const [questionIndex, setQuestionIndex] = React.useState(0);
     const [optionValue, setOptionValue] = React.useState("");
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
+    const dispatch = useDispatch();
 
     const addOption = (e) => {
         e.preventDefault()
@@ -29,10 +30,14 @@ function Mcq({ updateQuestionArray }) {
             id,
             optionValue
         }
-        if (options.length <= 4)
-            setOptions([...options,newObj])
-        else
-            toast.info('MCQ question can only have 4 options max!')
+        if (options.length < 4) {
+            dispatch({ type: SET_OPTIONS, payload: { options: [...options, newObj] } });
+            setOptions([...options, newObj])
+        }else {
+            toast.info('MCQ can only have 4 options max!')
+        }
+        updateQuestionArray(store.getState()['AddQuestionReducer'])
+
     };
 
     const setOptionText = (e) =>{
@@ -44,6 +49,8 @@ function Mcq({ updateQuestionArray }) {
         const tmp = [...options]
         tmp[optionIndexFound] = {...tmp[optionIndexFound],optionValue:e.target.value}
         setOptions(tmp)
+        dispatch({ type: SET_OPTIONS, payload: { options:tmp } });
+        updateQuestionArray(store.getState()['AddQuestionReducer'])
     }
 
     const loadOptions = (index) => {
@@ -70,37 +77,11 @@ function Mcq({ updateQuestionArray }) {
             </>
         );
     };
-    // const handleCorrectAnswerUpdate = (e) => {
-    //     console.log("from update =>", e.target);
-    //     const deepCopyForAnswerKey = [...answerKey];
-    //     deepCopyForAnswerKey[0] = {
-    //         ...deepCopyForAnswerKey[0],
-    //         correctAnswer: parseInt(e.target.value),
-    //     };
-    //     setAnswerKey([...deepCopyForAnswerKey]);
-    //     const deepCopy = [...props.questions];
-    //     const questionFound = deepCopy.findIndex(function (item, index) {
-    //         if (item.question.questionId === props.questionId) return true;
-    //     });
-    //
-    //     deepCopy[questionFound] = {
-    //         ...deepCopy[questionFound],
-    //         answerKeys: deepCopyForAnswerKey,
-    //     };
-    //     console.log("from deep copy=>", deepCopy[questionFound]);
-    //     setAnswerKey(deepCopyForAnswerKey);
-    //     props.setQuestionArray(deepCopy);
-    // };
-    useEffect(() => {
-        // const questionFound = props.questions.findIndex(function (item, index) {
-        //     if (item.question.questionId === props.questionId) return true;
-        // });
-        // setQuestionIndex(questionFound);
-        // setOptions([...props.options]);
-        //
-        // setAnswerKey(props.questions[questionIndex]["answerKeys"]);
-        // console.log("from mcqs", props.correctAnswer);
-    }, []);
+
+    const SetCorrectAnswer = (e) =>{
+        dispatch({ type: SET_ANSWER_KEY, payload: { answerKey: parseInt(e.target.value) } });
+        updateQuestionArray(store.getState()['AddQuestionReducer'])
+    }
 
     return (
         <Grid xs={12} container>
@@ -111,7 +92,7 @@ function Mcq({ updateQuestionArray }) {
                 alignItems="center"
                 xs={12}
             >
-                <RadioGroup onChange={(e)=>(alert(e.target.value))}>
+                <RadioGroup onChange={SetCorrectAnswer}>
                     <Grid container>
                         {options.map((val, index) => {
                             return loadOptions(index);
@@ -131,13 +112,13 @@ function Mcq({ updateQuestionArray }) {
                         </Grid>
                         <Grid item xs={4}>
                             <Button
-                                variant={"outlined"}
+                                sx={{mt:2}}
                                 variant="contained"
                                 size={"medium"}
                                 fullWidth
                                 onClick={addOption}
                             >
-                                submit option
+                                add option
                             </Button>
                         </Grid>
                     </Grid>

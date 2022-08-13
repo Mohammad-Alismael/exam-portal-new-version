@@ -1,161 +1,137 @@
-import React, {useEffect, useLayoutEffect} from 'react';
+import React, { useEffect, useLayoutEffect } from "react";
 import Grid from "@mui/material/Grid";
-import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
-import Paper from "@mui/material/Paper";
-import {makeStyles} from "@material-ui/core/styles";
 import Button from "@mui/material/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@mui/material/TextField";
-import {connect, useSelector} from "react-redux";
-import withAddQuestion from "./withAddQuestion";
-const useStyles = makeStyles((theme) => ({
-    paperStyle: {
-        padding: 30,
-        height: '15vh auto',
-        width: '50%',
-        margin: "30px auto",
-        position: 'relative'
-    },
-    textField: {
-        width: '100%',
-    },
-    dropDown: {
-        margin:"50px"
-    },
-    deleteIcon : {
-        float: "right",
-        cursor: "pointer",
-        position: 'absolute',
-        top: 15,
-        right: 15
-        // paddingTop: 20
-    }
-}));
-const CheckBoxComp = ({id}) => {
-    const classes = useStyles();
-    // const [options,setOptions] = React.useState([...props.options]);
-    const [selectedAnswer,setSelectedAnswer] = React.useState([]);
-    const [boolAr, setBoolAr] = React.useState([]);
+import { connect, useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
+import { store } from "../../../index";
+import FormGroup from "@mui/material/FormGroup";
+const CheckBoxComp = ({ updateQuestionArray }) => {
+    const [options, setOptions] = React.useState([
+        {
+            id: "90cba686-e279-46c4-8f1c-f2ff7435be0b",
+            optionValue: "hello",
+        },
+        {
+            id: "5df934ce-4761-442f-9364-bb879b2ffb2f",
+            optionValue: "hello3",
+        },
+        {
+            id: "2d36cca9-854b-46d7-961e-fe2ba8d8eaec",
+            optionValue: "hello5",
+        },
+    ]);
+    const [checkedAr, setCheckedAr] = React.useState([]);
+    const [optionValue, setOptionValue] = React.useState("");
     const exam = useSelector((state) => state.ExamReducer);
-    // const isChecked = (index) => {
-    //     const x = props.correctAnswer.findIndex(function (item) {
-    //         return item.correctAnswer == index
-    //     })
-    //     if(x == -1){
-    //         return false
-    //     }else {
-    //         return true
-    //     }
-    // }
+    const question = useSelector((state) => state.AddQuestionReducer);
+    const dispatch = useDispatch();
+    const handleCheckBoxOptions = (e) => {
+        e.preventDefault();
+        let id = uuidv4();
+        let newObj = {
+            id,
+            optionValue,
+        };
+        dispatch({ type: SET_OPTIONS, payload: { options: [...options, newObj] } });
+        setOptions([...options, newObj]);
+        updateQuestionArray(store.getState()["AddQuestionReducer"]);
+    };
 
-    // const handleChangev2 = (e) =>{
-    //     let deepCopy = [...selectedAnswer];
-    //     const i = parseInt(e.target.value);
-    //     const deepCopyForBools = [...boolAr];
-    //     console.log(e.target.checked)
-    //     if (e.target.checked) {
-    //         const questionFound = deepCopy.findIndex(function (item, index) {
-    //             if (item.correctAnswer == i)
-    //                 return true;
-    //         })
-    //         console.log("deep copy=>", deepCopy)
-    //         console.log("checkbox2=>", questionFound)
-    //         if (questionFound == -1) {
-    //             deepCopy.push({
-    //                 id: -1,
-    //                 questionId: props.questionId,
-    //                 correctAnswer: i
-    //             })
-    //         } else {
-    //             deepCopy[questionFound] = {...deepCopy[questionFound], correctAnswer: i}
-    //         }
-    //     }else {
-    //         deepCopy = deepCopy.filter(item => item.correctAnswer !== i)
-    //     }
-    //     deepCopyForBools[i] = !deepCopyForBools[i]
-    //     setBoolAr(deepCopyForBools);
-    //     setSelectedAnswer(deepCopy);
-    //     console.log(deepCopy)
-    // }
-    // const setOptionText = (e) =>{
-    //
-    //     let id = e.target.id;
-    //     let optionValue = e.target.value;
-    //     const deepCopy = [...props.questions]
-    //     const questionFound = deepCopy.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //
-    //     const foundIndex = deepCopy[questionFound]['questionOptions'].findIndex(function(item,index){
-    //         if (item.id == id)
-    //             return true;
-    //     })
-    //
-    //     deepCopy[questionFound]['questionOptions'][foundIndex] = {...deepCopy[questionFound]['questionOptions'][foundIndex],
-    //         optionValue}
-    //     deepCopy[questionFound] = {...deepCopy[questionFound]}
-    //     props.setQuestionArray(deepCopy)
-    //
-    // }
-    const loadCheckboxOptions = (index) =>{
-        return (
-            <Grid>
-                <Grid item xs={1}>
-                    <FormControlLabel
-                        // onChange={handleChangev2}
-                        key={index}
-                        value={index}
-                        control={<Checkbox
-                            id={exam.questions[id]['options'][index]['id']}
-                            // checked={true == boolAr[index]}
-                        />} label="" />
-                </Grid>
-                <Grid item xs={11}>
-                    <Grid item xs={11}>
-                        <TextField
-                            id={exam.questions[id]['options'][index]['id']}
-                            label={"option " + (index+1)}
-                            size="small"
-                            variant="filled"
-                            defaultValue={exam.questions[id]['options'][index]['optionValue']}
-                            // onChange={setOptionText}
-                            fullWidth
-                        />
-                    </Grid>
-                </Grid>
-            </Grid>
-        )
+    const setOptionText = (e) => {
+        const id = e.target.id;
+        const optionIndexFound = options.findIndex((option, index) => {
+            if (option.id === id) return true;
+        });
+        const tmp = [...options];
+        tmp[optionIndexFound] = {
+            ...tmp[optionIndexFound],
+            optionValue: e.target.value,
+        };
+        setOptions(tmp);
+        dispatch({ type: SET_OPTIONS, payload: { options: tmp } });
+        updateQuestionArray(store.getState()["AddQuestionReducer"]);
+    };
+    const handleCheckedAr = (e) =>{
+        const id = e.target.id
+        const checked = e.target.checked
+
+        if (checked && !checkedAr.includes(id)) {
+            setCheckedAr([...checkedAr, e.target.id])
+            dispatch({ type: SET_ANSWER_KEY, payload: { answerKey:[...checkedAr, e.target.id] } });
+            updateQuestionArray(store.getState()['AddQuestionReducer'])
+
+        }
+
+        if (!checked && checkedAr.includes(id)){
+            const new_ar = checkedAr.filter((_id,index)=>{
+                return _id !== id
+            })
+            setCheckedAr([...new_ar])
+            dispatch({ type: SET_ANSWER_KEY, payload: { answerKey:[...new_ar] } });
+            updateQuestionArray(store.getState()['AddQuestionReducer'])
+
+        }
     }
-    useEffect(()=>{
-        // let tmp = []
-        // for (let i= 0 ;i < props.options.length;i++){
-        //     tmp[i] = isChecked(i)
-        // }
-        // setBoolAr(tmp)
-        // setSelectedAnswer(props.correctAnswer)
-    },[])
+    const loadCheckboxOptions = (index) => {
+        return (
+            <Grid container direction="row">
+                <FormControlLabel
+                    key={index}
+                    value={index}
+                    control={
+                        <Checkbox
+                            id={options[index]["id"]}
+                        />
+                    }
+                    label=""
+                />
+                <TextField
+                    id={options[index]["id"]}
+                    label={"option " + (index + 1)}
+                    size="small"
+                    variant="filled"
+                    value={options[index]['optionValue']}
+                    onChange={setOptionText}
+                    fullWidth
+                />
+            </Grid>
+        );
+    };
     return (
-
-                <Grid xs={12} container>
-                    <Grid item
-                          style={{marginLeft:12}}
-                          justifyContent="center"
-                          alignItems="center"
-                          xs={12}>
-                        {/*<RadioGroup>*/}
-                            <Grid container style={{padding:'10px 0'}}>
-                                {
-                                    exam.questions[id]['options'].map((val,index)=>{
-                                        return loadCheckboxOptions(index)
-                                    })
-                                }
-                            </Grid>
-                        {/*</RadioGroup>*/}
-                    </Grid>
-                </Grid>
+        <>
+            <Grid item xs={12}>
+                <FormGroup onChange={handleCheckedAr}>
+                    {options.map((val, index) => {
+                        return loadCheckboxOptions(index);
+                    })}
+                </FormGroup>
+            </Grid>
+            <Grid item xs={8}>
+                <TextField
+                    id="filled-basic"
+                    label="Add Option"
+                    size="small"
+                    variant="standard"
+                    fullWidth
+                    onChange={(e) => setOptionValue(e.target.value)}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <Button
+                    fullWidth
+                    variant="contained"
+                    size={"medium"}
+                    sx={{ mb: 2 }}
+                    onClick={handleCheckBoxOptions}
+                >
+                    submit option
+                </Button>
+            </Grid>
+        </>
     );
 };
 

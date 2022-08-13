@@ -13,55 +13,35 @@ import Button from "@mui/material/Button";
 import {toast} from "react-toastify";
 import axios from "axios";
 import withAddQuestion from "./withAddQuestion";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {v4 as uuidv4} from "uuid";
+import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
+import {store} from "../../../index";
 const useStyles = makeStyles((theme) => ({
 }));
-function Matching ({id}) {
+function Matching ({updateQuestionArray}) {
     const classes = useStyles();
-    // const [options,setOptions] = React.useState([...props.options]);
+    const [options, setOptions] = React.useState([]);
     const [optionValue,setOptionValue] = React.useState('');
-    // const [correctAnswer,setCorrectAnswer] = React.useState([...props.correctAnswer]);
     const exam = useSelector((state) => state.ExamReducer);
+    const question = useSelector((state) => state.AddQuestionReducer);
+    const dispatch = useDispatch();
+    const addMatchingOption = (e) => {
+        e.preventDefault()
+        let id = uuidv4();
+        let newObj = {
+            id,
+            optionValue
+        }
+        dispatch({ type: SET_OPTIONS, payload: { options: [...options, newObj] } });
+        setOptions([...options, newObj])
+        updateQuestionArray(store.getState()['AddQuestionReducer'])
+    }
+    const SetCorrectAnswer = (e) =>{
+        dispatch({ type: SET_ANSWER_KEY, payload: { answerKey: parseInt(e.target.value) } });
+        updateQuestionArray(store.getState()['AddQuestionReducer'])
+    }
 
-    // const removeItem = (e) => {
-    //     toast.info(e.target.value)
-    // }
-    // const addMatchingOption = () =>{
-    //     console.log(optionValue);
-    //     const deepCopy = [...props.questions]
-    //     const questionFound = deepCopy.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //     assignOption(props.questionId,optionValue)
-    //     deepCopy[questionFound] = {...deepCopy[questionFound],
-    //         questionOptions: [...options,{id:options[options.length - 1]['id']+1,optionValue,questionId:props.questionId}]}
-    //     props.setQuestionArray(deepCopy)
-    //     setOptions([...options,{id:options[options.length - 1]['id']+1,optionValue,questionId:props.questionId}])
-    // }
-    // const changeCorrectAnswer = (e) =>{
-    //     const deepCopy = [...correctAnswer]
-    //     deepCopy[0] = {...deepCopy[0],correctAnswer:e.target.value}
-    //     setCorrectAnswer(deepCopy)
-    //     const deepCopyForQuestions = [...props.questions]
-    //     const questionFound = deepCopyForQuestions.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //
-    //     deepCopyForQuestions[questionFound] = {...deepCopyForQuestions[questionFound],
-    //     answerKeys: deepCopy[0]}
-    //     props.setQuestionArray(deepCopyForQuestions)
-    // }
-    // const assignOption = (questionId,optionValue) => {
-    //     axios.post('http://localhost:8080/set-question-options',{
-    //         questionId,
-    //         optionValue
-    //     }).then(console.log).catch(console.log)
-    // }
-    useEffect(()=>{
-        // console.log("matching correct answer =>",options)
-    },[])
     return (
             <>
                 <Grid item xs={4}>
@@ -71,12 +51,10 @@ function Matching ({id}) {
                             labelId="type"
                             id="type"
                             label="Question Options"
-                            // onChange={changeCorrectAnswer}
-                            // value={correctAnswer[0]['correctAnswer']}
+                            onChange={SetCorrectAnswer}
                         >
                             {
-                                exam.questions[id]['options'].map((val,index)=>{
-                                    console.log(val)
+                                options.map((val,index)=>{
                                     return <MenuItem
                                         value={index}
                                         >{val['optionValue']}</MenuItem>
@@ -100,7 +78,7 @@ function Matching ({id}) {
                     <Button
                         variant="contained"
                         fullWidth
-                        // onClick={addMatchingOption}
+                        onClick={addMatchingOption}
                         size={"small"}>Add option</Button>
                 </Grid>
             </>

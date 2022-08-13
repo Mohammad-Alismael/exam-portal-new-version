@@ -12,7 +12,6 @@ import Matching from "./Matching";
 import { v4 as uuidv4 } from 'uuid';
 
 import {SET_QUESTION_TEXT, SET_QUESTIONS, SET_TMP_ID} from "../../../store/actions";
-import CheckboxComp from "../../../components/QuestionBodyStudents/CheckboxComp";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         position: 'relative',
@@ -53,7 +52,7 @@ const Question = () => {
         }else if(questionType === 2){
             return <Text updateQuestionArray={updateExamQuestions}/>;
         }else if(questionType === 3){
-            return <CheckboxComp updateQuestionArray={updateExamQuestions}/>
+            return <CheckBoxComp updateQuestionArray={updateExamQuestions}/>
         }else if(questionType === 4){
             return <Matching updateQuestionArray={updateExamQuestions}/>
         }else {
