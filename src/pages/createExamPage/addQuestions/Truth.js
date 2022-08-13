@@ -7,46 +7,31 @@ import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import { connect, useSelector } from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import withAddQuestion from "./withAddQuestion";
-const Truth = () => {
-    // const [answerKey,setAnswerKey] = React.useState([]);
-    // const [isLoading, setIsLoading] = React.useState(false);
-    // const handleChange = (e) =>{
-    //     console.log(e.target)
-    //     const deepCopyForAnswerKey = [...answerKey]
-    //     deepCopyForAnswerKey[0] = {...deepCopyForAnswerKey[0],correctAnswer:parseInt(e.target.value)}
-    //     setAnswerKey([...deepCopyForAnswerKey])
-    //     const deepCopy = [...props.questions]
-    //     const questionFound = deepCopy.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //
-    //     deepCopy[questionFound] = {...deepCopy[questionFound],answerKeys:deepCopyForAnswerKey[0]}
-    //     props.setQuestionArray(deepCopy)
-    // }
-    // useEffect(()=>{
-    //     setIsLoading(false)
-    //     const questionFound = props.questions.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //     console.log("answer key =>",props.questions[questionFound]['answerKeys'])
-    //     setAnswerKey([...props.questions[questionFound]['answerKeys']])
-    //     setIsLoading(true)
-    // },[])
+import {SET_ANSWER_KEY, SET_QUESTION_TEXT, SET_QUESTIONS} from "../../../store/actions";
+import {store} from "../../../index";
+const Truth = ({updateQuestionArray}) => {
+    const exam = useSelector((state) => state.ExamReducer);
+    const question = useSelector((state) => state.AddQuestionReducer);
+    const dispatch = useDispatch();
+
+
+    const handleChange = (e) =>{
+        dispatch({ type: SET_ANSWER_KEY, payload: { answerKey: e.target.value } });
+        updateQuestionArray(store.getState()['AddQuestionReducer'])
+    }
 
     return (
-        <RadioGroup style={{ marginLeft: 12 }}>
+        <RadioGroup onChange={handleChange} style={{ marginLeft: 12 }}>
             <FormControlLabel
-                value={1}
+                value={true}
                 control={<Radio />}
                 label={"True"}
             />
             <FormControlLabel
-                value={0}
+                value={false}
                 control={<Radio  />}
                 label={"False"}
             />

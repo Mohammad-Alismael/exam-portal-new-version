@@ -11,7 +11,8 @@ import CheckBoxComp from "./CheckBoxComp";
 import Matching from "./Matching";
 import { v4 as uuidv4 } from 'uuid';
 
-import {SET_QUESTION_TEXT, SET_TMP_ID} from "../../../store/actions";
+import {SET_QUESTION_TEXT, SET_QUESTIONS, SET_TMP_ID} from "../../../store/actions";
+import CheckboxComp from "../../../components/QuestionBodyStudents/CheckboxComp";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         position: 'relative',
@@ -29,7 +30,36 @@ const questionTypes = [
 const Question = () => {
     const classes = useStyles();
     const question = useSelector((state) => state.AddQuestionReducer);
+    const exam = useSelector((state) => state.ExamReducer);
     const dispatch = useDispatch();
+    const updateExamQuestions = (_question) =>{
+        // i'm taking question object from the store to update it to the latest version
+        let examQuestions = exam?.questions
+        const questionFound = examQuestions.findIndex((quest, index) => {
+            if (quest.tmpId === _question.tmpId)
+                return true;
+        })
+        if (questionFound === -1){
+            examQuestions.push(_question)
+            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
+        }else {
+            examQuestions[questionFound] = _question
+            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
+        }
+    }
+    const chooseQuestionType = (questionType) => {
+        if (questionType === 1){
+            return  <Mcq updateQuestionArray={updateExamQuestions}/>
+        }else if(questionType === 2){
+            return <Text updateQuestionArray={updateExamQuestions}/>;
+        }else if(questionType === 3){
+            return <CheckboxComp updateQuestionArray={updateExamQuestions}/>
+        }else if(questionType === 4){
+            return <Matching updateQuestionArray={updateExamQuestions}/>
+        }else {
+            return <Truth updateQuestionArray={updateExamQuestions}/>
+        }
+    }
     useEffect(()=>{
         dispatch({ type: SET_TMP_ID, payload: { tmpId:uuidv4()}});
     },[])
@@ -37,7 +67,7 @@ const Question = () => {
         <Paper elevation={3} className={classes.paperStyle}>
             <Grid container spacing={2}>
                 <QuestionHeader/>
-                {questionTypes[question?.questionType - 1]}
+                {chooseQuestionType(question?.questionType)}
             </Grid>
         </Paper>
     );
