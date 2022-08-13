@@ -177,26 +177,4 @@ function Course(props) {
         </div>
     );
 }
-const mapStateToProps = state => {
-    return {
-        user : state.UserReducer,
-        questions : state.CreateReducer.questionsC
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        setUserId: (user_id) => dispatch({type:Actions.SET_USER_ID,
-            payload : {user_id}}),
-        setUsername: (username) => dispatch({type:Actions.SET_USERNAME,
-            payload : {username}}),
-        setRoleId: (role_id) => dispatch({type:Actions.SET_ROLE_ID,
-            payload : {role_id}}),
-        setClassroomId: (classroom_id) => dispatch({type:Actions.SET_CLASSROOM_ID,
-            payload : {classroom_id}}),
-        setTab: (tab) => dispatch({type:Actions.SET_TAB,
-            payload : {tab}}),
-        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_CREATE_EXAM_ARRAY,
-            payload : {newQuestionArray}})
-    }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(Course)
+export default Course;

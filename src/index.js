@@ -13,8 +13,10 @@ import UserReducerV2 from "./store/reducers/UserReducerV2";
 import {BrowserRouter} from "react-router-dom";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import CourseReducer from "./store/reducers/CourseReducer";
+import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
 const rootReducer = combineReducers({
     ExamReducer,
+    AddQuestionReducer,
     UserReducerV2,
     ExamStudentReducer,
     CreateReducer,
@@ -43,9 +45,10 @@ function loadFromLocalStorage() {
 
 const persistedState = loadFromLocalStorage();
 
-const store = createStore(rootReducer, persistedState, composeWithDevTools(applyMiddleware(thunk)));
+export const store = createStore(rootReducer, persistedState, composeWithDevTools(applyMiddleware(thunk)));
 store.subscribe(() => {
     const obj = store.getState()
+    console.log("from index.js", obj)
     // delete obj['TokenReducer']
     saveToLocalStorage(obj)
 });

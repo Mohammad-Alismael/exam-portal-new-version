@@ -6,59 +6,7 @@ const initialState = {
     endingAt: 0,
     assignedFor: null,
     navigation: null,
-    questions: [
-        {
-            questionId: 54,
-            answerKey: 0,
-            points: 5,
-            whoCanSee: 1,
-            questionType: 5,
-            questionText: "tf is that",
-            isActive: true,
-        },{
-            questionId: 55,
-            answerKey: 0,
-            points: 5,
-            questionType: 5,
-            whoCanSee: 1,
-            questionText: "tf is that2",
-            isActive: true,
-        },{
-            questionId: 56,
-            answerKey: 0,
-            points: 5,
-            whoCanSee: 1,
-            questionType: 5,
-            questionText: "tf is that3",
-            isActive: true,
-        },{
-            questionId: 57,
-            answerKey: 0,
-            points: 5,
-            whoCanSee: 3,
-            questionType: 1,
-            questionText: "choose the correct answer",
-            isActive: true,
-            options: [
-                {
-                    optionId: 1,
-                    optionValue: "nah fam!"
-                },
-                {
-                    optionId: 2,
-                    optionValue: "aiight"
-                },
-                {
-                    optionId: 3,
-                    optionValue: "suck ya mum"
-                },
-                {
-                    optionId: 4,
-                    optionValue: "that's mad"
-                }
-            ]
-        }
-    ],
+    questions: [],
 };
 const ExamReducer = (state = initialState, action) => {
     switch (action.type) {

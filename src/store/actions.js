@@ -2,12 +2,13 @@ export const APPEND_QUESTION = 'APPEND_QUESTION';
 export const SET_MAX_QUESTIONS = 'SET_MAX_QUESTIONS';
 export const SET_QUESTION_ARRAY = 'SET_QUESTION_ARRAY';
 export const SET_ANSWER_QUESTION_ARRAY = 'SET_ANSWER_QUESTION_ARRAY';
+
+
 export const SET_CREATE_EXAM_ARRAY = 'SET_CREATE_EXAM_ARRAY';
 export const APPEND_QUESTION_EXAM = 'APPEND_QUESTION_EXAM';
-export const SET_USER_ID = 'SET_USER_ID';
+// user actions
 export const SET_USER = 'SET_USER';
-export const SET_USERNAME = 'SET_USERNAME';
-export const SET_ROLE_ID = 'SET_ROLE_ID';
+
 export const SET_TAB = 'SET_TAB';
 export const SET_CLASSROOM_ID = 'SET_CLASSROOM_ID';
 export const SET_TOTAL_POINTS = 'SET_TOTAL_POINTS';
@@ -26,3 +27,12 @@ export const SET_COURSE_ID = 'SET_COURSE_ID';
 export const SET_COURSE_INFO = 'SET_COURSE_INFO';
 export const SET_COURSE_ANNOUNCEMENTS = 'SET_COURSE_ANNOUNCEMENTS';
 export const SET_COURSE_CLASSMATES = 'SET_COURSE_CLASSMATES';
+// question action
+export const SET_TMP_ID = 'SET_TMP_ID'
+export const SET_POINTS = 'SET_POINTS'
+export const SET_WHO_CAN_SEE = 'SET_WHO_CAN_SEE'
+export const SET_QUESTION_TYPE = 'SET_QUESTION_TYPE'
+export const SET_QUESTION_TEXT = 'SET_QUESTION_TEXT'
+export const SET_IS_ACTIVE = 'SET_IS_ACTIVE'
+export const SET_OPTIONS = 'SET_OPTIONS'
+export const SET_ANSWER_KEY = 'SET_ANSWER_KEY'

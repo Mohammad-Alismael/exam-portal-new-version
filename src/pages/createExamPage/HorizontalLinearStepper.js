@@ -44,9 +44,15 @@ export default function HorizontalLinearStepper(props) {
                 })}
             </Stepper>
             <React.Fragment>
-                <Grid container spacing={2} sx={{ mt: 2, mb: 2, padding: "0 1rem" }}>
-                    {props.components[activeStep]}
-                </Grid>
+                {activeStep == steps.length ? (
+                    <Grid container spacing={2} sx={{ mt: 2, mb: 2, padding: "0 1rem" }}>
+                        <Typography>finished exam details, now you van add questions</Typography>
+                    </Grid>
+                    ): (
+                    <Grid container spacing={2} sx={{ mt: 2, mb: 2, padding: "0 1rem" }}>
+                        {props.components[activeStep]}
+                    </Grid>
+                )}
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Button
                         color="inherit"

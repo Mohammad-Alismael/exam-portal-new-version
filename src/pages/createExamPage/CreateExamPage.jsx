@@ -25,15 +25,16 @@ import ExamVisibility from "./ExamVisibility";
 import ExamRandomness from "./ExamRandomness";
 import ExamAnswerKey from "./ExamAnswerKey";
 import AddIcon from "@mui/icons-material/Add";
-import Truth from "./questions/Truth";
+import Truth from "./addQuestions/Truth";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {SET_QUESTIONS} from "../../store/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Text from "./questions/Text";
 import Mcq from "./questions/Mcq";
 import Matching from "./questions/Matching";
 import CheckBoxComp from "./questions/CheckBoxComp";
 import CheckboxComp from "../../components/QuestionBodyStudents/CheckboxComp";
+import Question from "./addQuestions/Question";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -59,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 function CreateExamPage(props) {
     const classes = useStyles();
     const navigate = useNavigate();
+    const exam = useSelector((state) => state.ExamReducer);
     const [questions, setQuestions] = React.useState([
         {
             questionId: 54,
@@ -120,6 +122,7 @@ function CreateExamPage(props) {
     const dispatch = useDispatch()
     const addQuestion = (e) => {
         e.preventDefault();
+        console.log(exam.questions)
     };
 
     const components = [
@@ -130,13 +133,6 @@ function CreateExamPage(props) {
         <ExamRandomness />,
         <ExamAnswerKey />,
     ];
-    const questionTypes = [
-        <Mcq />,
-        <Text />,
-        <CheckBoxComp />,
-        <Matching />,
-        <Truth />
-    ]
     const chooseQuestionType = (questionType,index) => {
         if (questionType === 1){
             return  <Mcq key={index+1} id={index}/>
@@ -164,12 +160,10 @@ function CreateExamPage(props) {
                     <HorizontalLinearStepper components={components} />
                 </Paper>
 
-                {questions && questions.map(({questionType},index)=>{
-                    return chooseQuestionType(questionType,index)
-                })}
-                {/*<Question id={1} component={<Truth/>}/>*/}
-                {/*<Question id={0} component={<Text/>}/>*/}
-                {/*<Question id={3} component={<Mcq />}/>*/}
+                {/*{questions && questions.map(({questionType},index)=>{*/}
+                {/*    return chooseQuestionType(questionType,index)*/}
+                {/*})}*/}
+                <Question/>
                 <div>
                     <Button
                         sx={{ mt: 3 }}

@@ -12,11 +12,13 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
-import { SET_QUESTIONS } from "../../../store/actions";
+import {SET_POINTS, SET_QUESTION_TEXT, SET_QUESTION_TYPE, SET_QUESTIONS, SET_WHO_CAN_SEE} from "../../../store/actions";
 import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import IconButton from "@mui/material/IconButton";
 import LongMenu from "../../../components/LongMenu";
+import AddQuestionReducer from "../../../store/reducers/AddQuestionReducer";
+import {store} from "../../../index";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -41,38 +43,46 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: 20
     },
 }));
-function QuestionHeader({ id }) {
+function QuestionHeader() {
     const classes = useStyles();
     const [questionText, setQuestionText] = React.useState("empty");
     const [whoCanSee, setWhoCanSee] = React.useState(0);
     const [points, setPoints] = React.useState(0);
     const exam = useSelector((state) => state.ExamReducer);
+    const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
-
+    const updateExamQuestions = (_question) =>{
+        // i'm taking question object from the store to update it to the latest version
+        let examQuestions = exam?.questions
+        const questionFound = examQuestions.findIndex((quest, index) => {
+            if (quest.tmpId === _question.tmpId)
+                return true;
+        })
+        if (questionFound === -1){
+            examQuestions.push(_question)
+            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
+        }else {
+            examQuestions[questionFound] = _question
+            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
+        }
+    }
     const updateQuestionText = (e) => {
         setQuestionText(e.target.value)
-        const deepCopy = [...exam.questions];
-            deepCopy[id] = {
-                ...deepCopy[id],
-                questionText: e.target.value,
-            };
-        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
-        console.log("new",exam.questions[id]['questionText'])
+        dispatch({ type: SET_QUESTION_TEXT, payload: { questionText: e.target.value } });
+        updateExamQuestions(store.getState()['AddQuestionReducer'])
+
     };
     const handleWhoCanSee = (e) => {
-        const deepCopy = [...exam.questions];
-        deepCopy[id] = {...deepCopy[id],whoCanSee:parseInt(e.target.value)}
-        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+        dispatch({ type: SET_WHO_CAN_SEE, payload: { whoCanSee:parseInt(e.target.value) } });
+        updateExamQuestions(store.getState()['AddQuestionReducer'])
     }
     const handleQuestionType = (e) => {
-        const deepCopy = [...exam.questions];
-        deepCopy[id] = {...deepCopy[id],questionType:parseInt(e.target.value)}
-        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+        dispatch({ type: SET_QUESTION_TYPE, payload: { questionType:parseInt(e.target.value) } });
+        updateExamQuestions(store.getState()['AddQuestionReducer'])
     }
     const handlePoints = (e) =>{
-        const deepCopy = [...exam.questions];
-        deepCopy[id] = {...deepCopy[id],points:parseInt(e.target.value)}
-        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+        dispatch({ type: SET_POINTS, payload: { points: parseInt(e.target.value) } });
+        updateExamQuestions(store.getState()['AddQuestionReducer'])
     }
 
     return (
@@ -82,7 +92,7 @@ function QuestionHeader({ id }) {
                     id="outlined-uncontrolled"
                     label="Question text"
                     // size="small"
-                    value={exam.questions[id]["questionText"]}
+                    value={question?.questionText}
                     defaultValue={""}
                     fullWidth
                     onChange={updateQuestionText}
@@ -101,11 +111,12 @@ function QuestionHeader({ id }) {
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Question Type</InputLabel>
                     <Select
+                        defaultValue={""}
                         onChange={handleQuestionType}
                         labelId="type"
                         id="type"
                         disabled={false}
-                        value={exam.questions[id]?.questionType}
+                        value={question?.questionType}
                         label="Question type"
                     >
                         <MenuItem value={1}>MCQs</MenuItem>
@@ -120,7 +131,8 @@ function QuestionHeader({ id }) {
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Who can see</InputLabel>
                     <Select
-                        value={exam.questions[id]?.whoCanSee}
+                        defaultValue={""}
+                        value={question?.whoCanSee}
                         label="Who can see"
                         onChange={handleWhoCanSee}
                     >
@@ -135,7 +147,7 @@ function QuestionHeader({ id }) {
                     <TextField
                         type="number"
                         fullWidth
-                        value={exam.questions[id]?.points}
+                        value={question?.points}
                         onChange={handlePoints}
                         variant="standard"
                         inputProps={{ min: 1, max: 100 }}
