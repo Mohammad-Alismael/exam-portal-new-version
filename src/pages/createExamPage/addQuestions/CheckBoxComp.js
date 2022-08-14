@@ -29,6 +29,7 @@ const CheckBoxComp = ({ updateQuestionArray }) => {
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
+
     const handleCheckBoxOptions = (e) => {
         e.preventDefault();
         let id = uuidv4();
@@ -36,9 +37,8 @@ const CheckBoxComp = ({ updateQuestionArray }) => {
             id,
             optionValue,
         };
-        dispatch({ type: SET_OPTIONS, payload: { options: [...options, newObj] } });
+        updateQuestionArray({options: [...options, newObj]})
         setOptions([...options, newObj]);
-        updateQuestionArray(store.getState()["AddQuestionReducer"]);
     };
 
     const setOptionText = (e) => {
@@ -46,14 +46,15 @@ const CheckBoxComp = ({ updateQuestionArray }) => {
         const optionIndexFound = options.findIndex((option, index) => {
             if (option.id === id) return true;
         });
+
         const tmp = [...options];
         tmp[optionIndexFound] = {
             ...tmp[optionIndexFound],
             optionValue: e.target.value,
         };
+
+        updateQuestionArray({options: tmp})
         setOptions(tmp);
-        dispatch({ type: SET_OPTIONS, payload: { options: tmp } });
-        updateQuestionArray(store.getState()["AddQuestionReducer"]);
     };
     const handleCheckedAr = (e) =>{
         const id = e.target.id
@@ -61,21 +62,19 @@ const CheckBoxComp = ({ updateQuestionArray }) => {
 
         if (checked && !checkedAr.includes(id)) {
             setCheckedAr([...checkedAr, e.target.id])
-            dispatch({ type: SET_ANSWER_KEY, payload: { answerKey:[...checkedAr, e.target.id] } });
-            updateQuestionArray(store.getState()['AddQuestionReducer'])
-
+            updateQuestionArray({answerKey:[...checkedAr, e.target.id]})
         }
 
         if (!checked && checkedAr.includes(id)){
             const new_ar = checkedAr.filter((_id,index)=>{
                 return _id !== id
             })
-            setCheckedAr([...new_ar])
-            dispatch({ type: SET_ANSWER_KEY, payload: { answerKey:[...new_ar] } });
-            updateQuestionArray(store.getState()['AddQuestionReducer'])
 
+            updateQuestionArray({answerKey:[...new_ar]})
+            setCheckedAr([...new_ar])
         }
     }
+
     const loadCheckboxOptions = (index) => {
         return (
             <Grid container direction="row">

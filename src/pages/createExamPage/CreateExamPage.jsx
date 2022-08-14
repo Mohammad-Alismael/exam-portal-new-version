@@ -35,6 +35,7 @@ import Matching from "./questions/Matching";
 import CheckBoxComp from "./questions/CheckBoxComp";
 import CheckboxComp from "../../components/QuestionBodyStudents/CheckboxComp";
 import Question from "./addQuestions/Question";
+import {v4 as uuidv4} from "uuid";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -61,59 +62,7 @@ function CreateExamPage(props) {
     const classes = useStyles();
     const navigate = useNavigate();
     const exam = useSelector((state) => state.ExamReducer);
-    const [questions, setQuestions] = React.useState([
-        {
-            questionId: 54,
-            answerKey: 0,
-            points: 5,
-            whoCanSee: 1,
-            questionType: 5,
-            questionText: "tf is that",
-            isActive: true,
-        },{
-            questionId: 55,
-            answerKey: 0,
-            points: 5,
-            questionType: 5,
-            whoCanSee: 1,
-            questionText: "tf is that2",
-            isActive: true,
-        },{
-            questionId: 56,
-            answerKey: 0,
-            points: 5,
-            whoCanSee: 1,
-            questionType: 5,
-            questionText: "tf is that3",
-            isActive: true,
-        },{
-            questionId: 57,
-            answerKey: 0,
-            points: 5,
-            whoCanSee: 3,
-            questionType: 1,
-            questionText: "choose the correct answer",
-            isActive: true,
-            options: [
-                {
-                    optionId: 1,
-                    optionValue: "nah fam!"
-                },
-                {
-                    optionId: 2,
-                    optionValue: "aiight"
-                },
-                {
-                    optionId: 3,
-                    optionValue: "suck ya mum"
-                },
-                {
-                    optionId: 4,
-                    optionValue: "that's mad"
-                }
-            ]
-        }
-    ]);
+    const [questions, setQuestions] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [examTitle, setExamTitle] = React.useState("");
     const [examPoints, setExamPoints] = React.useState(0);
@@ -122,6 +71,7 @@ function CreateExamPage(props) {
     const dispatch = useDispatch()
     const addQuestion = (e) => {
         e.preventDefault();
+        setQuestions([...questions,<Question uid={uuidv4()}/>])
         console.log(exam.questions)
     };
 
@@ -160,10 +110,10 @@ function CreateExamPage(props) {
                     <HorizontalLinearStepper components={components} />
                 </Paper>
 
-                {/*{questions && questions.map(({questionType},index)=>{*/}
-                {/*    return chooseQuestionType(questionType,index)*/}
-                {/*})}*/}
-                <Question/>
+                {questions && questions.map((val,index)=>{
+                    return val
+                })}
+
                 <div>
                     <Button
                         sx={{ mt: 3 }}

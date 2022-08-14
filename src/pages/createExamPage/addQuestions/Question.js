@@ -26,47 +26,65 @@ const questionTypes = [
     <Matching />,
     <Truth />
 ]
-const Question = () => {
+const Question = ({uid}) => {
     const classes = useStyles();
     const question = useSelector((state) => state.AddQuestionReducer);
     const exam = useSelector((state) => state.ExamReducer);
     const dispatch = useDispatch();
-    const updateExamQuestions = (_question) =>{
-        // i'm taking question object from the store to update it to the latest version
-        let examQuestions = exam?.questions
-        const questionFound = examQuestions.findIndex((quest, index) => {
-            if (quest.tmpId === _question.tmpId)
-                return true;
+
+    const getQuestionIndex = () =>{
+        const questionIndexFound = exam?.questions.findIndex((quest,index)=>{
+            return quest.tmpId === uid
         })
-        if (questionFound === -1){
-            examQuestions.push(_question)
-            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
-        }else {
-            examQuestions[questionFound] = _question
-            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
-        }
+        console.log('index',questionIndexFound)
+
+        return questionIndexFound
+    }
+    const updateQuestionArray = (object)=>{
+        const key = Object.keys(object)[0]
+        const value = Object.values(object)[0]
+        const index = getQuestionIndex()
+        const deepCopy = exam?.questions
+        const deepCopyObj = deepCopy[index]
+        deepCopyObj[key] = value
+        deepCopy[index] = deepCopyObj
+        // deepCopy[index] = {...deepCopy[index], ...object}
+        dispatch({ type: SET_QUESTIONS, payload: { questions:deepCopy}});
     }
     const chooseQuestionType = (questionType) => {
         if (questionType === 1){
-            return  <Mcq updateQuestionArray={updateExamQuestions}/>
+            return  <Mcq questionIndex={getQuestionIndex()} updateQuestionArray={updateQuestionArray}/>
         }else if(questionType === 2){
-            return <Text updateQuestionArray={updateExamQuestions}/>;
+            return <Text questionIndex={getQuestionIndex()} updateQuestionArray={updateQuestionArray}/>;
         }else if(questionType === 3){
-            return <CheckBoxComp updateQuestionArray={updateExamQuestions}/>
+            return <CheckBoxComp getQuestionIndex={getQuestionIndex} updateQuestionArray={updateQuestionArray}/>
         }else if(questionType === 4){
-            return <Matching updateQuestionArray={updateExamQuestions}/>
+            return <Matching getQuestionIndex={getQuestionIndex} updateQuestionArray={updateQuestionArray}/>
         }else {
-            return <Truth updateQuestionArray={updateExamQuestions}/>
+            return <Truth getQuestionIndex={getQuestionIndex} updateQuestionArray={updateQuestionArray}/>
         }
     }
     useEffect(()=>{
-        dispatch({ type: SET_TMP_ID, payload: { tmpId:uuidv4()}});
+        const questionObj = {
+            answerKey: null,
+            isActive: true,
+            options: null,
+            points: 5,
+            questionText: "",
+            questionType: 5,
+            tmpId: uid,
+            whoCanSee: 3
+        }
+        const newQuestionAr = exam.questions;
+        newQuestionAr.push(questionObj)
+        dispatch({ type: SET_QUESTIONS, payload: { questions:newQuestionAr}});
     },[])
+
     return (
         <Paper elevation={3} className={classes.paperStyle}>
             <Grid container spacing={2}>
-                <QuestionHeader/>
-                {chooseQuestionType(question?.questionType)}
+                <QuestionHeader questionIndex={getQuestionIndex()} updateQuestionArray={updateQuestionArray}/>
+                {chooseQuestionType(exam.questions[getQuestionIndex()].questionType, uid)}
             </Grid>
         </Paper>
     );

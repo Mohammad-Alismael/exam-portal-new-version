@@ -33,13 +33,11 @@ function Matching ({updateQuestionArray}) {
             id,
             optionValue
         }
-        dispatch({ type: SET_OPTIONS, payload: { options: [...options, newObj] } });
+        updateQuestionArray({options: [...options, newObj]})
         setOptions([...options, newObj])
-        updateQuestionArray(store.getState()['AddQuestionReducer'])
     }
     const SetCorrectAnswer = (e) =>{
-        dispatch({ type: SET_ANSWER_KEY, payload: { answerKey: parseInt(e.target.value) } });
-        updateQuestionArray(store.getState()['AddQuestionReducer'])
+        updateQuestionArray({answerKey: parseInt(e.target.value)})
     }
 
     return (

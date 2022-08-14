@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import RadioGroup from "@mui/material/RadioGroup";
 import withAddQuestion from "./withAddQuestion";
 import {useDispatch, useSelector} from "react-redux";
-import {SET_ANSWER_KEY} from "../../../store/actions";
+import {SET_ANSWER_KEY, SET_QUESTIONS} from "../../../store/actions";
 import {store} from "../../../index";
 function Text({updateQuestionArray}) {
     const exam = useSelector((state) => state.ExamReducer);
@@ -16,8 +16,7 @@ function Text({updateQuestionArray}) {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch({ type: SET_ANSWER_KEY, payload: { answerKey: null } });
-        updateQuestionArray(store.getState()['AddQuestionReducer'])
+        updateQuestionArray({options: null})
     },[])
 
     return (

@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: 20
     },
 }));
-function QuestionHeader() {
+function QuestionHeader({questionIndex,updateQuestionArray}) {
     const classes = useStyles();
     const [questionText, setQuestionText] = React.useState("empty");
     const [whoCanSee, setWhoCanSee] = React.useState(0);
@@ -67,24 +67,21 @@ function QuestionHeader() {
         }
     }
     const updateQuestionText = (e) => {
+        updateQuestionArray({ questionText: e.target.value })
         setQuestionText(e.target.value)
-        dispatch({ type: SET_QUESTION_TEXT, payload: { questionText: e.target.value } });
-        updateExamQuestions(store.getState()['AddQuestionReducer'])
 
     };
     const handleWhoCanSee = (e) => {
-        dispatch({ type: SET_WHO_CAN_SEE, payload: { whoCanSee:parseInt(e.target.value) } });
-        updateExamQuestions(store.getState()['AddQuestionReducer'])
+        updateQuestionArray({ whoCanSee:parseInt(e.target.value) })
     }
     const handleQuestionType = (e) => {
-        dispatch({ type: SET_QUESTION_TYPE, payload: { questionType:parseInt(e.target.value) } });
-        updateExamQuestions(store.getState()['AddQuestionReducer'])
+        updateQuestionArray({ questionType:parseInt(e.target.value) })
     }
     const handlePoints = (e) =>{
-        dispatch({ type: SET_POINTS, payload: { points: parseInt(e.target.value) } });
-        updateExamQuestions(store.getState()['AddQuestionReducer'])
+        updateQuestionArray({ points: parseInt(e.target.value) })
     }
-
+    useEffect(()=>{
+    },[])
     return (
         <>
             <Grid xs={6} item>
@@ -92,7 +89,7 @@ function QuestionHeader() {
                     id="outlined-uncontrolled"
                     label="Question text"
                     // size="small"
-                    value={question?.questionText}
+                    value={exam.questions[questionIndex].questionText}
                     defaultValue={""}
                     fullWidth
                     onChange={updateQuestionText}
@@ -116,7 +113,7 @@ function QuestionHeader() {
                         labelId="type"
                         id="type"
                         disabled={false}
-                        value={question?.questionType}
+                        value={exam.questions[questionIndex].questionType}
                         label="Question type"
                     >
                         <MenuItem value={1}>MCQs</MenuItem>
@@ -132,7 +129,7 @@ function QuestionHeader() {
                     <InputLabel id="type">Who can see</InputLabel>
                     <Select
                         defaultValue={""}
-                        value={question?.whoCanSee}
+                        value={exam.questions[questionIndex].whoCanSee}
                         label="Who can see"
                         onChange={handleWhoCanSee}
                     >
@@ -147,7 +144,7 @@ function QuestionHeader() {
                     <TextField
                         type="number"
                         fullWidth
-                        value={question?.points}
+                        value={exam.questions[questionIndex].points}
                         onChange={handlePoints}
                         variant="standard"
                         inputProps={{ min: 1, max: 100 }}

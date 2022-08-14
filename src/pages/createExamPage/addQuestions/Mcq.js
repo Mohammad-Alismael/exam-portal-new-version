@@ -16,7 +16,7 @@ import {toast} from "react-toastify";
 import {SET_ANSWER_KEY, SET_OPTIONS, SET_QUESTIONS} from "../../../store/actions";
 import {store} from "../../../index";
 
-function Mcq({ updateQuestionArray }) {
+function Mcq({ questionIndex,updateQuestionArray }) {
     const [options, setOptions] = React.useState([]);
     const [optionValue, setOptionValue] = React.useState("");
     const exam = useSelector((state) => state.ExamReducer);
@@ -31,13 +31,11 @@ function Mcq({ updateQuestionArray }) {
             optionValue
         }
         if (options.length < 4) {
-            dispatch({ type: SET_OPTIONS, payload: { options: [...options, newObj] } });
+            updateQuestionArray({options: [...options, newObj]})
             setOptions([...options, newObj])
         }else {
             toast.info('MCQ can only have 4 options max!')
         }
-        updateQuestionArray(store.getState()['AddQuestionReducer'])
-
     };
 
     const setOptionText = (e) =>{
@@ -48,9 +46,8 @@ function Mcq({ updateQuestionArray }) {
         })
         const tmp = [...options]
         tmp[optionIndexFound] = {...tmp[optionIndexFound],optionValue:e.target.value}
+        updateQuestionArray({options: tmp})
         setOptions(tmp)
-        dispatch({ type: SET_OPTIONS, payload: { options:tmp } });
-        updateQuestionArray(store.getState()['AddQuestionReducer'])
     }
 
     const loadOptions = (index) => {
@@ -79,10 +76,12 @@ function Mcq({ updateQuestionArray }) {
     };
 
     const SetCorrectAnswer = (e) =>{
-        dispatch({ type: SET_ANSWER_KEY, payload: { answerKey: parseInt(e.target.value) } });
-        updateQuestionArray(store.getState()['AddQuestionReducer'])
+        updateQuestionArray({answerKey: parseInt(e.target.value)})
     }
-
+    useEffect(()=>{
+        console.log(exam.questions[questionIndex])
+        // setOptions([...exam.questions[questionIndex].options])
+    },[])
     return (
         <Grid xs={12} container>
             <Grid
@@ -102,7 +101,6 @@ function Mcq({ updateQuestionArray }) {
                     <Grid container>
                         <Grid item xs={8}>
                             <TextField
-                                // id={exam.questions[id]['options'][index]["id"]}
                                 label={"option value"}
                                 size="small"
                                 variant="filled"
