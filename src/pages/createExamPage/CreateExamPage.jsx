@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, { useEffect, useRef } from "react";
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
@@ -27,15 +27,15 @@ import ExamAnswerKey from "./ExamAnswerKey";
 import AddIcon from "@mui/icons-material/Add";
 import Truth from "./addQuestions/Truth";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {SET_QUESTIONS} from "../../store/actions";
-import {useDispatch, useSelector} from "react-redux";
+import { SET_QUESTIONS } from "../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
 import Text from "./questions/Text";
 import Mcq from "./questions/Mcq";
 import Matching from "./questions/Matching";
 import CheckBoxComp from "./questions/CheckBoxComp";
 import CheckboxComp from "../../components/QuestionBodyStudents/CheckboxComp";
 import Question from "./addQuestions/Question";
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -63,16 +63,37 @@ function CreateExamPage(props) {
     const navigate = useNavigate();
     const exam = useSelector((state) => state.ExamReducer);
     const [questions, setQuestions] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [examTitle, setExamTitle] = React.useState("");
-    const [examPoints, setExamPoints] = React.useState(0);
-    const [startingAt, setStartingAt] = React.useState(0);
-    const [endingAt, setEndingAt] = React.useState(0);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const getQuestionIndex = (uid) => {
+        const questionIndexFound = exam?.questions.findIndex((quest, index) => {
+            return quest.tmpId === uid;
+        });
+        return questionIndexFound;
+    };
     const addQuestion = (e) => {
         e.preventDefault();
-        setQuestions([...questions,<Question uid={uuidv4()}/>])
-        console.log(exam.questions)
+        const uid = uuidv4();
+        const questionObj = {
+            answerKey: null,
+            isActive: true,
+            options: null,
+            points: 5,
+            questionText: "",
+            questionType: 5,
+            tmpId: uid,
+            whoCanSee: 3,
+        };
+
+        const newQuestionAr = exam.questions;
+        newQuestionAr.push(questionObj);
+        dispatch({ type: SET_QUESTIONS, payload: { questions: newQuestionAr } });
+
+        const questionIndexFound = getQuestionIndex(uid);
+
+        // setQuestions([
+        //     ...questions,
+        //     <Question questionIndex={questionIndexFound} uid={uid} />,
+        // ]);
     };
 
     const components = [
@@ -83,22 +104,30 @@ function CreateExamPage(props) {
         <ExamRandomness />,
         <ExamAnswerKey />,
     ];
-    const chooseQuestionType = (questionType,index) => {
-        if (questionType === 1){
-            return  <Mcq key={index+1} id={index}/>
-        }else if(questionType === 2){
-            return <Text key={index+1} id={index}/>;
-        }else if(questionType === 3){
-            return <CheckboxComp key={index+1}  id={index}/>
-        }else if(questionType === 4){
-            return <Matching key={index+1}  id={index}/>
-        }else {
-            return <Truth key={index+1}  id={index}/>
+    const chooseQuestionType = (questionType, index) => {
+        if (questionType === 1) {
+            return <Mcq key={index + 1} id={index} />;
+        } else if (questionType === 2) {
+            return <Text key={index + 1} id={index} />;
+        } else if (questionType === 3) {
+            return <CheckboxComp key={index + 1} id={index} />;
+        } else if (questionType === 4) {
+            return <Matching key={index + 1} id={index} />;
+        } else {
+            return <Truth key={index + 1} id={index} />;
         }
-    }
-    useEffect(()=>{
-        // dispatch({type:SET_QUESTIONS,payload:{questions}})
-    },[])
+    };
+    useEffect(() => {
+        console.log(exam.questions.length)
+        // exam.questions.map(({ tmpId }, index) => {
+        //     console.log(tmpId,getQuestionIndex(tmpId))
+        //     console.log(exam.questions[getQuestionIndex(tmpId)])
+        //     setQuestions([
+        //         ...questions,
+        //         <Question questionIndex={getQuestionIndex(tmpId)} uid={tmpId} />
+        //     ]);
+        // });
+    }, []);
     return (
         <>
             <ResponsiveAppBar />
@@ -110,10 +139,15 @@ function CreateExamPage(props) {
                     <HorizontalLinearStepper components={components} />
                 </Paper>
 
-                {questions && questions.map((val,index)=>{
-                    return val
-                })}
-
+                {/*{questions && questions.map((val, index) => {*/}
+                {/*    console.log('question maping', questions)*/}
+                {/*    return val;*/}
+                {/*})}*/}
+                {
+                    exam.questions.map(({tmpId},index)=>{
+                        return <Question questionIndex={getQuestionIndex(tmpId)} uid={tmpId} />
+                    })
+                }
                 <div>
                     <Button
                         sx={{ mt: 3 }}

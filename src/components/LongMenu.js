@@ -24,7 +24,7 @@ const options = [
 
 const ITEM_HEIGHT = 48;
 
-export default function LongMenu({options,className}) {
+export default function LongMenu({options,className,functions}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -61,8 +61,12 @@ export default function LongMenu({options,className}) {
                     },
                 }}
             >
-                {options.map((option) => (
-                    <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+                {options.map((option,index) => (
+                    <MenuItem key={option} onClick={(e)=>{
+                        functions[index](e)
+                        handleClose()
+                    }
+                    }>
                         {/*<FileCopyIcon />*/}
                         {option}
                     </MenuItem>

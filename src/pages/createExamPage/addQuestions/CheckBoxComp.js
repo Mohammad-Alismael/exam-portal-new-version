@@ -9,19 +9,19 @@ import { v4 as uuidv4 } from "uuid";
 import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
 import { store } from "../../../index";
 import FormGroup from "@mui/material/FormGroup";
-const CheckBoxComp = ({ updateQuestionArray }) => {
+const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
     const [options, setOptions] = React.useState([
         {
             id: "90cba686-e279-46c4-8f1c-f2ff7435be0b",
-            optionValue: "hello",
+            optionValue: "option 1",
         },
         {
             id: "5df934ce-4761-442f-9364-bb879b2ffb2f",
-            optionValue: "hello3",
+            optionValue: "option 1",
         },
         {
             id: "2d36cca9-854b-46d7-961e-fe2ba8d8eaec",
-            optionValue: "hello5",
+            optionValue: "option 3",
         },
     ]);
     const [checkedAr, setCheckedAr] = React.useState([]);

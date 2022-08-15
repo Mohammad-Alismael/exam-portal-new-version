@@ -19,7 +19,7 @@ import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
 import {store} from "../../../index";
 const useStyles = makeStyles((theme) => ({
 }));
-function Matching ({updateQuestionArray}) {
+function Matching ({questionIndex,updateQuestionArray}) {
     const classes = useStyles();
     const [options, setOptions] = React.useState([]);
     const [optionValue,setOptionValue] = React.useState('');
@@ -49,10 +49,11 @@ function Matching ({updateQuestionArray}) {
                             labelId="type"
                             id="type"
                             label="Question Options"
+                            defaultValue={exam.questions[questionIndex].correctAnswer}
                             onChange={SetCorrectAnswer}
                         >
                             {
-                                options.map((val,index)=>{
+                                exam.questions[questionIndex].options.map((val,index)=>{
                                     return <MenuItem
                                         value={index}
                                         >{val['optionValue']}</MenuItem>

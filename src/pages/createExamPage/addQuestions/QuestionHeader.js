@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import LongMenu from "../../../components/LongMenu";
 import AddQuestionReducer from "../../../store/reducers/AddQuestionReducer";
 import {store} from "../../../index";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -51,21 +52,6 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
-    const updateExamQuestions = (_question) =>{
-        // i'm taking question object from the store to update it to the latest version
-        let examQuestions = exam?.questions
-        const questionFound = examQuestions.findIndex((quest, index) => {
-            if (quest.tmpId === _question.tmpId)
-                return true;
-        })
-        if (questionFound === -1){
-            examQuestions.push(_question)
-            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
-        }else {
-            examQuestions[questionFound] = _question
-            dispatch({ type: SET_QUESTIONS, payload: { questions: examQuestions } });
-        }
-    }
     const updateQuestionText = (e) => {
         updateQuestionArray({ questionText: e.target.value })
         setQuestionText(e.target.value)
@@ -79,6 +65,47 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
     }
     const handlePoints = (e) =>{
         updateQuestionArray({ points: parseInt(e.target.value) })
+    }
+    const deleteQuestion = (e) =>{
+        e.preventDefault()
+        exam.questions.splice(questionIndex,1)
+        dispatch({ type: SET_QUESTIONS, payload: { questions: exam.questions } });
+
+    }
+    const copyOptions = (currentOptions) =>{
+        if (currentOptions != null ){
+            var options = [];
+            for (let i = 0; i < currentOptions.length; i++) {
+                options.push({...currentOptions[i], id:  uuidv4()})
+            }
+            return options
+        }
+    }
+    const duplicateQuestion = (e) =>{
+        e.preventDefault()
+        const deepCopyExamQuestions = [...exam.questions]
+        let copiedQuestion = exam.questions[questionIndex]
+        // create new id for duplicate version
+        let modifiedObjects = {tmpId: uuidv4(), options: null}
+        // create new ids for duplicate options
+        const newOptions = copyOptions(copiedQuestion.options)
+        modifiedObjects['options'] = newOptions
+        // duplicating answer key with new ids
+
+        let newQuestion = {...copiedQuestion, ...modifiedObjects}
+
+        deepCopyExamQuestions[questionIndex + 1] = newQuestion
+
+        for (let i = questionIndex + 1; i < exam.questions.length; i++) {
+            deepCopyExamQuestions[i] = exam.questions[i]
+        }
+
+        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopyExamQuestions } });
+
+    }
+    const questionPreview = (e) => {
+        e.preventDefault()
+        alert("preview question" + questionIndex)
     }
     useEffect(()=>{
     },[])
@@ -154,6 +181,7 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                 <LongMenu
                     className={classes.menuIcon}
                     options={["delete", "duplicate", "preview question"]}
+                    functions={[deleteQuestion,duplicateQuestion,questionPreview]}
                 />
             </Grid>
         </>

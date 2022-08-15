@@ -79,8 +79,8 @@ function Mcq({ questionIndex,updateQuestionArray }) {
         updateQuestionArray({answerKey: parseInt(e.target.value)})
     }
     useEffect(()=>{
-        console.log(exam.questions[questionIndex])
-        // setOptions([...exam.questions[questionIndex].options])
+        // console.log(exam.questions[questionIndex])
+        setOptions([...exam.questions[questionIndex].options])
     },[])
     return (
         <Grid xs={12} container>
