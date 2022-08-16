@@ -42,16 +42,16 @@ const Truth = ({ id }) => {
         <RadioGroup style={{ marginLeft: 12 }}>
             <FormControlLabel
                 value={1}
-                control={<Radio checked={false} />}
+                control={<Radio  />}
                 label={"True"}
             />
             <FormControlLabel
                 value={0}
-                control={<Radio checked={true} />}
+                control={<Radio />}
                 label={"False"}
             />
         </RadioGroup>
     );
 };
 
-export default withQuestion(Truth);
+export default Truth;

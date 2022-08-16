@@ -39,7 +39,9 @@ function Matching ({questionIndex,updateQuestionArray}) {
     const SetCorrectAnswer = (e) =>{
         updateQuestionArray({answerKey: parseInt(e.target.value)})
     }
-
+    useEffect(()=>{
+        setOptions([...exam.questions[questionIndex].options])
+    },[])
     return (
             <>
                 <Grid item xs={4}>
@@ -53,7 +55,7 @@ function Matching ({questionIndex,updateQuestionArray}) {
                             onChange={SetCorrectAnswer}
                         >
                             {
-                                exam.questions[questionIndex].options.map((val,index)=>{
+                                options.map((val,index)=>{
                                     return <MenuItem
                                         value={index}
                                         >{val['optionValue']}</MenuItem>

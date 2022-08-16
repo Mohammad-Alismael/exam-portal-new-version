@@ -14,99 +14,55 @@ import {toast} from "react-toastify";
 import axios from "axios";
 import withQuestion from "./withQuestion";
 import {useSelector} from "react-redux";
+import Typography from "@mui/material/Typography";
 const useStyles = makeStyles((theme) => ({
 }));
-function Matching ({id}) {
+function Matching ({questionIndex}) {
     const classes = useStyles();
-    // const [options,setOptions] = React.useState([...props.options]);
+    const [options,setOptions] = React.useState();
     const [optionValue,setOptionValue] = React.useState('');
     // const [correctAnswer,setCorrectAnswer] = React.useState([...props.correctAnswer]);
     const exam = useSelector((state) => state.ExamReducer);
 
-    // const removeItem = (e) => {
-    //     toast.info(e.target.value)
-    // }
-    // const addMatchingOption = () =>{
-    //     console.log(optionValue);
-    //     const deepCopy = [...props.questions]
-    //     const questionFound = deepCopy.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //     assignOption(props.questionId,optionValue)
-    //     deepCopy[questionFound] = {...deepCopy[questionFound],
-    //         questionOptions: [...options,{id:options[options.length - 1]['id']+1,optionValue,questionId:props.questionId}]}
-    //     props.setQuestionArray(deepCopy)
-    //     setOptions([...options,{id:options[options.length - 1]['id']+1,optionValue,questionId:props.questionId}])
-    // }
-    // const changeCorrectAnswer = (e) =>{
-    //     const deepCopy = [...correctAnswer]
-    //     deepCopy[0] = {...deepCopy[0],correctAnswer:e.target.value}
-    //     setCorrectAnswer(deepCopy)
-    //     const deepCopyForQuestions = [...props.questions]
-    //     const questionFound = deepCopyForQuestions.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //
-    //     deepCopyForQuestions[questionFound] = {...deepCopyForQuestions[questionFound],
-    //     answerKeys: deepCopy[0]}
-    //     props.setQuestionArray(deepCopyForQuestions)
-    // }
-    // const assignOption = (questionId,optionValue) => {
-    //     axios.post('http://localhost:8080/set-question-options',{
-    //         questionId,
-    //         optionValue
-    //     }).then(console.log).catch(console.log)
-    // }
     useEffect(()=>{
-        // console.log("matching correct answer =>",options)
+        setOptions([...exam.questions[questionIndex].options])
     },[])
     return (
-            <>
-                <Grid item xs={4}>
-                    <FormControl fullWidth variant="standard" margin={'normal'}>
-                        <InputLabel id="type">Question Options</InputLabel>
+            <Grid container direction={'row'}>
+                <Grid item xs={3} fullwidth style={{height:'40px'}}>
+                    <FormControl fullWidth variant="standard" >
                         <Select
                             labelId="type"
                             id="type"
                             label="Question Options"
-                            // onChange={changeCorrectAnswer}
-                            // value={correctAnswer[0]['correctAnswer']}
+                            // onChange={handleChange}
                         >
                             {
-                                exam.questions[id]['options'].map((val,index)=>{
-                                    console.log(val)
+                                exam.questions[questionIndex].options.map((val,index)=>{
                                     return <MenuItem
+                                        key={index+1}
                                         value={index}
-                                        >{val['optionValue']}</MenuItem>
+                                    >{val['optionValue']}</MenuItem>
                                 })
                             }
+
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={7} >
-                    <FormControl fullWidth margin={'normal'}>
-                        <TextField
-                            label="Add Option"
-                            size="small"
-                            fullWidth
-                            onChange={(e)=>
-                               (setOptionValue(e.target.value))}
-                            variant="standard"/>
-                    </FormControl>
+                <Grid item xs={7} fullwidth>
+                    <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
+                        {exam.questions[questionIndex].questionText}
+                    </Typography>
                 </Grid>
-                <Grid item xs={12}>
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        // onClick={addMatchingOption}
-                        size={"small"}>Add option</Button>
+                <Grid item xs={2}>
+                    <Typography style={{color:"black"}} sx={{ float: 'right', flex: 1 }} variant="h6">
+                        {exam.questions[questionIndex].points} points
+                    </Typography>
                 </Grid>
-            </>
+            </Grid>
         );
 
 }
 
 
-export default withQuestion(Matching);
+export default Matching;

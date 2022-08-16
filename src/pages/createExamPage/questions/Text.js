@@ -21,4 +21,4 @@ function Text() {
     );
 }
 
-export default withQuestion(Text);
+export default Text;

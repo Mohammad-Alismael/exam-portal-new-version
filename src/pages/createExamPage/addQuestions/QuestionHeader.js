@@ -10,16 +10,20 @@ import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect, useDispatch, useSelector } from "react-redux";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 import {SET_POINTS, SET_QUESTION_TEXT, SET_QUESTION_TYPE, SET_QUESTIONS, SET_WHO_CAN_SEE} from "../../../store/actions";
 import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import IconButton from "@mui/material/IconButton";
 import LongMenu from "../../../components/LongMenu";
-import AddQuestionReducer from "../../../store/reducers/AddQuestionReducer";
-import {store} from "../../../index";
 import { v4 as uuidv4 } from "uuid";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import {Button} from "@material-ui/core";
+import Question from "../questions/Question";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -49,6 +53,7 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
     const [questionText, setQuestionText] = React.useState("empty");
     const [whoCanSee, setWhoCanSee] = React.useState(0);
     const [points, setPoints] = React.useState(0);
+    const [open, setOpen] = React.useState(false);
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
@@ -57,10 +62,19 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
         setQuestionText(e.target.value)
 
     };
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
     const handleWhoCanSee = (e) => {
         updateQuestionArray({ whoCanSee:parseInt(e.target.value) })
     }
     const handleQuestionType = (e) => {
+        if (e.target.value == 1|| e.target.value == 3 || e.target.value == 4){
+            updateQuestionArray({ options: []})
+        }
         updateQuestionArray({ questionType:parseInt(e.target.value) })
     }
     const handlePoints = (e) =>{
@@ -105,7 +119,7 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
     }
     const questionPreview = (e) => {
         e.preventDefault()
-        alert("preview question" + questionIndex)
+        handleClickOpen()
     }
     useEffect(()=>{
     },[])
@@ -184,6 +198,19 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                     functions={[deleteQuestion,duplicateQuestion,questionPreview]}
                 />
             </Grid>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                {/*<DialogContent>*/}
+                <Question questionIndex={questionIndex}/>
+                {/*</DialogContent>*/}
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

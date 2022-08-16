@@ -33,7 +33,7 @@ import Text from "./questions/Text";
 import Mcq from "./questions/Mcq";
 import Matching from "./questions/Matching";
 import CheckBoxComp from "./questions/CheckBoxComp";
-import CheckboxComp from "../../components/QuestionBodyStudents/CheckboxComp";
+import CheckboxComp from "../../components/QuestionStudent/CheckboxComp";
 import Question from "./addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
 
@@ -104,19 +104,7 @@ function CreateExamPage(props) {
         <ExamRandomness />,
         <ExamAnswerKey />,
     ];
-    const chooseQuestionType = (questionType, index) => {
-        if (questionType === 1) {
-            return <Mcq key={index + 1} id={index} />;
-        } else if (questionType === 2) {
-            return <Text key={index + 1} id={index} />;
-        } else if (questionType === 3) {
-            return <CheckboxComp key={index + 1} id={index} />;
-        } else if (questionType === 4) {
-            return <Matching key={index + 1} id={index} />;
-        } else {
-            return <Truth key={index + 1} id={index} />;
-        }
-    };
+
     useEffect(() => {
         console.log(exam.questions.length)
         // exam.questions.map(({ tmpId }, index) => {

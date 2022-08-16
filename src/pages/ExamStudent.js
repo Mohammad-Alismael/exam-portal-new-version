@@ -9,13 +9,13 @@ import axios from "axios";
 import moment from "moment";
 import Box from "@mui/material/Box";
 import QuizHeaderStudent from "../components/QuizHeaderStudent";
-import Mcq from "../components/QuestionBodyStudents/Mcq";
+import Mcq from "../components/QuestionStudent/Mcq";
 import CircularProgress from "@mui/material/CircularProgress";
 import {connect} from "react-redux";
-import Text from "../components/QuestionBodyStudents/Text";
-import Truth from "../components/QuestionBodyStudents/Truth";
-import Matching from "../components/QuestionBodyStudents/Matching";
-import CheckboxComp from "../components/QuestionBodyStudents/CheckboxComp";
+import Text from "../components/QuestionStudent/Text";
+import Truth from "../components/QuestionStudent/Truth";
+import Matching from "../components/QuestionStudent/Matching";
+import CheckboxComp from "../components/QuestionStudent/CheckboxComp";
 import * as Actions from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
