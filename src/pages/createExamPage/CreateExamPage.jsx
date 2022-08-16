@@ -36,7 +36,6 @@ import CheckBoxComp from "./questions/CheckBoxComp";
 import CheckboxComp from "../../components/QuestionStudent/CheckboxComp";
 import Question from "./addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
-
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 15%",
@@ -104,17 +103,19 @@ function CreateExamPage(props) {
         <ExamRandomness />,
         <ExamAnswerKey />,
     ];
+    function handleOnDragEnd(result) {
+        console.log(result)
+        if (!result.destination) return;
 
+        const items = Array.from(exam.questions);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        dispatch({ type: SET_QUESTIONS, payload: { questions: items } });
+
+    }
     useEffect(() => {
-        console.log(exam.questions.length)
-        // exam.questions.map(({ tmpId }, index) => {
-        //     console.log(tmpId,getQuestionIndex(tmpId))
-        //     console.log(exam.questions[getQuestionIndex(tmpId)])
-        //     setQuestions([
-        //         ...questions,
-        //         <Question questionIndex={getQuestionIndex(tmpId)} uid={tmpId} />
-        //     ]);
-        // });
+
     }, []);
     return (
         <>
@@ -126,16 +127,31 @@ function CreateExamPage(props) {
                     </Typography>
                     <HorizontalLinearStepper components={components} />
                 </Paper>
-
-                {/*{questions && questions.map((val, index) => {*/}
-                {/*    console.log('question maping', questions)*/}
-                {/*    return val;*/}
-                {/*})}*/}
-                {
-                    exam.questions.map(({tmpId},index)=>{
-                        return <Question questionIndex={getQuestionIndex(tmpId)} uid={tmpId} />
-                    })
-                }
+                <DragDropContext onDragEnd={handleOnDragEnd}>
+                    <Droppable droppableId={"questions"}>
+                        {(provided) => (
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                {exam.questions.map(({ tmpId }, index) => {
+                                    return (
+                                        <Draggable key={tmpId} draggableId={tmpId} index={index}>
+                                            {(provided) => (
+                                                <div ref={provided.innerRef}
+                                                     {...provided.draggableProps}
+                                                     {...provided.dragHandleProps}>
+                                                    <Question
+                                                        questionIndex={getQuestionIndex(tmpId)}
+                                                        uid={tmpId}
+                                                    />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    );
+                                })}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
                 <div>
                     <Button
                         sx={{ mt: 3 }}
