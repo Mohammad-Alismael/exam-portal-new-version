@@ -1,11 +1,14 @@
 import * as actionTypes from "../actions";
-import {SET_QUESTIONS} from "../actions";
+import {SET_EXAM_ANSWER_KEY, SET_QUESTIONS} from "../actions";
 const initialState = {
     examTitle: "",
     startingAt: 0,
     endingAt: 0,
     assignedFor: null,
     navigation: null,
+    questionTimer: null,
+    questionRandomness: '1',
+    postingAnswerKey: null,
     questions: [],
 };
 const ExamReducer = (state = initialState, action) => {
@@ -44,6 +47,21 @@ const ExamReducer = (state = initialState, action) => {
             return {
                 ...state,
                 navigation: action.payload.navigation,
+            }
+        case actionTypes.SET_EXAM_TIMER:
+            return {
+                ...state,
+                questionTimer: action.payload.questionTimer,
+            }
+        case actionTypes.SET_EXAM_RANDOMNESS:
+            return {
+                ...state,
+                questionRandomness: action.payload.questionRandomness,
+            }
+        case actionTypes.SET_EXAM_ANSWER_KEY:
+            return {
+                ...state,
+                postingAnswerKey: action.payload.postingAnswerKey,
             }
         default:
             break;

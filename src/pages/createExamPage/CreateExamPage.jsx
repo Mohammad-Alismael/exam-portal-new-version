@@ -100,7 +100,7 @@ function CreateExamPage(props) {
         <ExamSettings />,
         <ExamNavigation />,
         <ExamTimer />,
-        <ExamVisibility />,
+        // <ExamVisibility />,
         <ExamRandomness />,
         <ExamAnswerKey />,
     ];

@@ -194,7 +194,7 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                 </FormControl>
                 <LongMenu
                     className={classes.menuIcon}
-                    options={["delete", "duplicate", "preview question"]}
+                    options={["Delete", "Duplicate", "Preview Question"]}
                     functions={[deleteQuestion,duplicateQuestion,questionPreview]}
                 />
             </Grid>
