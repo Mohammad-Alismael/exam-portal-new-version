@@ -14,11 +14,10 @@ const Protected = ({children, onlyAccessTo}) => {
     const location = useLocation();
     const user = useSelector((state) => state.UserReducerV2).user;
     const roles = onlyAccessTo.includes(user.role_id)
-    console.log(roles)
     if (user == null) {
         return <Navigate to="/" replace state={{ path: location.pathname }}/>;
     }
-    if (!roles){
+    if (user != null && !roles){
         return <p style={{color: 'white'}}>you don't have access</p>;
     }
     return children;

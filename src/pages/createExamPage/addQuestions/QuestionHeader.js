@@ -24,6 +24,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import {Button} from "@material-ui/core";
 import Question from "../questions/Question";
+import Tooltip from "@mui/material/Tooltip";
+import PublishIcon from "@mui/icons-material/Publish";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -43,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
         float: "right",
         cursor: "pointer",
         position: "absolute",
-        top: 15,
+        bottom: 15,
         right: 15,
         // paddingTop: 20
     },
@@ -94,6 +96,9 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
             }
             return options
         }
+
+        return currentOptions
+
     }
     const duplicateQuestion = (e) =>{
         e.preventDefault()
@@ -107,13 +112,11 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
         // duplicating answer key with new ids
 
         let newQuestion = {...copiedQuestion, ...modifiedObjects}
-
         deepCopyExamQuestions[questionIndex + 1] = newQuestion
 
         for (let i = questionIndex + 1; i < exam.questions.length; i++) {
-            deepCopyExamQuestions[i] = exam.questions[i]
+            deepCopyExamQuestions[i+1] = exam.questions[i]
         }
-
         dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopyExamQuestions } });
 
     }
@@ -121,10 +124,23 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
         e.preventDefault()
         handleClickOpen()
     }
+    const handleQuestionFile = (e) =>{
+        e.preventDefault()
+        let myFiles = e.target.files;
+        Object.assign(myFiles[0],
+            {
+                preview: URL.createObjectURL(myFiles[0]),
+            }
+        )
+        updateQuestionArray({previewFile: myFiles[0]})
+    }
     useEffect(()=>{
     },[])
     return (
         <>
+            { exam.questions[questionIndex]['previewFile'] != null ? <Grid xs={12} item>
+                <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']} alt={'question img'}/>
+            </Grid> : null }
             <Grid xs={6} item>
                 <TextField
                     id="outlined-uncontrolled"
@@ -137,14 +153,16 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                     variant="standard"
                 />
             </Grid>
-            <ImageIcon
-                sx={{
-                    height: "40px",
-                    width: "40px",
-                    margin: "20px 5px",
-                    cursor: "pointer",
-                }}
-            />
+            <Tooltip title="upload file">
+                <IconButton aria-label="upload picture" component="label">
+                    <input onChange={handleQuestionFile} hidden accept="image/*" type="file" />
+                    <ImageIcon
+                        sx={{
+                            height: "40px",
+                            width: "40px",
+                        }} />
+                </IconButton>
+            </Tooltip>
             <Grid xs={2} item>
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Question Type</InputLabel>
@@ -202,9 +220,7 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                 open={open}
                 onClose={handleClose}
             >
-                {/*<DialogContent>*/}
                 <Question questionIndex={questionIndex}/>
-                {/*</DialogContent>*/}
                 <DialogActions>
                     <Button onClick={handleClose} autoFocus>
                         close

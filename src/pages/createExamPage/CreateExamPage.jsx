@@ -81,18 +81,13 @@ function CreateExamPage(props) {
             questionType: 5,
             tmpId: uid,
             whoCanSee: 3,
+            previewFile: null
         };
 
         const newQuestionAr = exam.questions;
         newQuestionAr.push(questionObj);
         dispatch({ type: SET_QUESTIONS, payload: { questions: newQuestionAr } });
-
-        const questionIndexFound = getQuestionIndex(uid);
-
-        // setQuestions([
-        //     ...questions,
-        //     <Question questionIndex={questionIndexFound} uid={uid} />,
-        // ]);
+        
     };
 
     const components = [

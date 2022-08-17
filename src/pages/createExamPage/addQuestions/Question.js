@@ -16,12 +16,20 @@ import {
     SET_QUESTIONS,
     SET_TMP_ID,
 } from "../../../store/actions";
+import ImageIcon from "@mui/icons-material/Image";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         position: "relative",
         padding: "15px 20px",
         marginTop: "2rem",
     },
+    test: {
+        position: 'absolute',
+        right: '-50px',
+        bottom: 0,
+        // padding: '0.6rem',
+        backgroundColor: 'red'
+    }
 }));
 const questionTypes = [
     <Mcq />,
@@ -103,6 +111,9 @@ const Question = ({ questionIndex, uid }) => {
                 />
                 {chooseQuestionType(exam.questions[questionIndex].questionType)}
             </Grid>
+            {/*<div className={classes.test}>*/}
+            {/*    <ImageIcon size={2}/>*/}
+            {/*</div>*/}
         </Paper>
     );
 };
