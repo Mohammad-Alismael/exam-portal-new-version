@@ -15,10 +15,12 @@ import {SvgIcon} from "@mui/material";
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
+import LongMenu from "../../../components/LongMenu";
 
 const useStyles = makeStyles((theme) => ({
     container: {
         width: '100%',
+        padding: '0.8rem',
         margin: '1rem',
         display: 'flex',
         flexDirection: 'row',
@@ -56,20 +58,6 @@ function Exam(props) {
             //     toast.info("you are too late to take this exam!")
         }
     };
-    const handleDelete = () => {
-        axios
-            .post("http://localhost:8080/delete-exam", {
-                creatorId: props.user.user_id,
-                examId: props.examId,
-            })
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        window.location.reload();
-    };
     return (
         <Paper elevation={5} className={classes.container}>
             <div className={classes.subContainer}>
@@ -87,9 +75,13 @@ function Exam(props) {
                         {moment(props.endingAt).format("MMMM Do YYYY, h:mm:ss a")}
                     </Typography>
                 </div>
-                <IconButton aria-label="Example">
-                    <FontAwesomeSvgIcon icon={faEllipsisV} />
-                </IconButton>
+                <LongMenu
+                    className={classes.menuIcon}
+                    options={["deactivate"]}
+                    functions={[function () {
+                        alert('deactivate')
+                    }]}
+                />
             </div>
         </Paper>
     );

@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
         gap: '1rem',
     },
     createExamBtnContainer: {
-        width: '100%',
+        // backgroundColor: 'red',
+        width: '103%',
         height: '30px',
         margin: '1.2rem',
     },

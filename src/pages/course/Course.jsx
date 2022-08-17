@@ -139,10 +139,10 @@ function Course(props) {
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
                   <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
-                     <b>{course?.course_info['class_name']}</b>
+                     <b>{course?.course_info?.class_name}</b>
                   </WhiteTextTypography>
                   <WhiteTextTypography variant="h4" style={{ fontSize: '25px' }}>
-                      section {course?.course_info['section'].toUpperCase()}
+                      section {course?.course_info?.section.toUpperCase()}
                   </WhiteTextTypography>
                 </Paper>
                 <Grid container spacing={2} className={classes.mainGrid}>
@@ -170,8 +170,6 @@ function Course(props) {
 
                         </Grid>
                     </Grid>
-
-
                 </Grid>
             </Box>
         </div>
