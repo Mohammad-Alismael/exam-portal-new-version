@@ -17,6 +17,13 @@ import {
     SET_TMP_ID,
 } from "../../../store/actions";
 import ImageIcon from "@mui/icons-material/Image";
+import Divider from "@mui/material/Divider";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import Tooltip from "@mui/material/Tooltip";
+import LongMenu from "../../../components/LongMenu";
+
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         position: "relative",
@@ -101,6 +108,49 @@ const Question = ({ questionIndex, uid }) => {
             );
         }
     };
+    const copyOptions = (currentOptions) =>{
+        if (currentOptions != null ){
+            var options = [];
+            for (let i = 0; i < currentOptions.length; i++) {
+                options.push({...currentOptions[i], id:  uuidv4()})
+            }
+            return options
+        }
+
+        return currentOptions
+
+    }
+    const deleteQuestion = (e) =>{
+        e.preventDefault()
+        exam.questions.splice(questionIndex,1)
+        dispatch({ type: SET_QUESTIONS, payload: { questions: exam.questions } });
+
+    }
+
+    const duplicateQuestion = (e) =>{
+        e.preventDefault()
+        const deepCopyExamQuestions = [...exam.questions]
+        let copiedQuestion = exam.questions[questionIndex]
+        // create new id for duplicate version
+        let modifiedObjects = {tmpId: uuidv4(), options: null}
+        // create new ids for duplicate options
+        const newOptions = copyOptions(copiedQuestion.options)
+        modifiedObjects['options'] = newOptions
+        // duplicating answer key with new ids
+
+        let newQuestion = {...copiedQuestion, ...modifiedObjects}
+        deepCopyExamQuestions[questionIndex + 1] = newQuestion
+
+        for (let i = questionIndex + 1; i < exam.questions.length; i++) {
+            deepCopyExamQuestions[i+1] = exam.questions[i]
+        }
+        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopyExamQuestions } });
+
+    }
+    const questionPreview = (e) => {
+        e.preventDefault()
+        // handleClickOpen()
+    }
 
     return (
         <Paper elevation={3} className={classes.paperStyle}>
@@ -111,9 +161,25 @@ const Question = ({ questionIndex, uid }) => {
                 />
                 {chooseQuestionType(exam.questions[questionIndex].questionType)}
             </Grid>
-            {/*<div className={classes.test}>*/}
-            {/*    <ImageIcon size={2}/>*/}
-            {/*</div>*/}
+            <Divider sx={{mt:2,mb:2}}/>
+            <div style={{height: '1rem'}}>
+                <Tooltip title="Preview">
+                    <VisibilityIcon onClick={questionPreview} style={{float: 'right',marginLeft: '1rem'}}/>
+                </Tooltip>
+                <Tooltip title="Delete">
+                    <DeleteOutlineIcon onClick={deleteQuestion} style={{float: 'right',marginLeft: '1rem'}}/>
+                </Tooltip>
+                <Tooltip title="Duplicate">
+                    <ContentCopyIcon  onClick={duplicateQuestion} style={{float: 'right'}}/>
+                </Tooltip>
+                {/*<div  style={{float: 'right'}}>*/}
+                {/*    <LongMenu*/}
+                {/*        options={["Delete", "Duplicate", "Preview Question"]}*/}
+                {/*        functions={[deleteQuestion,duplicateQuestion,questionPreview]}*/}
+                {/*    />*/}
+                {/*</div>*/}
+
+            </div>
         </Paper>
     );
 };

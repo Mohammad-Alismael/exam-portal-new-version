@@ -82,48 +82,6 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
     const handlePoints = (e) =>{
         updateQuestionArray({ points: parseInt(e.target.value) })
     }
-    const deleteQuestion = (e) =>{
-        e.preventDefault()
-        exam.questions.splice(questionIndex,1)
-        dispatch({ type: SET_QUESTIONS, payload: { questions: exam.questions } });
-
-    }
-    const copyOptions = (currentOptions) =>{
-        if (currentOptions != null ){
-            var options = [];
-            for (let i = 0; i < currentOptions.length; i++) {
-                options.push({...currentOptions[i], id:  uuidv4()})
-            }
-            return options
-        }
-
-        return currentOptions
-
-    }
-    const duplicateQuestion = (e) =>{
-        e.preventDefault()
-        const deepCopyExamQuestions = [...exam.questions]
-        let copiedQuestion = exam.questions[questionIndex]
-        // create new id for duplicate version
-        let modifiedObjects = {tmpId: uuidv4(), options: null}
-        // create new ids for duplicate options
-        const newOptions = copyOptions(copiedQuestion.options)
-        modifiedObjects['options'] = newOptions
-        // duplicating answer key with new ids
-
-        let newQuestion = {...copiedQuestion, ...modifiedObjects}
-        deepCopyExamQuestions[questionIndex + 1] = newQuestion
-
-        for (let i = questionIndex + 1; i < exam.questions.length; i++) {
-            deepCopyExamQuestions[i+1] = exam.questions[i]
-        }
-        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopyExamQuestions } });
-
-    }
-    const questionPreview = (e) => {
-        e.preventDefault()
-        handleClickOpen()
-    }
     const handleQuestionFile = (e) =>{
         e.preventDefault()
         let myFiles = e.target.files;
@@ -210,11 +168,6 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                         label={"points"}
                     />
                 </FormControl>
-                <LongMenu
-                    className={classes.menuIcon}
-                    options={["Delete", "Duplicate", "Preview Question"]}
-                    functions={[deleteQuestion,duplicateQuestion,questionPreview]}
-                />
             </Grid>
             <Dialog
                 open={open}

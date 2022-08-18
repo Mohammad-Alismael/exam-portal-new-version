@@ -15,10 +15,14 @@ import { v4 as uuidv4 } from 'uuid';
 import {toast} from "react-toastify";
 import {SET_ANSWER_KEY, SET_OPTIONS, SET_QUESTIONS} from "../../../store/actions";
 import {store} from "../../../index";
+import IconButton from "@mui/material/IconButton";
+import ImageIcon from "@mui/icons-material/Image";
+import Tooltip from "@mui/material/Tooltip";
 
 function Mcq({ questionIndex,updateQuestionArray }) {
     const [options, setOptions] = React.useState([]);
     const [optionValue, setOptionValue] = React.useState("");
+    const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
@@ -28,7 +32,8 @@ function Mcq({ questionIndex,updateQuestionArray }) {
         let id = uuidv4();
         let newObj = {
             id,
-            optionValue
+            optionValue,
+            img: optionImg
         }
         if (options.length < 4) {
             updateQuestionArray({options: [...options, newObj]})
@@ -49,10 +54,25 @@ function Mcq({ questionIndex,updateQuestionArray }) {
         updateQuestionArray({options: tmp})
         setOptions(tmp)
     }
-
+    const SetCorrectAnswer = (e) =>{
+        updateQuestionArray({answerKey: parseInt(e.target.value)})
+    }
+    const optionFile = (e) =>{
+        e.preventDefault()
+        let myFiles = e.target.files;
+        Object.assign(myFiles[0],
+            {
+                preview: URL.createObjectURL(myFiles[0]),
+            }
+        )
+        setOptionImg(myFiles[0])
+        // updateQuestionArray({previewFile: myFiles[0]})
+    }
     const loadOptions = (index) => {
+        console.log(options[index])
         return (
             <>
+                { options[index]['img'] != null ? <img src={options[index]['img']} alt={'question'}/> : null}
                 <Grid item xs={12}>
                     <FormControlLabel
                         value={index}
@@ -75,11 +95,7 @@ function Mcq({ questionIndex,updateQuestionArray }) {
         );
     };
 
-    const SetCorrectAnswer = (e) =>{
-        updateQuestionArray({answerKey: parseInt(e.target.value)})
-    }
     useEffect(()=>{
-        // console.log(exam.questions[questionIndex])
         setOptions([...exam.questions[questionIndex].options])
     },[])
     return (
@@ -99,7 +115,7 @@ function Mcq({ questionIndex,updateQuestionArray }) {
                     </Grid>
                     <br />
                     <Grid container>
-                        <Grid item xs={8}>
+                        <Grid item xs={7}>
                             <TextField
                                 label={"option value"}
                                 size="small"
@@ -108,9 +124,19 @@ function Mcq({ questionIndex,updateQuestionArray }) {
                                 onChange={(e)=>(setOptionValue(e.target.value))}
                             />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Tooltip title="upload option file">
+                            <IconButton aria-label="upload picture" component="label">
+                                <input onChange={optionFile} hidden accept="image/*" type="file" />
+                                <ImageIcon
+                                    sx={{
+                                        height: "40px",
+                                        width: "40px",
+                                    }} />
+                            </IconButton>
+                        </Tooltip>
+                        <Grid item xs={4} sx={{backgroundColor: 'transparent',position:'relative'}}>
                             <Button
-                                sx={{mt:2}}
+                                sx={{position:'absolute', bottom: 10}}
                                 variant="contained"
                                 size={"medium"}
                                 fullWidth
