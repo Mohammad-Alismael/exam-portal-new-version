@@ -59,17 +59,16 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
     const handleCheckedAr = (e) =>{
         const id = e.target.id
         const checked = e.target.checked
-
+        // if checked and not in array then add it
         if (checked && !checkedAr.includes(id)) {
             setCheckedAr([...checkedAr, e.target.id])
             updateQuestionArray({answerKey:[...checkedAr, e.target.id]})
         }
-
+        // if not checked and in array then remove it
         if (!checked && checkedAr.includes(id)){
             const new_ar = checkedAr.filter((_id,index)=>{
                 return _id !== id
             })
-
             updateQuestionArray({answerKey:[...new_ar]})
             setCheckedAr([...new_ar])
         }

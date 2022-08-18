@@ -12,6 +12,7 @@ import Matching from "./Matching";
 import { v4 as uuidv4 } from "uuid";
 
 import {
+    SET_EXAM_QUESTION_INDEX,
     SET_QUESTION_TEXT,
     SET_QUESTIONS,
     SET_TMP_ID,
@@ -69,6 +70,17 @@ const Question = ({ questionIndex, uid }) => {
         deepCopy[index] = deepCopyObj;
         // deepCopy[index] = {...deepCopy[index], ...object}
         dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+    };
+    const updateQuestionArrayv2 = (object) => {
+        const key = Object.keys(object)[0];
+        const value = Object.values(object)[0];
+        const index = getQuestionIndex();
+        const deepCopy = exam?.questions;
+        const deepCopyObj = deepCopy[index];
+        deepCopyObj[key] = value;
+        // deepCopy[index] = deepCopyObj;
+        // deepCopy[index] = {...deepCopy[index], ...object}
+        dispatch({ type: SET_EXAM_QUESTION_INDEX, payload: { question: deepCopyObj, index } });
     };
     const chooseQuestionType = (questionType) => {
         if (questionType === 1) {

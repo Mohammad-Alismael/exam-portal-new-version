@@ -1,5 +1,5 @@
 import * as actionTypes from "../actions";
-import {SET_EXAM_ANSWER_KEY, SET_QUESTIONS} from "../actions";
+import {SET_EXAM_ANSWER_KEY, SET_EXAM_QUESTION_INDEX, SET_QUESTIONS} from "../actions";
 const initialState = {
     examTitle: "",
     startingAt: 0,
@@ -22,6 +22,18 @@ const ExamReducer = (state = initialState, action) => {
             return {
                 ...state,
                 questions: action.payload.questions,
+            };
+        case actionTypes.SET_EXAM_QUESTION_INDEX:
+            const index = action.payload.index
+            const newQuestion = action.payload.question
+            const newQuestionArray = state.questions.map((obj,i)=>{
+                if (index === i){
+                    return {...newQuestion}
+                }
+            })
+            return {
+                ...state,
+                questions: newQuestionArray,
             };
         case actionTypes.SET_EXAM_TITLE:
             return {
