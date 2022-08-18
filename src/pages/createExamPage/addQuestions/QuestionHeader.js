@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: 20
     },
 }));
-function QuestionHeader({questionIndex,updateQuestionArray}) {
+function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionArray,preview}) {
     const classes = useStyles();
     const [questionText, setQuestionText] = React.useState("empty");
     const [whoCanSee, setWhoCanSee] = React.useState(0);
@@ -63,12 +63,6 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
         updateQuestionArray({ questionText: e.target.value })
         setQuestionText(e.target.value)
 
-    };
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
     };
     const handleWhoCanSee = (e) => {
         updateQuestionArray({ whoCanSee:parseInt(e.target.value) })
@@ -102,7 +96,6 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                 <TextField
                     id="outlined-uncontrolled"
                     label="Question text"
-                    // size="small"
                     value={exam.questions[questionIndex].questionText}
                     defaultValue={""}
                     fullWidth
@@ -169,12 +162,12 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
                 </FormControl>
             </Grid>
             <Dialog
-                open={open}
-                onClose={handleClose}
+                open={preview}
+                onClose={previewClose}
             >
                 <Question questionIndex={questionIndex}/>
                 <DialogActions>
-                    <Button onClick={handleClose} autoFocus>
+                    <Button onClick={previewClose} autoFocus>
                         close
                     </Button>
                 </DialogActions>

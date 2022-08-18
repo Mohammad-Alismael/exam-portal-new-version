@@ -9,21 +9,11 @@ import { v4 as uuidv4 } from "uuid";
 import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
 import { store } from "../../../index";
 import FormGroup from "@mui/material/FormGroup";
+import Tooltip from "@mui/material/Tooltip";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
-    const [options, setOptions] = React.useState([
-        {
-            id: "90cba686-e279-46c4-8f1c-f2ff7435be0b",
-            optionValue: "option 1",
-        },
-        {
-            id: "5df934ce-4761-442f-9364-bb879b2ffb2f",
-            optionValue: "option 1",
-        },
-        {
-            id: "2d36cca9-854b-46d7-961e-fe2ba8d8eaec",
-            optionValue: "option 3",
-        },
-    ]);
+    const [options, setOptions] = React.useState([]);
     const [checkedAr, setCheckedAr] = React.useState([]);
     const [optionValue, setOptionValue] = React.useState("");
     const exam = useSelector((state) => state.ExamReducer);
@@ -73,10 +63,26 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
             setCheckedAr([...new_ar])
         }
     }
-
+    const getOptionIndex = (id) => {
+        return options.findIndex((option, index) => {
+            if (option.id === id) return true;
+        });
+    }
+    const updateQuestionOptions = (newOptionsArray) => {
+        updateQuestionArray({ options: newOptionsArray });
+        setOptions(newOptionsArray);
+    }
+    const deleteOption = (id) => {
+        const optionIndexFound = getOptionIndex(id);
+        const tmp = [...options];
+        tmp.splice(optionIndexFound,1)
+        updateQuestionOptions(tmp)
+    }
     const loadCheckboxOptions = (index) => {
         return (
-            <Grid container direction="row">
+            <Grid container direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center">
                 <FormControlLabel
                     key={index}
                     value={index}
@@ -94,11 +100,18 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                     variant="filled"
                     value={options[index]['optionValue']}
                     onChange={setOptionText}
-                    fullWidth
                 />
+                <Tooltip title={'delete option'}>
+                    <IconButton>
+                        <CloseIcon onClick={()=>(deleteOption(options[index]["id"]))} />
+                    </IconButton>
+                </Tooltip>
             </Grid>
         );
     };
+    useEffect(() => {
+        setOptions([...exam.questions[questionIndex].options]);
+    }, []);
     return (
         <>
             <Grid item xs={12}>

@@ -12,6 +12,7 @@ import Matching from "./Matching";
 import { v4 as uuidv4 } from "uuid";
 
 import {
+    DELETE_EXAM_QUESTION_INDEX,
     SET_EXAM_QUESTION_INDEX,
     SET_QUESTION_TEXT,
     SET_QUESTIONS,
@@ -24,6 +25,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Tooltip from "@mui/material/Tooltip";
 import LongMenu from "../../../components/LongMenu";
+import IconButton from "@mui/material/IconButton";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -50,7 +52,15 @@ const Question = ({ questionIndex, uid }) => {
     const classes = useStyles();
     const question = useSelector((state) => state.AddQuestionReducer);
     const exam = useSelector((state) => state.ExamReducer);
+    const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const getQuestionIndex = () => {
         const questionIndexFound = exam?.questions.findIndex((quest, index) => {
@@ -60,18 +70,8 @@ const Question = ({ questionIndex, uid }) => {
 
         return questionIndexFound;
     };
-    const updateQuestionArray = (object) => {
-        const key = Object.keys(object)[0];
-        const value = Object.values(object)[0];
-        const index = getQuestionIndex();
-        const deepCopy = exam?.questions;
-        const deepCopyObj = deepCopy[index];
-        deepCopyObj[key] = value;
-        deepCopy[index] = deepCopyObj;
-        // deepCopy[index] = {...deepCopy[index], ...object}
-        dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
-    };
     const updateQuestionArrayv2 = (object) => {
+        console.log('wtf')
         const key = Object.keys(object)[0];
         const value = Object.values(object)[0];
         const index = getQuestionIndex();
@@ -132,9 +132,7 @@ const Question = ({ questionIndex, uid }) => {
     }
     const deleteQuestion = (e) =>{
         e.preventDefault()
-        exam.questions.splice(questionIndex,1)
-        dispatch({ type: SET_QUESTIONS, payload: { questions: exam.questions } });
-
+        dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
     }
 
     const duplicateQuestion = (e) =>{
@@ -154,12 +152,13 @@ const Question = ({ questionIndex, uid }) => {
         for (let i = questionIndex + 1; i < exam.questions.length; i++) {
             deepCopyExamQuestions[i+1] = exam.questions[i]
         }
+        console.log(deepCopyExamQuestions)
         dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopyExamQuestions } });
 
     }
     const questionPreview = (e) => {
         e.preventDefault()
-        // handleClickOpen()
+        handleClickOpen()
     }
 
     return (
@@ -168,27 +167,29 @@ const Question = ({ questionIndex, uid }) => {
                 <QuestionHeader
                     questionIndex={questionIndex}
                     updateQuestionArray={updateQuestionArrayv2}
+                    previewOpen={handleClickOpen}
+                    previewClose={handleClose}
+                    preview={open}
                 />
                 {chooseQuestionType(exam.questions[questionIndex].questionType)}
             </Grid>
             <Divider sx={{mt:2,mb:2}}/>
-            <div style={{height: '1rem'}}>
+            <div style={{height: '2rem'}}>
                 <Tooltip title="Preview">
-                    <VisibilityIcon onClick={questionPreview} style={{float: 'right',marginLeft: '1rem'}}/>
+                    <IconButton style={{float: 'right'}}>
+                        <VisibilityIcon onClick={questionPreview} />
+                    </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                    <DeleteOutlineIcon onClick={deleteQuestion} style={{float: 'right',marginLeft: '1rem'}}/>
+                    <IconButton style={{float: 'right'}}>
+                        <DeleteOutlineIcon onClick={deleteQuestion} />
+                    </IconButton>
                 </Tooltip>
                 <Tooltip title="Duplicate">
-                    <ContentCopyIcon  onClick={duplicateQuestion} style={{float: 'right'}}/>
+                    <IconButton style={{float: 'right'}}>
+                        <ContentCopyIcon onClick={duplicateQuestion} />
+                    </IconButton>
                 </Tooltip>
-                {/*<div  style={{float: 'right'}}>*/}
-                {/*    <LongMenu*/}
-                {/*        options={["Delete", "Duplicate", "Preview Question"]}*/}
-                {/*        functions={[deleteQuestion,duplicateQuestion,questionPreview]}*/}
-                {/*    />*/}
-                {/*</div>*/}
-
             </div>
         </Paper>
     );

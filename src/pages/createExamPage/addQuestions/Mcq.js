@@ -105,9 +105,10 @@ function Mcq({ questionIndex, updateQuestionArray }) {
                         onChange={setOptionText}
                     />
                     <Tooltip title={'delete option'}>
-                        <CloseIcon onClick={()=>(deleteOption(options[index]["id"]))} sx={{ mt: 3}}/>
+                        <IconButton aria-label="upload picture" component="label">
+                            <CloseIcon onClick={()=>(deleteOption(options[index]["id"]))} sx={{ mt: 3}}/>
+                        </IconButton>
                     </Tooltip>
-
                 </Grid>
             </>
         );

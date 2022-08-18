@@ -29,11 +29,22 @@ const ExamReducer = (state = initialState, action) => {
             const newQuestionArray = state.questions.map((obj,i)=>{
                 if (index === i){
                     return {...newQuestion}
+                }else {
+                    return obj
                 }
             })
             return {
                 ...state,
                 questions: newQuestionArray,
+            };
+        case actionTypes.DELETE_EXAM_QUESTION_INDEX:
+            const _index = action.payload.index
+            const _newQuestionArray = state.questions.filter((question,index)=>{
+                return index !== _index
+            })
+            return {
+                ...state,
+                questions: _newQuestionArray,
             };
         case actionTypes.SET_EXAM_TITLE:
             return {

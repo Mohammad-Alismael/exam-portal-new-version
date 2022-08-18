@@ -87,7 +87,7 @@ function CreateExamPage(props) {
         const newQuestionAr = exam.questions;
         newQuestionAr.push(questionObj);
         dispatch({ type: SET_QUESTIONS, payload: { questions: newQuestionAr } });
-        
+
     };
 
     const components = [
@@ -105,7 +105,6 @@ function CreateExamPage(props) {
         const items = Array.from(exam.questions);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
-
         dispatch({ type: SET_QUESTIONS, payload: { questions: items } });
 
     }
@@ -127,6 +126,7 @@ function CreateExamPage(props) {
                         {(provided) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
                                 {exam.questions.map(({ tmpId }, index) => {
+                                    console.log(tmpId)
                                     return (
                                         <Draggable key={tmpId} draggableId={tmpId} index={index}>
                                             {(provided) => (

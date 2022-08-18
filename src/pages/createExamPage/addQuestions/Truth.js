@@ -21,9 +21,9 @@ const Truth = ({questionIndex,updateQuestionArray}) => {
         updateQuestionArray({answerKey: e.target.value})
     }
 
-    useEffect(()=>{
-        updateQuestionArray({options: null})
-    },[])
+    // useEffect(()=>{
+    //     updateQuestionArray({options: null})
+    // },[])
     return (
         <RadioGroup onChange={handleChange} style={{ marginLeft: 12 }}>
             <FormControlLabel
