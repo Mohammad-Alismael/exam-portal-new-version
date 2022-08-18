@@ -92,8 +92,7 @@ function QuestionHeader({questionIndex,updateQuestionArray}) {
         )
         updateQuestionArray({previewFile: myFiles[0]})
     }
-    useEffect(()=>{
-    },[])
+
     return (
         <>
             { exam.questions[questionIndex]['previewFile'] != null ? <Grid xs={12} item>

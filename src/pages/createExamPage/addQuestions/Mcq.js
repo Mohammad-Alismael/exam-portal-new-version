@@ -22,6 +22,7 @@ import { store } from "../../../index";
 import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import Tooltip from "@mui/material/Tooltip";
+import CloseIcon from '@mui/icons-material/Close';
 
 function Mcq({ questionIndex, updateQuestionArray }) {
     const [options, setOptions] = React.useState([]);
@@ -47,19 +48,24 @@ function Mcq({ questionIndex, updateQuestionArray }) {
             toast.info("MCQ can only have 4 options max!");
         }
     };
-
-    const setOptionText = (e) => {
-        const id = e.target.id;
-        const optionIndexFound = options.findIndex((option, index) => {
+    const getOptionIndex = (id) => {
+        return options.findIndex((option, index) => {
             if (option.id === id) return true;
         });
+    }
+    const updateQuestionOptions = (newOptionsArray) => {
+        updateQuestionArray({ options: newOptionsArray });
+        setOptions(newOptionsArray);
+    }
+    const setOptionText = (e) => {
+        const id = e.target.id;
+        const optionIndexFound = getOptionIndex(id);
         const tmp = [...options];
         tmp[optionIndexFound] = {
             ...tmp[optionIndexFound],
             optionValue: e.target.value,
         };
-        updateQuestionArray({ options: tmp });
-        setOptions(tmp);
+        updateQuestionOptions(tmp)
     };
     const SetCorrectAnswer = (e) => {
         updateQuestionArray({ answerKey: parseInt(e.target.value) });
@@ -67,25 +73,28 @@ function Mcq({ questionIndex, updateQuestionArray }) {
     const optionFile = (e) => {
         e.preventDefault();
         let myFiles = e.target.files;
-        myFiles[0]['preview'] = URL.createObjectURL(myFiles[0])
-        // Object.assign(myFiles[0], {
-        //     preview: URL.createObjectURL(myFiles[0]),
-        // });
-        console.log(myFiles[0])
+        Object.assign(myFiles[0], {
+            preview: URL.createObjectURL(myFiles[0]),
+        });
         setOptionImg(myFiles[0]);
     };
+    const deleteOption = (id) => {
+        const optionIndexFound = getOptionIndex(id);
+        const tmp = [...options];
+       tmp.splice(optionIndexFound,1)
+        updateQuestionOptions(tmp)
+    }
     const loadOptions = (index) => {
         return (
             <>
                 {options[index]["img"] != null ? (
                     <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
                 ) : null}
-                <Grid item xs={12}>
+                <Grid container alignItems={'center'} xs={12} style={{backgroundColor: 'transparent'}}>
                     <FormControlLabel
                         value={index}
                         control={<Radio />}
                         label=""
-                        sx={{ mt: 2 }}
                     />
                     <TextField
                         id={options[index]["id"]}
@@ -93,10 +102,12 @@ function Mcq({ questionIndex, updateQuestionArray }) {
                         size="small"
                         variant="filled"
                         value={options[index]["optionValue"]}
-                        sx={{ mb: 2 }}
-                        // defaultValue={exam.questions[id]['options'][index]["optionValue"]}
                         onChange={setOptionText}
                     />
+                    <Tooltip title={'delete option'}>
+                        <CloseIcon onClick={()=>(deleteOption(options[index]["id"]))} sx={{ mt: 3}}/>
+                    </Tooltip>
+
                 </Grid>
             </>
         );

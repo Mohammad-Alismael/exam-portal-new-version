@@ -78,8 +78,6 @@ const Question = ({ questionIndex, uid }) => {
         const deepCopy = exam?.questions;
         const deepCopyObj = deepCopy[index];
         deepCopyObj[key] = value;
-        // deepCopy[index] = deepCopyObj;
-        // deepCopy[index] = {...deepCopy[index], ...object}
         dispatch({ type: SET_EXAM_QUESTION_INDEX, payload: { question: deepCopyObj, index } });
     };
     const chooseQuestionType = (questionType) => {
@@ -87,35 +85,35 @@ const Question = ({ questionIndex, uid }) => {
             return (
                 <Mcq
                     questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArray}
+                    updateQuestionArray={updateQuestionArrayv2}
                 />
             );
         } else if (questionType === 2) {
             return (
                 <Text
                     questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArray}
+                    updateQuestionArray={updateQuestionArrayv2}
                 />
             );
         } else if (questionType === 3) {
             return (
                 <CheckBoxComp
                     questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArray}
+                    updateQuestionArray={updateQuestionArrayv2}
                 />
             );
         } else if (questionType === 4) {
             return (
                 <Matching
                     questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArray}
+                    updateQuestionArray={updateQuestionArrayv2}
                 />
             );
         } else {
             return (
                 <Truth
                     questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArray}
+                    updateQuestionArray={updateQuestionArrayv2}
                 />
             );
         }
@@ -169,7 +167,7 @@ const Question = ({ questionIndex, uid }) => {
             <Grid container spacing={2}>
                 <QuestionHeader
                     questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArray}
+                    updateQuestionArray={updateQuestionArrayv2}
                 />
                 {chooseQuestionType(exam.questions[questionIndex].questionType)}
             </Grid>
