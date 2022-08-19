@@ -12,10 +12,13 @@ import FormGroup from "@mui/material/FormGroup";
 import Tooltip from "@mui/material/Tooltip";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import ImageIcon from "@mui/icons-material/Image";
+import {Badge} from "@mui/material";
 const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
     const [options, setOptions] = React.useState([]);
     const [checkedAr, setCheckedAr] = React.useState([]);
     const [optionValue, setOptionValue] = React.useState("");
+    const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
@@ -26,9 +29,11 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
         let newObj = {
             id,
             optionValue,
+            img: optionImg,
         };
         updateQuestionArray({options: [...options, newObj]})
         setOptions([...options, newObj]);
+        setOptionImg(null);
     };
 
     const setOptionText = (e) => {
@@ -106,8 +111,31 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                         <CloseIcon onClick={()=>(deleteOption(options[index]["id"]))} />
                     </IconButton>
                 </Tooltip>
+                {options[index]["img"] != null ? (
+                    <Grid xs={12} item>
+                        <Badge badgeContent={'x'} color="primary" onClick={()=>(removeFile(options[index]["id"]))} sx={{cursor: 'pointer'}}>
+                            <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
+                        </Badge>
+                    </Grid>
+                ) : null}
             </Grid>
         );
+    };
+    const removeFile = (optionId) => {
+        const optionIndex = options.findIndex((option,i)=>{
+            return option.id === optionId
+        })
+        const deepCopy = [...options]
+        deepCopy[optionIndex] = {...deepCopy[optionIndex], img : null}
+        setOptions(deepCopy)
+    }
+    const optionFile = (e) => {
+        e.preventDefault();
+        let myFiles = e.target.files;
+        Object.assign(myFiles[0], {
+            preview: URL.createObjectURL(myFiles[0]),
+        });
+        setOptionImg(myFiles[0]);
     };
     useEffect(() => {
         setOptions([...exam.questions[questionIndex].options]);
@@ -121,7 +149,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                     })}
                 </FormGroup>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={7}>
                 <TextField
                     id="filled-basic"
                     label="Add Option"
@@ -131,6 +159,22 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                     onChange={(e) => setOptionValue(e.target.value)}
                 />
             </Grid>
+            <Tooltip title="upload option file">
+                <IconButton aria-label="upload picture" component="label">
+                    <input
+                        onChange={optionFile}
+                        hidden
+                        accept="image/*"
+                        type="file"
+                    />
+                    <ImageIcon
+                        sx={{
+                            height: "40px",
+                            width: "40px",
+                        }}
+                    />
+                </IconButton>
+            </Tooltip>
             <Grid item xs={4}>
                 <Button
                     fullWidth

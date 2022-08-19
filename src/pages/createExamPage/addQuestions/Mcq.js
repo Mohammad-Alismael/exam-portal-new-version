@@ -23,6 +23,7 @@ import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import Tooltip from "@mui/material/Tooltip";
 import CloseIcon from '@mui/icons-material/Close';
+import {Badge} from "@mui/material";
 
 function Mcq({ questionIndex, updateQuestionArray }) {
     const [options, setOptions] = React.useState([]);
@@ -84,11 +85,23 @@ function Mcq({ questionIndex, updateQuestionArray }) {
        tmp.splice(optionIndexFound,1)
         updateQuestionOptions(tmp)
     }
+    const removeFile = (optionId) => {
+        const optionIndex = options.findIndex((option,i)=>{
+            return option.id === optionId
+        })
+        const deepCopy = [...options]
+        deepCopy[optionIndex] = {...deepCopy[optionIndex], img : null}
+        setOptions(deepCopy)
+    }
     const loadOptions = (index) => {
         return (
             <>
                 {options[index]["img"] != null ? (
-                    <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
+                    <Grid xs={12} item>
+                        <Badge badgeContent={'x'} color="primary" onClick={()=>(removeFile(options[index]["id"]))} sx={{cursor: 'pointer'}}>
+                            <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
+                        </Badge>
+                    </Grid>
                 ) : null}
                 <Grid container alignItems={'center'} xs={12} style={{backgroundColor: 'transparent'}}>
                     <FormControlLabel

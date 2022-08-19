@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         height: '15vh auto',
         width: '60vw',
         // margin: "30px auto",
-        position: 'relative'
+        position: 'relative',
     },
 }));
 
@@ -59,8 +59,11 @@ const Question = ({ questionIndex}) => {
     };
 
     return (
-        <Paper className={classes.paperStyle}>
+        <Paper className={classes.paperStyle} elevation={0}>
             <Grid container>
+                { exam.questions[questionIndex]['previewFile'] != null ? <Grid xs={12} item>
+                    <img style={{maxWidth: '100%',marginBottom: '1rem'}} src={exam.questions[questionIndex]['previewFile']['preview']} alt={'question img'}/>
+                </Grid> : null }
                 { exam.questions[questionIndex].questionType != 4 ?
                     <Grid item xs={10}>
                     <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
@@ -69,8 +72,8 @@ const Question = ({ questionIndex}) => {
                 </Grid> : null}
                 { exam.questions[questionIndex].questionType != 4 ?
                     <Grid item xs={2}>
-                    <Typography style={{color:"black"}} sx={{ float: 'right', flex: 1 }} variant="h6">
-                        {exam.questions[questionIndex].points} points
+                    <Typography style={{color:"black"}} sx={{ float: 'right', flex: 1 }} variant="subtitle1">
+                        <b>{exam.questions[questionIndex].points} points</b>
                     </Typography>
                 </Grid> : null}
                 <Grid item xs={12}>

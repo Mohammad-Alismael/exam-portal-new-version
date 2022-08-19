@@ -11,35 +11,8 @@ import { connect, useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import withQuestion from "./withQuestion";
 const Truth = ({ id }) => {
-    // const [answerKey,setAnswerKey] = React.useState([]);
-    // const [isLoading, setIsLoading] = React.useState(false);
-    // const handleChange = (e) =>{
-    //     console.log(e.target)
-    //     const deepCopyForAnswerKey = [...answerKey]
-    //     deepCopyForAnswerKey[0] = {...deepCopyForAnswerKey[0],correctAnswer:parseInt(e.target.value)}
-    //     setAnswerKey([...deepCopyForAnswerKey])
-    //     const deepCopy = [...props.questions]
-    //     const questionFound = deepCopy.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //
-    //     deepCopy[questionFound] = {...deepCopy[questionFound],answerKeys:deepCopyForAnswerKey[0]}
-    //     props.setQuestionArray(deepCopy)
-    // }
-    // useEffect(()=>{
-    //     setIsLoading(false)
-    //     const questionFound = props.questions.findIndex(function(item,index){
-    //         if (item.question.questionId === props.questionId)
-    //             return true;
-    //     })
-    //     console.log("answer key =>",props.questions[questionFound]['answerKeys'])
-    //     setAnswerKey([...props.questions[questionFound]['answerKeys']])
-    //     setIsLoading(true)
-    // },[])
-
     return (
-        <RadioGroup style={{ marginLeft: 12 }}>
+        <RadioGroup>
             <FormControlLabel
                 value={1}
                 control={<Radio  />}

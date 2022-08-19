@@ -37,8 +37,6 @@ const useStyles = makeStyles((theme) => ({
 function Mcq({ questionIndex }) {
     const classes = useStyles();
     const [options, setOptions] = React.useState([]);
-    // const [answerKey, setAnswerKey] = React.useState([]);
-    // const [questionIndex, setQuestionIndex] = React.useState(0);
     const exam = useSelector((state) => state.ExamReducer);
 
     const loadOptions = (index) => {
@@ -49,6 +47,9 @@ function Mcq({ questionIndex }) {
                     control={<Radio />}
                     label={options[index]['optionValue']}
                 />
+                {options[index]["img"] != null ? (
+                    <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
+                ) : null}
             </Grid>
         );
     };

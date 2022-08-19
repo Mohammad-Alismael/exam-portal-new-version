@@ -26,6 +26,7 @@ import {Button} from "@material-ui/core";
 import Question from "../questions/Question";
 import Tooltip from "@mui/material/Tooltip";
 import PublishIcon from "@mui/icons-material/Publish";
+import {Badge} from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -86,12 +87,18 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
         )
         updateQuestionArray({previewFile: myFiles[0]})
     }
-
+    const removeFile = (e) => {
+        updateQuestionArray({previewFile: null})
+    }
     return (
         <>
-            { exam.questions[questionIndex]['previewFile'] != null ? <Grid xs={12} item>
-                <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']} alt={'question img'}/>
-            </Grid> : null }
+            { exam.questions[questionIndex]['previewFile'] != null ?
+                    <Grid xs={12} item>
+                        <Badge badgeContent={'x'} color="primary" onClick={removeFile} sx={{cursor: 'pointer'}}>
+                            <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']} alt={'question img'}/>
+                        </Badge>
+                    </Grid>
+                : null }
             <Grid xs={6} item>
                 <TextField
                     id="outlined-uncontrolled"
