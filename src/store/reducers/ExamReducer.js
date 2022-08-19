@@ -7,7 +7,7 @@ const initialState = {
     assignedFor: null,
     navigation: null,
     questionTimer: null,
-    questionRandomness: '1',
+    questionRandomness: 'true',
     postingAnswerKey: null,
     questions: [],
 };
