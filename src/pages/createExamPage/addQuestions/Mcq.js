@@ -41,14 +41,26 @@ function Mcq({ questionIndex, updateQuestionArray }) {
             optionValue,
             img: optionImg,
         };
+
         if (options.length < 4) {
-            updateQuestionArray({ options: [...options, newObj] });
-            setOptions([...options, newObj]);
-            setOptionImg(null);
+            if (checkOptionText() === -1){
+                updateQuestionArray({ options: [...options, newObj] });
+                setOptions([...options, newObj]);
+                setOptionImg(null);
+            }
         } else {
             toast.info("MCQ can only have 4 options max!");
         }
     };
+    const checkOptionText = () => {
+        const optionTextFound = options.findIndex((option,i)=>{
+            return option['optionValue'] === optionValue
+        })
+        if (optionTextFound != -1){
+            toast.info("option already existed!");
+        }
+        return optionTextFound
+    }
     const getOptionIndex = (id) => {
         return options.findIndex((option, index) => {
             if (option.id === id) return true;

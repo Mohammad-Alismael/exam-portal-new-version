@@ -14,6 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import {Badge} from "@mui/material";
+import {toast} from "react-toastify";
 const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
     const [options, setOptions] = React.useState([]);
     const [checkedAr, setCheckedAr] = React.useState([]);
@@ -22,7 +23,6 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
-
     const handleCheckBoxOptions = (e) => {
         e.preventDefault();
         let id = uuidv4();
@@ -31,10 +31,26 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
             optionValue,
             img: optionImg,
         };
-        updateQuestionArray({options: [...options, newObj]})
-        setOptions([...options, newObj]);
-        setOptionImg(null);
+
+        if (options.length < 4) {
+            if (checkOptionText() === -1){
+                updateQuestionArray({ options: [...options, newObj] });
+                setOptions([...options, newObj]);
+                setOptionImg(null);
+            }
+        } else {
+            toast.info("MCQ can only have 4 options max!");
+        }
     };
+    const checkOptionText = () => {
+        const optionTextFound = options.findIndex((option,i)=>{
+            return option['optionValue'] === optionValue
+        })
+        if (optionTextFound != -1){
+            toast.info("option already existed!");
+        }
+        return optionTextFound
+    }
 
     const setOptionText = (e) => {
         const id = e.target.id;
@@ -51,6 +67,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
         updateQuestionArray({options: tmp})
         setOptions(tmp);
     };
+
     const handleCheckedAr = (e) =>{
         const id = e.target.id
         const checked = e.target.checked
