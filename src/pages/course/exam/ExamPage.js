@@ -6,7 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from "@mui/material/Tooltip";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: '7% 25%',
@@ -31,11 +31,13 @@ const useStyles = makeStyles((theme) => ({
 const ExamPage = () => {
     const classes = useStyles();
     const navigate = useNavigate();
+    const { course_id } = useParams();
+
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
     const createNewExam = (e) =>{
         e.preventDefault()
-        navigate('/create-exam')
+        navigate(`/courses/${course_id}/create-exam`)
     }
     return (
         <>

@@ -36,65 +36,9 @@ function ExamSettings(props) {
     const [examVisibility, setExamVisibility] = React.useState(3);
     const [checked, setChecked] = React.useState([]);
     const [studentInfo, setStudentInfo] = React.useState("");
-    const [students, setStudents] = React.useState([
-        {
-            username: "mhdd",
-            email: "mhdd260@gmail.com",
-        },
-        {
-            username: "mhd",
-            email: "mhdhd260@gmail.com",
-        },
-        {
-            username: "kaan",
-            email: "kaan60@gmail.com",
-        },
-        {
-            username: "ahmed",
-            email: "260ahmed@gmail.com",
-        },
-        {
-            username: "abdullallah",
-            email: "mhdhrgd260@gmail.com",
-        },
-        {
-            username: "joe",
-            email: "mthfr260@gmail.com",
-        },
-        {
-            username: "jon jones",
-            email: "fdgv@gmail.com",
-        },
-        {
-            username: "ya mama",
-            email: "jlk567@gmail.com",
-        },
-        {
-            username: "nah fam",
-            email: "gthtry5@gmail.com",
-        },
-        {
-            username: "nigga",
-            email: "ggdfgr5@gmail.com",
-        },
-        {
-            username: "nigger",
-            email: "fdgbv4@gmail.com",
-        },
-        {
-            username: "justin",
-            email: "tghdg@gmail.com",
-        },
-        {
-            username: "dustin",
-            email: "5t4df@gmail.com",
-        },
-        {
-            username: "kamaru usman",
-            email: "54gdfv@gmail.com",
-        },
-    ]);
+    const [students, setStudents] = React.useState([]);
     const exam = useSelector((state) => state.ExamReducer);
+    const course = useSelector(state => state.CourseReducer);
     const dispatch = useDispatch();
     const handleToggle = (username) => () => {
         // get username index
@@ -118,10 +62,6 @@ function ExamSettings(props) {
             // remove selected index
             newChecked.splice(currentIndex, 1);
         }
-        dispatch({
-            type: SET_ASSIGNED_FOR,
-            payload: { assignedFor: newChecked },
-        });
         setChecked(newChecked);
     };
 
@@ -132,6 +72,13 @@ function ExamSettings(props) {
     const handleClose = () => {
         setOpen(false);
     };
+    const handleOk = () => {
+        dispatch({
+            type: SET_ASSIGNED_FOR,
+            payload: { assignedFor: checked },
+        });
+        setOpen(false);
+    }
 
     const updateStartingAt = (e) => {
         dispatch({
@@ -164,6 +111,9 @@ function ExamSettings(props) {
         });
         return checkedIndex !== -1;
     };
+    useEffect(()=>{
+       setStudents(course?.classmates)
+    },[])
     return (
         <>
             <Grid item xs={6}>
@@ -205,7 +155,6 @@ function ExamSettings(props) {
                     label="Starting At"
                     type="datetime-local"
                     fullWidth
-                    // defaultValue={new Date(exam?.startingAt).toISOString().slice(0, 16)}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -219,7 +168,6 @@ function ExamSettings(props) {
                     type="datetime-local"
                     fullWidth
                     onChange={updateEndingAt}
-                    // defaultValue={new Date(exam?.endingAt).toISOString().slice(0, 16)}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -227,7 +175,7 @@ function ExamSettings(props) {
             </Grid>
 
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>course name students</DialogTitle>
+                <DialogTitle>{course?.course_info?.class_name} course students</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -289,7 +237,7 @@ function ExamSettings(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>ok</Button>
+                    <Button onClick={handleOk}>ok</Button>
                 </DialogActions>
             </Dialog>
         </>

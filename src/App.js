@@ -114,12 +114,13 @@ function App(props) {
                             </Protected>
                         }
                     />
+                    <Route path="create-exam" element={
+                        <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
+                            <CreateExamPage />
+                        </Protected>
+                    }/>
                 </Route>
-                <Route path="/create-exam" element={
-                    // <Protected onlyAccessTo={ALL_ROLES}>
-                        <CreateExamPage />
-                    // </Protected>
-                }/>
+
                 {/*<Route path="/preview/:examId" element={<PreviewExam />} />*/}
                 {/*<Route exact path="/result/:examId" element={<ResultExam />} />*/}
                 {/*<Route exact path="/exam/:examId" element={<ExamStudent />} />*/}
