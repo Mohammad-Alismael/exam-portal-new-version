@@ -13,92 +13,116 @@ import {
     SET_EXAM_TITLE,
     SET_STARTING_AT,
 } from "../../store/actions";
-import {Dialog, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, TextField} from "@mui/material";
+import {
+    Dialog,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemText,
+    TextField,
+} from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
-import {Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
 import { v4 as uuidv4 } from "uuid";
 
 function ExamSettings(props) {
     const [open, setOpen] = React.useState(false);
-    const [examVisibility, setExamVisibility] = React.useState(null);
-    const [checked, setChecked] = React.useState([1]);
+    const [examVisibility, setExamVisibility] = React.useState(3);
+    const [checked, setChecked] = React.useState([]);
     const [studentInfo, setStudentInfo] = React.useState("");
-    const [students,setStudents] = React.useState([
+    const [students, setStudents] = React.useState([
         {
-            username: 'mhdd',
-            email: 'mhdd260@gmail.com'
+            username: "mhdd",
+            email: "mhdd260@gmail.com",
         },
         {
-            username: 'mhd',
-            email: 'mhdhd260@gmail.com'
+            username: "mhd",
+            email: "mhdhd260@gmail.com",
         },
         {
-            username: 'kaan',
-            email: 'kaan60@gmail.com'
+            username: "kaan",
+            email: "kaan60@gmail.com",
         },
         {
-            username: 'ahmed',
-            email: '260ahmed@gmail.com'
+            username: "ahmed",
+            email: "260ahmed@gmail.com",
         },
         {
-            username: 'abdullallah',
-            email: 'mhdhrgd260@gmail.com'
+            username: "abdullallah",
+            email: "mhdhrgd260@gmail.com",
         },
         {
-            username: 'joe',
-            email: 'mthfr260@gmail.com'
+            username: "joe",
+            email: "mthfr260@gmail.com",
         },
         {
-            username: 'jon jones',
-            email: 'fdgv@gmail.com'
+            username: "jon jones",
+            email: "fdgv@gmail.com",
         },
         {
-            username: 'ya mama',
-            email: 'jlk567@gmail.com'
+            username: "ya mama",
+            email: "jlk567@gmail.com",
         },
         {
-            username: 'nah fam',
-            email: 'gthtry5@gmail.com'
+            username: "nah fam",
+            email: "gthtry5@gmail.com",
         },
         {
-            username: 'nigga',
-            email: 'ggdfgr5@gmail.com'
+            username: "nigga",
+            email: "ggdfgr5@gmail.com",
         },
         {
-            username: 'nigger',
-            email: 'fdgbv4@gmail.com'
+            username: "nigger",
+            email: "fdgbv4@gmail.com",
         },
         {
-            username: 'justin',
-            email: 'tghdg@gmail.com'
+            username: "justin",
+            email: "tghdg@gmail.com",
         },
         {
-            username: 'dustin',
-            email: '5t4df@gmail.com'
+            username: "dustin",
+            email: "5t4df@gmail.com",
         },
         {
-            username: 'kamaru usman',
-            email: '54gdfv@gmail.com'
-        }
-    ])
+            username: "kamaru usman",
+            email: "54gdfv@gmail.com",
+        },
+    ]);
     const exam = useSelector((state) => state.ExamReducer);
     const dispatch = useDispatch();
-    const handleToggle = (value) => () => {
-        // const currentIndex = checked.indexOf(value);
-        // const newChecked = [...checked];
-        //
-        // if (currentIndex === -1) {
-        //     newChecked.push(value);
-        // } else {
-        //     newChecked.splice(currentIndex, 1);
-        // }
-        //
-        // setChecked(newChecked);
+    const handleToggle = (username) => () => {
+        // get username index
+        const studentIndex = students.findIndex((student, i) => {
+            return student["username"] === username;
+        });
+
+        const newChecked = [...checked];
+        // check if it is already selected
+        const includes = newChecked.some((val, i) => {
+            return val["username"] === username;
+        });
+
+        if (!includes && studentIndex !== -1) {
+            newChecked.push(students[studentIndex]);
+        } else {
+            // get selected index
+            const currentIndex = checked.findIndex((student, i) => {
+                return student["username"] === username;
+            });
+            // remove selected index
+            newChecked.splice(currentIndex, 1);
+        }
+        dispatch({
+            type: SET_ASSIGNED_FOR,
+            payload: { assignedFor: newChecked },
+        });
+        setChecked(newChecked);
     };
 
     const handleClickOpen = () => {
@@ -121,6 +145,25 @@ function ExamSettings(props) {
             payload: { endingAt: Date.parse(e.target.value) },
         });
     };
+    const handleAssignedFor = (e) => {
+        e.preventDefault();
+        setExamVisibility(e.target.value)
+        if (e.target.value === 4) {
+            setOpen(true);
+        } else {
+            setOpen(false);
+        }
+        dispatch({
+            type: SET_ASSIGNED_FOR,
+            payload: { assignedFor: e.target.value },
+        });
+    };
+    const handleCheckedList = (username) => {
+        const checkedIndex = checked.findIndex((val, i) => {
+            return val["username"] === username;
+        });
+        return checkedIndex !== -1;
+    };
     return (
         <>
             <Grid item xs={6}>
@@ -141,26 +184,13 @@ function ExamSettings(props) {
             </Grid>
             <Grid item xs={6}>
                 <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                        exam visibility
-                    </InputLabel>
+                    <InputLabel id="demo-simple-select-label">exam visibility</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={exam?.assignedFor}
+                        value={examVisibility}
                         label="exam visibility"
-                        onChange={(e) =>{
-                            if (e.target.value == 4){
-                                setOpen(true)
-                            }else {
-                                setOpen(false)
-                            }
-                            // setExamVisibility(e.target.value)
-                            dispatch({
-                                type: SET_ASSIGNED_FOR,
-                                payload: { assignedFor: e.target.value },
-                            })
-                        }}
+                        onChange={handleAssignedFor}
                     >
                         <MenuItem value={1}>undergraduate</MenuItem>
                         <MenuItem value={2}>graduate</MenuItem>
@@ -205,41 +235,56 @@ function ExamSettings(props) {
                         id="name"
                         label="Student Username or Email Address"
                         type="email"
-                        onChange={(e)=>{setStudentInfo(e.target.value)}}
+                        onChange={(e) => {
+                            setStudentInfo(e.target.value);
+                        }}
                         fullWidth
                         variant="standard"
                     />
-                    <List dense sx={{ width: 560, height: 250, bgcolor: 'background.paper',  position: 'relative',
-                        overflow: 'auto'}}>
-                        {students.filter((student,i)=>{
-                            return student['username'].includes(studentInfo) || student['email'].includes(studentInfo)
-                        }).map(({username},i) => {
-                            const labelId = uuidv4();
-                            return (
-                                <ListItem
-                                    key={labelId}
-                                    secondaryAction={
-                                        <Checkbox
-                                            edge="end"
-                                            // onChange={handleToggle(value)}
-                                            // checked={checked.indexOf(value) !== -1}
-                                            inputProps={{ 'aria-labelledby': labelId }}
-                                        />
-                                    }
-                                    disablePadding
-                                >
-                                    <ListItemButton>
-                                        <ListItemAvatar>
-                                            <Avatar
-                                                alt={username}
-                                                // src={`/static/images/avatar/${value + 1}.jpg`}
+                    <List
+                        dense
+                        sx={{
+                            width: 560,
+                            height: 250,
+                            bgcolor: "background.paper",
+                            position: "relative",
+                            overflow: "auto",
+                        }}
+                    >
+                        {students
+                            .filter((student, i) => {
+                                return (
+                                    student["username"].includes(studentInfo) ||
+                                    student["email"].includes(studentInfo)
+                                );
+                            })
+                            .map(({ username }, i) => {
+                                const labelId = uuidv4();
+                                return (
+                                    <ListItem
+                                        key={labelId}
+                                        secondaryAction={
+                                            <Checkbox
+                                                edge="end"
+                                                onChange={handleToggle(username)}
+                                                checked={handleCheckedList(username)}
+                                                inputProps={{ "aria-labelledby": labelId }}
                                             />
-                                        </ListItemAvatar>
-                                        <ListItemText id={labelId} primary={username} />
-                                    </ListItemButton>
-                                </ListItem>
-                            );
-                        })}
+                                        }
+                                        disablePadding
+                                    >
+                                        <ListItemButton>
+                                            <ListItemAvatar>
+                                                <Avatar
+                                                    alt={username}
+                                                    // src={`/static/images/avatar/${value + 1}.jpg`}
+                                                />
+                                            </ListItemAvatar>
+                                            <ListItemText id={labelId} primary={username} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                );
+                            })}
                     </List>
                 </DialogContent>
                 <DialogActions>
