@@ -76,6 +76,7 @@ function CreateExamPage(props) {
             answerKey: null,
             isActive: true,
             options: null,
+            time: null,
             points: 5,
             questionText: "",
             questionType: 5,
@@ -99,9 +100,7 @@ function CreateExamPage(props) {
         <ExamAnswerKey />,
     ];
     function handleOnDragEnd(result) {
-        console.log(result)
         if (!result.destination) return;
-
         const items = Array.from(exam.questions);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
@@ -126,7 +125,6 @@ function CreateExamPage(props) {
                         {(provided) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
                                 {exam.questions.map(({ tmpId }, index) => {
-                                    console.log(tmpId)
                                     return (
                                         <Draggable key={tmpId} draggableId={tmpId} index={index}>
                                             {(provided) => (

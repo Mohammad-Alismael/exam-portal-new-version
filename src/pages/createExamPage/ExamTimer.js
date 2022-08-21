@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import * as PropTypes from "prop-types";
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {SET_EXAM_TIMER, SET_NAVIGATION} from "../../store/actions";
+import {REMOVE_TIME_OBJECT, SET_EXAM_TIMER, SET_NAVIGATION} from "../../store/actions";
 
 export default function ExamTimer(props) {
     const exam = useSelector((state) => state.ExamReducer);
@@ -16,11 +16,12 @@ export default function ExamTimer(props) {
     const dispatch = useDispatch();
     const handleChange = (e) => {
         e.preventDefault()
-        if (e.target.value == 0){
-            dispatch({
-                type: SET_EXAM_TIMER,
-                payload: { questionTimer: null },
-            })
+        dispatch({
+            type: SET_EXAM_TIMER,
+            payload: { questionTimer: e.target.value },
+        })
+        if (e.target.value == 'false'){
+            dispatch({type: REMOVE_TIME_OBJECT})
         }
         setOption(e.target.value)
     }
@@ -28,22 +29,10 @@ export default function ExamTimer(props) {
         <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">setting a timer for each
                 question</FormLabel>
-            <RadioGroup onChange={handleChange} defaultValue="0" name="radio-buttons-group">
-                <FormControlLabel value={1} control={<Radio/>} label="Yes"/>
-                <FormControlLabel value={0} control={<Radio/>} label="No"/>
+            <RadioGroup onChange={handleChange} value={exam?.questionTimer} name="radio-buttons-group">
+                <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
+                <FormControlLabel value={false} control={<Radio/>} label="No"/>
             </RadioGroup>
-            { option == '1' ? <TextField
-                label="mins per question"
-                type="number"
-                fullWidth
-                // value={props.value}
-                inputProps={{min: 1}}
-                onChange={(e)=>{ dispatch({
-                    type: SET_EXAM_TIMER,
-                    payload: { questionTimer: e.target.value },
-                })}}
-                required
-                variant="outlined"/> : null }
         </FormControl>
     </Grid>;
 }

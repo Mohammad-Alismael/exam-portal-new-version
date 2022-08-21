@@ -50,10 +50,18 @@ const ExamPage = () => {
                         </Button>
                     </Tooltip>
                 </div>
-                <Exam examTitle={'testing'}/>
-                <Exam examTitle={'final cs202'}/>
-                <Exam examTitle={'final cs350'}/>
-                <Exam examTitle={'midterm cs202'}/>
+                {
+                    course?.exams.filter(({specific_user},i)=>{
+                        return specific_user === false
+                    }).map(({exam_id,title, starting_at,ending_at},index)=>{
+                        return <Exam
+                            examTitle={title}
+                            examId={exam_id}
+                            startingAt={starting_at}
+                            endingAt={ending_at}
+                        />
+                    })
+                }
             </div>
         </>
     );

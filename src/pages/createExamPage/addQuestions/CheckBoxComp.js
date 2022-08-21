@@ -32,14 +32,10 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
             img: optionImg,
         };
 
-        if (options.length < 4) {
-            if (checkOptionText() === -1){
-                updateQuestionArray({ options: [...options, newObj] });
-                setOptions([...options, newObj]);
-                setOptionImg(null);
-            }
-        } else {
-            toast.info("MCQ can only have 4 options max!");
+        if (checkOptionText() === -1){
+            updateQuestionArray({ options: [...options, newObj] });
+            setOptions([...options, newObj]);
+            setOptionImg(null);
         }
     };
     const checkOptionText = () => {

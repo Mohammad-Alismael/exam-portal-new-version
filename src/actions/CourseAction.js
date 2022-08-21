@@ -9,6 +9,7 @@ export function CourseAction(course_id) {
             dispatch(setCourseInfo(data['course_info']))
             dispatch(setCourseAnnouncements(data['announcements']))
             dispatch(setCourseClassmates(data['classmates']))
+            dispatch(setCourseExams(data['exams']))
         }).catch(error => {
             console.log(error)
             toast.info(error.response.data.message)
@@ -32,5 +33,11 @@ export function setCourseClassmates(data){
     return {
         type: Actions.SET_COURSE_CLASSMATES,
         classmates: data
+    }
+}
+export function setCourseExams(data){
+    return {
+        type: Actions.SET_COURSE_EXAMS,
+        exams: data
     }
 }

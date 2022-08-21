@@ -74,6 +74,9 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
         }
         updateQuestionArray({ questionType:parseInt(e.target.value) })
     }
+    const handleTime = (e) => {
+        updateQuestionArray({ time: parseInt(e.target.value) })
+    }
     const handlePoints = (e) =>{
         updateQuestionArray({ points: parseInt(e.target.value) })
     }
@@ -99,7 +102,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                         </Badge>
                     </Grid>
                 : null }
-            <Grid xs={6} item>
+            <Grid xs={exam?.questionTimer === 'true' ? 5 : 6} item>
                 <TextField
                     id="outlined-uncontrolled"
                     label="Question text"
@@ -155,6 +158,19 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                     </Select>
                 </FormControl>
             </Grid>
+            { exam?.questionTimer === 'true'  ? <Grid xs={1} item>
+                <FormControl fullWidth variant="standard">
+                    <TextField
+                        type="number"
+                        fullWidth
+                        value={exam.questions[questionIndex].time}
+                        onChange={handleTime}
+                        variant="standard"
+                        inputProps={{ min: 1, max: 100 }}
+                        label={"minutes"}
+                    />
+                </FormControl>
+            </Grid> : null }
             <Grid xs={1} item>
                 <FormControl fullWidth variant="standard">
                     <TextField

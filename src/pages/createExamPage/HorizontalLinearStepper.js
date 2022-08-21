@@ -10,6 +10,13 @@ import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
+import {axiosPrivate} from "../../api/axios";
+import {CREATE_EXAM} from "../../api/services/RouteNames";
+import {useSelector} from "react-redux";
+import {toast} from "react-toastify";
+import {Backdrop} from "@mui/material";
+import {CircularProgress} from "@material-ui/core";
+import {createExam} from "../../api/services/Exam";
 
 const steps = [
     "Exam Settings",
@@ -23,6 +30,10 @@ const steps = [
 export default function HorizontalLinearStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [open, setOpen] = React.useState(false);
+    const [postExamLoading, setPostExamLoading] = React.useState(false);
+
+    const exam = useSelector((state) => state.ExamReducer);
+    const course = useSelector(state => state.CourseReducer);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -40,6 +51,21 @@ export default function HorizontalLinearStepper(props) {
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
+    const postExam = (e) => {
+        e.preventDefault()
+        setOpen(false);
+        setPostExamLoading(true)
+        createExam({...exam, classroom_id: course?.course_info?.id})
+            .then(res => {
+                toast.info(res['message'])
+                setPostExamLoading(false)
+
+            }).catch((e)=>{
+            console.log(e)
+            setPostExamLoading(false)
+        })
+
+    }
 
     return (
         <Box sx={{ width: "100%" }}>
@@ -87,19 +113,20 @@ export default function HorizontalLinearStepper(props) {
                     <DialogTitle id="alert-dialog-title">
                         {"Are you sure you want to post the exam?"}
                     </DialogTitle>
-                    {/*<DialogContent>*/}
-                    {/*    <DialogContentText id="alert-dialog-description">*/}
-                    {/*        Let Google help apps determine location. This means sending anonymous*/}
-                    {/*        location data to Google, even when no apps are running.*/}
-                    {/*    </DialogContentText>*/}
-                    {/*</DialogContent>*/}
                     <DialogActions>
                         <Button onClick={handleClose}>no</Button>
-                        <Button onClick={handleClose} autoFocus>yes</Button>
+                        <Button onClick={postExam} autoFocus>yes</Button>
                     </DialogActions>
                 </Dialog>
-
             </React.Fragment>
+
+            {/*<Backdrop*/}
+            {/*    sx={{ color: '#FFCD38', zIndex: (theme) => theme.zIndex.drawer + 1 }}*/}
+            {/*    open={postExamLoading}*/}
+            {/*>*/}
+            {/*    <CircularProgress color="inherit" />*/}
+            {/*</Backdrop>*/}
+
         </Box>
     );
 }

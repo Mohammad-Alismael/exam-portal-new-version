@@ -48,7 +48,6 @@ const persistedState = loadFromLocalStorage();
 export const store = createStore(rootReducer, persistedState, composeWithDevTools(applyMiddleware(thunk)));
 store.subscribe(() => {
     const obj = store.getState()
-    console.log("from index.js", obj)
     // delete obj['TokenReducer']
     saveToLocalStorage(obj)
 });

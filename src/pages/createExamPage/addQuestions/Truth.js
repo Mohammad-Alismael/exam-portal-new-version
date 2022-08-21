@@ -18,12 +18,14 @@ const Truth = ({questionIndex,updateQuestionArray}) => {
     const dispatch = useDispatch();
 
     const handleChange = (e) =>{
-        updateQuestionArray({answerKey: e.target.value})
+        if (e.target.value == 'true'){
+            updateQuestionArray({answerKey: 0})
+        }else {
+            updateQuestionArray({answerKey: 1})
+        }
+
     }
 
-    // useEffect(()=>{
-    //     updateQuestionArray({options: null})
-    // },[])
     return (
         <RadioGroup onChange={handleChange} style={{ marginLeft: 12 }}>
             <FormControlLabel

@@ -49,13 +49,13 @@ function Exam(props) {
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector((state) => state.CourseReducer);
     const redirect = (e) => {
-        if (user.role_id == 1) {
+        if (user.role_id == 3) {
             navigate(`/preview/${props.examId}`);
         } else {
-            // if (props.endingAt > Date.now())
-            navigate(`/exam/${props.examId}`);
-            // else
-            //     toast.info("you are too late to take this exam!")
+            if (props.endingAt > Date.now())
+                navigate(`/exam/${props.examId}`);
+            else
+                toast.info("you are too late to take this exam!")
         }
     };
     return (

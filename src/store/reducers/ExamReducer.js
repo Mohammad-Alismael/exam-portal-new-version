@@ -1,14 +1,14 @@
 import * as actionTypes from "../actions";
-import {SET_EXAM_ANSWER_KEY, SET_EXAM_QUESTION_INDEX, SET_QUESTIONS} from "../actions";
+import {REMOVE_TIME_OBJECT, SET_EXAM_ANSWER_KEY, SET_EXAM_QUESTION_INDEX, SET_QUESTIONS} from "../actions";
 const initialState = {
     examTitle: "",
     startingAt: 0,
     endingAt: 0,
     assignedFor: null,
     navigation: null,
-    questionTimer: null,
+    questionTimer: 'false',
     questionRandomness: 'true',
-    postingAnswerKey: null,
+    postingAnswerKey: 'true',
     questions: [],
 };
 const ExamReducer = (state = initialState, action) => {
@@ -36,6 +36,16 @@ const ExamReducer = (state = initialState, action) => {
             return {
                 ...state,
                 questions: newQuestionArray,
+            };
+        case actionTypes.REMOVE_TIME_OBJECT:
+            // setting time object to null
+            const __newQuestionArray = state.questions.map((obj,i)=>{
+                console.log(obj)
+                return {...obj,time : null}
+            })
+            return {
+                ...state,
+                questions: __newQuestionArray,
             };
         case actionTypes.DELETE_EXAM_QUESTION_INDEX:
             const _index = action.payload.index

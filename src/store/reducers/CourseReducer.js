@@ -1,10 +1,12 @@
 import * as actionTypes from '../actions'
+import {SET_COURSE_EXAMS} from "../actions";
 
 const initialState = {
     courseId: "",
     course_info: null,
     announcements: [],
-    classmates: []
+    classmates: [],
+    exams: []
 }
 
 const CourseReducer  = (state = initialState, action) => {
@@ -24,10 +26,10 @@ const CourseReducer  = (state = initialState, action) => {
                 ...state,
                 announcements: action.announcements
             }
-        case actionTypes.SET_COURSE_CLASSMATES:
+        case actionTypes.SET_COURSE_EXAMS:
             return {
                 ...state,
-                classmates: action.classmates
+                exams: action.exams
             }
         default:
             break;

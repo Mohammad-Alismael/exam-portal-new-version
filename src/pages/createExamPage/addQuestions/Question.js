@@ -71,7 +71,6 @@ const Question = ({ questionIndex, uid }) => {
         return questionIndexFound;
     };
     const updateQuestionArrayv2 = (object) => {
-        console.log('wtf')
         const key = Object.keys(object)[0];
         const value = Object.values(object)[0];
         const index = getQuestionIndex();

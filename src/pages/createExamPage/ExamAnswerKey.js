@@ -12,15 +12,14 @@ import {useDispatch, useSelector} from "react-redux";
 
 export default function ExamAnswerKey(props) {
     const [option,setOption] = useState('')
+    const exam = useSelector((state) => state.ExamReducer);
     const dispatch = useDispatch();
     const handleChange = (e) => {
         e.preventDefault()
-        if (e.target.value == 1){
-            dispatch({
-                type: SET_EXAM_ANSWER_KEY,
-                payload: { postingAnswerKey: null },
-            })
-        }
+        dispatch({
+            type: SET_EXAM_ANSWER_KEY,
+            payload: { postingAnswerKey: e.target.value },
+        })
         setOption(e.target.value)
     }
     const postingAnswerKeyAt = (e) => {
@@ -33,11 +32,11 @@ export default function ExamAnswerKey(props) {
         <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Posting answer key right after the
                 students finishes the exam</FormLabel>
-            <RadioGroup onChange={handleChange} defaultValue="1" name="radio-buttons-group">
-                <FormControlLabel value={1} control={<Radio/>} label="Yes"/>
-                <FormControlLabel value={0} control={<Radio/>} label="No"/>
+            <RadioGroup onChange={handleChange} defaultValue={true} name="radio-buttons-group">
+                <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
+                <FormControlLabel value={false} control={<Radio/>} label="No"/>
             </RadioGroup>
-            { option == '0' ? <TextField
+            { option === 'false' ? <TextField
                 id="datetime-local"
                 label="posting answer key At"
                 type="datetime-local"
