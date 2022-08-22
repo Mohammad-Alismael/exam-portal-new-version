@@ -37,6 +37,7 @@ const ResponsiveAppBar = (props) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [username,setUsername] = useState('');
     const user = useSelector(state => state.UserReducerV2).user;
+    const course = useSelector(state => state.CourseReducer);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -55,7 +56,7 @@ const ResponsiveAppBar = (props) => {
         if (link == "/courses"){
             navigateTo = link
         }else {
-            navigateTo = `/${words[1]}/${words[2]}${link}`
+            navigateTo = `/courses/${course?.courseId}${link}`
         }
         navigate(navigateTo)
     };

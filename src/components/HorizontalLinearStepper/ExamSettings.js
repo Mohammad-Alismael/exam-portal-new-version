@@ -155,6 +155,7 @@ function ExamSettings(props) {
                     label="Starting At"
                     type="datetime-local"
                     fullWidth
+                    defaultValue={new Date(exam?.startingAt).toISOString().slice(0, 16)}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -167,6 +168,7 @@ function ExamSettings(props) {
                     label="Ending At"
                     type="datetime-local"
                     fullWidth
+                    defaultValue={new Date(exam?.endingAt).toISOString().slice(0, 16)}
                     onChange={updateEndingAt}
                     InputLabelProps={{
                         shrink: true,

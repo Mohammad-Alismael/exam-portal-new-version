@@ -7,7 +7,7 @@ import Radio from "@mui/material/Radio";
 import TextField from "@mui/material/TextField";
 import * as PropTypes from "prop-types";
 import React, {useState} from "react";
-import {SET_EXAM_ANSWER_KEY, SET_NAVIGATION, SET_STARTING_AT} from "../../store/actions";
+import {SET_EXAM_ANSWER_KEY} from "../../store/actions";
 import {useDispatch, useSelector} from "react-redux";
 
 export default function ExamAnswerKey(props) {

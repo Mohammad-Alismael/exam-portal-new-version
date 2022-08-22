@@ -59,7 +59,7 @@ function Exam(props) {
         }
     };
     return (
-        <Paper elevation={5} className={classes.container}>
+        <Paper elevation={5} className={classes.container} onClick={redirect}>
             <div className={classes.subContainer}>
                 <img src={'/images/icons/exam_logo.svg'} alt={'logo'}/>
                 <Typography variant="h6">

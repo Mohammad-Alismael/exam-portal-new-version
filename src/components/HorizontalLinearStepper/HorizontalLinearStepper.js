@@ -22,7 +22,6 @@ const steps = [
     "Exam Settings",
     "Exam Navigation",
     "Exam Timer",
-    // "Exam Visibility",
     "Exam Randomness",
     "Answer key settings",
 ];

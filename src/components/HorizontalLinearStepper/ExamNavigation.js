@@ -6,22 +6,26 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {SET_EXAM_RANDOMNESS, SET_NAVIGATION} from "../../store/actions";
+import {SET_NAVIGATION} from "../../store/actions";
 
-export default function ExamRandomness() {
+export default function ExamNavigation() {
     const exam = useSelector((state) => state.ExamReducer);
     const [option,setOption] = useState('')
     const dispatch = useDispatch();
     const handleChange = (e) => {
-        dispatch({
-            type: SET_EXAM_RANDOMNESS,
-            payload: { questionRandomness: e.target.value },
-        })
+        e.preventDefault()
+        setOption(e.target.value)
     }
     return <Grid item xs={12}>
         <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Show questions randomly</FormLabel>
-            <RadioGroup onChange={handleChange} defaultValue={exam?.questionRandomness} name="radio-buttons-group">
+            <FormLabel id="demo-radio-buttons-group-label">Exam/Quiz navigation</FormLabel>
+            <RadioGroup defaultValue={exam?.navigation} name="radio-buttons-group"
+            onChange={(e)=>(
+                dispatch({
+                    type: SET_NAVIGATION,
+                    payload: { navigation: e.target.value },
+                })
+            )}>
                 <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
                 <FormControlLabel value={false} control={<Radio/>} label="No"/>
             </RadioGroup>

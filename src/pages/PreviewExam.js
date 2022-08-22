@@ -1,296 +1,115 @@
-import React, {Component, useEffect} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import axios from "axios";
-import index from "@mui/material/darkScrollbar";
-import CircularProgress from '@mui/material/CircularProgress';
-import Mcq from "../components/QuestionsPreview/Mcq";
-import Text from "../components/QuestionsPreview/Text";
-import Truth from "../components/QuestionsPreview/Truth";
-import CheckBoxComp from "../components/QuestionsPreview/CheckBoxComp";
-import Matching from "../components/QuestionsPreview/Matching";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import {Box} from "@mui/material";
-import {createTheme, makeStyles} from "@material-ui/core/styles";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import AppBar from "@mui/material/AppBar";
-import moment from 'moment'
-import * as Actions from "../store/actions";
-import {connect} from "react-redux";
-import {toast} from "react-toastify";
-
+import React, { Component, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { createTheme, makeStyles } from "@material-ui/core/styles";
+import { connect, useDispatch, useSelector } from "react-redux";
+import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import Question from "./createExamPage/addQuestions/Question";
+import { fetchExamQuestions } from "../api/services/Exam";
+import { SET_QUESTIONS } from "../store/actions";
+import ExamDetails from "../components/ExamDetails";
 const useStyles = makeStyles((theme) => ({
+    container: {
+        padding: "7% 15%",
+        float: "center",
+    },
     paperStyle: {
-        padding: 30,
-        height: '15vh auto',
-        width: '50%',
-        margin: "30px auto",
-        position: 'relative'
+        padding: "1rem",
     },
     textField: {
-        width: '100%',
-    }
+        width: "100%",
+    },
+    subContainer: {
+        display: "flex",
+        flexDirection: "row",
+        gap: "1rem",
+    },
+    addQuestionBtn: {
+        float: "right",
+    },
 }));
 
 function PreviewExam(props) {
     const classes = useStyles();
-    const {examId} = useParams();
+    const { examId } = useParams();
     const navigate = useNavigate();
-    const [questions,setQuestions] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [examTitle,setExamTitle] = React.useState('');
-    const [examPoints,setExamPoints] = React.useState(0);
-    const [startingAt,setStartingAt] = React.useState(0);
-    const [endingAt,setEndingAt] = React.useState(0);
+    const dispatch = useDispatch();
+    const exam = useSelector((state) => state.ExamReducer);
+    const getQuestionIndex = (uid) => {
+        const questionIndexFound = exam?.questions.findIndex((quest, index) => {
+            return quest.tmpId === uid;
+        });
+        console.log(questionIndexFound);
+        return questionIndexFound;
+    };
 
-    const getExamInfo = async () => {
-        setIsLoading(false)
-        const examInfo = await axios.post('http://localhost:8080/get-exam-id-info', {
-            examId
-        })
-        console.log("exam info=>", examInfo.data)
-        setExamTitle(examInfo.data['title'])
-        setExamPoints(examInfo.data['score'])
-        setStartingAt(examInfo.data['startingAt'])
-        setEndingAt(examInfo.data['endingAt'])
+    function handleOnDragEnd(result) {
+        if (!result.destination) return;
+        const items = Array.from(exam.questions);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
     }
-    const getExamQuestionsv2 = async () => {
-
-        const questionss = await axios.post('http://localhost:8080/list-questions', {
-            examId,
-        })
-
-       return questionss.data
-
-    }
-    // useEffect( ()=>{
-    //
-    //     getExamInfo().then(console.log)
-    //     getExamQuestionsv2().then((data)=>{
-    //         console.log("questions =>",data)
-    //         setQuestions([...data])
-    //         props.setQuestionArray([...data])
-    //         setIsLoading(true)
-    //     })
-    //
-    // },[])
-    const updateExam = () =>{
-        console.log(props.questions)
-        updateExamInfo()
-        props.questions.map((val,index)=>{
-            updateQuestion(val['question'])
-            if (val['question']['questionType'] != 3 &&
-                val['question']['questionType'] != 5){
-                val['questionOptions'].map((val,index)=>{
-                    updateOptions(val)
-                })
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchExamQuestions(examId, controller).then((data) => {
+            var ar = [];
+            for (let i = 0; i < data.length; i++) {
+                const questionObject = {
+                    answerKey: null,
+                    isActive: data[i]["is_active"],
+                    options: [],
+                    time: data[i]["time_limit"],
+                    points: data[i]["points"],
+                    questionText: data[i]["question_text"],
+                    questionType: data[i]["question_type"],
+                    tmpId: data[i]["question_id"],
+                    whoCanSee: data[i]["who_can_see"],
+                    previewFile: data[i]["file_path"],
+                };
+                ar.push(questionObject);
             }
-            if (val['question']['questionType'] != 2){
-                val['answerKeys'].map((val,index)=>{
-                    updateAnswerKey(val)
-                })
-            }
-        })
-        props.setQuestionArray([])
-        navigate('/course1')
-    }
-    const updateExamInfo = () => {
-        axios.post('http://localhost:8080/update-exam',{
-            examId,
-            creatorId: props.user.user_id,
-            title: examTitle ,
-            score:examPoints,
-            startingAt: startingAt,
-            endingAt: endingAt
 
-    }).then(console.log).catch(console.log)
-    }
-    const updateQuestion = (data) =>{
-        axios.post('http://localhost:8080/update-question', {
-            questionId:data['questionId'],
-            questionType: data['questionType'],
-            creatorExamId: props.user.user_id,
-            questionText: data['questionText'],
-            points: data['points'],
-            examId,
-            isActive: 1,
-            whoCanSee: data['whoCanSee']
-        }).then(console.log).catch(console.log)
-    }
-    const updateOptions = (data) =>{
-        axios.post('http://localhost:8080/update-question-options',{
-            id: data['id'],
-            questionId: data['questionId'],
-            optionValue: data['optionValue']
-        }).then(console.log).catch(console.log)
-    }
-
-    const updateAnswerKey = (data) => {
-        if (data['id'] != -1) {
-            axios.post('http://localhost:8080/update-answer-key', {
-                id: data['id'],
-                questionId: data['questionId'],
-                correctAnswer: data['correctAnswer']
-            }).then(console.log).catch(console.log)
-        }else{
-            setAnswerKeyForCheckBox(data)
-        }
-    }
-    const setAnswerKeyForCheckBox = (data) => {
-        axios.post('http://localhost:8080/set-answer-key',{
-            questionId: data['questionId'],
-            correctAnswer: data['correctAnswer']
-        }).then(console.log).catch(console.log)
-    }
-    const updateStartingAt = (e) => {
-        setStartingAt(Date.parse(e.target.value))
-    }
-    const updateEndingAt = (e) => {
-        setEndingAt(Date.parse(e.target.value))
-    }
-    if (!isLoading){
-        return <CircularProgress />
-    }else {
-        return (
-            <Box sx={{ mt: 10 }}>
-                <AppBar
-                    sx={{ position: 'fixed',bgcolor:"#ffd05e"}}>
-                    <Toolbar>
-                        <Typography style={{color:"black"}} sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            Exam id : {examId}
-                        </Typography>
-                        <Button style={{ textTransform: 'none' }}
-                                color="primary"
-                                onClick={updateExam}
-                        >
-                            update exam
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                <Paper elevation={3} className={classes.paperStyle}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <TextField id="filled-basic"
-                                       label="exam title"
-                                       size="small"
-                                       fullWidth
-                                       required
-                                       value={examTitle}
-                                       onChange={(e) =>(setExamTitle(e.target.value))}
-                                       variant="filled" />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="points"
-                                size="small"
-                                type="number"
-                                fullWidth
-                                value={examPoints}
-                                inputProps={{ min: 1 }}
-                                onChange={(e) =>(setExamPoints(parseInt(e.target.value)))}
-                                required
-                                variant="filled" />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="datetime-local"
-                                label="Ending At"
-                                type="datetime-local"
-                                fullWidth
-                                defaultValue={new Date(startingAt).toISOString().slice(0,16)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={updateStartingAt}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="datetime-local"
-                                label="Ending At"
-                                type="datetime-local"
-                                fullWidth
-                                onChange={updateEndingAt}
-                                defaultValue={new Date(endingAt).toISOString().slice(0,16)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                </Paper>
-                {
-                    questions.map((val,index)=>{
-                        if (val.question.questionType === 1){
-                            return <Mcq
-                                questionId={val.question.questionId}
-                                questionText={val.question.questionText}
-                                correctAnswer={val['answerKeys']}
-                                points={val.question.points}
-                                options={val.questionOptions}
-                                isActive={val.question.isActive}
-                                whoCanSee={val.question.whoCanSee}
-                            />
-                        }else if (val.question.questionType === 2){
-                            return <Text
-                                questionId={val.question.questionId}
-                                questionText={val.question.questionText}
-                                correctAnswer={val['answerKeys']}
-                                points={val.question.points}
-                                isActive={val.question.isActive}
-                                whoCanSee={val.question.whoCanSee}
-                            />
-                        }else if (val.question.questionType === 3){
-                            return <CheckBoxComp
-                                questionId={val.question.questionId}
-                                questionText={val.question.questionText}
-                                correctAnswer={val['answerKeys']}
-                                points={val.question.points}
-                                options={val['questionOptions']}
-                                isActive={val.question.isActive}
-                                whoCanSee={val.question.whoCanSee}
-                            />
-                        }else if (val.question.questionType === 4){
-                            return <Matching
-                                questionId={val.question.questionId}
-                                questionText={val.question.questionText}
-                                correctAnswer={val['answerKeys']}
-                                points={val.question.points}
-                                options={val.questionOptions}
-                                isActive={val.question.isActive}
-                                whoCanSee={val.question.whoCanSee}
-                            />
-                        }else if (val.question.questionType === 5){
-                            return <Truth
-                                questionId={val.question.questionId}
-                                questionText={val.question.questionText}
-                                points={val.question.points}
-                                whoCanSee={val.question.whoCanSee}
-                            />
-                        }
-                    })
-                }
-
-            </Box>
-        );
-    }
-}
-const mapStateToProps = state => {
-    return {
-        questions : state.ExamReducer.questions,
-        user : state.UserReducer
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        appendQuestion: (question) => dispatch({type:Actions.APPEND_QUESTION,
-            payload : {question}}),
-        setQuestionArray: (newQuestionArray) => dispatch({type:Actions.SET_NEW_QUESTION_ARRAY,
-            payload : {newQuestionArray}})
-    }
+            dispatch({ type: SET_QUESTIONS, payload: { questions: ar } });
+        });
+        return () => {
+            controller.abort();
+        };
+    }, []);
+    return (
+        <>
+            <ResponsiveAppBar />
+            <div className={classes.container}>
+                <ExamDetails />
+                <DragDropContext onDragEnd={handleOnDragEnd}>
+                    <Droppable droppableId={"previewQuestions"}>
+                        {(provided) => (
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                {exam.questions.map(({ tmpId }, index) => {
+                                    return (
+                                        <Draggable key={tmpId} draggableId={tmpId} index={index}>
+                                            {(provided) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                >
+                                                    <Question
+                                                        questionIndex={getQuestionIndex(tmpId)}
+                                                        uid={tmpId}
+                                                    />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    );
+                                })}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </div>
+        </>
+    );
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(PreviewExam);
+export default PreviewExam;
