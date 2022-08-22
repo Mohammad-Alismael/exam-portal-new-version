@@ -15,7 +15,7 @@ export default function ExamRandomness() {
     const handleChange = (e) => {
         dispatch({
             type: SET_EXAM_RANDOMNESS,
-            payload: { questionRandomness: e.target.value },
+            payload: { questionRandomness: (e.target.value === 'true') },
         })
     }
     return <Grid item xs={12}>

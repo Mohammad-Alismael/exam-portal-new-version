@@ -18,7 +18,7 @@ export default function ExamTimer(props) {
         e.preventDefault()
         dispatch({
             type: SET_EXAM_TIMER,
-            payload: { questionTimer: e.target.value },
+            payload: { questionTimer: (e.target.value === 'true') },
         })
         if (e.target.value == 'false'){
             dispatch({type: REMOVE_TIME_OBJECT})

@@ -10,7 +10,7 @@ import ExamReducer from "../../store/reducers/ExamReducer";
 import {
     SET_ASSIGNED_FOR,
     SET_ENDING_AT,
-    SET_EXAM_TITLE,
+    SET_EXAM_TITLE, SET_SPECIFIC_STUDENTS,
     SET_STARTING_AT,
 } from "../../store/actions";
 import {
@@ -30,6 +30,8 @@ import { Button } from "@material-ui/core";
 import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
 import { v4 as uuidv4 } from "uuid";
+import {useLocation, useParams} from "react-router-dom";
+import {fetchExamStudents} from "../../api/services/Exam";
 
 function ExamSettings(props) {
     const [open, setOpen] = React.useState(false);
@@ -37,9 +39,11 @@ function ExamSettings(props) {
     const [checked, setChecked] = React.useState([]);
     const [studentInfo, setStudentInfo] = React.useState("");
     const [students, setStudents] = React.useState([]);
+    const { examId } = useParams();
     const exam = useSelector((state) => state.ExamReducer);
     const course = useSelector(state => state.CourseReducer);
     const dispatch = useDispatch();
+    const location = useLocation();
     const handleToggle = (username) => () => {
         // get username index
         const studentIndex = students.findIndex((student, i) => {
@@ -74,8 +78,8 @@ function ExamSettings(props) {
     };
     const handleOk = () => {
         dispatch({
-            type: SET_ASSIGNED_FOR,
-            payload: { assignedFor: checked },
+            type: SET_SPECIFIC_STUDENTS,
+            payload: { specificStudents: checked },
         });
         setOpen(false);
     }
@@ -112,7 +116,20 @@ function ExamSettings(props) {
         return checkedIndex !== -1;
     };
     useEffect(()=>{
-       setStudents(course?.classmates)
+        // const controller = new AbortController();
+        // const str = location.pathname
+        // const words = str.split('/')
+        // if (words.includes('preview')){
+        //     fetchExamStudents(examId,controller).then((data)=>{
+        //         console.log('students', data)
+        //         setStudents(data)
+        //     })
+        // }else {
+        //     setStudents(course?.classmates)
+        // }
+        // return ()=>{
+        //     controller.abort()
+        // }
     },[])
     return (
         <>
@@ -138,7 +155,7 @@ function ExamSettings(props) {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={examVisibility}
+                        value={exam?.assignedFor}
                         label="exam visibility"
                         onChange={handleAssignedFor}
                     >

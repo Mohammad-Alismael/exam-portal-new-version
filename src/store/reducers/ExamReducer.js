@@ -1,14 +1,22 @@
 import * as actionTypes from "../actions";
-import {REMOVE_TIME_OBJECT, SET_EXAM_ANSWER_KEY, SET_EXAM_QUESTION_INDEX, SET_QUESTIONS} from "../actions";
+import {
+    REMOVE_TIME_OBJECT,
+    SET_EXAM_ANSWER_KEY,
+    SET_EXAM_QUESTION_INDEX,
+    SET_QUESTIONS,
+    SET_SPECIFIC_STUDENTS
+} from "../actions";
 const initialState = {
     examTitle: "",
     startingAt: 0,
     endingAt: 0,
-    assignedFor: null,
+    assignedFor: 3,
+    specificStudents : null,
     navigation: null,
     questionTimer: 'false',
     questionRandomness: 'true',
     postingAnswerKey: 'true',
+    postingAnswerKeyAt: null,
     questions: [],
 };
 const ExamReducer = (state = initialState, action) => {
@@ -76,6 +84,11 @@ const ExamReducer = (state = initialState, action) => {
                 ...state,
                 assignedFor: action.payload.assignedFor,
             }
+        case actionTypes.SET_SPECIFIC_STUDENTS:
+            return {
+                ...state,
+                specificStudents: action.payload.specificStudents,
+            }
         case actionTypes.SET_NAVIGATION:
             return {
                 ...state,
@@ -95,6 +108,11 @@ const ExamReducer = (state = initialState, action) => {
             return {
                 ...state,
                 postingAnswerKey: action.payload.postingAnswerKey,
+            }
+        case actionTypes.SET_EXAM_ANSWER_KEY_AT:
+            return {
+                ...state,
+                postingAnswerKeyAt: action.payload.postingAnswerKeyAt,
             }
         default:
             break;

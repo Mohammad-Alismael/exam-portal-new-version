@@ -23,7 +23,7 @@ export default function ExamNavigation() {
             onChange={(e)=>(
                 dispatch({
                     type: SET_NAVIGATION,
-                    payload: { navigation: e.target.value },
+                    payload: { navigation: (e.target.value === 'true') },
                 })
             )}>
                 <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
