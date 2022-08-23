@@ -16,7 +16,8 @@ import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {Backdrop} from "@mui/material";
 import {CircularProgress} from "@material-ui/core";
-import {createExam} from "../../api/services/Exam";
+import {createExam, updateExam} from "../../api/services/Exam";
+import {useLocation, useParams} from "react-router-dom";
 
 const steps = [
     "Exam Settings",
@@ -30,10 +31,10 @@ export default function HorizontalLinearStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [postExamLoading, setPostExamLoading] = React.useState(false);
-
+    const { examId } = useParams();
     const exam = useSelector((state) => state.ExamReducer);
     const course = useSelector(state => state.CourseReducer);
-
+    const location = useLocation();
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -54,15 +55,28 @@ export default function HorizontalLinearStepper(props) {
         e.preventDefault()
         setOpen(false);
         setPostExamLoading(true)
-        createExam({...exam, classroom_id: course?.course_info?.id})
-            .then(res => {
+        const str = location.pathname
+        const words = str.split('/')
+        if (words.includes('preview')){
+            updateExam({...exam,examId}).then(res => {
                 toast.info(res['message'])
                 setPostExamLoading(false)
 
-            }).catch((e)=>{
-            console.log(e)
-            setPostExamLoading(false)
-        })
+            }).catch((e) => {
+                console.log(e)
+                setPostExamLoading(false)
+            })
+        }else {
+            createExam({...exam, classroom_id: course?.course_info?.id})
+                .then(res => {
+                    toast.info(res['message'])
+                    setPostExamLoading(false)
+
+                }).catch((e) => {
+                console.log(e)
+                setPostExamLoading(false)
+            })
+        }
 
     }
 
@@ -119,12 +133,12 @@ export default function HorizontalLinearStepper(props) {
                 </Dialog>
             </React.Fragment>
 
-            {/*<Backdrop*/}
-            {/*    sx={{ color: '#FFCD38', zIndex: (theme) => theme.zIndex.drawer + 1 }}*/}
-            {/*    open={postExamLoading}*/}
-            {/*>*/}
-            {/*    <CircularProgress color="inherit" />*/}
-            {/*</Backdrop>*/}
+            <Backdrop
+                sx={{ color: '#FFCD38', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={postExamLoading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
 
         </Box>
     );

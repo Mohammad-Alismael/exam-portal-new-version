@@ -147,7 +147,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Who can see</InputLabel>
                     <Select
-                        defaultValue={""}
+                        disabled={exam?.assignedFor != 3}
                         value={exam.questions[questionIndex].whoCanSee}
                         label="Who can see"
                         onChange={handleWhoCanSee}

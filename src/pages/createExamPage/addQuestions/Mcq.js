@@ -153,7 +153,7 @@ function Mcq({ questionIndex, updateQuestionArray }) {
             >
                 <RadioGroup onChange={SetCorrectAnswer}>
                     <Grid container>
-                        {options.map((val, index) => {
+                        {exam.questions[questionIndex].options.map((val, index) => {
                             return loadOptions(index);
                         })}
                     </Grid>

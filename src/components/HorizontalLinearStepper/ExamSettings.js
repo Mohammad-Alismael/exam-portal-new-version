@@ -11,7 +11,7 @@ import {
     SET_ASSIGNED_FOR,
     SET_ENDING_AT,
     SET_EXAM_TITLE, SET_SPECIFIC_STUDENTS,
-    SET_STARTING_AT,
+    SET_STARTING_AT, SET_WHO_CAN_SEE_OBJECT,
 } from "../../store/actions";
 import {
     Dialog,
@@ -66,6 +66,7 @@ function ExamSettings(props) {
             // remove selected index
             newChecked.splice(currentIndex, 1);
         }
+        dispatch({type: SET_SPECIFIC_STUDENTS, payload: { specificStudents: newChecked }});
         setChecked(newChecked);
     };
 
@@ -102,12 +103,17 @@ function ExamSettings(props) {
         if (e.target.value === 4) {
             setOpen(true);
         } else {
+            dispatch({
+                type: SET_WHO_CAN_SEE_OBJECT,
+                payload: { whoCanSee: e.target.value },
+            });
             setOpen(false);
         }
         dispatch({
             type: SET_ASSIGNED_FOR,
             payload: { assignedFor: e.target.value },
         });
+
     };
     const handleCheckedList = (username) => {
         const checkedIndex = checked.findIndex((val, i) => {
@@ -116,20 +122,8 @@ function ExamSettings(props) {
         return checkedIndex !== -1;
     };
     useEffect(()=>{
-        // const controller = new AbortController();
-        // const str = location.pathname
-        // const words = str.split('/')
-        // if (words.includes('preview')){
-        //     fetchExamStudents(examId,controller).then((data)=>{
-        //         console.log('students', data)
-        //         setStudents(data)
-        //     })
-        // }else {
-        //     setStudents(course?.classmates)
-        // }
-        // return ()=>{
-        //     controller.abort()
-        // }
+        setChecked(exam?.specificStudents)
+        setStudents(exam?.students)
     },[])
     return (
         <>

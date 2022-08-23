@@ -11,8 +11,8 @@ import {
     SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
     SET_EXAM_TITLE,
     SET_NAVIGATION,
-    SET_QUESTIONS,
-    SET_STARTING_AT
+    SET_QUESTIONS, SET_SPECIFIC_STUDENTS,
+    SET_STARTING_AT, SET_STUDENTS
 } from "../store/actions";
 import ExamDetails from "../components/ExamDetails";
 import {CircularProgress} from "@material-ui/core";
@@ -68,6 +68,8 @@ function PreviewExam(props) {
             dispatch({type: SET_ENDING_AT, payload: { endingAt: data['ending_at']}});
             dispatch({type: SET_EXAM_TITLE, payload: { examTitle: data['title']}});
             dispatch({type: SET_ASSIGNED_FOR, payload: { assignedFor: data['assigned_for'] }});
+            dispatch({type: SET_SPECIFIC_STUDENTS, payload: { specificStudents: data['specificStudents'] }});
+            dispatch({type: SET_STUDENTS, payload: { students: data['students'] }});
             dispatch({type: SET_NAVIGATION, payload: { navigation: data['navigation'] }});
             dispatch({type: SET_EXAM_TIMER, payload: { questionTimer: data['question_timer'] }});
             dispatch({type: SET_EXAM_RANDOMNESS, payload: { questionRandomness: data['question_randomness']}})

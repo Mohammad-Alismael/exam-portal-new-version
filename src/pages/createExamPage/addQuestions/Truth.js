@@ -18,16 +18,11 @@ const Truth = ({questionIndex,updateQuestionArray}) => {
     const dispatch = useDispatch();
 
     const handleChange = (e) =>{
-        if (e.target.value == 'true'){
-            updateQuestionArray({answerKey: 0})
-        }else {
-            updateQuestionArray({answerKey: 1})
-        }
-
+        updateQuestionArray({answerKey: (e.target.value === 'true')})
     }
 
     return (
-        <RadioGroup onChange={handleChange} style={{ marginLeft: 12 }}>
+        <RadioGroup onChange={handleChange} value={exam?.questions[questionIndex].answerKey} style={{ marginLeft: 12 }}>
             <FormControlLabel
                 value={true}
                 control={<Radio />}

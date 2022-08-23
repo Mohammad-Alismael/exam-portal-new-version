@@ -4,7 +4,7 @@ import {
     SET_EXAM_ANSWER_KEY,
     SET_EXAM_QUESTION_INDEX,
     SET_QUESTIONS,
-    SET_SPECIFIC_STUDENTS
+    SET_SPECIFIC_STUDENTS, SET_WHO_CAN_SEE_OBJECT
 } from "../actions";
 const initialState = {
     examTitle: "",
@@ -18,6 +18,7 @@ const initialState = {
     postingAnswerKey: 'true',
     postingAnswerKeyAt: null,
     questions: [],
+    students: []
 };
 const ExamReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -113,6 +114,19 @@ const ExamReducer = (state = initialState, action) => {
             return {
                 ...state,
                 postingAnswerKeyAt: action.payload.postingAnswerKeyAt,
+            }
+        case actionTypes.SET_STUDENTS:
+            return {
+                ...state,
+                students: action.payload.students
+            }
+        case actionTypes.SET_WHO_CAN_SEE_OBJECT:
+            const questionsWithSettedWhoCanSee = state.questions.map((val,i)=>{
+                return {val, whoCanSee: action.payload.whoCanSee}
+            })
+            return {
+                ...state,
+                questions: questionsWithSettedWhoCanSee
             }
         default:
             break;

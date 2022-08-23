@@ -5,7 +5,7 @@ import {
     FETCH_EXAM_QUESTIONS,
     FETCH_EXAM_STUDENTS,
     FETCH_EXAMS,
-    FEtch_EXAMS
+    UPDATE_EXAM
 } from "./RouteNames";
 import {toast} from "react-toastify";
 import User from "./User";
@@ -23,7 +23,7 @@ async function fetchExams(courseId,controller) {
 async function createExam(examObject) {
    User.checkTokenExpiration()
     try {
-        const res = await axiosPrivate.post(CREATE_EXAM,examObject)
+        const res = await axiosPrivate.post(CREATE_EXAM,{...examObject})
         return await res['data']
     }catch (e) {
         console.log(e.message.status)
@@ -34,7 +34,7 @@ async function fetchExamQuestions(exam_id,controller) {
     User.checkTokenExpiration()
     try {
         const res = await axiosPrivate.post(FETCH_EXAM_QUESTIONS,
-            {exam_id},{signal: controller.signal})
+            {examId: exam_id},{signal: controller.signal})
         return await res['data']
     } catch (e) {
         console.log(e)
@@ -60,4 +60,14 @@ async function fetchExamStudents(exam_id,controller) {
         console.log(e)
     }
 }
-export {fetchExams,createExam,fetchExamQuestions,fetchExamDetails,fetchExamStudents};
+
+async function updateExam(examObject) {
+    User.checkTokenExpiration()
+    try {
+        const res = await axiosPrivate.post(UPDATE_EXAM, {...examObject})
+        return await res['data']
+    } catch (e) {
+        console.log(Object.keys(e))
+    }
+}
+export {fetchExams,updateExam,createExam,fetchExamQuestions,fetchExamDetails,fetchExamStudents};
