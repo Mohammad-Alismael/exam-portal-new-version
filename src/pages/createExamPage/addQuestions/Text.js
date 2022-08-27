@@ -16,7 +16,7 @@ function Text({updateQuestionArray}) {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        updateQuestionArray({options: null})
+
     },[])
 
     return (

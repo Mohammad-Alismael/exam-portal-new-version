@@ -14,7 +14,9 @@ import withAddQuestion from "./withAddQuestion";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import {
+    CHANGE_QUESTION_OPTIONS,
     SET_ANSWER_KEY,
+    SET_EXAM_QUESTION_INDEX,
     SET_OPTIONS,
     SET_QUESTIONS,
 } from "../../../store/actions";
@@ -22,14 +24,22 @@ import { store } from "../../../index";
 import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import Tooltip from "@mui/material/Tooltip";
-import CloseIcon from '@mui/icons-material/Close';
-import {Badge} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Badge } from "@mui/material";
 
-function Mcq({ questionIndex, updateQuestionArray }) {
-    const [options, setOptions] = React.useState([]);
+function Mcq({
+                 questionIndex,
+                 updateQuestionArray,
+                 updateQuestionOptions,
+                 checkOptionText,
+                 setOptionText,
+                 deleteOption,
+             }) {
     const [optionValue, setOptionValue] = React.useState("");
     const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);
+    const options = exam.questions[questionIndex].options;
+
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
 
@@ -43,43 +53,19 @@ function Mcq({ questionIndex, updateQuestionArray }) {
         };
 
         if (options.length < 4) {
-            if (checkOptionText() === -1){
-                updateQuestionArray({ options: [...options, newObj] });
-                setOptions([...options, newObj]);
+            if (checkOptionText(optionValue) === -1) {
+                updateQuestionOptions([
+                    ...exam.questions[questionIndex].options,
+                    newObj,
+                ]);
+                // setOptions([...options, newObj]);
                 setOptionImg(null);
             }
         } else {
             toast.info("MCQ can only have 4 options max!");
         }
     };
-    const checkOptionText = () => {
-        const optionTextFound = options.findIndex((option,i)=>{
-            return option['optionValue'] === optionValue
-        })
-        if (optionTextFound != -1){
-            toast.info("option already existed!");
-        }
-        return optionTextFound
-    }
-    const getOptionIndex = (id) => {
-        return options.findIndex((option, index) => {
-            if (option.id === id) return true;
-        });
-    }
-    const updateQuestionOptions = (newOptionsArray) => {
-        updateQuestionArray({ options: newOptionsArray });
-        setOptions(newOptionsArray);
-    }
-    const setOptionText = (e) => {
-        const id = e.target.id;
-        const optionIndexFound = getOptionIndex(id);
-        const tmp = [...options];
-        tmp[optionIndexFound] = {
-            ...tmp[optionIndexFound],
-            optionValue: e.target.value,
-        };
-        updateQuestionOptions(tmp)
-    };
+
     const SetCorrectAnswer = (e) => {
         updateQuestionArray({ answerKey: parseInt(e.target.value) });
     };
@@ -91,36 +77,40 @@ function Mcq({ questionIndex, updateQuestionArray }) {
         });
         setOptionImg(myFiles[0]);
     };
-    const deleteOption = (id) => {
-        const optionIndexFound = getOptionIndex(id);
-        const tmp = [...options];
-       tmp.splice(optionIndexFound,1)
-        updateQuestionOptions(tmp)
-    }
+
     const removeFile = (optionId) => {
-        const optionIndex = options.findIndex((option,i)=>{
-            return option.id === optionId
-        })
-        const deepCopy = [...options]
-        deepCopy[optionIndex] = {...deepCopy[optionIndex], img : null}
-        setOptions(deepCopy)
-    }
+        const optionIndex = exam.questions[questionIndex].options.findIndex(
+            (option, i) => {
+                return option.id == optionId;
+            }
+        );
+        const deepCopy = [...exam.questions[questionIndex].options];
+        deepCopy[optionIndex] = { ...deepCopy[optionIndex], img: null };
+        updateQuestionOptions(deepCopy);
+    };
     const loadOptions = (index) => {
         return (
             <>
                 {options[index]["img"] != null ? (
                     <Grid xs={12} item>
-                        <Badge badgeContent={'x'} color="primary" onClick={()=>(removeFile(options[index]["id"]))} sx={{cursor: 'pointer'}}>
-                            <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
+                        <Badge
+                            badgeContent={"x"}
+                            color="primary"
+                            onClick={() => removeFile(options[index]["id"])}
+                            sx={{ cursor: "pointer" }}
+                        >
+                            <img
+                                style={{ width: "100%", outline: "1px solid" }}
+                                src={options[index]["img"]["preview"]}
+                                alt={"question"}
+                            />
                         </Badge>
                     </Grid>
                 ) : null}
-                <Grid container alignItems={'center'} xs={12} style={{backgroundColor: 'transparent'}}>
+                <Grid container alignItems={"center"} xs={12}>
                     <FormControlLabel
                         value={index}
-                        control={<Radio />}
-                        label=""
-                    />
+                        control={<Radio />} label="" />
                     <TextField
                         id={options[index]["id"]}
                         label={""}
@@ -129,9 +119,12 @@ function Mcq({ questionIndex, updateQuestionArray }) {
                         value={options[index]["optionValue"]}
                         onChange={setOptionText}
                     />
-                    <Tooltip title={'delete option'}>
+                    <Tooltip title={"delete option"}>
                         <IconButton aria-label="upload picture" component="label">
-                            <CloseIcon onClick={()=>(deleteOption(options[index]["id"]))} sx={{ mt: 3}}/>
+                            <CloseIcon
+                                onClick={() => deleteOption(options[index]["id"])}
+                                sx={{ mt: 3 }}
+                            />
                         </IconButton>
                     </Tooltip>
                 </Grid>
@@ -140,7 +133,7 @@ function Mcq({ questionIndex, updateQuestionArray }) {
     };
 
     useEffect(() => {
-        setOptions([...exam.questions[questionIndex].options]);
+        console.log("options", exam.questions[questionIndex].options);
     }, []);
     return (
         <Grid xs={12} container>
@@ -151,55 +144,57 @@ function Mcq({ questionIndex, updateQuestionArray }) {
                 alignItems="center"
                 xs={12}
             >
-                <RadioGroup onChange={SetCorrectAnswer}>
+                <RadioGroup onChange={SetCorrectAnswer} value={exam?.questions[questionIndex]?.answerKey}>
                     <Grid container>
-                        {exam.questions[questionIndex].options.map((val, index) => {
+                        {options.map((val, index) => {
                             return loadOptions(index);
                         })}
                     </Grid>
                     <br />
-                    <Grid container>
-                        <Grid item xs={7}>
-                            <TextField
-                                label={"option value"}
-                                size="small"
-                                variant="filled"
-                                fullWidth
-                                onChange={(e) => setOptionValue(e.target.value)}
-                            />
-                        </Grid>
-                        <Tooltip title="upload option file">
-                            <IconButton aria-label="upload picture" component="label">
-                                <input
-                                    onChange={optionFile}
-                                    hidden
-                                    accept="image/*"
-                                    type="file"
+                    {!exam.isItPreview ? (
+                        <Grid container>
+                            <Grid item xs={7}>
+                                <TextField
+                                    label={"option value"}
+                                    size="small"
+                                    variant="filled"
+                                    fullWidth
+                                    onChange={(e) => setOptionValue(e.target.value)}
                                 />
-                                <ImageIcon
-                                    sx={{
-                                        height: "40px",
-                                        width: "40px",
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Grid
-                            item
-                            xs={4}
-                            sx={{ backgroundColor: "transparent", position: "relative" }}
-                        >
-                            <Button
-                                sx={{ position: "absolute", bottom: 10 }}
-                                variant="contained"
-                                size={"medium"}
-                                fullWidth
-                                onClick={addOption}
+                            </Grid>
+                            <Tooltip title="upload option file">
+                                <IconButton aria-label="upload picture" component="label">
+                                    <input
+                                        onChange={optionFile}
+                                        hidden
+                                        accept="image/*"
+                                        type="file"
+                                    />
+                                    <ImageIcon
+                                        sx={{
+                                            height: "40px",
+                                            width: "40px",
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                            <Grid
+                                item
+                                xs={4}
+                                sx={{ backgroundColor: "transparent", position: "relative" }}
                             >
-                                add option
-                            </Button>
+                                <Button
+                                    sx={{ position: "absolute", bottom: 10 }}
+                                    variant="contained"
+                                    size={"medium"}
+                                    fullWidth
+                                    onClick={addOption}
+                                >
+                                    add option
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    ) : null}
                 </RadioGroup>
             </Grid>
         </Grid>

@@ -14,12 +14,9 @@ class Logout extends Component {
         sessionStorage.removeItem("1store1");
         sessionStorage.removeItem('key')
         updateToken("")
-        axiosPrivate.delete(DELETE_TOKEN).then((res)=> {
-            if (res.status == 204){
-                window.location.href = "/"
-            }
-        })
-            .catch((err)=> {console.log(err)})
+        axiosPrivate.delete(DELETE_TOKEN).then(console.log)
+            .catch(console.log)
+        window.location.href = "/"
     }
 
 

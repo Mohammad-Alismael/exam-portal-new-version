@@ -31,24 +31,6 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const theme2 = createTheme({
-    typography: {
-        h6: {
-            fontSize: 32,
-            marginTop: -40,
-            color: '#161b22'
-        },
-    },
-    palette: {
-        primary: {
-            main: 'rgb(22,27,34)',
-        },
-        secondary: {
-            main: '#ffd05e',
-        }
-    }
-})
-
 function ExamStudent(props) {
     const classes = useStyles();
     const {examId} = useParams();
@@ -77,26 +59,7 @@ function ExamStudent(props) {
         }
     }
 
-
-
-    const getExamQuestionsv2 = async () => {
-        const questions = await axios.post('http://localhost:8080/list-questions-randomly', {
-            examId,
-            whoCanSee: props.user.role_id
-        })
-        setQuestions(questions.data)
-        console.log(questions.data)
-        setIsLoading(false)
-    }
     useEffect( ()=>{
-        getExamInfo().then((data)=>{
-            console.log(data)
-            setExamTitle(data['title'])
-            setEndingAt(moment(data['endingAt']).format('h:mm a'));
-            getExamQuestionsv2();
-
-            })
-
 
     },[])
 
@@ -115,7 +78,6 @@ function ExamStudent(props) {
     const submitExam = () => {
         props.examStudent.answeredQuestions.map((val,index)=>{
             console.log(val);
-            console.log(typeof val['userAnswer'] == "string")
             if(!Array.isArray(val['userAnswer'])){
                 if(typeof val['userAnswer'] == "string"){
                     submitQuestionAnswerText(val['questionId'],val['userAnswer'])
@@ -152,44 +114,7 @@ function ExamStudent(props) {
     }else {
         return (
             <>
-                <AppBar
-                    sx={{position: 'fixed', bgcolor: "#ffd05e"}}>
-                    <Toolbar>
-                        <Typography style={{color: "black"}} sx={{ml: 2, flex: 1}} variant="h6" component="div">
-                            {examTitle}
-                        </Typography>
-                        <Typography style={{color: "black"}} sx={{ml: 2, flex: 1}} variant="h6" component="div">
-                            ends at {endingAt}
-                        </Typography>
-                        <Button style={{ textTransform: 'none' }}
-                                onClick={submitExam}
-                        >
-                            Submit
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                <Box sx={{mt: 10}}>
-
-                    {
-                        questions.map((val,index)=>{
-                            if (val['question'].questionType != 4 ) {
-                                return <QuizHeaderStudent
-                                    key={index + 1}
-                                    questionText={val['question'].questionText}
-                                    points={val['question'].points}
-                                    body={chooseBody(val, index)}/>
-                            }else {
-                                return <Matching
-                                    key={index+1}
-                                    options={val['questionOptions']}
-                                    questionText={val['question'].questionText}
-                                    questionId={val['question'].questionId}
-                                    points={val['question'].points}
-                                />;
-                            }
-                        })
-                    }
-                </Box>
+                <p style={{color: 'white'}}>{examId}</p>
             </>
         )
     }

@@ -15,15 +15,15 @@ import axios from "axios";
 import withAddQuestion from "./withAddQuestion";
 import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuidv4} from "uuid";
-import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
+import {CHANGE_QUESTION_OPTIONS, SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
 import {store} from "../../../index";
 const useStyles = makeStyles((theme) => ({
 }));
-function Matching ({questionIndex,updateQuestionArray}) {
+function Matching ({questionIndex,updateQuestionArray,updateQuestionOptions}) {
     const classes = useStyles();
-    const [options, setOptions] = React.useState([]);
     const [optionValue,setOptionValue] = React.useState('');
     const exam = useSelector((state) => state.ExamReducer);
+    const options = exam.questions[questionIndex].options
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
     const addMatchingOption = (e) => {
@@ -33,14 +33,15 @@ function Matching ({questionIndex,updateQuestionArray}) {
             id,
             optionValue
         }
-        updateQuestionArray({options: [...options, newObj]})
-        setOptions([...options, newObj])
+        updateQuestionOptions([...options, newObj])
+        // updateQuestionArray({options: [...options, newObj]})
     }
+
     const SetCorrectAnswer = (e) =>{
         updateQuestionArray({answerKey: parseInt(e.target.value)})
     }
     useEffect(()=>{
-        setOptions([...exam.questions[questionIndex].options])
+        console.log('options from checkbox',exam.questions[questionIndex].options)
     },[])
     return (
             <>
@@ -51,7 +52,7 @@ function Matching ({questionIndex,updateQuestionArray}) {
                             labelId="type"
                             id="type"
                             label="Question Options"
-                            defaultValue={exam.questions[questionIndex].correctAnswer}
+                            defaultValue={exam.questions[questionIndex].answerKey}
                             onChange={SetCorrectAnswer}
                         >
                             {
@@ -64,7 +65,7 @@ function Matching ({questionIndex,updateQuestionArray}) {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={7} >
+                {!exam.isItPreview ? <Grid item xs={7} >
                     <FormControl fullWidth margin={'normal'}>
                         <TextField
                             label="Add Option"
@@ -74,14 +75,14 @@ function Matching ({questionIndex,updateQuestionArray}) {
                                (setOptionValue(e.target.value))}
                             variant="standard"/>
                     </FormControl>
-                </Grid>
-                <Grid item xs={12}>
+                </Grid>  : null }
+                {!exam.isItPreview ? <Grid item xs={12}>
                     <Button
                         variant="contained"
                         fullWidth
                         onClick={addMatchingOption}
                         size={"small"}>Add option</Button>
-                </Grid>
+                </Grid> : null }
             </>
         );
 

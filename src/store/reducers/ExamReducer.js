@@ -1,5 +1,6 @@
 import * as actionTypes from "../actions";
 import {
+    CHANGE_QUESTION_OPTIONS,
     REMOVE_TIME_OBJECT,
     SET_EXAM_ANSWER_KEY,
     SET_EXAM_QUESTION_INDEX,
@@ -18,7 +19,8 @@ const initialState = {
     postingAnswerKey: 'true',
     postingAnswerKeyAt: null,
     questions: [],
-    students: []
+    students: [],
+    isItPreview : false
 };
 const ExamReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -27,11 +29,28 @@ const ExamReducer = (state = initialState, action) => {
                 ...state,
                 questions: [...state.questions, action.payload.question],
             };
+        case actionTypes.CHANGE_PREVIEW:
+            return {
+                ...state,
+                isItPreview: action.payload.isItPreview
+            };
         case actionTypes.SET_QUESTIONS:
             return {
                 ...state,
                 questions: action.payload.questions,
             };
+        case actionTypes.CHANGE_QUESTION_OPTIONS:
+            const __index = action.payload.index;
+            const newOptions = action.payload.newOptions;
+            const deepQuestionCopy = state.questions
+            const deepQuestionObject = deepQuestionCopy[__index]
+            deepQuestionObject['options'] = newOptions
+            deepQuestionCopy[__index] = deepQuestionObject
+            console.log('index', __index, 'new options', newOptions)
+            return {
+                ...state,
+                questions: deepQuestionCopy
+            }
         case actionTypes.SET_EXAM_QUESTION_INDEX:
             const index = action.payload.index
             const newQuestion = action.payload.question

@@ -22,7 +22,7 @@ const Truth = ({questionIndex,updateQuestionArray}) => {
     }
 
     return (
-        <RadioGroup onChange={handleChange} value={exam?.questions[questionIndex].answerKey} style={{ marginLeft: 12 }}>
+        <RadioGroup onChange={handleChange} value={exam?.questions[questionIndex].answerKey == 1 ? true : false} style={{ marginLeft: 12 }}>
             <FormControlLabel
                 value={true}
                 control={<Radio />}

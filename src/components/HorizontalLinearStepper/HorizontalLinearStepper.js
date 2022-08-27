@@ -12,12 +12,20 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import {axiosPrivate} from "../../api/axios";
 import {CREATE_EXAM} from "../../api/services/RouteNames";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {Backdrop} from "@mui/material";
 import {CircularProgress} from "@material-ui/core";
-import {createExam, updateExam} from "../../api/services/Exam";
+import {createExam, updateExamDetails} from "../../api/services/Exam";
 import {useLocation, useParams} from "react-router-dom";
+import {updateExamQuestions} from "../../api/services/Question";
+import {
+    SET_ASSIGNED_FOR,
+    SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
+    SET_EXAM_TITLE, SET_NAVIGATION, SET_QUESTIONS,
+    SET_SPECIFIC_STUDENTS,
+    SET_STARTING_AT, SET_STUDENTS
+} from "../../store/actions";
 
 const steps = [
     "Exam Settings",
@@ -35,6 +43,8 @@ export default function HorizontalLinearStepper(props) {
     const exam = useSelector((state) => state.ExamReducer);
     const course = useSelector(state => state.CourseReducer);
     const location = useLocation();
+    const dispatch = useDispatch();
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -51,14 +61,17 @@ export default function HorizontalLinearStepper(props) {
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
-    const postExam = (e) => {
-        e.preventDefault()
-        setOpen(false);
-        setPostExamLoading(true)
-        const str = location.pathname
-        const words = str.split('/')
-        if (words.includes('preview')){
-            updateExam({...exam,examId}).then(res => {
+
+    function updateExam() {
+        updateExamDetails({...exam, examId}).then(res => {
+            toast.info(res['message'])
+            if (exam?.questions.length == 0) setPostExamLoading(false)
+        }).catch((e) => {
+            console.log(e)
+            setPostExamLoading(false)
+        })
+        if (exam?.questions.length !== 0) {
+            updateExamQuestions({...exam, examId}).then(res => {
                 toast.info(res['message'])
                 setPostExamLoading(false)
 
@@ -66,6 +79,65 @@ export default function HorizontalLinearStepper(props) {
                 console.log(e)
                 setPostExamLoading(false)
             })
+        }
+    }
+
+    function resetExamReducer() {
+        dispatch({
+            type: SET_STARTING_AT,
+            payload: {startingAt: 0},
+        });
+        dispatch({
+            type: SET_ENDING_AT,
+            payload: {endingAt: 0},
+        });
+        dispatch({
+            type: SET_EXAM_TITLE,
+            payload: {examTitle: ""},
+        });
+        dispatch({
+            type: SET_ASSIGNED_FOR,
+            payload: {assignedFor: 3},
+        });
+        dispatch({
+            type: SET_SPECIFIC_STUDENTS,
+            payload: {specificStudents: null},
+        });
+        dispatch({
+            type: SET_STUDENTS,
+            payload: {students: []},
+        });
+        dispatch({
+            type: SET_NAVIGATION,
+            payload: {navigation: null},
+        });
+        dispatch({
+            type: SET_EXAM_TIMER,
+            payload: {questionTimer: 'false'},
+        });
+        dispatch({
+            type: SET_EXAM_RANDOMNESS,
+            payload: {questionRandomness: 'true'},
+        });
+        dispatch({
+            type: SET_EXAM_ANSWER_KEY_AT,
+            payload: {postingAnswerKeyAt: null},
+        });
+        dispatch({
+            type: SET_EXAM_ANSWER_KEY,
+            payload: {postingAnswerKey: 'true'},
+        });
+        dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
+    }
+
+    const postExam = (e) => {
+        e.preventDefault()
+        setOpen(false);
+        setPostExamLoading(true)
+        const str = location.pathname
+        const words = str.split('/')
+        if (words.includes('preview')){
+            updateExam();
         }else {
             createExam({...exam, classroom_id: course?.course_info?.id})
                 .then(res => {
@@ -77,7 +149,7 @@ export default function HorizontalLinearStepper(props) {
                 setPostExamLoading(false)
             })
         }
-
+        resetExamReducer();
     }
 
     return (

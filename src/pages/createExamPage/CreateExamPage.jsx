@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { SET_QUESTIONS } from "../../store/actions";
+import {CHANGE_PREVIEW, SET_QUESTIONS} from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Question from "./addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
@@ -70,7 +70,9 @@ function CreateExamPage(props) {
         items.splice(result.destination.index, 0, reorderedItem);
         dispatch({ type: SET_QUESTIONS, payload: { questions: items } });
     }
-
+    useEffect(()=>{
+        dispatch({ type: CHANGE_PREVIEW, payload: { isItPreview: false } });
+    },[])
     return (
         <>
             <ResponsiveAppBar />
@@ -103,18 +105,19 @@ function CreateExamPage(props) {
                         )}
                     </Droppable>
                 </DragDropContext>
+                <div>
+                    <Button
+                        sx={{ mt: 3 }}
+                        onClick={addQuestion}
+                        className={classes.addQuestionBtn}
+                        variant="contained"
+                        color="warning"
+                    >
+                        <b>add question</b>
+                    </Button>
+                </div>
             </div>
-            <div>
-                <Button
-                    sx={{ mt: 3 }}
-                    onClick={addQuestion}
-                    className={classes.addQuestionBtn}
-                    variant="contained"
-                    color="warning"
-                >
-                    <b>add question</b>
-                </Button>
-            </div>
+
         </>
     );
 }

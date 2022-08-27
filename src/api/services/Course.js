@@ -22,7 +22,6 @@ class Course {
         })
     }
      createCourse(course_name,section ,user_id) {
-         User.checkTokenExpiration()
         return axiosPrivate.post('/classroom/create',{
             class_name: course_name,
             section,
@@ -37,7 +36,6 @@ class Course {
         })
     }
     enrollToCourse(course_id) {
-        User.checkTokenExpiration()
         return axiosPrivate.post('/classroom/enroll',{
             classroom_id : course_id
         }).then((res)=> {
@@ -52,7 +50,6 @@ class Course {
     }
 }
 async function fetchCourseInfo(courseId) {
-    User.checkTokenExpiration()
     try {
         const response = await axiosPrivate.get(`${FETCH_COURSE_INFO}/${courseId}`)
         return response.data

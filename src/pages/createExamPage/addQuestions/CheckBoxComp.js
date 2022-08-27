@@ -15,14 +15,15 @@ import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import {Badge} from "@mui/material";
 import {toast} from "react-toastify";
-const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
-    const [options, setOptions] = React.useState([]);
+const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,checkOptionText,setOptionText,deleteOption }) => {
+    // const [options, setOptions] = React.useState([]);
     const [checkedAr, setCheckedAr] = React.useState([]);
     const [optionValue, setOptionValue] = React.useState("");
     const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
+    const options = exam.questions[questionIndex].options
     const handleCheckBoxOptions = (e) => {
         e.preventDefault();
         let id = uuidv4();
@@ -32,36 +33,12 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
             img: optionImg,
         };
 
-        if (checkOptionText() === -1){
-            updateQuestionArray({ options: [...options, newObj] });
-            setOptions([...options, newObj]);
+        if (checkOptionText(optionValue) === -1){
+            updateQuestionOptions( [...options, newObj])
+            // updateQuestionArray({ options: });
             setOptionImg(null);
         }
-    };
-    const checkOptionText = () => {
-        const optionTextFound = options.findIndex((option,i)=>{
-            return option['optionValue'] === optionValue
-        })
-        if (optionTextFound != -1){
-            toast.info("option already existed!");
-        }
-        return optionTextFound
-    }
 
-    const setOptionText = (e) => {
-        const id = e.target.id;
-        const optionIndexFound = options.findIndex((option, index) => {
-            if (option.id === id) return true;
-        });
-
-        const tmp = [...options];
-        tmp[optionIndexFound] = {
-            ...tmp[optionIndexFound],
-            optionValue: e.target.value,
-        };
-
-        updateQuestionArray({options: tmp})
-        setOptions(tmp);
     };
 
     const handleCheckedAr = (e) =>{
@@ -80,21 +57,6 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
             updateQuestionArray({answerKey:[...new_ar]})
             setCheckedAr([...new_ar])
         }
-    }
-    const getOptionIndex = (id) => {
-        return options.findIndex((option, index) => {
-            if (option.id === id) return true;
-        });
-    }
-    const updateQuestionOptions = (newOptionsArray) => {
-        updateQuestionArray({ options: newOptionsArray });
-        setOptions(newOptionsArray);
-    }
-    const deleteOption = (id) => {
-        const optionIndexFound = getOptionIndex(id);
-        const tmp = [...options];
-        tmp.splice(optionIndexFound,1)
-        updateQuestionOptions(tmp)
     }
     const loadCheckboxOptions = (index) => {
         return (
@@ -140,7 +102,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
         })
         const deepCopy = [...options]
         deepCopy[optionIndex] = {...deepCopy[optionIndex], img : null}
-        setOptions(deepCopy)
+        updateQuestionOptions(deepCopy)
     }
     const optionFile = (e) => {
         e.preventDefault();
@@ -151,7 +113,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
         setOptionImg(myFiles[0]);
     };
     useEffect(() => {
-        setOptions([...exam.questions[questionIndex].options]);
+        // setOptions([...exam.questions[questionIndex].options]);
     }, []);
     return (
         <>
@@ -162,7 +124,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                     })}
                 </FormGroup>
             </Grid>
-            <Grid item xs={7}>
+            {!exam.isItPreview ? <Grid item xs={7}>
                 <TextField
                     id="filled-basic"
                     label="Add Option"
@@ -171,8 +133,8 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                     fullWidth
                     onChange={(e) => setOptionValue(e.target.value)}
                 />
-            </Grid>
-            <Tooltip title="upload option file">
+            </Grid> : null }
+            {!exam.isItPreview ? <Tooltip title="upload option file">
                 <IconButton aria-label="upload picture" component="label">
                     <input
                         onChange={optionFile}
@@ -187,8 +149,8 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                         }}
                     />
                 </IconButton>
-            </Tooltip>
-            <Grid item xs={4}>
+            </Tooltip> : null}
+            {!exam.isItPreview ? <Grid item xs={4}>
                 <Button
                     fullWidth
                     variant="contained"
@@ -198,7 +160,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray }) => {
                 >
                     submit option
                 </Button>
-            </Grid>
+            </Grid> : null}
         </>
     );
 };

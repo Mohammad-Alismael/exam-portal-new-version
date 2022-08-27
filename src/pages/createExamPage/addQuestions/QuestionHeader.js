@@ -70,7 +70,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
     }
     const handleQuestionType = (e) => {
         if (e.target.value == 1|| e.target.value == 3 || e.target.value == 4){
-            updateQuestionArray({ options: []})
+            if (!exam?.isItPreview) updateQuestionArray({ options: []})
         }
         updateQuestionArray({ questionType:parseInt(e.target.value) })
     }

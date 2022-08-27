@@ -52,10 +52,10 @@ function Exam(props) {
         if (user.role_id == 3) {
             navigate(`/preview/${props.examId}`);
         } else {
-            if (props.endingAt > Date.now())
+            // if (props.endingAt > Date.now())
                 navigate(`/exam/${props.examId}`);
-            else
-                toast.info("you are too late to take this exam!")
+            // else
+            //     toast.info("you are too late to take this exam!")
         }
     };
     return (

@@ -4,7 +4,6 @@ const {UPLOAD_ANNOUNCEMENT_FILE, CREATE_ANNOUNCEMENT} = require("./RouteNames");
 const {toast} = require("react-toastify");
 
 async function uploadFileAnnouncement(formData) {
-    User.checkTokenExpiration()
     try {
         const response = await axiosPrivate
             .post(UPLOAD_ANNOUNCEMENT_FILE, formData)
@@ -16,14 +15,12 @@ async function uploadFileAnnouncement(formData) {
     }
 }
 async function createAnnouncement(announcementText,courseId) {
-    User.checkTokenExpiration()
     try {
         const response = await axiosPrivate
             .post(CREATE_ANNOUNCEMENT, {
                 announcement_text: announcementText,
                 courseId
             })
-
         console.log(response.data)
         return response.data
     } catch (e) {

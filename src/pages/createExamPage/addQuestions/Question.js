@@ -12,6 +12,7 @@ import Matching from "./Matching";
 import { v4 as uuidv4 } from "uuid";
 
 import {
+    CHANGE_QUESTION_OPTIONS,
     DELETE_EXAM_QUESTION_INDEX,
     SET_EXAM_QUESTION_INDEX,
     SET_QUESTION_TEXT,
@@ -26,6 +27,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Tooltip from "@mui/material/Tooltip";
 import LongMenu from "../../../components/LongMenu";
 import IconButton from "@mui/material/IconButton";
+import {deleteQuestion} from "../../../api/services/Question";
+import {useNavigate, useParams} from "react-router-dom";
+import {deleteExam} from "../../../api/services/Exam";
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -41,19 +46,15 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'red'
     }
 }));
-const questionTypes = [
-    <Mcq />,
-    <Text />,
-    <CheckBoxComp />,
-    <Matching />,
-    <Truth />,
-];
 const Question = ({ questionIndex, uid }) => {
     const classes = useStyles();
-    const question = useSelector((state) => state.AddQuestionReducer);
+    const { examId } = useParams();
     const exam = useSelector((state) => state.ExamReducer);
+    const course = useSelector(state => state.CourseReducer);
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -70,7 +71,44 @@ const Question = ({ questionIndex, uid }) => {
 
         return questionIndexFound;
     };
+    const updateQuestionOptions = (newOptionsArray) => {
+        dispatch({ type: CHANGE_QUESTION_OPTIONS,
+            payload: { newOptions: newOptionsArray, index: questionIndex } });
+    }
+    const checkOptionText = (optionValue) => {
+        const optionTextFound = exam.questions[questionIndex].options.findIndex((option,i)=>{
+            return option['optionValue'] === optionValue
+        })
+        if (optionTextFound != -1){
+            toast.info("option already existed!");
+        }
+        return optionTextFound
+    }
+    const getOptionIndex = (id) => {
+        return exam.questions[questionIndex].options.findIndex((option, index) => {
+            return option.id == id
+        });
+    }
+    const setOptionText = (e) => {
+        const id = e.target.id;
+        const optionIndexFound = getOptionIndex(id);
+        const tmp = [...exam.questions[questionIndex].options];
+        console.log(optionIndexFound,tmp)
+        tmp[optionIndexFound] = {
+            ...tmp[optionIndexFound],
+            optionValue: e.target.value,
+        };
+        console.log(tmp)
+        updateQuestionOptions(tmp)
+    };
+    const deleteOption = (id) => {
+        const optionIndexFound = getOptionIndex(id);
+        const tmp = [...exam.questions[questionIndex].options];
+        tmp.splice(optionIndexFound,1)
+        updateQuestionOptions(tmp)
+    }
     const updateQuestionArrayv2 = (object) => {
+        console.log('wtf from here',object)
         const key = Object.keys(object)[0];
         const value = Object.values(object)[0];
         const index = getQuestionIndex();
@@ -85,6 +123,10 @@ const Question = ({ questionIndex, uid }) => {
                 <Mcq
                     questionIndex={questionIndex}
                     updateQuestionArray={updateQuestionArrayv2}
+                    updateQuestionOptions={updateQuestionOptions}
+                    checkOptionText={checkOptionText}
+                    setOptionText={setOptionText}
+                    deleteOption={deleteOption}
                 />
             );
         } else if (questionType === 2) {
@@ -99,6 +141,10 @@ const Question = ({ questionIndex, uid }) => {
                 <CheckBoxComp
                     questionIndex={questionIndex}
                     updateQuestionArray={updateQuestionArrayv2}
+                    updateQuestionOptions={updateQuestionOptions}
+                    checkOptionText={checkOptionText}
+                    setOptionText={setOptionText}
+                    deleteOption={deleteOption}
                 />
             );
         } else if (questionType === 4) {
@@ -106,6 +152,7 @@ const Question = ({ questionIndex, uid }) => {
                 <Matching
                     questionIndex={questionIndex}
                     updateQuestionArray={updateQuestionArrayv2}
+                    updateQuestionOptions={updateQuestionOptions}
                 />
             );
         } else {
@@ -129,11 +176,33 @@ const Question = ({ questionIndex, uid }) => {
         return currentOptions
 
     }
-    const deleteQuestion = (e) =>{
-        e.preventDefault()
-        dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
+
+    function deleteExamIfNoQuestions() {
+        // if it is in preview status and no exam questions then delete the whole exam
+        if (exam?.questions.length == 0) {
+            deleteExam(examId).then((data) => {
+                console.log(data)
+                navigate(`/courses/${course?.courseId}/exams`)
+            })
+        }
     }
 
+    const handleDeleteQuestion = (e) =>{
+        e.preventDefault()
+        if (exam?.isItPreview && exam?.questions.length !== 0){
+            // delete question from db
+            const questionId = exam?.questions[questionIndex].tmpId
+            deleteQuestion(questionId,examId).then((data)=>{
+                console.log('length before', exam?.questions.length)
+                dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
+                console.log('length after', exam?.questions.length)
+
+                deleteExamIfNoQuestions();
+            })
+        }else {
+            dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
+        }
+    }
     const duplicateQuestion = (e) =>{
         e.preventDefault()
         const deepCopyExamQuestions = [...exam.questions]
@@ -181,14 +250,14 @@ const Question = ({ questionIndex, uid }) => {
                 </Tooltip>
                 <Tooltip title="Delete">
                     <IconButton style={{float: 'right'}}>
-                        <DeleteOutlineIcon onClick={deleteQuestion} />
+                        <DeleteOutlineIcon onClick={handleDeleteQuestion} />
                     </IconButton>
                 </Tooltip>
-                <Tooltip title="Duplicate">
+                {!exam.isItPreview ? <Tooltip title="Duplicate">
                     <IconButton style={{float: 'right'}}>
                         <ContentCopyIcon onClick={duplicateQuestion} />
                     </IconButton>
-                </Tooltip>
+                </Tooltip> : null }
             </div>
         </Paper>
     );

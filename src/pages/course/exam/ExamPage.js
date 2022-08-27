@@ -52,6 +52,8 @@ const ExamPage = () => {
             setExams(data)
             setCourseExams(data)
             setLoading(false)
+        }).catch((e)=>{
+            console.log(e)
         })
         return ()=>{
             controller.abort()
@@ -64,13 +66,13 @@ const ExamPage = () => {
         <>
             <ResponsiveAppBar />
             <div className={classes.container}>
-                <div className={classes.createExamBtnContainer}>
+                {user.role_id === 3 ? <div className={classes.createExamBtnContainer}>
                     <Tooltip title="create new exam/quiz for this course">
                         <Button onClick={createNewExam} className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
                             <b>create</b>
                         </Button>
                     </Tooltip>
-                </div>
+                </div> : null}
                 {
                     exams.map(({exam_id,title, starting_at,ending_at},index)=>{
                         return <Exam

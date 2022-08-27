@@ -42,6 +42,7 @@ function App(props) {
     const [loading, setLoading] = useState(true);
     const user = useSelector(state => state.UserReducerV2).user;
 
+
     // using async useEffect can cause memory leak but i'm using 'isMounted'
     // to prevent that
     useEffect(   async () => {
@@ -129,7 +130,7 @@ function App(props) {
                     }
                 />
                 {/*<Route exact path="/result/:examId" element={<ResultExam />} />*/}
-                {/*<Route exact path="/exam/:examId" element={<ExamStudent />} />*/}
+                <Route exact path="/exam/:examId" element={<ExamStudent />} />
                 <Route
                     exact
                     path="/invitation/:invitationHash"

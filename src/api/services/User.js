@@ -68,7 +68,12 @@ class User {
     static async refreshTokenv2() {
         try {
             const {data} = await axiosPrivate.post(REFRESH_TOKEN)
-            updateToken(data['accessToken'])
+            const token = data['accessToken']
+            axiosPrivate.interceptors.request.use(async  req => {
+                console.log('calling v2',token)
+                req.headers.Authorization = 'Bearer ' + token
+                return req
+            });
         }catch (err) {
             console.log(err)
             if (err.response.status === 406) {
