@@ -11,11 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect, useDispatch, useSelector } from "react-redux";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ImageIcon from "@mui/icons-material/Image";
-import {SET_POINTS, SET_QUESTION_TEXT, SET_QUESTION_TYPE, SET_QUESTIONS, SET_WHO_CAN_SEE} from "../../../store/actions";
-import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
+import {SET_POINTS, SET_QUESTION_TEXT, SET_QUESTION_TYPE, SET_QUESTIONS, SET_WHO_CAN_SEE} from "../../store/actions";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import IconButton from "@mui/material/IconButton";
-import LongMenu from "../../../components/LongMenu";
 import { v4 as uuidv4 } from "uuid";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -102,7 +100,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                         </Badge>
                     </Grid>
                 : null }
-            <Grid xs={exam?.questionTimer === 'true' ? 5 : 6} item>
+            <Grid xs={exam?.questionTimer ? 5 : 6} item>
                 <TextField
                     id="outlined-uncontrolled"
                     label="Question text"
@@ -158,7 +156,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                     </Select>
                 </FormControl>
             </Grid>
-            { exam?.questionTimer === 'true'  ? <Grid xs={1} item>
+            { exam?.questionTimer ? <Grid xs={1} item>
                 <FormControl fullWidth variant="standard">
                     <TextField
                         type="number"

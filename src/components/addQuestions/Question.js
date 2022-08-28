@@ -18,18 +18,17 @@ import {
     SET_QUESTION_TEXT,
     SET_QUESTIONS,
     SET_TMP_ID,
-} from "../../../store/actions";
+} from "../../store/actions";
 import ImageIcon from "@mui/icons-material/Image";
 import Divider from "@mui/material/Divider";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Tooltip from "@mui/material/Tooltip";
-import LongMenu from "../../../components/LongMenu";
 import IconButton from "@mui/material/IconButton";
-import {deleteQuestion} from "../../../api/services/Question";
+import {deleteQuestion} from "../../api/services/Question";
 import {useNavigate, useParams} from "react-router-dom";
-import {deleteExam} from "../../../api/services/Exam";
+import {deleteExam} from "../../api/services/Exam";
 import {toast} from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({

@@ -8,9 +8,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import * as Actions from "../../../store/actions";
 import {connect, useSelector} from "react-redux";
-import withQuestion from "./withQuestion";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,

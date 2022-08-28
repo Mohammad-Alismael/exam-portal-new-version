@@ -7,7 +7,7 @@ import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { toast } from "react-toastify";
-import { connect, useSelector } from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from '@mui/material/IconButton';
 import axios from "axios";
@@ -16,6 +16,13 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
 import LongMenu from "../../../components/LongMenu";
+import {
+    SET_ASSIGNED_FOR,
+    SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
+    SET_EXAM_TITLE, SET_NAVIGATION, SET_QUESTIONS,
+    SET_SPECIFIC_STUDENTS,
+    SET_STARTING_AT, SET_STUDENTS
+} from "../../../store/actions";
 
 const useStyles = makeStyles((theme) => ({
     container: {

@@ -1,23 +1,6 @@
 import React, { Component, useEffect } from "react";
-import PropTypes from "prop-types";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect, useDispatch, useSelector } from "react-redux";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import axios from "axios";
-import ImageIcon from "@mui/icons-material/Image";
-import { SET_QUESTIONS } from "../../../store/actions";
-import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
-import IconButton from "@mui/material/IconButton";
-import LongMenu from "../../../components/LongMenu";
-import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {

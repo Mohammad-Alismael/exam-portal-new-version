@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {CHANGE_PREVIEW, SET_QUESTIONS} from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
-import Question from "./addQuestions/Question";
+import Question from "../../components/addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
 import ExamDetails from "../../components/ExamDetails";
 const useStyles = makeStyles((theme) => ({

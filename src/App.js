@@ -7,7 +7,6 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Course from "./pages/course/Course";
-import Quiz from "./components/Quiz";
 import Logout from "./pages/Logout";
 import { connect, useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";

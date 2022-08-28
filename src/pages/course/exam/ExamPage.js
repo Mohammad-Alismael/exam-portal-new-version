@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ResponsiveAppBar from "../../../layouts/ResponsiveAppBar";
 import Exam from "./Exam";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -10,6 +10,13 @@ import {useNavigate, useParams} from "react-router-dom";
 import {fetchExams} from "../../../api/services/Exam";
 import {setCourseExams} from "../../../actions/CourseAction";
 import {CircularProgress} from "@material-ui/core";
+import {
+    SET_ASSIGNED_FOR,
+    SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
+    SET_EXAM_TITLE, SET_NAVIGATION, SET_QUESTIONS,
+    SET_SPECIFIC_STUDENTS,
+    SET_STARTING_AT, SET_STUDENTS
+} from "../../../store/actions";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: '7% 25%',
@@ -38,12 +45,60 @@ const ExamPage = () => {
     const { course_id } = useParams();
     const [exams,setExams] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
     const createNewExam = (e) =>{
         e.preventDefault()
+        resetExamReducer()
         navigate(`/courses/${course_id}/create-exam`)
+    }
+    function resetExamReducer() {
+        dispatch({
+            type: SET_STARTING_AT,
+            payload: {startingAt: 0},
+        });
+        dispatch({
+            type: SET_ENDING_AT,
+            payload: {endingAt: 0},
+        });
+        dispatch({
+            type: SET_EXAM_TITLE,
+            payload: {examTitle: ""},
+        });
+        dispatch({
+            type: SET_ASSIGNED_FOR,
+            payload: {assignedFor: 3},
+        });
+        dispatch({
+            type: SET_SPECIFIC_STUDENTS,
+            payload: {specificStudents: null},
+        });
+        dispatch({
+            type: SET_STUDENTS,
+            payload: {students: []},
+        });
+        dispatch({
+            type: SET_NAVIGATION,
+            payload: {navigation: null},
+        });
+        dispatch({
+            type: SET_EXAM_TIMER,
+            payload: {questionTimer: 'false'},
+        });
+        dispatch({
+            type: SET_EXAM_RANDOMNESS,
+            payload: {questionRandomness: 'true'},
+        });
+        dispatch({
+            type: SET_EXAM_ANSWER_KEY_AT,
+            payload: {postingAnswerKeyAt: null},
+        });
+        dispatch({
+            type: SET_EXAM_ANSWER_KEY,
+            payload: {postingAnswerKey: 'true'},
+        });
+        dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
     }
     useEffect(()=>{
         const controller = new AbortController();

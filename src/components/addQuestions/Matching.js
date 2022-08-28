@@ -11,12 +11,10 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {toast} from "react-toastify";
-import axios from "axios";
 import withAddQuestion from "./withAddQuestion";
 import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuidv4} from "uuid";
-import {CHANGE_QUESTION_OPTIONS, SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
-import {store} from "../../../index";
+import {SET_ANSWER_KEY, SET_OPTIONS} from "../../store/actions";
 const useStyles = makeStyles((theme) => ({
 }));
 function Matching ({questionIndex,updateQuestionArray,updateQuestionOptions}) {

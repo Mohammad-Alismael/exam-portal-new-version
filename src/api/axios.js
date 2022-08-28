@@ -15,26 +15,17 @@ const axiosPrivate = axios.create({
     withCredentials: true
 })
 
-// axiosPrivate.interceptors.request.use(
-//     config => {
-//         if (token != null) {
-//             config.headers['Authorization'] = 'Bearer ' + token
-//         }
-//         return config
-//     },
-//     error => {
-//         Promise.reject(error)
-//     }
-// );
-
 axiosPrivate.interceptors.request.use(async  req => {
     console.log('calling',token)
     if (token != null) req.headers.Authorization = 'Bearer ' + token
-
     if (!isExpired(token)) return req
 
     if (token != null){
-        const {data} = await axios.post(REFRESH_TOKEN)
+        const {data} = await axios.post(REFRESH_TOKEN,{},{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         updateToken(data['accessToken'])
         req.headers.Authorization = 'Bearer ' + data['accessToken']
     }

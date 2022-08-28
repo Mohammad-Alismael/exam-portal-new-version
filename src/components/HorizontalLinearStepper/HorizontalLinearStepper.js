@@ -17,7 +17,7 @@ import {toast} from "react-toastify";
 import {Backdrop} from "@mui/material";
 import {CircularProgress} from "@material-ui/core";
 import {createExam, updateExamDetails} from "../../api/services/Exam";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {updateExamQuestions} from "../../api/services/Question";
 import {
     SET_ASSIGNED_FOR,
@@ -44,6 +44,7 @@ export default function HorizontalLinearStepper(props) {
     const course = useSelector(state => state.CourseReducer);
     const location = useLocation();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -74,7 +75,6 @@ export default function HorizontalLinearStepper(props) {
             updateExamQuestions({...exam, examId}).then(res => {
                 toast.info(res['message'])
                 setPostExamLoading(false)
-
             }).catch((e) => {
                 console.log(e)
                 setPostExamLoading(false)
@@ -143,13 +143,13 @@ export default function HorizontalLinearStepper(props) {
                 .then(res => {
                     toast.info(res['message'])
                     setPostExamLoading(false)
-
+                    navigate(`/courses/${course?.courseId}/exams`)
                 }).catch((e) => {
                 console.log(e)
                 setPostExamLoading(false)
             })
         }
-        resetExamReducer();
+        // resetExamReducer();
     }
 
     return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, {useEffect, useLayoutEffect, useRef} from "react";
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
@@ -6,8 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@mui/material/TextField";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import {SET_ANSWER_KEY, SET_OPTIONS} from "../../../store/actions";
-import { store } from "../../../index";
+import {SET_ANSWER_KEY, SET_OPTIONS} from "../../store/actions";
 import FormGroup from "@mui/material/FormGroup";
 import Tooltip from "@mui/material/Tooltip";
 import CloseIcon from "@mui/icons-material/Close";
@@ -23,6 +22,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
+    const itemsRef = useRef([]);
     const options = exam.questions[questionIndex].options
     const handleCheckBoxOptions = (e) => {
         e.preventDefault();
@@ -68,6 +68,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
                     value={index}
                     control={
                         <Checkbox
+                            ref={el => itemsRef.current[index] = el}
                             id={options[index]["id"]}
                         />
                     }
@@ -113,6 +114,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
         setOptionImg(myFiles[0]);
     };
     useEffect(() => {
+        console.log(itemsRef.current)
         // setOptions([...exam.questions[questionIndex].options]);
     }, []);
     return (

@@ -8,19 +8,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import * as Actions from "../../../store/actions";
 import { connect, useDispatch, useSelector } from "react-redux";
 import withAddQuestion from "./withAddQuestion";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
-import {
-    CHANGE_QUESTION_OPTIONS,
-    SET_ANSWER_KEY,
-    SET_EXAM_QUESTION_INDEX,
-    SET_OPTIONS,
-    SET_QUESTIONS,
-} from "../../../store/actions";
-import { store } from "../../../index";
 import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import Tooltip from "@mui/material/Tooltip";

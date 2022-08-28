@@ -4,7 +4,7 @@ import { createTheme, makeStyles } from "@material-ui/core/styles";
 import { connect, useDispatch, useSelector } from "react-redux";
 import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import Question from "./createExamPage/addQuestions/Question";
+import Question from "../components/addQuestions/Question";
 import { fetchExamDetails} from "../api/services/Exam";
 import {fetchExamQuestions} from "../api/services/Question"
 import {
@@ -179,6 +179,7 @@ function PreviewExam(props) {
                 <ExamDetails />
                 {exam.questions.map(({ tmpId }, index) => {
                     return  <Question
+                        key={tmpId}
                         questionIndex={getQuestionIndex(tmpId)}
                         uid={tmpId}
                     />
