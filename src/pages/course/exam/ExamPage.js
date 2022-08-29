@@ -11,7 +11,7 @@ import {fetchExams} from "../../../api/services/Exam";
 import {setCourseExams} from "../../../actions/CourseAction";
 import {CircularProgress} from "@material-ui/core";
 import {
-    SET_ASSIGNED_FOR,
+    SET_ASSIGNED_FOR, SET_COURSE_EXAMS,
     SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
     SET_EXAM_TITLE, SET_NAVIGATION, SET_QUESTIONS,
     SET_SPECIFIC_STUDENTS,
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
     createExamBtnContainer: {
         // backgroundColor: 'red',
-        width: '103%',
+        width: '100%',
         height: '30px',
         margin: '1.2rem',
     },
@@ -105,7 +105,7 @@ const ExamPage = () => {
         fetchExams(course_id,controller).then((data)=>{
             console.log('exams', data)
             setExams(data)
-            setCourseExams(data)
+            dispatch({ type: SET_COURSE_EXAMS, payload: { exams: data } });
             setLoading(false)
         }).catch((e)=>{
             console.log(e)
@@ -129,7 +129,7 @@ const ExamPage = () => {
                     </Tooltip>
                 </div> : null}
                 {
-                    exams.map(({exam_id,title, starting_at,ending_at},index)=>{
+                    course?.exams.map(({exam_id,title, starting_at,ending_at},index)=>{
                         return <Exam
                             examTitle={title}
                             examId={exam_id}

@@ -39,7 +39,6 @@ function Matching ({questionIndex,updateQuestionArray,updateQuestionOptions}) {
         updateQuestionArray({answerKey: parseInt(e.target.value)})
     }
     useEffect(()=>{
-        console.log('options from checkbox',exam.questions[questionIndex].options)
     },[])
     return (
             <>

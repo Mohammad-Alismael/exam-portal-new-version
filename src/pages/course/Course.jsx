@@ -124,9 +124,6 @@ function Course(props) {
         dispatch({ type: SET_COURSE_ID, payload : {courseId: course_id} })
         dispatch(CourseAction(course_id))
         setIsLoading(false)
-        // return ()=>{
-        //     controller.abort()
-        // }
     },[])
 
     if (isLoading) {

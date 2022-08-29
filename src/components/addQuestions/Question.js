@@ -144,6 +144,7 @@ const Question = ({ questionIndex, uid }) => {
                     checkOptionText={checkOptionText}
                     setOptionText={setOptionText}
                     deleteOption={deleteOption}
+                    getOptionIndex={getOptionIndex}
                 />
             );
         } else if (questionType === 4) {
@@ -178,7 +179,7 @@ const Question = ({ questionIndex, uid }) => {
 
     function deleteExamIfNoQuestions() {
         // if it is in preview status and no exam questions then delete the whole exam
-        if (exam?.questions.length == 0) {
+        if (exam?.questions.length === 0) {
             deleteExam(examId).then((data) => {
                 console.log(data)
                 navigate(`/courses/${course?.courseId}/exams`)
@@ -192,10 +193,7 @@ const Question = ({ questionIndex, uid }) => {
             // delete question from db
             const questionId = exam?.questions[questionIndex].tmpId
             deleteQuestion(questionId,examId).then((data)=>{
-                console.log('length before', exam?.questions.length)
                 dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
-                console.log('length after', exam?.questions.length)
-
                 deleteExamIfNoQuestions();
             })
         }else {

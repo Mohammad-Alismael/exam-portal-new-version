@@ -14,9 +14,10 @@ import IconButton from "@mui/material/IconButton";
 import ImageIcon from "@mui/icons-material/Image";
 import {Badge} from "@mui/material";
 import {toast} from "react-toastify";
-const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,checkOptionText,setOptionText,deleteOption }) => {
+const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,selectedOptionForCheckbox,getOptionIndex,checkOptionText,setOptionText,deleteOption }) => {
     // const [options, setOptions] = React.useState([]);
     const [checkedAr, setCheckedAr] = React.useState([]);
+
     const [optionValue, setOptionValue] = React.useState("");
     const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);
@@ -24,6 +25,11 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
     const dispatch = useDispatch();
     const itemsRef = useRef([]);
     const options = exam.questions[questionIndex].options
+    const answerKeyArray = exam?.questions[questionIndex].answerKey
+    let selectedAnswerKeyOptions = options.map((val,i)=>{
+        return answerKeyArray.includes(i)
+    })
+    const [boolAr, setBoolAr] = React.useState([selectedAnswerKeyOptions]);
     const handleCheckBoxOptions = (e) => {
         e.preventDefault();
         let id = uuidv4();
@@ -44,20 +50,30 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
     const handleCheckedAr = (e) =>{
         const id = e.target.id
         const checked = e.target.checked
+        const optionIndex = getOptionIndex(id)
         // if checked and not in array then add it
-        if (checked && !checkedAr.includes(id)) {
-            setCheckedAr([...checkedAr, e.target.id])
-            updateQuestionArray({answerKey:[...checkedAr, e.target.id]})
+        if (checked && !checkedAr.includes(optionIndex)) {
+            setCheckedAr([...checkedAr, optionIndex])
+            updateQuestionArray({answerKey:[...checkedAr, optionIndex]})
         }
         // if not checked and in array then remove it
-        if (!checked && checkedAr.includes(id)){
+        if (!checked && checkedAr.includes(optionIndex)){
             const new_ar = checkedAr.filter((_id,index)=>{
-                return _id !== id
+                return _id !== optionIndex
             })
             updateQuestionArray({answerKey:[...new_ar]})
             setCheckedAr([...new_ar])
         }
     }
+    const handleChangebox = (e)=>{
+        const id = e.target.id
+        const index = getOptionIndex(id)
+        const checked = e.target.checked
+        const deepCopy = [...boolAr]
+        deepCopy[index] = !boolAr[index]
+        setBoolAr(deepCopy)
+    }
+
     const loadCheckboxOptions = (index) => {
         return (
             <Grid container direction="row"
@@ -68,7 +84,8 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
                     value={index}
                     control={
                         <Checkbox
-                            ref={el => itemsRef.current[index] = el}
+                            onChange={handleChangebox}
+                            checked={!!boolAr[index]}
                             id={options[index]["id"]}
                         />
                     }
@@ -114,8 +131,12 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
         setOptionImg(myFiles[0]);
     };
     useEffect(() => {
-        console.log(itemsRef.current)
-        // setOptions([...exam.questions[questionIndex].options]);
+        const answerKeyArray = exam?.questions[questionIndex].answerKey
+        const a = options.map((val,i)=>{
+            return answerKeyArray.includes(i)
+        })
+        setBoolAr(a)
+        setCheckedAr([...answerKeyArray])
     }, []);
     return (
         <>

@@ -124,7 +124,6 @@ function Mcq({
     };
 
     useEffect(() => {
-        console.log("options", exam.questions[questionIndex].options);
     }, []);
     return (
         <Grid xs={12} container>

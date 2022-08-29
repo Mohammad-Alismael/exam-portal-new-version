@@ -1,6 +1,7 @@
 import axios from "axios";
 import {isExpired} from "react-jwt";
 import {REFRESH_TOKEN} from "./services/RouteNames";
+import {toast} from "react-toastify";
 export const BASE_URL = 'http://localhost:8081';
 let token = null
 
@@ -21,13 +22,20 @@ axiosPrivate.interceptors.request.use(async  req => {
     if (!isExpired(token)) return req
 
     if (token != null){
-        const {data} = await axios.post(REFRESH_TOKEN,{},{
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        updateToken(data['accessToken'])
-        req.headers.Authorization = 'Bearer ' + data['accessToken']
+        try {
+            const {data} = await axios.post(REFRESH_TOKEN,{},{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            updateToken(data['accessToken'])
+            req.headers.Authorization = 'Bearer ' + data['accessToken']
+        }catch (e) {
+            console.log(e)
+            window.location.href = '/logout'
+            toast("session expired, you must log in again!")
+        }
+
     }
 
     return req

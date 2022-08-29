@@ -27,9 +27,10 @@ const CourseReducer  = (state = initialState, action) => {
                 announcements: action.announcements
             }
         case actionTypes.SET_COURSE_EXAMS:
+            console.log('from exm reducer', action.payload.exams)
             return {
                 ...state,
-                exams: action.exams
+                exams: action.payload.exams
             }
         default:
             break;
