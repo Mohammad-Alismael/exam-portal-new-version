@@ -66,8 +66,6 @@ const Question = ({ questionIndex, uid }) => {
         const questionIndexFound = exam?.questions.findIndex((quest, index) => {
             return quest.tmpId === uid;
         });
-        console.log("index", questionIndexFound);
-
         return questionIndexFound;
     };
     const updateQuestionOptions = (newOptionsArray) => {
@@ -92,12 +90,10 @@ const Question = ({ questionIndex, uid }) => {
         const id = e.target.id;
         const optionIndexFound = getOptionIndex(id);
         const tmp = [...exam.questions[questionIndex].options];
-        console.log(optionIndexFound,tmp)
         tmp[optionIndexFound] = {
             ...tmp[optionIndexFound],
             optionValue: e.target.value,
         };
-        console.log(tmp)
         updateQuestionOptions(tmp)
     };
     const deleteOption = (id) => {
@@ -107,7 +103,6 @@ const Question = ({ questionIndex, uid }) => {
         updateQuestionOptions(tmp)
     }
     const updateQuestionArrayv2 = (object) => {
-        console.log('wtf from here',object)
         const key = Object.keys(object)[0];
         const value = Object.values(object)[0];
         const index = getQuestionIndex();

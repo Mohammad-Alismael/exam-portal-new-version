@@ -1,63 +1,80 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import React, { Component, useEffect } from "react";
+import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
-import {toast} from "react-toastify";
-import {connect} from "react-redux";
-import * as Actions from "../../store/actions";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import {connect, useSelector} from "react-redux";
+import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
+const useStyles = makeStyles((theme) => ({
+    paperStyle: {
+        padding: 30,
+        height: "15vh auto",
+        width: "50%",
+        margin: "30px auto",
+        position: "relative",
+    },
+    textField: {
+        width: "100%",
+    },
+    dropDown: {
+        margin: "50px",
+    },
+    deleteIcon: {
+        float: "right",
+        cursor: "pointer",
+        position: "absolute",
+        top: 15,
+        right: 15,
+        // paddingTop: 20
+    },
+}));
+function Mcq({ questionIndex }) {
+    const classes = useStyles();
+    const [options, setOptions] = React.useState([]);
+    const exam = useSelector((state) => state.ExamStudentReducer);
 
-
-
-function Mcq(props) {
-    const handleChange = (e) => {
-        // [{questionId:"",userAnswer:""}]
-        const deepCopy = [...props.examStudent.answeredQuestions]
-        const questionFound = deepCopy.findIndex(function(item,index){
-            if (item.questionId === props.questionId)
-                return true;
-        })
-        console.log(questionFound)
-        if(questionFound == -1){
-            deepCopy.push({questionId:parseInt(props.questionId), userAnswer: parseInt(e.target.value)})
-            props.setAnsweredQuestionsArray(deepCopy)
-        }else {
-            deepCopy[questionFound] = {questionId:parseInt(props.questionId), userAnswer: parseInt(e.target.value)}
-            props.setAnsweredQuestionsArray(deepCopy)
-        }
-    }
+    const loadOptions = (index) => {
+        return (
+            <Grid item xs={12} fullwidth>
+                <FormControlLabel
+                    value={options[index]['optionValue']}
+                    control={<Radio />}
+                    label={options[index]['optionValue']}
+                />
+                {options[index]["img"] != null ? (
+                    <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
+                ) : null}
+            </Grid>
+        );
+    };
+    useEffect(()=>{
+        // console.log(exam.questions[questionIndex])
+        setOptions([...exam.questions[questionIndex].options])
+    },[])
     return (
-        <RadioGroup
-            name="radio-buttons-group"
-            onChange={handleChange}
-        >
-            { props.options.map((val,index)=>{
-                return (
-                    <Grid item fullwidth>
-                        <FormControlLabel value={index} control={<Radio />} label={val['optionValue']} />
+        <Grid xs={12} container>
+            <Grid
+                item
+                style={{ marginLeft: 12 }}
+                justifyContent="center"
+                alignItems="center"
+                xs={12}
+            >
+                <RadioGroup>
+                    <Grid container style={{ padding: "10px 0" }}>
+                        {options.map((val, index) => {
+                            return loadOptions(index);
+                        })}
                     </Grid>
-                )
-            })
-
-            }
-
-        </RadioGroup>
+                </RadioGroup>
+            </Grid>
+        </Grid>
     );
 }
-const mapStateToProps = state => {
-    return {
-        user : state.UserReducer,
-        examStudent: state.ExamStudentReducer
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        setAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_NEW_ANSWER_QUESTION_ARRAY,
-            payload : {questions}})
 
-    }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(Mcq);
+export default Mcq;

@@ -1,22 +1,16 @@
 import * as actionTypes from '../actions'
+import {SET_EXAM_QUESTIONS_STUDENT} from "../actions";
 const initialState = {
-    answeredQuestions : []
+    questions : []
 }
 
 const ExamStudentReducer  = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SET_ANSWER_QUESTION_ARRAY:
+        case actionTypes.SET_EXAM_QUESTIONS_STUDENT:
             return {
                 ...state,
-                answeredQuestions: []
+                questions: action.payload.questions
             }
-
-        case actionTypes.SET_NEW_ANSWER_QUESTION_ARRAY:
-            return {
-                ...state,
-                answeredQuestions: action.payload.questions
-            }
-
         default:
             break;
     }
