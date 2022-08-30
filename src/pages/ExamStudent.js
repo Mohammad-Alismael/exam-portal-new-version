@@ -17,6 +17,8 @@ import Truth from "../components/QuestionStudent/Truth";
 import Matching from "../components/QuestionStudent/Matching";
 import CheckboxComp from "../components/QuestionStudent/CheckboxComp";
 import * as Actions from "../store/actions";
+import {fetchExamDetailsForStudent} from "../api/services/Exam";
+import {fetchExamQuestions} from "../api/services/Question";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -38,77 +40,21 @@ function ExamStudent(props) {
     const [endingAt,setEndingAt] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
     const [questions,setQuestions] = React.useState([]);
-    const getExamInfo = async () => {
-        setIsLoading(true)
-        const promise = new Promise((resolve, reject) => {
-            axios.post('http://localhost:8080/get-exam-id-info', {
-                examId
-            }).then((data) => {
-                resolve(data.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                    reject('no exam id found!')
-                })
-        })
-
-        try {
-            return await promise
-        } catch (e) {
-            return Promise.resolve(e)
-        }
-    }
-
-    useEffect( ()=>{
-
-    },[])
-
-    const chooseBody = (val,index) => {
-        if (val['question'].questionType == 1){
-            return  <Mcq key={index+1} questionId={val['question'].questionId} options={val['questionOptions']}/>
-        }else if(val['question'].questionType == 2){
-            return <Text key={index+1} questionId={val['question'].questionId}/>;
-        }else if(val['question'].questionType == 3){
-            return <CheckboxComp key={index+1} questionId={val['question'].questionId} options={val['questionOptions']}/>
-        }else {
-            return <Truth questionId={val['question'].questionId}/>
-        }
-    }
-
-    const submitExam = () => {
-        props.examStudent.answeredQuestions.map((val,index)=>{
-            console.log(val);
-            if(!Array.isArray(val['userAnswer'])){
-                if(typeof val['userAnswer'] == "string"){
-                    submitQuestionAnswerText(val['questionId'],val['userAnswer'])
-                    submitQuestionAnswer(val['questionId'],-1)
-                }
-                submitQuestionAnswer(val['questionId'],val['userAnswer'])
-            }
-            else {
-                val['userAnswer'].map((val2,index)=>{
-                    submitQuestionAnswer(val['questionId'],val2)
-                })
-
-            }
-        })
-        props.resetAnsweredQuestionsArray()
-    }
-    const submitQuestionAnswer = (questionId,userAnswer) => {
-        axios.post('http://localhost:8080/set-user-answer', {
-            userId: props.user.user_id,
-            questionId,
-            userAnswer: parseInt(userAnswer)
-        })
-    }
-
-    const submitQuestionAnswerText = (questionId,userAnswer) => {
-        axios.post('http://localhost:8080/set-user-answer-text', {
-            userId: props.user.user_id,
-            qid: questionId,
-            userAnswer: userAnswer
-        })
-    }
+   useEffect(()=>{
+       setIsLoading(true)
+       const controller = new AbortController();
+       fetchExamDetailsForStudent(examId,controller).then((data)=>{
+           console.log('exam details for students',data)
+       })
+       fetchExamQuestions(examId, controller).then((data) => {
+           console.log('exam questions for students', data)
+           setQuestions(questions)
+           setIsLoading(false)
+       })
+       return () => {
+           controller.abort();
+       };
+   },[])
     if (isLoading){
         return <CircularProgress />
     }else {
@@ -120,19 +66,4 @@ function ExamStudent(props) {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        user : state.UserReducer,
-        examStudent: state.ExamStudentReducer
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        setAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_NEW_ANSWER_QUESTION_ARRAY,
-            payload : {questions}}),
-        resetAnsweredQuestionsArray: (questions) => dispatch({type:Actions.SET_ANSWER_QUESTION_ARRAY,
-            payload : {questions:[]}}),
-
-    }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(ExamStudent);
+export default ExamStudent;

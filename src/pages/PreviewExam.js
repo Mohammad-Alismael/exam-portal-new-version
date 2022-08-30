@@ -118,7 +118,6 @@ function PreviewExam(props) {
             });
 
         fetchExamQuestions(examId, controller).then((data) => {
-            console.log("exam questions", data);
             const ar = data.map(
                 (
                     {
