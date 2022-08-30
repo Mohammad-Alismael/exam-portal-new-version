@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions'
-import {SET_COURSE_EXAMS} from "../actions";
+import {SET_COURSE_CLASSMATES, SET_COURSE_EXAMS} from "../actions";
 
 const initialState = {
     courseId: "",
@@ -26,8 +26,12 @@ const CourseReducer  = (state = initialState, action) => {
                 ...state,
                 announcements: action.announcements
             }
+        case actionTypes.SET_COURSE_CLASSMATES:
+            return {
+                ...state,
+                classmates: action.classmates
+            }
         case actionTypes.SET_COURSE_EXAMS:
-            console.log('from exm reducer', action.payload.exams)
             return {
                 ...state,
                 exams: action.payload.exams

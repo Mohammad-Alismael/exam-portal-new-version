@@ -17,6 +17,7 @@ import {
     SET_SPECIFIC_STUDENTS,
     SET_STARTING_AT, SET_STUDENTS
 } from "../../../store/actions";
+import ResetExamReducer from "../../../actions/ResetExamReducer";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: '7% 25%',
@@ -50,55 +51,8 @@ const ExamPage = () => {
     const course = useSelector(state => state.CourseReducer);
     const createNewExam = (e) =>{
         e.preventDefault()
-        resetExamReducer()
+        dispatch(ResetExamReducer())
         navigate(`/courses/${course_id}/create-exam`)
-    }
-    function resetExamReducer() {
-        dispatch({
-            type: SET_STARTING_AT,
-            payload: {startingAt: 0},
-        });
-        dispatch({
-            type: SET_ENDING_AT,
-            payload: {endingAt: 0},
-        });
-        dispatch({
-            type: SET_EXAM_TITLE,
-            payload: {examTitle: ""},
-        });
-        dispatch({
-            type: SET_ASSIGNED_FOR,
-            payload: {assignedFor: 3},
-        });
-        dispatch({
-            type: SET_SPECIFIC_STUDENTS,
-            payload: {specificStudents: null},
-        });
-        dispatch({
-            type: SET_STUDENTS,
-            payload: {students: []},
-        });
-        dispatch({
-            type: SET_NAVIGATION,
-            payload: {navigation: null},
-        });
-        dispatch({
-            type: SET_EXAM_TIMER,
-            payload: {questionTimer: 'false'},
-        });
-        dispatch({
-            type: SET_EXAM_RANDOMNESS,
-            payload: {questionRandomness: 'true'},
-        });
-        dispatch({
-            type: SET_EXAM_ANSWER_KEY_AT,
-            payload: {postingAnswerKeyAt: null},
-        });
-        dispatch({
-            type: SET_EXAM_ANSWER_KEY,
-            payload: {postingAnswerKey: 'true'},
-        });
-        dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
     }
     useEffect(()=>{
         const controller = new AbortController();

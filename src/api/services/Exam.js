@@ -39,7 +39,7 @@ async function fetchExamDetails(exam_id,controller) {
 
 async function fetchExamStudents(exam_id,controller) {
     try {
-        const res = await axiosPrivate.get(FETCH_EXAM_STUDENTS + exam_id, {signal: controller.signal})
+        const res = await axiosPrivate.get(`${FETCH_EXAM_STUDENTS}/${exam_id}`, {signal: controller.signal})
         return await res['data']
     } catch (e) {
         console.log(e)

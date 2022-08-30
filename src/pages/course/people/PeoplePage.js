@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
@@ -7,6 +7,8 @@ import Participants from "../people/Participants";
 import {makeStyles} from "@material-ui/core/styles";
 import Divider from "@mui/material/Divider";
 import ResponsiveAppBar from "../../../layouts/ResponsiveAppBar";
+import {fetchExamStudents} from "../../../api/services/Exam";
+import {SET_STUDENTS} from "../../../store/actions";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: 30,
@@ -19,7 +21,15 @@ function PeoplePage(props) {
     const classes = useStyles();
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
-
+    useEffect(()=>{
+        // fetchExamStudents(examId,controller).then((data)=>{
+        //     dispatch({
+        //         type: SET_STUDENTS,
+        //         payload: { students: data },
+        //     });
+        //     setStudents(data)
+        // })
+    },[])
     return (
         <>
             <ResponsiveAppBar />
@@ -49,7 +59,7 @@ function PeoplePage(props) {
                         </Grid>
                     </Grid>
                     <Divider sx={{ borderBottomWidth: 3,color: 'primary.main' }}/>
-                    <Participants  username={user?.username}/>
+                    {user.role_id != 3 ? <Participants  username={user?.username}/> : null }
                     <Divider/>
                     {
                         course.classmates.filter((student)=>{

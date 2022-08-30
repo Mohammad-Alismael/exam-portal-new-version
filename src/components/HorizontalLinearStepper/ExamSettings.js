@@ -11,7 +11,7 @@ import {
     SET_ASSIGNED_FOR,
     SET_ENDING_AT,
     SET_EXAM_TITLE, SET_SPECIFIC_STUDENTS,
-    SET_STARTING_AT, SET_WHO_CAN_SEE_OBJECT,
+    SET_STARTING_AT, SET_STUDENTS, SET_WHO_CAN_SEE_OBJECT,
 } from "../../store/actions";
 import {
     Dialog,
@@ -122,8 +122,20 @@ function ExamSettings(props) {
         return checkedIndex !== -1;
     };
     useEffect(()=>{
+        const controller = new AbortController();
+        // fetch exam/students
+        fetchExamStudents(examId,controller).then((data)=>{
+            dispatch({
+                type: SET_STUDENTS,
+                payload: { students: data },
+            });
+            setStudents(data)
+        })
+
         setChecked(exam?.specificStudents)
-        setStudents(exam?.students)
+        return ()=>{
+            controller.abort()
+        }
     },[])
     return (
         <>

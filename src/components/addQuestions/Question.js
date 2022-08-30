@@ -194,7 +194,7 @@ const Question = ({ questionIndex, uid }) => {
             const questionId = exam?.questions[questionIndex].tmpId
             deleteQuestion(questionId,examId).then((data)=>{
                 dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
-                deleteExamIfNoQuestions();
+                // deleteExamIfNoQuestions();
             })
         }else {
             dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });

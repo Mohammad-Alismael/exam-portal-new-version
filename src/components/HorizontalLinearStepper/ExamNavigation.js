@@ -4,7 +4,7 @@ import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {SET_NAVIGATION} from "../../store/actions";
 
@@ -12,10 +12,7 @@ export default function ExamNavigation() {
     const exam = useSelector((state) => state.ExamReducer);
     const [option,setOption] = useState('')
     const dispatch = useDispatch();
-    const handleChange = (e) => {
-        e.preventDefault()
-        setOption(e.target.value)
-    }
+
     return <Grid item xs={12}>
         <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Exam/Quiz navigation</FormLabel>

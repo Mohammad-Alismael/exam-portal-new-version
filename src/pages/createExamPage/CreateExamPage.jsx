@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Question from "../../components/addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
 import ExamDetails from "../../components/ExamDetails";
+import ResetExamReducer from "../../actions/ResetExamReducer";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 15%",

@@ -29,7 +29,7 @@ export default function ExamTimer(props) {
         <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">setting a timer for each
                 question</FormLabel>
-            <RadioGroup onChange={handleChange} value={exam?.questionTimer} name="radio-buttons-group">
+            <RadioGroup onChange={handleChange} defaultValue={exam?.questionTimer} name="radio-buttons-group">
                 <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
                 <FormControlLabel value={false} control={<Radio/>} label="No"/>
             </RadioGroup>

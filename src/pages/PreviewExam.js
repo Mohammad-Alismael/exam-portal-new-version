@@ -89,10 +89,6 @@ function PreviewExam(props) {
                     payload: { specificStudents: data["specificStudents"] },
                 });
                 dispatch({
-                    type: SET_STUDENTS,
-                    payload: { students: data["students"] },
-                });
-                dispatch({
                     type: SET_NAVIGATION,
                     payload: { navigation: data["navigation"] },
                 });
