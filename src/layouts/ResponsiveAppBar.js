@@ -50,8 +50,6 @@ const ResponsiveAppBar = (props) => {
 
     const handleCloseNavMenu = (link) => {
         setAnchorElNav(null);
-        const str = location.pathname
-        const words = str.split('/')
         let navigateTo;
         if (link == "/courses"){
             navigateTo = link
@@ -69,16 +67,25 @@ const ResponsiveAppBar = (props) => {
         setAnchorElUser(null);
         navigate(link)
     };
+
+    function hideGradesPage() {
+        const urls =  [{title: 'courses', url: '/courses'},
+            {title: 'exams', url: '/exams'},
+            {title: 'people', url: '/people'}]
+
+        if (parseInt(user.role_id) === 3) {
+            urls.push({title: 'grades', url: '/grades'})
+        }
+        setPages(urls)
+    }
+
     useEffect(()=>{
 
         // hiding other routes
         if (location.pathname === "/courses"){
             setPages([{title: 'courses', url: '/courses'}])
         }else {
-            setPages([{title: 'courses', url: '/courses'},
-                {title: 'exams', url: '/exams'},
-                {title: 'people', url: '/people'},
-                {title: 'grades', url: '/grades'}])
+            hideGradesPage();
         }
     },[navigate])
 

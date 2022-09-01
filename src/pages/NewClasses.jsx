@@ -13,7 +13,7 @@ import ClassCard from "../components/ClassCard";
 import { Button } from '@material-ui/core';
 import { Typography } from "@mui/material";
 import { connect, useSelector } from "react-redux";
-import {Course} from "../api/services/Course";
+import {Course, getCourses} from "../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
 import {Outlet} from "react-router";
@@ -74,19 +74,10 @@ function NewClasses(props) {
         let isMounted = true;
         const controller = new AbortController();
 
-        const getCourses = async () =>{
-            try {
-                const response = await axiosPrivate(FETCH_CLASSROOMS,{
-                    signal: controller.signal
-                })
-                isMounted && setCourses(response.data['result'])
-                isMounted && setLoading(false)
-            }catch (e) {
-                console.log(e)
-            }
-        }
-
-        getCourses()
+        getCourses(controller).then((data)=>{
+            isMounted && setCourses(data['result'])
+            isMounted && setLoading(false)
+        })
 
         return ()=>{
             isMounted = false
@@ -106,7 +97,7 @@ function NewClasses(props) {
                             section={section}
                         />;
                     })}
-                    {courses?.length == 0 ? (
+                    {courses?.length === 0 ? (
                         <Grid item xs={12} sm={6} md={3}>
                             <Card className={classes.createClass}>
                                 <Typography
@@ -119,7 +110,7 @@ function NewClasses(props) {
                             </Card>
                         </Grid>
                     ) : null}
-                    {user?.role_id == 3 ? (
+                    {parseInt(user?.role_id) === 3 ? (
                         <Grid item xs={12} sm={6} md={3}>
                             <Card className={classes.createClass}>
                                 <Button variant="contained" color="warning" onClick={handleClickOpen}>

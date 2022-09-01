@@ -4,7 +4,7 @@ import {axiosPrivate, token} from "../axios";
 import User from './User';
 import {isExpired} from "react-jwt";
 import jwt from "jwt-decode";
-import {FETCH_COURSE_INFO} from "./RouteNames";
+import {FETCH_CLASSROOMS, FETCH_COURSE_INFO} from "./RouteNames";
 
 class Course {
 
@@ -49,9 +49,9 @@ class Course {
 
     }
 }
-async function fetchCourseInfo(courseId) {
+async function fetchCourseInfo(courseId,controller) {
     try {
-        const response = await axiosPrivate.get(`${FETCH_COURSE_INFO}/${courseId}`)
+        const response = await axiosPrivate.get(`${FETCH_COURSE_INFO}/${courseId}`,{ signal: controller.signal })
         return response.data
     }catch (e) {
         console.log(e)
@@ -59,4 +59,15 @@ async function fetchCourseInfo(courseId) {
     }
 
 }
-export {Course,fetchCourseInfo};
+async function getCourses(controller){
+    try {
+        const response = await axiosPrivate(FETCH_CLASSROOMS,{
+            signal: controller.signal
+        })
+        return response['data']
+
+    }catch (e) {
+        console.log(e)
+    }
+}
+export {Course,fetchCourseInfo,getCourses};

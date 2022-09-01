@@ -1,19 +1,16 @@
 import {fetchCourseInfo} from "../api/services/Course";
 import {toast} from "react-toastify";
 import * as Actions from "../store/actions";
+import {SET_COURSE_EXAMS} from "../store/actions";
 
-export function CourseAction(course_id) {
+export function CourseAction(data) {
     return (dispatch) => {
-        return fetchCourseInfo(course_id).then((data)=>{
             console.log(data)
             dispatch(setCourseInfo(data['course_info']))
             dispatch(setCourseAnnouncements(data['announcements']))
             dispatch(setCourseClassmates(data['classmates']))
-            dispatch(setCourseExams(data['exams']))
-        }).catch(error => {
-            console.log(error)
-            toast.info(error.response.data.message)
-        });
+            dispatch({ type: SET_COURSE_EXAMS, payload: { exams: data['exams'] } });
+
     }
 }
 

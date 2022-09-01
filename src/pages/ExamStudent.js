@@ -15,15 +15,12 @@ import { linearProgressClasses, Paper } from "@mui/material";
 import { SET_EXAM_QUESTIONS_STUDENT, SET_QUESTIONS } from "../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
-import Question from "../components/QuestionStudent/Question";
-import ExamStudentReducer from "../store/reducers/ExamStudentReducer";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Mcq from "../components/QuestionStudent/Mcq";
 import Text from "../components/QuestionStudent/Text";
 import CheckBoxComp from "../components/QuestionStudent/CheckBoxComp";
 import Matching from "../components/QuestionStudent/Matching";
-import {toast} from "react-toastify";
 import * as PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +95,7 @@ function ExamStudent(props) {
     };
 
     useEffect(()=>{
-        let timer_ = examStudent.questions[questionIndex].time * 5;
+        let timer_ = examStudent.questions[questionIndex].time * 60;
         let minutes;
         let seconds;
         const interval = setInterval(function () {
@@ -184,12 +181,9 @@ function ExamStudent(props) {
                     <Typography>
                         <b>40 mins</b> left
                     </Typography>
-                    <Typography>
-                        <b>
-                            {questionIndex + 1}/{examStudent.questions.length}
-                        </b>{" "}
-                        Questions
-                    </Typography>
+                    <Button variant="contained" onClick={nextQuestion}>
+                        submit exam
+                    </Button>
                 </Grid>
                 <BorderLinearProgress
                     variant="determinate"

@@ -51,7 +51,6 @@ import {fetchCourseInfo} from "../../api/services/Course";
 import { useDispatch } from 'react-redux'
 import {SET_COURSE_ID} from "../../store/actions";
 import {CourseAction} from "../../actions/CourseAction";
-import {CircularProgress} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,8 +67,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundSize: 'cover',
     },
     mainGrid: {
-        // padding: 10,
-        // height: '28vh',
         width: '68%',
         margin: "30px auto",
     },
@@ -122,16 +119,19 @@ function Course(props) {
     useEffect(()=>{
         const controller = new AbortController();
         dispatch({ type: SET_COURSE_ID, payload : {courseId: course_id} })
-        dispatch(CourseAction(course_id))
-        setIsLoading(false)
+        fetchCourseInfo(course_id,controller).then((data)=>{
+            dispatch(CourseAction(data))
+            setIsLoading(false)
+        })
+        return () => {
+            controller.abort();
+        };
     },[])
 
-    if (isLoading) {
-        return <CircularProgress size={200}/>;
-    }
     return (
         <div>
             <ResponsiveAppBar />
+            { isLoading ? <LinearProgress /> :
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
                   <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
@@ -167,7 +167,7 @@ function Course(props) {
                         </Grid>
                     </Grid>
                 </Grid>
-            </Box>
+            </Box> }
         </div>
     );
 }

@@ -15,7 +15,6 @@ import Signup from "./pages/Signup";
 import PreviewExam from "./pages/PreviewExam";
 import ExamStudent from "./pages/ExamStudent";
 import Invitation from "./pages/Invitation";
-import ResultExam from "./pages/ResultExam";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ActivateEmail from "./pages/ActivateEmail";
@@ -35,9 +34,6 @@ import CreateExamPage from "./pages/createExamPage/CreateExamPage";
 import {ALL_ROLES, INSTRUCTOR_ROLE} from "./utils/global/GlobalConstants";
 
 function App(props) {
-    const dispatch = useDispatch();
-    const location = useLocation();
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const user = useSelector(state => state.UserReducerV2).user;
 
@@ -139,8 +135,6 @@ function App(props) {
                         </Protected>
                     }
                 />
-                {/*<Route exact path="/show" element={<Show />} />*/}
-                {/*<Route exact path="/quiz" element={<Quiz />} />*/}
             </Routes>
         </ThemeProvider>
     );
