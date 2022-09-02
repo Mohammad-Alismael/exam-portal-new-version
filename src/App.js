@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PreviewExam from "./pages/PreviewExam";
-import ExamStudent from "./pages/ExamStudent";
+import ExamStudent from "./pages/examStudent/ExamStudent";
 import Invitation from "./pages/Invitation";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";

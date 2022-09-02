@@ -52,7 +52,8 @@ class Course {
 async function fetchCourseInfo(courseId,controller) {
     try {
         const response = await axiosPrivate.get(`${FETCH_COURSE_INFO}/${courseId}`,{ signal: controller.signal })
-        return response.data
+        console.log('from fetchCourseInfo', response.data)
+        return await response.data
     }catch (e) {
         console.log(e)
         alert("error happened while fetching course info")

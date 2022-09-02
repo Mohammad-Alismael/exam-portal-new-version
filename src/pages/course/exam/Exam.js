@@ -97,9 +97,9 @@ function Exam(props) {
                     </div>
                 </div>
             </div>
-            <LongMenu
+            { parseInt(user.role) === 3 ? <LongMenu
                 className={classes.menuIcon}
-                options={["Delete", "Clone for other sections"]}
+                options={["Delete", "Clone for other sections", "see grades","exam statistics"]}
                 functions={[function (e) {
                     e.stopPropagation()
                     deleteExam(props.examId).then((data) => {
@@ -113,8 +113,14 @@ function Exam(props) {
                 }, function (e) {
                     e.stopPropagation()
                     alert('create it for other sections')
+                },function (e) {
+                    e.stopPropagation()
+                    alert('see grades')
+                },function (e) {
+                    e.stopPropagation()
+                    alert('exam statistics')
                 }]}
-            />
+            /> : null}
         </Paper>
     );
 }
