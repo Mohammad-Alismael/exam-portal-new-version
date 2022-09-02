@@ -75,7 +75,7 @@ const ExamPage = () => {
         <>
             <ResponsiveAppBar />
             <div className={classes.container}>
-                {user.role_id === 3 ? <div className={classes.createExamBtnContainer}>
+                {parseInt(user.role_id) === 3 ? <div className={classes.createExamBtnContainer}>
                     <Tooltip title="create new exam/quiz for this course">
                         <Button onClick={createNewExam} className={classes.createExamBtn} variant="contained" color="warning" endIcon={<AddIcon />}>
                             <b>create</b>

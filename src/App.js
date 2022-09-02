@@ -31,7 +31,7 @@ import GradesPage from "./pages/GradesPage";
 import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
 import User from "./api/services/User";
 import CreateExamPage from "./pages/createExamPage/CreateExamPage";
-import {ALL_ROLES, INSTRUCTOR_ROLE} from "./utils/global/GlobalConstants";
+import {ALL_ROLES, INSTRUCTOR_ROLE, STUDENT_ROLES} from "./utils/global/GlobalConstants";
 
 function App(props) {
     const [loading, setLoading] = useState(true);
@@ -103,9 +103,25 @@ function App(props) {
                         }
                     />
                     <Route
-                        path="grades"
+                        path="grades/:examId"
                         element={
-                            <Protected onlyAccessTo={ALL_ROLES}>
+                            <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
+                                <GradesPage />
+                            </Protected>
+                        }
+                    />
+                    <Route
+                        path="statistics/:examId"
+                        element={
+                            <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
+                                <GradesPage />
+                            </Protected>
+                        }
+                    />
+                    <Route
+                        path="grades/:examId/:studentId"
+                        element={
+                            <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
                                 <GradesPage />
                             </Protected>
                         }
@@ -125,12 +141,16 @@ function App(props) {
                     }
                 />
                 {/*<Route exact path="/result/:examId" element={<ResultExam />} />*/}
-                <Route exact path="/exam/:examId" element={<ExamStudent />} />
+                <Route exact path="/exam/:examId" element={
+                    <Protected onlyAccessTo={STUDENT_ROLES}>
+                        <ExamStudent />
+                    </Protected>
+                } />
                 <Route
                     exact
                     path="/invitation/:invitationHash"
                     element={
-                        <Protected>
+                        <Protected onlyAccessTo={ALL_ROLES}>
                             <Invitation />
                         </Protected>
                     }

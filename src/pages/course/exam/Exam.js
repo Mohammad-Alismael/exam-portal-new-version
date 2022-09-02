@@ -97,7 +97,7 @@ function Exam(props) {
                     </div>
                 </div>
             </div>
-            { parseInt(user.role) === 3 ? <LongMenu
+            { parseInt(user.role_id) === 3 ? <LongMenu
                 className={classes.menuIcon}
                 options={["Delete", "Clone for other sections", "see grades","exam statistics"]}
                 functions={[function (e) {
@@ -115,10 +115,12 @@ function Exam(props) {
                     alert('create it for other sections')
                 },function (e) {
                     e.stopPropagation()
-                    alert('see grades')
+                    navigate(`/courses/${course?.courseId}/grades/${props.examId}`)
+
                 },function (e) {
                     e.stopPropagation()
-                    alert('exam statistics')
+                    navigate(`/courses/${course?.courseId}/statistics/${props.examId}`)
+
                 }]}
             /> : null}
         </Paper>

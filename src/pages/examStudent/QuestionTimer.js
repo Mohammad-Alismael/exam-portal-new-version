@@ -4,8 +4,22 @@ import {useDispatch, useSelector} from "react-redux";
 import {SET_QUESTION_INDEX} from "../../store/actions";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
-
+import {makeStyles} from "@material-ui/core/styles";
+const useStyles = makeStyles((theme) => ({
+    questionTimerContainer: {
+        backgroundColor: '#fff',
+        borderRadius: '5px 0 0 5px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        gap: '10px',
+        padding: '0.5rem',
+        float: 'right',
+        marginTop: '2.5rem',
+    }
+}));
 export default function QuestionTimer(props) {
+    const classes = useStyles();
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const [timer,setTimer] = React.useState("");
     const dispatch = useDispatch();
@@ -42,7 +56,7 @@ export default function QuestionTimer(props) {
         return () => clearInterval(interval); //This is important
 
     },[examStudent?.questionIndex])
-    return <div className={props.classes.questionTimerContainer}>
+    return <div className={classes.questionTimerContainer}>
         <Typography><b>{timer}</b></Typography>
         <img src={"/images/icons/questionTimer.svg"} alt={"questionTime"}/>
     </div>;

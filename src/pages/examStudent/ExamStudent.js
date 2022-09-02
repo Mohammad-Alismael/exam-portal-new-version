@@ -19,27 +19,13 @@ import Button from "@mui/material/Button";
 import {toast} from "react-toastify";
 import QuestionTimer from "./QuestionTimer";
 import StudentQuestion from "./StudentQuestion";
+import QuestionNavigation from "./QuestionNavigation";
 
 const useStyles = makeStyles((theme) => ({
     container: {
         backgroundColor: "#FFF",
         height: "7vh",
         padding: "0 1rem",
-    },
-    questionContainer: {
-        margin: "10% 15%",
-        padding: "1rem",
-    },
-    questionTimerContainer: {
-        backgroundColor: '#fff',
-        borderRadius: '5px 0 0 5px',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        gap: '10px',
-        padding: '0.5rem',
-        float: 'right',
-        marginTop: '2.5rem',
     }
 }));
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -139,9 +125,9 @@ function ExamStudent() {
                     size={40}
                     thickness={4}
                 />
-                {examStudent.questions[examStudent?.questionIndex].time != null ?
-                    <QuestionTimer classes={classes}/> : null}
-                <StudentQuestion classes={classes} />
+                {examStudent.questions[examStudent?.questionIndex].time != null ? <QuestionTimer /> : null}
+                <QuestionNavigation />
+                <StudentQuestion />
             </>
         );
     }

@@ -87,7 +87,7 @@ export default function StudentQuestion(props) {
             ) : null}
         </Grid>
         <Grid item xs={12} style={{margin: "0 12px"}}>
-            {chooseQuestionType}
+            {chooseQuestionType(examStudent.questions[examStudent.questionIndex].questionType)}
         </Grid>
         <Box sx={{display: "flex", flexDirection: "row", pt: 2}}>
             {examStudent?.examDetails?.navigation == 1 ? <Button
@@ -99,7 +99,7 @@ export default function StudentQuestion(props) {
             </Button> : null}
             <Box sx={{flex: "1 1 auto"}}/>
             <Button variant="outlined"
-                    disabled={examStudent?.questionIndex === examStudent?.questions.length}
+                    disabled={examStudent?.questionIndex === examStudent?.questions.length -1}
                     onClick={nextQuestion}>
                 Next
             </Button>
