@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
-import QuestionHeader from "./QuestionHeader";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@mui/material/Button";
-import RadioGroup from "@mui/material/RadioGroup";
-import withQuestion from "./withQuestion";
+import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
+import {useDispatch} from "react-redux";
 function Text() {
+    const dispatch = useDispatch();
+    const handleChange = (e) => {
+        e.preventDefault()
+        dispatch({
+            type: SET_QUESTION_USER_ANSWER,
+            payload: {userAnswer: e.target.value},
+        });
+    }
     return (
         <Grid xs={12} style={{ marginLeft: 12 }}>
             <TextField
+                onChange={handleChange}
                 id="filled-basic"
                 label="long answer text"
                 fullWidth

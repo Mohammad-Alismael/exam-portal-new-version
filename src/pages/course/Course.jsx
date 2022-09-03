@@ -149,7 +149,7 @@ function Course(props) {
                         </Item>
                     </Grid>
                     <Grid item xs={9}>
-                        <Announcement />
+                        {parseInt(user.role_id) === 3 ? <Announcement /> : null}
                         <Grid item>
                             {
                                 course.announcements.sort(function(a, b) {

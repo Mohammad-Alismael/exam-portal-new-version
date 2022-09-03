@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {SET_QUESTION_INDEX} from "../../store/actions";
+import {SET_QUESTION_INDEX, SET_QUESTION_TIME_LEFT} from "../../store/actions";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
@@ -29,7 +29,7 @@ export default function QuestionTimer(props) {
     useEffect(()=>{
         let interval;
         if (examStudent.questions[examStudent?.questionIndex].time != null) {
-            let timer_ = examStudent.questions[examStudent?.questionIndex].time * 60;
+            let timer_ = examStudent.questions[examStudent?.questionIndex].time;
             let minutes;
             let seconds;
             interval = setInterval(function () {
@@ -40,9 +40,10 @@ export default function QuestionTimer(props) {
                 seconds = seconds < 10 ? "0" + seconds : seconds;
 
                 setTimer(minutes + ":" + seconds)
+                dispatch({type: SET_QUESTION_TIME_LEFT, payload: {time: timer_}});
                 if (--timer_ < 0) {
                     if (examStudent?.questionIndex < examStudent.questions.length - 1)
-                        dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: examStudent.questionIndex + 1},});
+                        dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: examStudent.questionIndex + 1}});
                     else{
                         navigate(`/courses/${course?.courseId}/exams`)
                         toast("you have finished the exam!")
@@ -56,6 +57,7 @@ export default function QuestionTimer(props) {
         return () => clearInterval(interval); //This is important
 
     },[examStudent?.questionIndex])
+
     return <div className={classes.questionTimerContainer}>
         <Typography><b>{timer}</b></Typography>
         <img src={"/images/icons/questionTimer.svg"} alt={"questionTime"}/>
