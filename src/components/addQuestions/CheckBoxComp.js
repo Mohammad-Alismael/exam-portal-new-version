@@ -15,9 +15,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import {Badge} from "@mui/material";
 import {toast} from "react-toastify";
 const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,selectedOptionForCheckbox,getOptionIndex,checkOptionText,setOptionText,deleteOption }) => {
-    // const [options, setOptions] = React.useState([]);
     const [checkedAr, setCheckedAr] = React.useState([]);
-
     const [optionValue, setOptionValue] = React.useState("");
     const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);

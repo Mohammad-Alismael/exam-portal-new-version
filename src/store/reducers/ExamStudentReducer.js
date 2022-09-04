@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions'
-import {SET_QUESTION_TIME_LEFT, SET_QUESTION_USER_ANSWER} from "../actions";
+import {SET_EXAM_STUDENT_TIMER, SET_QUESTION_TIME_LEFT, SET_QUESTION_USER_ANSWER} from "../actions";
 const initialState = {
     questionIndex: 0,
     questions : [],
@@ -29,6 +29,13 @@ const ExamStudentReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 questions: deepCopy
+            }
+        case actionTypes.SET_EXAM_STUDENT_TIMER:
+            const examDetailsDeepCopy = state.examDetails;
+            examDetailsDeepCopy['timeLeft'] = action.payload.timeLeft
+            return {
+                ...state,
+                examDetails: examDetailsDeepCopy
             }
         case actionTypes.SET_QUESTION_USER_ANSWER:
             const deepCopy_ = state.questions;

@@ -7,17 +7,26 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Typography from "@mui/material/Typography";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
+import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
 const useStyles = makeStyles((theme) => ({
 }));
 function Matching ({questionIndex}) {
     const classes = useStyles();
     const [options,setOptions] = React.useState();
-    const [optionValue,setOptionValue] = React.useState('');
-    const exam = useSelector((state) => state.ExamStudentReducer);
+    const dispatch = useDispatch();
 
+    const exam = useSelector((state) => state.ExamStudentReducer);
+    const handleChange = (e) => {
+        e.preventDefault()
+
+        dispatch({
+            type: SET_QUESTION_USER_ANSWER,
+            payload: {userAnswer: e.target.value},
+        });
+    }
     useEffect(()=>{
         setOptions([...exam.questions[questionIndex].options])
     },[])
@@ -29,7 +38,7 @@ function Matching ({questionIndex}) {
                             labelId="type"
                             id="type"
                             label="Question Options"
-                            // onChange={handleChange}
+                            onChange={handleChange}
                         >
                             {
                                 exam.questions[questionIndex].options.map((val,index)=>{

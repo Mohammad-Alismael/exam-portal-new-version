@@ -8,9 +8,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@mui/material/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@mui/material/TextField";
-import { connect, useSelector } from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import FormGroup from "@mui/material/FormGroup";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
+import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -37,6 +38,37 @@ const useStyles = makeStyles((theme) => ({
 const CheckBoxComp = ({ questionIndex }) => {
     const exam = useSelector((state) => state.ExamStudentReducer);
     const options = exam.questions[questionIndex].options;
+    const [checkedAr, setCheckedAr] = React.useState([]);
+    const dispatch = useDispatch();
+    const getOptionIndex = (id) => {
+        return options.findIndex((option, index) => {
+            return option.id == id
+        });
+    }
+    const handleCheckedAr = (e) =>{
+        const id = e.target.id
+        const checked = e.target.checked
+        const optionIndex = getOptionIndex(id)
+        // if checked and not in array then add it
+        if (checked && !checkedAr.includes(optionIndex)) {
+            setCheckedAr([...checkedAr, optionIndex])
+            dispatch({
+                type: SET_QUESTION_USER_ANSWER,
+                payload: {userAnswer:[...checkedAr, optionIndex]},
+            });
+        }
+        // if not checked and in array then remove it
+        if (!checked && checkedAr.includes(optionIndex)){
+            const new_ar = checkedAr.filter((_id,index)=>{
+                return _id !== optionIndex
+            })
+            dispatch({
+                type: SET_QUESTION_USER_ANSWER,
+                payload: {userAnswer:[...new_ar]},
+            });
+            setCheckedAr([...new_ar])
+        }
+    }
     const loadCheckboxOptions = (index) => {
         return (
             <>
@@ -60,7 +92,7 @@ const CheckBoxComp = ({ questionIndex }) => {
     return (
         <>
             <Grid item xs={12}>
-                <FormGroup>
+                <FormGroup onChange={handleCheckedAr}>
                     {options.map((val, index) => {
                         return loadCheckboxOptions(index);
                     })}

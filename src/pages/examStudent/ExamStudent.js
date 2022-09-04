@@ -20,25 +20,17 @@ import {toast} from "react-toastify";
 import QuestionTimer from "./QuestionTimer";
 import StudentQuestion from "./StudentQuestion";
 import QuestionNavigation from "./QuestionNavigation";
+import ExamStudentNavbar from "./ExamStudentNavbar";
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        backgroundColor: "#FFF",
-        height: "7vh",
-        padding: "0 1rem",
-    }
-}));
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
     borderRadius: 5,
 }));
 
 function ExamStudent() {
-    const classes = useStyles();
     const { examId } = useParams();
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [examDetails,setExamDetails] = React.useState(null);
     const dispatch = useDispatch();
     const course = useSelector(state => state.CourseReducer);
     const navigate = useNavigate();
@@ -50,10 +42,10 @@ function ExamStudent() {
                 navigate(`/courses/${course?.courseId}/exams`)
                 toast("no exam found!")
             }else {
-                setExamDetails(data)
                 dispatch({
                     type: SET_STUDENT_EXAM_DETAILS,
-                    payload: {examDetails: data},
+                    payload: {examDetails:
+                            {...data, timeLeft :parseInt(data['ending_at']) - parseInt(data['starting_at'])}}
                 });
                 dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: 0}});
             }
@@ -86,7 +78,6 @@ function ExamStudent() {
                         questionType: question_type,
                         tmpId: question_id,
                         userAnswer: null,
-                        userAnswerList: [],
                         whoCanSee: who_can_see,
                         previewFile: file_path,
                     };
@@ -104,22 +95,7 @@ function ExamStudent() {
     } else {
         return (
             <>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    maxWidth="xl"
-                    className={classes.container}
-                >
-                    <Typography variant={"h6"}>{examDetails['title'].toUpperCase()}</Typography>
-                    <Typography>
-                        <b>{(examDetails['ending_at'] - examDetails['starting_at'])/1000} mins</b> left
-                    </Typography>
-                    <Button variant="contained">
-                        submit exam
-                    </Button>
-                </Grid>
+                <ExamStudentNavbar/>
                 <BorderLinearProgress
                     variant="determinate"
                     value={((examStudent?.questionIndex + 1) / examStudent.questions.length) * 100}

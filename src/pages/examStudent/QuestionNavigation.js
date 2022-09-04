@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#D9D9D9',
         display: "inline-block",
         padding: '1rem',
+        margin: '0 1rem',
         cursor: "pointer",
         "& p": {
             float: 'center',
@@ -62,7 +63,7 @@ function QuestionNavigation(props) {
                     </Typography>
                     <Divider sx={{ borderBottomWidth: 3,color: 'primary.main' }}/>
                 </Grid>
-                <Grid container justifyContent={'space-between'} xs={12} sx={{mt:4}}>
+                <Grid container justifyContent={'flex-start'} xs={12} sx={{mt:4}}>
                     {
                         examStudent.questions.map((val,i)=>{
                             return (

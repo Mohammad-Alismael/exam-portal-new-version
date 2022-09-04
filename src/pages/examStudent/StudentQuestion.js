@@ -8,7 +8,7 @@ import Mcq from "../../components/QuestionStudent/Mcq";
 import Text from "../../components/QuestionStudent/Text";
 import CheckBoxComp from "../../components/QuestionStudent/CheckBoxComp";
 import Matching from "../../components/QuestionStudent/Matching";
-import Truth from "../../components/questions/Truth";
+import Truth from "../../components/QuestionStudent/Truth";
 import {useDispatch, useSelector} from "react-redux";
 import {SET_ENDING_AT, SET_QUESTION_INDEX} from "../../store/actions";
 import {makeStyles} from "@material-ui/core/styles";

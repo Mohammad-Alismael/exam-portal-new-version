@@ -8,8 +8,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import {connect, useSelector} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
+import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -37,13 +38,14 @@ function Mcq({ questionIndex }) {
     const classes = useStyles();
     const [options, setOptions] = React.useState([]);
     const exam = useSelector((state) => state.ExamStudentReducer);
+    const dispatch = useDispatch();
 
     const loadOptions = (index) => {
         return (
             <Grid item xs={12} fullwidth>
                 <FormControlLabel
                     value={options[index]['optionValue']}
-                    control={<Radio />}
+                    control={<Radio id={index}/>}
                     label={options[index]['optionValue']}
                 />
                 {options[index]["img"] != null ? (
@@ -52,6 +54,14 @@ function Mcq({ questionIndex }) {
             </Grid>
         );
     };
+    const handleChange = (e) => {
+        e.preventDefault()
+        console.log(e.target)
+        dispatch({
+            type: SET_QUESTION_USER_ANSWER,
+            payload: {userAnswer: e.target.id},
+        });
+    }
     useEffect(()=>{
         // console.log(exam.questions[questionIndex])
         setOptions([...exam.questions[questionIndex].options])
@@ -65,7 +75,7 @@ function Mcq({ questionIndex }) {
                 alignItems="center"
                 xs={12}
             >
-                <RadioGroup>
+                <RadioGroup onChange={handleChange}>
                     <Grid container style={{ padding: "10px 0" }}>
                         {options.map((val, index) => {
                             return loadOptions(index);
