@@ -98,12 +98,13 @@ export default function HorizontalLinearStepper(props) {
                     toast.info(res['message'])
                     setPostExamLoading(false)
                     navigate(`/courses/${course?.courseId}/exams`)
+                    dispatch(ResetExamReducer())
                 }).catch((e) => {
                 console.log(e)
                 setPostExamLoading(false)
             })
         }
-        dispatch(ResetExamReducer())
+
     }
 
     return (

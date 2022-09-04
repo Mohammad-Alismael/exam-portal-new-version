@@ -127,12 +127,17 @@ function ExamSettings(props) {
         fetchExamStudents(examId,controller).then((data)=>{
             dispatch({
                 type: SET_STUDENTS,
-                payload: { students: data },
+                payload: { students: data['students'] },
             });
-            setStudents(data)
+            setStudents(data['students'])
+            dispatch({
+                type: SET_SPECIFIC_STUDENTS,
+                payload: { specificStudents: data["specificStudents"] },
+            });
+            setChecked(data["specificStudents"])
+
         })
 
-        setChecked(exam?.specificStudents)
         return ()=>{
             controller.abort()
         }

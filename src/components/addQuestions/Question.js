@@ -172,16 +172,6 @@ const Question = ({ questionIndex, uid }) => {
 
     }
 
-    function deleteExamIfNoQuestions() {
-        // if it is in preview status and no exam questions then delete the whole exam
-        if (exam?.questions.length === 0) {
-            deleteExam(examId).then((data) => {
-                console.log(data)
-                navigate(`/courses/${course?.courseId}/exams`)
-            })
-        }
-    }
-
     const handleDeleteQuestion = (e) =>{
         e.preventDefault()
         if (exam?.isItPreview && exam?.questions.length !== 0){
