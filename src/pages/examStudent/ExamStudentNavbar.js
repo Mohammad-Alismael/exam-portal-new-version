@@ -6,7 +6,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {SET_EXAM_STUDENT_TIMER, SET_QUESTION_INDEX, SET_QUESTION_TIME_LEFT} from "../../store/actions";
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import {submitUserAnswer} from "../../api/services/UserAnswer";
 const useStyles = makeStyles((theme) => ({
     container: {
         backgroundColor: "#FFF",
@@ -18,10 +19,21 @@ function ExamStudentNavbar(props) {
     const classes = useStyles();
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const [timer,setTimer] = React.useState("");
+    const { examId } = useParams();
+
     const course = useSelector(state => state.CourseReducer);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const submitExam = (e) => {
+        e.preventDefault()
+        submitUserAnswer(examStudent?.questions,examId).then((data)=>{
+            navigate(`/courses/${course?.courseId}/exams`)
+            toast("you have successfully submitted the exam!")
+        }).catch((err)=>{
+            console.log(err)
+        })
 
+    }
     useEffect(()=>{
         let interval;
         let timer = examStudent?.examDetails?.timeLeft
@@ -42,6 +54,7 @@ function ExamStudentNavbar(props) {
             dispatch({type: SET_EXAM_STUDENT_TIMER, payload: {timeLeft: timer}});
 
             if (timer < 0) {
+                submitUserAnswer(examStudent?.questions,examId).then(console.log)
                 navigate(`/courses/${course?.courseId}/exams`)
                 toast("you have finished the exam!")
                 clearInterval(interval)
@@ -64,7 +77,7 @@ function ExamStudentNavbar(props) {
             <Typography>
                 <b>{timer}</b> left
             </Typography>
-            <Button variant="contained">
+            <Button variant="contained" onClick={submitExam}>
                 submit exam
             </Button>
         </Grid>

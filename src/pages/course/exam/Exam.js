@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component, useEffect} from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@mui/material/Paper";
@@ -25,6 +25,7 @@ import {
 } from "../../../store/actions";
 import {deleteExam} from "../../../api/services/Exam";
 import {setCourseExams} from "../../../actions/CourseAction";
+import {getExamGrade} from "../../../api/services/UserAnswer";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -77,13 +78,35 @@ function Exam(props) {
             //     toast.info("you are too late to take this exam!")
         }
     };
+    useEffect(()=>{
+        const controller = new AbortController();
+        if (user.role_id != 3) {
+            getExamGrade(props.examId, user.user_id, controller)
+                .then((data) => {
+                    if (data.status != 204 || data.status != 404){
+
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+        return () => {
+            controller.abort();
+        };
+    },[])
     return (
         <Paper elevation={5} className={classes.container}>
             <div className={classes.containerForOnClick} onClick={redirect}>
                 <div className={classes.subContainer}>
                     <img src={'/images/icons/exam_logo.svg'} alt={'logo'}/>
                     <Typography variant="h6">
-                        <b>{props.examTitle}</b>
+                        {props.examTitle}
+                    </Typography>
+                </div>
+                <div>
+                    <Typography variant="h6">
+                        <b>{72} %</b>
                     </Typography>
                 </div>
                 <div className={classes.subContainer}>
