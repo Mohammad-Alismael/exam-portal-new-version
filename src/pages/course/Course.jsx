@@ -109,7 +109,6 @@ function Course(props) {
     ]);
     const user = useSelector(state => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
-    const navigate = useNavigate();
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
