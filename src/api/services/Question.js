@@ -1,4 +1,3 @@
-import User from "./User";
 import {axiosPrivate, token} from "../axios";
 import {DELETE_QUESTION, FETCH_EXAM_QUESTIONS, FETCH_EXAM_STUDENTS, UPDATE_EXAM_QUESTION} from "./RouteNames";
 

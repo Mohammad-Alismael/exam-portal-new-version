@@ -85,6 +85,12 @@ export const theme = createTheme({
         white: {
             main: 'rgb(255,255,255)'
         },
+        success: {
+            main: 'rgb(84,255,56)'
+        },
+        error: {
+            main: 'rgb(255,104,56)'
+        }
 
     },
     background: {

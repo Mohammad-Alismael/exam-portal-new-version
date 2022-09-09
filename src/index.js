@@ -14,11 +14,13 @@ import {BrowserRouter} from "react-router-dom";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import CourseReducer from "./store/reducers/CourseReducer";
 import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
+import SubmissionsReducer from "./store/reducers/SubmissionsReducer";
 const rootReducer = combineReducers({
     ExamReducer,
     AddQuestionReducer,
     UserReducerV2,
     ExamStudentReducer,
+    SubmissionsReducer,
     CreateReducer,
     CourseReducer
 });

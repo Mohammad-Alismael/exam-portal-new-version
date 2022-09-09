@@ -2,7 +2,7 @@ import axios from "axios";
 import {axiosPrivate, token, updateToken} from "../axios";
 import {toast} from "react-toastify";
 import {isExpired} from "react-jwt";
-import {AUTH_USER, CREATE_USER, REFRESH_TOKEN} from "./RouteNames";
+import {AUTH_USER, CREATE_USER, FETCH_USER_INFO, REFRESH_TOKEN} from "./RouteNames";
 
 class User {
     static userAuth(username, password) {
@@ -103,5 +103,12 @@ class User {
         }
     }
 }
-
+export const getUserInfo = async (username) =>{
+    try {
+        let response = await axiosPrivate(`${FETCH_USER_INFO}/${username}`);
+        return await response.data;
+    }catch (e) {
+        throw Error('error happened!')
+    }
+}
 export default User;
