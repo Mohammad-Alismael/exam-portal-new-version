@@ -59,6 +59,7 @@ function NewClasses(props) {
             .createCourse(newClassName,section, user["user_id"])
             .then((res) => {
                 toast(res["message"]);
+                setCourses([...courses,res['newClassroom']])
                 setLoading(false);
             })
             .catch((error) => {

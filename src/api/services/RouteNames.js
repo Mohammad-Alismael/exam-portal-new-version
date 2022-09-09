@@ -1,4 +1,6 @@
+export const CREATE_CLASSROOM = '/classroom/create'
 export const FETCH_CLASSROOMS = '/classroom/classes'
+export const ENROLL_CLASSROOM = '/classroom/enroll'
 export const FETCH_COURSE_INFO = '/classroom'
 export const UPLOAD_ANNOUNCEMENT_FILE = '/announcement/upload'
 export const CREATE_ANNOUNCEMENT = '/announcement/create'

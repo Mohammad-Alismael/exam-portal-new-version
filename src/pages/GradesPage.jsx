@@ -107,7 +107,7 @@ function GradesPage(props) {
                     submittedAt: getSubmittedAt(submitted_at)
                 }
             })
-            
+
             setRows(rows_)
             setIsLoading(false)
 

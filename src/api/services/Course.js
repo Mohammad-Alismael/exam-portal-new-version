@@ -4,25 +4,12 @@ import {axiosPrivate, token} from "../axios";
 import User from './User';
 import {isExpired} from "react-jwt";
 import jwt from "jwt-decode";
-import {FETCH_CLASSROOMS, FETCH_COURSE_INFO} from "./RouteNames";
+import {CREATE_CLASSROOM, ENROLL_CLASSROOM, FETCH_CLASSROOMS, FETCH_COURSE_INFO} from "./RouteNames";
 
 class Course {
 
-    fetchCourses() {
-        User.checkTokenExpiration()
-        return axiosPrivate.get('/classroom/classes').then((res)=> {
-            console.log('data from backend',res)
-            return res['data']['result']
-        }).catch((error)=>{
-            console.log(error.response.data)
-            if (error.response.status == 403){
-                toast("user error!")
-                // window.location.href = "/refresh"
-            }
-        })
-    }
      createCourse(course_name,section ,user_id) {
-        return axiosPrivate.post('/classroom/create',{
+        return axiosPrivate.post(CREATE_CLASSROOM,{
             class_name: course_name,
             section,
             instructor_id: user_id,
@@ -36,7 +23,7 @@ class Course {
         })
     }
     enrollToCourse(course_id) {
-        return axiosPrivate.post('/classroom/enroll',{
+        return axiosPrivate.post(ENROLL_CLASSROOM,{
             classroom_id : course_id
         }).then((res)=> {
             return res.data
