@@ -114,7 +114,7 @@ function App(props) {
                     <Route
                         path="grades/:examId/:username"
                         element={
-                            <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
+                            <Protected onlyAccessTo={ALL_ROLES}>
                                 <StudentExamResult />
                             </Protected>
                         }

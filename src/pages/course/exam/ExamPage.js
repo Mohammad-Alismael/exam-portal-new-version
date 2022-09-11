@@ -83,12 +83,13 @@ const ExamPage = () => {
                     </Tooltip>
                 </div> : null}
                 {
-                    course?.exams.map(({exam_id,title, starting_at,ending_at},index)=>{
+                    course?.exams.map(({exam_id,title, starting_at,ending_at,see_result_at},index)=>{
                         return <Exam
                             examTitle={title}
                             examId={exam_id}
                             startingAt={starting_at}
                             endingAt={ending_at}
+                            seeResultAt={see_result_at}
                         />
                     })
                 }

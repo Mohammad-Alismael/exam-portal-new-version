@@ -61,10 +61,26 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function seeResultPage(props, navigate, user,course) {
+    if (props.seeResultAt == null || props.seeResultAt < Date.now()) {
+        navigate(`/courses/${course.courseId}/grades/${props.examId}/${user?.username}`)
+    } else {
+        toast.info("you can't access it")
+    }
+}
+
+function studentNavigate(props, navigate, user,course) {
+    if (props.endingAt > Date.now()) {
+        navigate(`/exam/${props.examId}`);
+    } else {
+        seeResultPage(props, navigate, user,course);
+    }
+}
+
 function Exam(props) {
     const classes = useStyles();
     const navigate = useNavigate();
-    const user = useSelector((state) => state.UserReducerV2).user;
+    const {user} = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const dispatch = useDispatch();
     const redirect = (e) => {
@@ -72,10 +88,7 @@ function Exam(props) {
         if (user.role_id == 3) {
             navigate(`/preview/${props.examId}`);
         } else {
-            // if (props.endingAt > Date.now())
-                navigate(`/exam/${props.examId}`);
-            // else
-            //     toast.info("you are too late to take this exam!")
+            studentNavigate(props, navigate, user,course);
         }
     };
     useEffect(()=>{

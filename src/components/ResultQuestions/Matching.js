@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -37,72 +37,65 @@ function Matching({ questionIndex }) {
     const classes = useStyles();
     const [colors, setColors] = React.useState([]);
     const { submissions } = useSelector((state) => state.SubmissionsReducer);
-    const itemsRef = useRef([]);
+    const selectRef = useRef(null);
+    const [loading,setLoading] = useState(true)
     const options = submissions[questionIndex]["options"];
     useEffect(() => {
 
         const answerKey = parseInt(submissions[questionIndex].answerKey);
         const userAnswer = parseInt(submissions[questionIndex].userAnswer[0]);
-        console.log('userAnswer',userAnswer)
-        console.log(itemsRef.current)
-        // function makeTheRestBlack() {
-        //     itemsRef.current.forEach((val, index) => {
-        //         itemsRef.current[index].style.color = "rgb(0,0,0)";
-        //     });
-        // }
-        //
-        // if (userAnswer === answerKey) {
-        //     itemsRef.current[userAnswer].style.color = "rgb(84,255,56)";
-        // } else if (userAnswer !== answerKey) {
-        //     itemsRef.current[userAnswer].style.color = "rgb(255,104,56)";
-        //     itemsRef.current[answerKey].style.color = "rgb(84,255,56)";
-        // } else {
-        //     makeTheRestBlack();
-        // }
+        if (userAnswer === answerKey) {
+            selectRef.current.children[0].style.color = "rgb(84,255,56)";
+        } else {
+            selectRef.current.children[0].style.color = "rgb(255,104,56)";
+        }
+        setLoading(false)
     }, []);
 
     return (
-        <Grid container direction={"row"}>
-            <Grid item xs={3} fullwidth style={{ height: "40px" }}>
-                <FormControl fullWidth variant="standard">
-                    <Select labelId="type" id="type" label="Question Options"
-                            value={parseInt(submissions[questionIndex].userAnswer[0])}>
-                        {options.map((val, index) => {
-                            return (
-                                <MenuItem
-                                    ref={(el) => (itemsRef.current[index] = el)}
-                                    key={index + 1}
-                                    value={index}
-                                    selected={
-                                        parseInt(submissions[questionIndex].userAnswer[0]) === index
-                                    }
-                                >
-                                    {val["optionValue"]}
-                                </MenuItem>
-                            );
-                        })}
-                    </Select>
-                </FormControl>
+        <>
+            <Grid container direction={"row"}>
+                <Grid item xs={3} fullwidth style={{ height: "40px" }}>
+                    <FormControl fullWidth variant="standard">
+                        <Select label="Question Options" sx={{ml:1}} value={submissions[questionIndex].userAnswer[0]} ref={selectRef}>
+                            {options.map((val, index) => {
+                                return (
+                                    <MenuItem
+
+                                        key={index + 1}
+                                        value={index}
+                                        selected={
+                                            parseInt(submissions[questionIndex].userAnswer[0]) === index
+                                        }
+                                    >
+                                        {val["optionValue"]}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={7} fullwidth>
+                    <Typography
+                        style={{ color: "black" }}
+                        sx={{ ml: 1, flex: 1 }}
+                        variant="h6"
+                    >
+                        {submissions[questionIndex]["questionDetails"].question_text}
+                    </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                    <Typography
+                        style={{color: "black"}}
+                        sx={{float: "right", flex: 1}}
+                        variant="subtitle1"
+                    >
+                        <b>{submissions[questionIndex].user_points}/{submissions[questionIndex]["questionDetails"].points} points</b>
+                    </Typography>
+                </Grid>
             </Grid>
-            <Grid item xs={7} fullwidth>
-                <Typography
-                    style={{ color: "black" }}
-                    sx={{ ml: 1, flex: 1 }}
-                    variant="h6"
-                >
-                    {submissions[questionIndex]["questionDetails"].question_text}
-                </Typography>
-            </Grid>
-            <Grid item xs={2}>
-                <Typography
-                    style={{color: "black"}}
-                    sx={{float: "right", flex: 1}}
-                    variant="subtitle1"
-                >
-                    <b>{submissions[questionIndex].user_points}/{submissions[questionIndex]["questionDetails"].points} points</b>
-                </Typography>
-            </Grid>
-        </Grid>
+        </>
+
     );
 }
 

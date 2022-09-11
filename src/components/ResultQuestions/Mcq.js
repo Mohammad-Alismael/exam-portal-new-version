@@ -32,8 +32,6 @@ function Mcq({ questionIndex }) {
 
         if (userAnswer === answerKey) {
             itemsRef.current[userAnswer].style.color = "rgb(84,255,56)";
-            // itemsRef.current.splice(itemsRef.current[answerKey], 1);
-            // makeTheRestBlack();
         } else if (userAnswer !== answerKey) {
             itemsRef.current[userAnswer].style.color = "rgb(255,104,56)";
             itemsRef.current[answerKey].style.color = "rgb(84,255,56)";
@@ -45,11 +43,12 @@ function Mcq({ questionIndex }) {
         <RadioGroup name="radio-buttons-group">
             {options.map((val, index) => {
                 return (
-                    <Grid item fullwidth>
+                    <Grid item fullwidth sx={{ml:3}}>
                         <FormControlLabel
                             value={index}
                             control={
                                 <Radio
+                                    disabled={true}
                                     checked={parseInt(submissions[questionIndex].userAnswer[0]) === index}
                                 />
                             }

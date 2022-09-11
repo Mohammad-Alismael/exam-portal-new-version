@@ -1,5 +1,5 @@
 import {axiosPrivate} from "../axios";
-import {GET_EXAM_FINAL_RESULT, SUBMIT_USER_ANSWER} from "./RouteNames";
+import {CORRECT_QUESTION_TEXT, CORRECT_QUESTIONS, GET_EXAM_FINAL_RESULT, SUBMIT_USER_ANSWER} from "./RouteNames";
 
 async function submitUserAnswer(userAnswerObject,examId) {
     try {
@@ -18,7 +18,25 @@ async function getExamGrade(examId,studentId,controller) {
     }
 }
 
+async function correctQuestionText(points,questionId,username) {
+    try {
+        const res = await axiosPrivate.post(CORRECT_QUESTION_TEXT,{points,questionId,username});
+        return await res['data'];
+    } catch (e) {
+        console.log(e.response.status);
+    }
+}
+async function correctQuestions(examId,username) {
+    try {
+        const res = await axiosPrivate.post(CORRECT_QUESTIONS,{examId,username});
+        return await res;
+    } catch (e) {
+        console.log(e.response.status);
+    }
+}
 export {
     submitUserAnswer,
-    getExamGrade
+    getExamGrade,
+    correctQuestionText,
+    correctQuestions
 }

@@ -9,13 +9,10 @@ import { Typography } from '@mui/material';
 
 function Text({questionIndex}) {
     const {submissions} = useSelector((state) => state.SubmissionsReducer);
-
-    const handleChange = (e) => {
-
-    }
     return (
         <Grid item xs={12}>
             <TextField
+                sx={{ml:3}}
                 id="filled-basic"
                 label="student's answer"
                 fullWidth

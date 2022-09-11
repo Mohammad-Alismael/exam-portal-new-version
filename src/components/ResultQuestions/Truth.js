@@ -51,12 +51,12 @@ const Truth = ({questionIndex}) => {
         <RadioGroup style={{ marginLeft: 12 }}>
             <FormControlLabel
                 value={0}
-                control={<Radio checked={submissions[questionIndex].userAnswer == 0} />}
+                control={<Radio disabled={true}checked={submissions[questionIndex].userAnswer == 0} />}
                 label={<Typography ref={el => itemsRef.current[0] = el}>False</Typography>}
             />
             <FormControlLabel
                 value={1}
-                control={<Radio checked={submissions[questionIndex].userAnswer == 1}/>}
+                control={<Radio disabled={true} checked={submissions[questionIndex].userAnswer == 1}/>}
                 label={<Typography ref={el => itemsRef.current[1] = el}>True</Typography>}
             />
         </RadioGroup>
