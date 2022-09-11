@@ -1,4 +1,4 @@
-import React, {Component, useEffect} from "react";
+import React, {Component, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@mui/material/Paper";
@@ -61,23 +61,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function seeResultPage(props, navigate, user,course) {
-    if (props.seeResultAt == null || props.seeResultAt < Date.now()) {
-        navigate(`/courses/${course.courseId}/grades/${props.examId}/${user?.username}`)
-    } else {
-        toast.info("you can't access it")
-    }
-}
-
-function studentNavigate(props, navigate, user,course) {
-    if (props.endingAt > Date.now()) {
-        navigate(`/exam/${props.examId}`);
-    } else {
-        seeResultPage(props, navigate, user,course);
-    }
-}
-
-function Exam(props) {
+function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
     const classes = useStyles();
     const navigate = useNavigate();
     const {user} = useSelector((state) => state.UserReducerV2);
@@ -85,25 +69,10 @@ function Exam(props) {
     const dispatch = useDispatch();
     const redirect = (e) => {
         e.stopPropagation()
-        if (user.role_id == 3) {
-            navigate(`/preview/${props.examId}`);
-        } else {
-            studentNavigate(props, navigate, user,course);
-        }
+        navigate(`/preview/${examId}`);
     };
     useEffect(()=>{
         const controller = new AbortController();
-        if (user.role_id != 3) {
-            getExamGrade(props.examId, user.user_id, controller)
-                .then((data) => {
-                    if (data.status != 204 || data.status != 404){
-
-                    }
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        }
         return () => {
             controller.abort();
         };
@@ -114,34 +83,29 @@ function Exam(props) {
                 <div className={classes.subContainer}>
                     <img src={'/images/icons/exam_logo.svg'} alt={'logo'}/>
                     <Typography variant="h6">
-                        {props.examTitle}
-                    </Typography>
-                </div>
-                <div>
-                    <Typography variant="h6">
-                        <b>{72} %</b>
+                        {examTitle}
                     </Typography>
                 </div>
                 <div className={classes.subContainer}>
                     <div className={classes.time}>
                         <Typography variant="caption">
-                            {moment(props.startingAt).format("MMMM Do YYYY, h:mm:ss a")}
+                            {moment(startingAt).format("MMMM Do YYYY, h:mm:ss a")}
                         </Typography>
                         <Typography variant="caption">
-                            {moment(props.endingAt).format("MMMM Do YYYY, h:mm:ss a")}
+                            {moment(endingAt).format("MMMM Do YYYY, h:mm:ss a")}
                         </Typography>
                     </div>
                 </div>
             </div>
-            { parseInt(user.role_id) === 3 ? <LongMenu
+            <LongMenu
                 className={classes.menuIcon}
                 options={["Delete", "Clone for other sections", "see grades","exam statistics"]}
                 functions={[function (e) {
                     e.stopPropagation()
-                    deleteExam(props.examId).then((data) => {
+                    deleteExam(examId).then((data) => {
                         console.log(data)
                         const newExamsArray = course.exams.filter(({exam_id},i)=>{
-                            return exam_id !== props.examId
+                            return exam_id !== examId
                         })
                         dispatch({ type: SET_COURSE_EXAMS, payload: { exams: newExamsArray } });
 
@@ -151,16 +115,16 @@ function Exam(props) {
                     alert('create it for other sections')
                 },function (e) {
                     e.stopPropagation()
-                    navigate(`/courses/${course?.courseId}/grades/${props.examId}`)
+                    navigate(`/courses/${course?.courseId}/grades/${examId}`)
 
                 },function (e) {
                     e.stopPropagation()
-                    navigate(`/courses/${course?.courseId}/statistics/${props.examId}`)
+                    navigate(`/courses/${course?.courseId}/statistics/${examId}`)
 
                 }]}
-            /> : null}
+            />
         </Paper>
     );
 }
 
-export default Exam;
+export default ExamInstructor;

@@ -98,7 +98,7 @@ const ResponsiveAppBar = (props) => {
         <AppBar position="static" color="white">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <img src={process.env.PUBLIC_URL +'/images/logo.png'} className={classes.logo} alt="Exam Portal" />
+                    <img src={process.env.PUBLIC_URL +'/images/logo.png'} className={classes.logo} alt="ExamInstructor Portal" />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"

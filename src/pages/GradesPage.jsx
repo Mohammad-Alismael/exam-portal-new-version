@@ -50,12 +50,6 @@ const columns = [
     { field: 'submittedAt', headerName: 'Submitted At',type: 'string',width: 250,disablePadding: true,},
 
 ];
-const rows = [
-    { id: 1, emailId: 'Snow@gmail.com', username: 'Jon',examStatus: 'corrected', grade: 35, submittedAt: '23.08.2022' },
-    { id: 2, emailId: 'Jones@gmail.com', username: 'Jones',examStatus: 'corrected', grade: 55, submittedAt: '23.08.2022' },
-    { id: 3, emailId: 'Mamduh@gmail.com', username: 'Mamduh',examStatus: 'not corrected', grade: null, submittedAt: "didn't submit" },
-
-];
 function CustomToolbar() {
     return (
         <GridToolbarContainer sx={{float: 'right'}}>
