@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "3vh",
         // maxHeight: '8vh',
         // width: '48%',
-        margin: "0.8rem auto",
+        margin: "auto auto 0.8rem auto",
     },
     userContainer: {
         display: "flex",
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
         // height: '75%'
     },
 }));
-function AnnouncementComponent(props) {
+function AnnounceComponent(props) {
     const classes = useStyles();
     const [username, setUsername] = React.useState("");
     const user = useSelector((state) => state.UserReducerV2).user;
@@ -92,4 +92,4 @@ function AnnouncementComponent(props) {
     );
 }
 
-export default AnnouncementComponent;
+export default AnnounceComponent;

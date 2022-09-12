@@ -34,7 +34,7 @@ const steps = [
     "Exam Navigation",
     "Exam Timer",
     "Exam Randomness",
-    "Answer key settings",
+    "Answer Key Settings",
 ];
 
 export default function HorizontalLinearStepper(props) {

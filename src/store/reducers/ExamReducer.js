@@ -9,7 +9,7 @@ import {
 } from "../actions";
 const initialState = {
     examTitle: "",
-    startingAt: 0,
+    startingAt: new Date(),
     endingAt: 0,
     assignedFor: 3,
     specificStudents : null,

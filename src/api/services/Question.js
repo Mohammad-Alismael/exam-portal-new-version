@@ -1,5 +1,11 @@
 import {axiosPrivate, token} from "../axios";
-import {DELETE_QUESTION, FETCH_EXAM_QUESTIONS, FETCH_EXAM_STUDENTS, UPDATE_EXAM_QUESTION} from "./RouteNames";
+import {
+    DELETE_QUESTION,
+    FETCH_EXAM_QUESTIONS,
+    FETCH_EXAM_QUESTIONS_STUDENT,
+    FETCH_EXAM_STUDENTS,
+    UPDATE_EXAM_QUESTION
+} from "./RouteNames";
 
 async function deleteQuestion(questionId,examId) {
     try {
@@ -35,4 +41,12 @@ async function updateExamQuestions(examObject) {
         console.log(e)
     }
 }
-export {deleteQuestion,fetchExamQuestions,updateExamQuestions};
+async function fetchExamQuestionsStudent(exam_id,controller) {
+    try {
+        const res = await axiosPrivate.get(`${FETCH_EXAM_QUESTIONS_STUDENT}/${exam_id}`, {signal: controller.signal})
+        return await res['data']
+    } catch (e) {
+        console.log(e)
+    }
+}
+export {deleteQuestion,fetchExamQuestions,updateExamQuestions,fetchExamQuestionsStudent};

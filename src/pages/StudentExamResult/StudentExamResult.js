@@ -50,6 +50,7 @@ function StudentExamResult(props) {
 
         fetchStudentSubmission(examId,username,controller).then((data)=>{
             const {questionTextType, restOfQuestions} = getQuestions(data);
+            console.log('wtf', data)
             const insertedData = parseInt(user?.role_id) === 3 ? questionTextType.concat(restOfQuestions) : data
             dispatch({
                 type: SET_SUBMISSIONS,

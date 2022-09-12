@@ -27,6 +27,7 @@ import {
 } from "../../../store/actions";
 import ResetExamReducer from "../../../actions/ResetExamReducer";
 import ExamStudent from "./ExamStudent";
+import NoExam from "./NoExam";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 25%",
@@ -101,7 +102,7 @@ const ExamPage = () => {
                         </Tooltip>
                     </div>
                 ) : null}
-                {course?.exams.map(
+                {course?.exams != 0 && course?.exams.map(
                     (
                         { exam_id, title, starting_at, ending_at, see_result_at },
                         index
@@ -124,6 +125,7 @@ const ExamPage = () => {
                         );
                     }
                 )}
+                {course?.exams == 0 ? <NoExam /> : null}
             </div>
         </>
     );

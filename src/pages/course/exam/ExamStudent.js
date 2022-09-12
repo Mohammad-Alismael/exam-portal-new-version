@@ -34,6 +34,7 @@ import {
 import { deleteExam } from "../../../api/services/Exam";
 import { setCourseExams } from "../../../actions/CourseAction";
 import { getExamGrade } from "../../../api/services/UserAnswer";
+import {didUserSubmit} from "../../../api/services/UserSubmission";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -87,12 +88,19 @@ function ExamStudent(props) {
     const dispatch = useDispatch();
     const [finalGrade, setFinalGrade] = useState(null);
     const [submittedAt, setSubmittedAt] = useState(null);
+    const [didUserSubmit_,setUserSubmit_] = useState(false);
     const redirect = (e) => {
         e.stopPropagation();
-        if (props.endingAt > Date.now()) {
+        if (props.endingAt > Date.now() && didUserSubmit_ === false) {
             navigate(`/exam/${props.examId}`);
         } else {
-            seeResultPage(props, navigate, user, course);
+            if ((props.seeResultAt == null || props.seeResultAt < Date.now()) && didUserSubmit_) {
+                navigate(
+                    `/courses/${course.courseId}/grades/${props.examId}/${user?.username}`
+                );
+            } else {
+                toast.info("you can't access it");
+            }
         }
     };
     useEffect(() => {
@@ -108,7 +116,10 @@ function ExamStudent(props) {
             .catch((err) => {
                 console.log(err);
             });
-
+        didUserSubmit(props.examId, user.user_id, controller).then(data => {
+            console.log('did user submit', data)
+            setUserSubmit_(data)
+        })
         return () => {
             controller.abort();
         };

@@ -4,7 +4,7 @@ import { createTheme, makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { fetchExamDetailsForStudent } from "../../api/services/Exam";
-import { fetchExamQuestions } from "../../api/services/Question";
+import {fetchExamQuestionsStudent, updateExamQuestionsStudent} from "../../api/services/Question";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
 import {
@@ -50,7 +50,7 @@ function ExamStudent() {
                 dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: 0}});
             }
         });
-        fetchExamQuestions(examId, controller).then((data) => {
+        fetchExamQuestionsStudent(examId, controller).then((data) => {
             console.log("exam questions for students", data);
             const questions = data.map(
                 (

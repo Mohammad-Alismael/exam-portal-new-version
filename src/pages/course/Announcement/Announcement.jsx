@@ -4,19 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import PublishIcon from '@mui/icons-material/Publish';
-import {InputBase} from "@material-ui/core";
-
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
 import Grid from "@mui/material/Grid";
 import {Button} from "@mui/material";
 import {makeStyles} from "@material-ui/core/styles";
@@ -24,7 +12,6 @@ import classes from "../../../img/classes.jpg";
 import Divider from "@material-ui/core/Divider";
 import {createAnnouncement, uploadFileAnnouncement} from "../../../api/services/Annoucments";
 import {toast} from "react-toastify";
-import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_ID} from "../../../store/actions";
 import {setCourseAnnouncements} from "../../../actions/CourseAction";
 import {BASE_URL} from "../../../api/axios";
 import Tooltip from "@mui/material/Tooltip";
@@ -119,7 +106,7 @@ function Announcement(props) {
     }
     return (
         <Paper elevation={5}>
-            <Grid container>
+            <Grid container sx={{marginBottom: '0.8rem'}}>
                 {selectedFile != null ?
                 <Grid item xs={12}>
                     <img className={classes.uploadPreview} src={selectedFile.preview} alt={'img'}/>

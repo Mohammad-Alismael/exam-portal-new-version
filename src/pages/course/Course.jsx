@@ -1,56 +1,24 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
 import Typography from '@material-ui/core/Typography';
-import Tabs from '@mui/material/Tabs';
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import classes from '../../img/classes.jpg'
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import PublishIcon from '@mui/icons-material/Publish';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import LiveHelpIcon from '@mui/icons-material/LiveHelp';
-import Link from '@mui/material/Link';
 import Grid from "@material-ui/core/Grid";
-import index from "@mui/material/darkScrollbar";
 import {useEffect} from "react";
-import axios from 'axios'
 import {connect, useSelector} from "react-redux";
-import {toast} from "react-toastify";
-import {Title} from "@mui/icons-material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LinearProgress from '@mui/material/LinearProgress';
-import useClipboard from 'react-hook-clipboard'
-import {getTableSortLabelUtilityClass} from "@mui/material";
-import Toolbar from '@mui/material/Toolbar';
 import {useNavigate, useParams} from "react-router-dom";
 import { styled } from '@mui/material/styles';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import AppBar from '@mui/material/AppBar';
-import * as Actions from "../../store/actions";
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
-import Container from "@mui/material/Container";
-import AnnouncementComponent from "./Announcement/AnnouncementComponent";
-import InputAdornment from '@mui/material/InputAdornment';
-import Avatar from "@mui/material/Avatar";
-import TextField from '@mui/material/TextField';
+import AnnounceComponent from "./Announcement/AnnounceComponent";
 import Announcement from "./Announcement/Announcement";
 import { withStyles } from "@material-ui/core/styles";
 import {fetchCourseInfo} from "../../api/services/Course";
 import { useDispatch } from 'react-redux'
 import {SET_COURSE_ID} from "../../store/actions";
 import {CourseAction} from "../../actions/CourseAction";
+import NoAnnouncement from "./Announcement/NoAnnouncement";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -151,18 +119,20 @@ function Course(props) {
                         {parseInt(user.role_id) === 3 ? <Announcement /> : null}
                         <Grid item>
                             {
-                                course.announcements.sort(function(a, b) {
+                                course.announcements.length !== 0 && course.announcements.sort(function(a, b) {
                                     return b.created_at - a.created_at;
                                 }).map(({instructorId,announcement_text,file_path,created_at},index)=>{
 
-                                    return <AnnouncementComponent
+                                    return <AnnounceComponent
                                         key={index}
                                         file={file_path}
                                         text={announcement_text}
                                         createdAt={created_at}/>
                                 })
                             }
-
+                            {
+                                course.announcements.length === 0 ? <NoAnnouncement /> : null
+                            }
                         </Grid>
                     </Grid>
                 </Grid>
