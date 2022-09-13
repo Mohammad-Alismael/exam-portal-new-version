@@ -23,7 +23,7 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
     const dispatch = useDispatch();
     const itemsRef = useRef([]);
     const options = exam.questions[questionIndex].options
-    const answerKeyArray = exam?.questions[questionIndex].answerKey
+    const answerKeyArray = exam?.questions[questionIndex].answerKey == null ? [] : exam?.questions[questionIndex].answerKey
     let selectedAnswerKeyOptions = options.map((val,i)=>{
         return answerKeyArray.includes(i)
     })
@@ -36,7 +36,6 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
             optionValue,
             img: optionImg,
         };
-
         if (checkOptionText(optionValue) === -1){
             updateQuestionOptions( [...options, newObj])
             // updateQuestionArray({ options: });
@@ -129,18 +128,17 @@ const CheckBoxComp = ({ questionIndex,updateQuestionArray,updateQuestionOptions,
         setOptionImg(myFiles[0]);
     };
     useEffect(() => {
-        const answerKeyArray = exam?.questions[questionIndex].answerKey
-        const a = options.map((val,i)=>{
+        const selectedOptions = options.map((val,i)=>{
             return answerKeyArray.includes(i)
         })
-        setBoolAr(a)
+        setBoolAr(selectedOptions)
         setCheckedAr([...answerKeyArray])
     }, []);
     return (
         <>
             <Grid item xs={12}>
                 <FormGroup onChange={handleCheckedAr}>
-                    {options.map((val, index) => {
+                    {options.length !== 0 && options.map((val, index) => {
                         return loadCheckboxOptions(index);
                     })}
                 </FormGroup>

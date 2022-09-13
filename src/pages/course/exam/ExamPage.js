@@ -109,6 +109,7 @@ const ExamPage = () => {
                     ) => {
                         return parseInt(user.role_id) === 3 ? (
                             <ExamInstructor
+                                key={index}
                                 examTitle={title}
                                 examId={exam_id}
                                 startingAt={starting_at}
@@ -116,6 +117,7 @@ const ExamPage = () => {
                             />
                         ) : (
                             <ExamStudent
+                                key={index}
                                 examTitle={title}
                                 examId={exam_id}
                                 startingAt={starting_at}

@@ -13,6 +13,7 @@ import FormGroup from "@mui/material/FormGroup";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
 import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
 import {toast} from "react-toastify";
+import LoadCheckBoxOptions from "../LoadCheckBoxOptions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -47,7 +48,7 @@ const CheckBoxComp = ({ questionIndex }) => {
         });
     }
     const handleCheckedAr = (e) =>{
-        if (checkedAr.length > exam.questions[questionIndex].maxAnswerCount) return toast('you have exceeded answer limit')
+        if (checkedAr.length > exam.questions[questionIndex].maxAnswerCount) return toast.info('you have exceeded answer limit')
         const id = e.target.id
         const checked = e.target.checked
         const optionIndex = getOptionIndex(id)
@@ -71,32 +72,32 @@ const CheckBoxComp = ({ questionIndex }) => {
             setCheckedAr([...new_ar])
         }
     }
-    const loadCheckboxOptions = (index) => {
-        return (
-            <>
-                <FormControlLabel
-                    key={index}
-                    value={index}
-                    control={<Checkbox id={options[index]["id"]} />}
-                    label={options[index]["optionValue"]}
-                />
-                {options[index]["img"] != null ? (
-                    <img
-                        style={{ maxWidth: "100%", outline: "1px solid" }}
-                        src={options[index]["img"]["preview"]}
-                        alt={"question"}
-                    />
-                ) : null}
-            </>
-        );
-    };
+    // const loadCheckboxOptions = (index) => {
+    //     return (
+    //         <>
+    //             <FormControlLabel
+    //                 key={index}
+    //                 value={index}
+    //                 control={<Checkbox id={options[index]["id"]} />}
+    //                 label={options[index]["optionValue"]}
+    //             />
+    //             {options[index]["img"] != null ? (
+    //                 <img
+    //                     style={{ maxWidth: "100%", outline: "1px solid" }}
+    //                     src={options[index]["img"]["preview"]}
+    //                     alt={"question"}
+    //                 />
+    //             ) : null}
+    //         </>
+    //     );
+    // };
     useEffect(() => {}, []);
     return (
         <>
             <Grid item xs={12}>
                 <FormGroup onChange={handleCheckedAr}>
                     {options.map((val, index) => {
-                        return loadCheckboxOptions(index);
+                        return <LoadCheckBoxOptions options={options} index={index}/>
                     })}
                 </FormGroup>
             </Grid>
