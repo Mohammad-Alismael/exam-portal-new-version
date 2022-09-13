@@ -39,7 +39,8 @@ const ExamStudentReducer  = (state = initialState, action) => {
             }
         case actionTypes.SET_QUESTION_USER_ANSWER:
             const deepCopy_ = state.questions;
-            deepCopy_[state.questionIndex]['userAnswer'] = action.payload.userAnswer
+            const index = action.payload.index
+            deepCopy_[index]['userAnswer'] = action.payload.userAnswer
             return {
                 ...state,
                 questions: deepCopy_

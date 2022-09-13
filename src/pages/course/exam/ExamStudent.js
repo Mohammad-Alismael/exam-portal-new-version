@@ -88,7 +88,7 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
     const dispatch = useDispatch();
     const [finalGrade, setFinalGrade] = useState(null);
     const [submittedAt, setSubmittedAt] = useState(null);
-    const [didUserSubmit_, setUserSubmit_] = useState(false);
+    const [didUserSubmit_, setUserSubmit_] = useState(null);
     const viewingBeforeExamStarts = () => {
         return startingAt > Date.now();
     };
@@ -126,19 +126,18 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
         const controller = new AbortController();
         getExamGrade(examId, user.user_id, controller)
             .then((res) => {
+                console.log("what's wrong with status", res.status)
                 if (res.status === 200) {
                     console.log("grade", res);
                     setFinalGrade(res.data["finalResult"]);
+                    setSubmittedAt(res.data["userSubmitted"]);
                 }
+            },(error)=>{
+                console.log('inside wtf')
+                setUserSubmit_(false);
+
             })
-            .catch((err) => {
-                console.log(err);
-            });
-        didUserSubmit(examId, user.user_id, controller).then((data) => {
-            console.log("did user submit", data);
-            setUserSubmit_(data["submitted_at"] != null);
-            setSubmittedAt(data["submitted_at"]);
-        });
+
         return () => {
             controller.abort();
         };
@@ -165,7 +164,7 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
                     </div>
                 ) : null}
                 <div className={classes.subContainer}>
-                    {startingAt > Date.now() ? (
+                    {!didUserSubmit_ ? (
                         <div className={classes.time}>
                             <Typography variant="caption">
                                 {moment(startingAt).format("MMMM Do YYYY, h:mm:ss a")}

@@ -65,6 +65,7 @@ function ExamStudent() {
                         file_path,
                         options,
                         answerKey,
+                        maxAnswerCount
                     },
                     i
                 ) => {
@@ -80,6 +81,7 @@ function ExamStudent() {
                         userAnswer: null,
                         whoCanSee: who_can_see,
                         previewFile: file_path,
+                        maxAnswerCount
                     };
                 }
             );
@@ -102,7 +104,7 @@ function ExamStudent() {
                     size={40}
                     thickness={4}
                 />
-                {examStudent.questions[examStudent?.questionIndex].time != null ? <QuestionTimer /> : null}
+                {/*{examStudent.questions[examStudent?.questionIndex].time != null ? <QuestionTimer /> : null}*/}
                 <QuestionNavigation />
                 <StudentQuestion />
             </>

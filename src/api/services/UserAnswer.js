@@ -14,7 +14,8 @@ async function getExamGrade(examId,studentId,controller) {
         const res = await axiosPrivate.get(`${GET_EXAM_FINAL_RESULT}/${examId}/${studentId}`, { signal: controller.signal });
         return await res;
     } catch (e) {
-        console.log(e.response.status);
+        if (e.response.status)
+            throw new Error(e.response.data.message)
     }
 }
 
