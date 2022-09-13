@@ -30,7 +30,7 @@ function NoAnnouncement(props) {
                         sx={{ ml: 1, flex: 1 ,textTransform: 'capitalize',padding: '0.8rem'}}
                         variant="body1"
                     >
-                        {parseInt(user.role_id) !== 3 ? "no announcement from your insinuator":
+                        {parseInt(user.role_id) !== 3 ? "no announcement from your instructor":
                             "you have not announced anything yet"}
                     </Typography>
                 </Grid>

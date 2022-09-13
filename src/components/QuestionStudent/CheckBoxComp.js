@@ -12,6 +12,7 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import FormGroup from "@mui/material/FormGroup";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
 import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
+import {toast} from "react-toastify";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -46,6 +47,7 @@ const CheckBoxComp = ({ questionIndex }) => {
         });
     }
     const handleCheckedAr = (e) =>{
+        if (checkedAr.length > exam.questions[questionIndex].maxAnswerCount) return toast('you have exceeded answer limit')
         const id = e.target.id
         const checked = e.target.checked
         const optionIndex = getOptionIndex(id)
