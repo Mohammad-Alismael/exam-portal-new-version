@@ -93,7 +93,7 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
         return startingAt > Date.now();
     };
     const viewingExam = () => {
-        return startingAt < Date.now() && endingAt > Date.now();
+        return startingAt < Date.now() && endingAt > Date.now() && didUserSubmit_ === false;
     };
     const finishedExamButNoGraded = () => {
         return didUserSubmit_ && finalGrade == null;

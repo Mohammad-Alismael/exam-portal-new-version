@@ -22,7 +22,7 @@
     "axios": "^0.24.0",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
-    "cypress": "^10.7.0",
+    "cypress-downloadfile": "^1.2.3",
     "date-fns": "^2.0.0-beta.5",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
@@ -50,7 +50,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cy-test": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -69,5 +70,22 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "devDependencies": {
+    "cypress": "^10.7.0",
+    "cypress-file-upload": "^5.0.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohammad-Alismael/exam-portal-new-version.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mohammad-Alismael/exam-portal-new-version/issues"
+  },
+  "homepage": "https://github.com/Mohammad-Alismael/exam-portal-new-version#readme"
 }

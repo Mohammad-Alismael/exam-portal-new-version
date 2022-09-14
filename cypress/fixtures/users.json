@@ -1,0 +1,30 @@
+{
+  "valid": {
+    "admin": {
+      "username": "admin",
+      "password": "1234"
+    },
+    "studentUndergraduate": {
+      "username": "mhdd",
+      "password": "1234"
+    },
+    "studentGraduate": {
+      "username": "mhd",
+      "password": "1234"
+    }
+  },
+  "invalid": {
+    "admin": {
+      "username": "admin12",
+      "password": "asdqw12342"
+    },
+    "studentUndergraduate": {
+      "username": "mhdd4",
+      "password": "12344"
+    },
+    "studentGraduate": {
+      "username": "mhdf",
+      "password": "1234f"
+    }
+  }
+}
