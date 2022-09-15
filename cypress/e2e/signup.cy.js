@@ -23,9 +23,7 @@ describe('Login Tests', () => {
         createUserPage.clickSignUp()
         cy.visit('http://localhost:3000/')
 
-        loginPage.enterUsername('admin12')
-        loginPage.enterPassword('Admin123')
-        loginPage.clickLogin()
+        loginPage.loginUser('admin12','Admin123')
         Alert.checkAlertMessage('your email is not activated')
     });
 
@@ -37,9 +35,7 @@ describe('Login Tests', () => {
         createUserPage.clickSignUp()
         cy.visit('http://localhost:3000/')
 
-        loginPage.enterUsername('anwar')
-        loginPage.enterPassword('Anwar123')
-        loginPage.clickLogin()
+        loginPage.loginUser('anwar','Anwar123')
         Alert.checkAlertMessage('your email is not activated')
 
     });

@@ -12,38 +12,19 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import ForgotPassword from "./ForgotPassword";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosPrivate } from "../api/axios";
+import {RESET_PASSWORD} from "../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: "flex",
-        height: "100vh",
-        flexGrow: 1,
-        backgroundColor: "#1a1a1a",
         padding: "7%",
     },
     container: {
         padding: 30,
-        height: "270px",
         width: "32%",
         margin: "30px auto",
-    },
-    paper: {
-        marginTop: theme.spacing(3),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "stretch",
-        justifyContent: "center",
-    },
-
-    signUpBtn: {
-        margin: theme.spacing(3, 0, 2),
-        textTransform: "none",
-        fontSize: 17,
-        maxHeight: "50px",
-        padding: "16px",
     },
 
     border: {
@@ -51,24 +32,6 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
     },
 }));
-
-const theme2 = createTheme({
-    typography: {
-        h3: {
-            fontSize: 32,
-            color: "#161b22",
-            textAlign: "center",
-        },
-    },
-    palette: {
-        primary: {
-            main: "rgb(0,0,0)",
-        },
-        secondary: {
-            main: "rgb(255,208,94)",
-        },
-    },
-});
 
 function ResetPassword(props) {
     const classes = useStyles();
@@ -78,7 +41,7 @@ function ResetPassword(props) {
     const submit = (e) => {
         e.preventDefault();
         axiosPrivate
-            .post("/user/reset-password", {
+            .post(RESET_PASSWORD, {
                 reset_token,
                 new_password: newPassword,
             })
@@ -95,11 +58,11 @@ function ResetPassword(props) {
             <Navbar type={2} />
             <Grid className={classes.root} item md={12} sm={12}>
                 <Paper elevation={10} className={classes.container}>
-                    <Typography variant="h3">
+                    <Typography variant="h5" style={{ textAlign: "center" }}>
                         <b>Reset password</b>
                     </Typography>
                     <Divider style={{ margin: "30px 0px 0px" }} />
-                    <Grid className={classes.paper} item md={12} sm={12} xs={6}>
+                    <Grid item md={12} sm={12} xs={6}>
                         <form noValidate>
                             <TextField
                                 onChange={(e) => setNewPassword(e.target.value)}
@@ -118,10 +81,9 @@ function ResetPassword(props) {
                         <Button
                             onClick={submit}
                             variant="contained"
-                            color="secondary"
+                            color="primary"
                             type="submit"
                             fullWidth
-                            className={classes.signUpBtn}
                             size="large"
                         >
                             <b>Submit</b>

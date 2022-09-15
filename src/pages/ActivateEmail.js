@@ -12,6 +12,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import {useNavigate, useParams} from "react-router-dom";
 import {axiosPrivate} from "../api/axios";
+import {ACTIVATE_USER} from "../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -70,16 +71,19 @@ const ActivateEmail = () => {
     const {email_token} = useParams();
     const navigate = useNavigate();
     useEffect(()=>{
-
-        axiosPrivate.post('/user/activate',{
+        const controller = new AbortController();
+        axiosPrivate.post(ACTIVATE_USER,{
             email_token
-        }).then((res)=> {
+        },{ signal: controller.signal }).then((res)=> {
             console.log('data from backend',res);
             toast.success(res.data.message)
             navigate("/");
         }).catch((error)=>{
             toast.info(error.response.data.message)
         })
+        return () => {
+            controller.abort();
+        };
     },[])
     return (
         <div>
