@@ -120,7 +120,6 @@ function Signup(props) {
                                 color="warning"
                                 type="submit"
                                 fullWidth
-                                id={'sign_up'}
                                 className={classes.signUpBtn}
                                 size="large"
                             >
