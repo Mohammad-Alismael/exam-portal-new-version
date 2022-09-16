@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Paper, Typography } from "@mui/material";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Question from "../../components/addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
 import ExamDetails from "../../components/ExamDetails";
+import CircularProgress from "@mui/material/CircularProgress";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 15%",
@@ -34,7 +35,6 @@ function CreateExamPage(props) {
     const classes = useStyles();
     const navigate = useNavigate();
     const exam = useSelector((state) => state.ExamReducer);
-    const [questions, setQuestions] = React.useState([]);
     const dispatch = useDispatch();
     const getQuestionIndex = (uid) => {
         const questionIndexFound = exam?.questions.findIndex((quest, index) => {
@@ -76,7 +76,7 @@ function CreateExamPage(props) {
     return (
         <>
             <ResponsiveAppBar />
-            <div className={classes.container}>
+            {exam.questions.length !== 0 ? <div className={classes.container}>
                 <ExamDetails />
                 <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId={"questions"}>
@@ -116,8 +116,7 @@ function CreateExamPage(props) {
                         <b>add question</b>
                     </Button>
                 </div>
-            </div>
-
+            </div> : <CircularProgress />}
         </>
     );
 }

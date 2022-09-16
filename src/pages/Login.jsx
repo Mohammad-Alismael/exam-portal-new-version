@@ -7,13 +7,14 @@ import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../layouts/Navbar";
 import Box from "@mui/material/Box";
 import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
-import {Button, TextField} from "@material-ui/core";
+import {TextField} from "@material-ui/core";
+import Button from "@mui/material/Button";
 import {theme} from "../utils/global/useStyles";
 import {useLocation} from "react-router";
 import {token} from "../api/axios";
@@ -135,10 +136,9 @@ function Login(props) {
                         <Button
                             onClick={submit}
                             variant="contained"
-                            color="error"
+                            color="primary"
                             type="submit"
-                            fullWidth
-                            className={classes.signInBtn}
+                            sx={{mb:3,width: '45%'}}
                             size="large"
                         >
                             <b>Login</b>

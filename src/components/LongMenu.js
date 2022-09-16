@@ -4,27 +4,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-
-const options = [
-    'None',
-    'Atria',
-    'Callisto',
-    'Dione',
-    'Ganymede',
-    'Hangouts Call',
-    'Luna',
-    'Oberon',
-    'Phobos',
-    'Pyxis',
-    'Sedna',
-    'Titania',
-    'Triton',
-    'Umbriel',
-];
-
+import {ListItemIcon, ListItemText} from "@mui/material";
 const ITEM_HEIGHT = 48;
-
-export default function LongMenu({options,className,functions}) {
+export default function LongMenu({options,className,functions,icons}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -67,8 +49,10 @@ export default function LongMenu({options,className,functions}) {
                         handleClose()
                     }
                     }>
-                        {/*<FileCopyIcon />*/}
-                        {option}
+                        <ListItemIcon>
+                            {icons[index]}
+                        </ListItemIcon>
+                        <ListItemText>{option}</ListItemText>
                     </MenuItem>
                 ))}
             </Menu>

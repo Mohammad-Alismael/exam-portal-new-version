@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
     containerForOnClick: {
         width: "100%",
-        margin: "1rem",
+        padding: '1rem',
         display: "flex",
         flexDirection: "row",
         alignItems: "center",

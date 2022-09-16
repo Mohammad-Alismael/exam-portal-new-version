@@ -76,6 +76,9 @@ const ResponsiveAppBar = (props) => {
             { title: "exams", url: "/exams" },
             { title: "people", url: "/people" },
         ];
+        if (parseInt(user.user_id) !== 3)
+            urls.push({ title: "grades", url: "/grades" })
+
         setPages(urls);
     }
 

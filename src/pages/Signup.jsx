@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
@@ -11,14 +9,12 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import * as Actions from "../store/actions";
 import { connect } from "react-redux";
 import Navbar from "../layouts/Navbar";
 import { SignUpAction } from "../actions/SignUpAction";
-import { theme, authStyles } from "../utils/global/useStyles";
+import { authStyles } from "../utils/global/useStyles";
 
 function Signup(props) {
     const classes = authStyles();
@@ -119,8 +115,8 @@ function Signup(props) {
                                 variant="contained"
                                 color="warning"
                                 type="submit"
-                                fullWidth
-                                className={classes.signUpBtn}
+                                sx={{mt:3,width: '45%'}}
+                                id={'sign_up'}
                                 size="large"
                             >
                                 <b>sign up</b>

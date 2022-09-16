@@ -33,6 +33,7 @@ import User from "./api/services/User";
 import CreateExamPage from "./pages/createExamPage/CreateExamPage";
 import {ALL_ROLES, INSTRUCTOR_ROLE, STUDENT_ROLES} from "./utils/global/GlobalConstants";
 import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
+import Grades from "./pages/course/grades/Grades";
 
 function App(props) {
     const [loading, setLoading] = useState(true);
@@ -109,6 +110,14 @@ function App(props) {
                             <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
                                 <GradesPage />
                             </Protected>
+                        }
+                    />
+                    <Route
+                        path="grades"
+                        element={
+                            // <Protected onlyAccessTo={STUDENT_ROLES}>
+                                <Grades />
+                            // </Protected>
                         }
                     />
                     <Route

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { toast } from "react-toastify";
 import {connect, useDispatch, useSelector} from "react-redux";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from '@mui/material/IconButton';
 import axios from "axios";
@@ -17,16 +18,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
 import LongMenu from "../../../components/LongMenu";
 import {
-    SET_ASSIGNED_FOR, SET_COURSE_EXAMS,
-    SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
-    SET_EXAM_TITLE, SET_NAVIGATION, SET_QUESTIONS,
-    SET_SPECIFIC_STUDENTS,
-    SET_STARTING_AT, SET_STUDENTS
+    SET_COURSE_EXAMS, SET_QUESTIONS
 } from "../../../store/actions";
 import {deleteExam} from "../../../api/services/Exam";
 import {setCourseExams} from "../../../actions/CourseAction";
 import {getExamGrade} from "../../../api/services/UserAnswer";
-
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import GradingIcon from '@mui/icons-material/Grading';
+import BarChartIcon from '@mui/icons-material/BarChart';
 const useStyles = makeStyles((theme) => ({
     container: {
         width: '100%',
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     },
     containerForOnClick: {
         width: '100%',
-        margin: '1rem',
+        padding: '1rem',
         display: 'flex',
         flexDirection: 'row',
         alignItems:'center',
@@ -69,6 +68,7 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
     const dispatch = useDispatch();
     const redirect = (e) => {
         e.stopPropagation()
+        dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
         navigate(`/preview/${examId}`);
     };
     useEffect(()=>{
@@ -99,7 +99,8 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
             </div>
             <LongMenu
                 className={classes.menuIcon}
-                options={["Delete", "Clone for other sections", "see grades","exam statistics"]}
+                options={["Delete Exam", "See Grades","Exam Statistics"]}
+                icons={[<DeleteOutlineIcon />,<GradingIcon />,<BarChartIcon />]}
                 functions={[function (e) {
                     e.stopPropagation()
                     deleteExam(examId).then((data) => {
@@ -110,10 +111,8 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
                         dispatch({ type: SET_COURSE_EXAMS, payload: { exams: newExamsArray } });
 
                     })
-                }, function (e) {
-                    e.stopPropagation()
-                    alert('create it for other sections')
-                },function (e) {
+                },
+                    function (e) {
                     e.stopPropagation()
                     navigate(`/courses/${course?.courseId}/grades/${examId}`)
 
