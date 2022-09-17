@@ -71,10 +71,6 @@ function Course(props) {
     const { course_id } = useParams();
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = React.useState(true);
-    const [announcements,setAnnouncements] = React.useState([
-        {instructorId: 10,announcementText: "tmrw we have a quiz!",createdAt: 1658749897526},
-        {instructorId: 10,announcementText: "tmrw we have a final!tmrw we have a final!tmrw we have a final!tmrw we have a final!",createdAt: 1658749899526}
-    ]);
     const user = useSelector(state => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
 

@@ -7,7 +7,7 @@ import {
     FETCH_EXAM_DETAILS_STUDENT,
     FETCH_EXAM_QUESTIONS,
     FETCH_EXAM_STUDENTS,
-    FETCH_EXAMS,
+    FETCH_EXAMS, FETCH_EXAMS_STUDENT, FETCH_MISSED_EXAMS,
     UPDATE_EXAM,
     UPDATE_EXAM_DETAILS,
 } from "./RouteNames";
@@ -27,6 +27,19 @@ async function fetchExams(courseId, controller) {
     }
 }
 
+
+async function fetchExamsStudent(courseId, controller) {
+    try {
+        const res = await axiosPrivate.post(
+            FETCH_EXAMS_STUDENT,
+            { courseId },
+            { signal: controller.signal }
+        );
+        return await res["data"];
+    } catch (e) {
+        console.log(e.message.status);
+    }
+}
 async function createExam(examObject) {
     try {
         const res = await axiosPrivate.post(CREATE_EXAM, { ...examObject });
@@ -94,6 +107,19 @@ async function fetchExamDetailsForStudent(exam_id, controller) {
         console.log(e);
     }
 }
+
+async function fetchMissedExams(classroomId, controller) {
+    try {
+        const res = await axiosPrivate.get(
+            `${FETCH_MISSED_EXAMS}/${classroomId}`,
+            {signal: controller.signal}
+        );
+        return await res["data"];
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export {
     fetchExamDetailsForStudent,
     deleteExam,
@@ -102,4 +128,6 @@ export {
     createExam,
     fetchExamDetails,
     fetchExamStudents,
+    fetchMissedExams,
+    fetchExamsStudent
 };

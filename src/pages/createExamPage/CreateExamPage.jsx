@@ -76,7 +76,7 @@ function CreateExamPage(props) {
     return (
         <>
             <ResponsiveAppBar />
-            {exam.questions.length !== 0 ? <div className={classes.container}>
+            <div className={classes.container}>
                 <ExamDetails />
                 <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId={"questions"}>
@@ -116,7 +116,7 @@ function CreateExamPage(props) {
                         <b>add question</b>
                     </Button>
                 </div>
-            </div> : <CircularProgress />}
+            </div>
         </>
     );
 }

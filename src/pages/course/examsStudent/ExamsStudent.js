@@ -1,10 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ResponsiveAppBar from "../../../layouts/ResponsiveAppBar";
 import {makeStyles} from "@material-ui/core/styles";
 import classNames from "classnames";
 import * as PropTypes from "prop-types";
-import ExamContainer from "../../../components/ExamContainers/ExamContainer";
+import ExamContainer from "../../../components/ExamContainers/Containers/UpComingContainer";
 import classnames from "classnames";
+import {fetchExams, fetchExamsStudent, fetchMissedExams} from "../../../api/services/Exam";
+import {useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {fetchPendingAndSubmittedExam} from "../../../api/services/UserSubmission";
+import {CircularProgress} from "@material-ui/core";
+import UpComingContainer from "../../../components/ExamContainers/Containers/UpComingContainer";
+import PendingContainer from "../../../components/ExamContainers/Containers/PendingContainer";
+import GradedContainer from "../../../components/ExamContainers/Containers/GradedContainer";
+import MissedContainer from "../../../components/ExamContainers/Containers/MissedContainer";
 const useStyles = makeStyles((theme) => ({
     container: {
         // backgroundColor: 'red',
@@ -41,22 +50,75 @@ const useStyles = makeStyles((theme) => ({
 
 function ExamsStudent(props) {
     const classes = useStyles();
-
+    const { course_id } = useParams();
+    const course = useSelector(state => state.CourseReducer);
+    const {user} = useSelector(state => state.UserReducerV2);
+    const [upComingExams,setUpcomingExams] = useState([])
+    const [waitingToeGradedExams,setWaitingToeGradedExams] = useState([])
+    const [gradedExams,setGradedExams] = useState([])
+    const [missedExams,setMissedExams] = useState([])
+    const [loading,setLoading] = useState(false)
+    useEffect(()=>{
+        const controller = new AbortController();
+        setLoading(true)
+        fetchExamsStudent(course?.course_info?.id, controller)
+            .then((data)=>{
+                setUpcomingExams(data)
+                console.log('upcoming exams exams',data)
+            }).catch(console.log)
+        fetchPendingAndSubmittedExam(course?.course_info?.id,
+            user.user_id,controller)
+            .then((data)=>{
+                setGradedExams(data['graded_exams'])
+                setWaitingToeGradedExams(data['pending_exams'])
+                console.log('pending and graded exams',data)
+            })
+            .catch(console.log)
+        fetchMissedExams(course?.course_info?.id,controller)
+            .then((data)=>{
+                setMissedExams(data)
+                setLoading(false)
+                console.log('missed exams',data)
+            })
+            .catch(console.log)
+        return () => {
+            controller.abort();
+        };
+    },[])
+    if (loading) {
+        return <CircularProgress size={200} />;
+    }
     return (
         <>
             <ResponsiveAppBar/>
             <div className={classes.container}>
                 <div className={classes.subContainer}>
-                    <ExamContainer title={'upcoming exams'}/>
+                    <UpComingContainer
+                        exams={upComingExams}
+                        title={'upcoming exams'}
+                        noExamTitle={'no upcoming exams yet'}
+                    />
                 </div>
                 <div className={classnames(classes.subContainer,classes.subContainer2)}>
-                    <ExamContainer title={'waiting to be graded'}/>
+                    <PendingContainer
+                        exams={waitingToeGradedExams}
+                        title={'waiting to be graded'}
+                        noExamTitle={'no pending exams yet'}
+                    />
                 </div>
                 <div className={classnames(classes.subContainer,classes.subContainer3)}>
-                    <ExamContainer title={'graded exam'}/>
+                    <GradedContainer
+                        exams={gradedExams}
+                        title={'graded exam'}
+                        noExamTitle={'no graded exams yet'}
+                    />
                 </div>
                 <div className={classnames(classes.subContainer,classes.subContainer4)}>
-                    <ExamContainer title={'missed exams'}/>
+                    <MissedContainer
+                        exams={missedExams}
+                        title={'missed exams'}
+                        noExamTitle={'no missed exams yet'}
+                    />
                 </div>
             </div>
         </>

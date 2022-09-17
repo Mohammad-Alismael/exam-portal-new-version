@@ -1,5 +1,10 @@
 import {axiosPrivate} from "../axios";
-import {DID_STUDENT_SUBMIT, FETCH_STUDENTS_SUBMISSION, GET_EXAM_FINAL_RESULT} from "./RouteNames";
+import {
+    DID_STUDENT_SUBMIT,
+    FETCH_PENDING_AND_GRADED_EXAMS,
+    FETCH_STUDENTS_SUBMISSION,
+    GET_EXAM_FINAL_RESULT
+} from "./RouteNames";
 import {getUserInfo} from "./User";
 
 async function fetchStudentsSubmission(examId,controller) {
@@ -30,8 +35,19 @@ async function didUserSubmit(examId,studentId,controller) {
         console.log(e.response.status);
     }
 }
+
+async function fetchPendingAndSubmittedExam(classroomId, studentId, controller) {
+    try {
+        const res = await axiosPrivate.get(`${FETCH_PENDING_AND_GRADED_EXAMS}/${classroomId}/${studentId}`,
+            {signal: controller.signal})
+        return await res['data'];
+    }catch (e) {
+        console.log(e.response.status);
+    }
+}
 export {
     fetchStudentsSubmission,
     fetchStudentSubmission,
-    didUserSubmit
+    didUserSubmit,
+    fetchPendingAndSubmittedExam
 }

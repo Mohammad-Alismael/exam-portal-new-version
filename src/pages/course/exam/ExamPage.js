@@ -57,7 +57,7 @@ const ExamPage = () => {
     const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.UserReducerV2).user;
+    const {user} = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const createNewExam = (e) => {
         e.preventDefault();

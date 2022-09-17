@@ -153,7 +153,6 @@ function App(props) {
                         </Protected>
                     }
                 />
-                {/*<Route exact path="/result/:examId" element={<ResultExam />} />*/}
                 <Route exact path="/exam/:examId" element={
                     <Protected onlyAccessTo={STUDENT_ROLES}>
                         <ExamStudent />

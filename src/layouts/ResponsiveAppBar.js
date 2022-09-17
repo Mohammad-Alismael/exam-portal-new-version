@@ -75,10 +75,11 @@ const ResponsiveAppBar = (props) => {
             { title: "courses", url: "/courses" },
             { title: "people", url: "/people" },
         ];
-        if (parseInt(user.user_id) !== 3)
-            urls.push({ title: "exams", url: "/exams-student" })
+
+        if (parseInt(user.role_id) !== 3)
+            urls.push({title: "exams", url: "/exams-student"})
         else
-            urls.push({ title: "exams", url: "/exams" })
+            urls.push({title: "exams", url: "/exams"})
 
         setPages(urls);
     }
