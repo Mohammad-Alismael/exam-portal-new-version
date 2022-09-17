@@ -7,6 +7,7 @@ const useStyles = makeStyles(({ palette }) => ({
     itemElement:{
         backgroundColor: '#FFF',
         minWidth: '100%',
+        // height: '28%',
         marginBottom: '0.8rem',
         borderRadius: '15px',
         position: 'relative',
@@ -14,7 +15,7 @@ const useStyles = makeStyles(({ palette }) => ({
     },
     headerContainer: {
         position: "absolute",
-        top: '0.5rem',
+        top: '0.9rem',
         display: 'inline-block',
         height: '60px',
     },
@@ -24,43 +25,46 @@ const useStyles = makeStyles(({ palette }) => ({
         color: '#000000',
     },
     examTitle: {
-        marginBottom: '3px',
+        // marginBottom: '10px',
         fontWeight: 'bold'
     },
     submittedAt: {
         fontSize: '12px',
-        marginTop: '3px',
+        marginTop: '10px',
     },
     circle: {
         display: 'inline-block',
-        border: `3px solid rgba(117, 117, 117, 1)`,
+        border: `3px solid #FF6838`,
         borderRadius: '50%',
         width: '60px',
         height: '60px',
         margin: '0.5rem',
-    },
+        '& span:nth-child(1)': {
+            marginLeft: '17%',
+            marginTop: '36%',
+            fontWeight: 'semi-bold',
+            display: 'block',
+            fontSize: 12,
+            color: '#FF6838'
+        },
 
-    icon: {
-        width: 40,
-        height: 40,
-        margin: '1rem'
     }
 }));
 
-export default function UpComingExam(props) {
+export default function MissedExam(props) {
     const classes = useStyles();
     return (
         <div className={classes.itemElement}>
-            <img className={classes.icon} src={"/images/icons/exam_logo.svg"} alt={"logo"} />
+            <div className={classes.circle}>
+                <span>Missed</span>
+            </div>
             <div className={classes.headerContainer}>
                 <p className={classNames(classes.miniHeader, classes.examTitle)}>CS202 final</p>
-                <p className={classNames(classes.miniHeader, classes.submittedAt)}>Starting at Spt 14th
-                    2022, 3:30:45 pm</p>
-                <p className={classNames(classes.miniHeader, classes.submittedAt)}>Ending at Spt 14th
+                <p className={classNames(classes.miniHeader, classes.submittedAt)}>Submitted at Spt 14th
                     2022, 3:30:45 pm</p>
             </div>
         </div>
     );
 }
 
-UpComingExam.propTypes = {classes: PropTypes.any};
+MissedExam.propTypes = {classes: PropTypes.any};

@@ -75,13 +75,14 @@ function Login(props) {
     const classes = useStyles(theme);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
-    const { state } = useLocation();
+    // const {state} = useLocation()
+    const navigate = useNavigate()
     const submit = (e) => {
         e.preventDefault();
         if (username !== "" && password !== "") {
             props.setUserData(username, password, (res) => {
-                navigate(state?.path || "/courses");
+                // navigate(state?.path || "/courses");
+                navigate("/courses")
             });
         } else {
             toast("username or password field is missing!");

@@ -104,7 +104,7 @@ function ExamStudent() {
                     size={40}
                     thickness={4}
                 />
-                {/*{examStudent.questions[examStudent?.questionIndex].time != null ? <QuestionTimer /> : null}*/}
+                {/*{examsStudent.questions[examsStudent?.questionIndex].time != null ? <QuestionTimer /> : null}*/}
                 <QuestionNavigation />
                 <StudentQuestion />
             </>

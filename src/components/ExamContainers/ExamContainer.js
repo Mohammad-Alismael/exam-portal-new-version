@@ -1,7 +1,11 @@
 import * as PropTypes from "prop-types";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import GradedExam from "./GradedExam";
+import PendingExam from "./PendingExam";
+import MissedExam from "./MissedExam";
 import UpComingExam from "./UpComingExam";
+import NoExam from "./NoExam";
 const useStyles = makeStyles((theme) => ({
     itemContainer: {
         // backgroundColor: 'blue',
@@ -32,11 +36,11 @@ export default function ExamContainer({title}) {
         <div className={classes.itemContainer}>
             <h4 className={classes.itemContainerHeader}>{title}</h4>
             <div className={classes.elementsContainer}>
+                <GradedExam />
+                <PendingExam />
+                <MissedExam />
                 <UpComingExam />
-                <UpComingExam />
-                <UpComingExam />
-                <UpComingExam />
-                <UpComingExam />
+                <NoExam title={'no graded exam yet'}/>
             </div>
         </div>
     );

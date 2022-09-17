@@ -73,11 +73,12 @@ const ResponsiveAppBar = (props) => {
     function hideGradesPage() {
         const urls = [
             { title: "courses", url: "/courses" },
-            { title: "exams", url: "/exams" },
             { title: "people", url: "/people" },
         ];
         if (parseInt(user.user_id) !== 3)
-            urls.push({ title: "grades", url: "/grades" })
+            urls.push({ title: "exams", url: "/exams-student" })
+        else
+            urls.push({ title: "exams", url: "/exams" })
 
         setPages(urls);
     }

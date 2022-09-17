@@ -1,8 +1,6 @@
 import {
     Routes,
     Route,
-    useLocation,
-    useNavigate,
 } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +17,6 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ActivateEmail from "./pages/ActivateEmail";
 import NewClasses from "./pages/NewClasses";
-import jwt from "jwt-decode";
 import Protected from "./utils/Protected";
 import {axiosPrivate, token, updateToken} from "./api/axios";
 import { theme } from "./utils/global/useStyles";
@@ -28,17 +25,15 @@ import { CircularProgress } from "@material-ui/core";
 import ExamPage from "./pages/course/exam/ExamPage";
 import PeoplePage from "./pages/course/people/PeoplePage";
 import GradesPage from "./pages/GradesPage";
-import ResponsiveAppBar from "./layouts/ResponsiveAppBar";
 import User from "./api/services/User";
 import CreateExamPage from "./pages/createExamPage/CreateExamPage";
 import {ALL_ROLES, INSTRUCTOR_ROLE, STUDENT_ROLES} from "./utils/global/GlobalConstants";
 import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
-import Grades from "./pages/course/grades/Grades";
+import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
 
 function App(props) {
     const [loading, setLoading] = useState(true);
     const user = useSelector(state => state.UserReducerV2).user;
-
 
     // using async useEffect can cause memory leak but i'm using 'isMounted'
     // to prevent that
@@ -91,8 +86,16 @@ function App(props) {
                     <Route
                         path="exams"
                         element={
-                            <Protected onlyAccessTo={ALL_ROLES}>
+                            <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
                                 <ExamPage />
+                            </Protected>
+                        }
+                    />
+                    <Route
+                        path="exams-student"
+                        element={
+                            <Protected onlyAccessTo={STUDENT_ROLES}>
+                                <ExamsStudent />
                             </Protected>
                         }
                     />
@@ -110,14 +113,6 @@ function App(props) {
                             <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
                                 <GradesPage />
                             </Protected>
-                        }
-                    />
-                    <Route
-                        path="grades"
-                        element={
-                            // <Protected onlyAccessTo={STUDENT_ROLES}>
-                                <Grades />
-                            // </Protected>
                         }
                     />
                     <Route
