@@ -5,29 +5,27 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import {TextField} from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "../components/ClassCard";
-import { Button } from '@material-ui/core';
-import { Typography } from "@mui/material";
+import { Button } from "@material-ui/core";
+import { Fab, Typography } from "@mui/material";
 import { connect, useSelector } from "react-redux";
-import {Course, getCourses} from "../api/services/Course";
+import { Course, getCourses } from "../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
-import {Outlet} from "react-router";
+import AddIcon from "@mui/icons-material/Add";
+
+import { Outlet } from "react-router";
 import User from "../api/services/User";
-import {axiosPrivate, token} from "../api/axios";
-import {FETCH_CLASSROOMS} from "../api/services/RouteNames";
+import { axiosPrivate, token } from "../api/axios";
+import { FETCH_CLASSROOMS } from "../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
     root: {
-        position: "absolute",
-        top: "9%",
         padding: "1rem",
         backgroundColor: "#1a1a1a",
-        height: "91.98vh",
-        width: "100vw",
         overflow: "hidden",
     },
     createClass: {
@@ -39,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     },
     noClass: {
         transform: "translate(0%,100%)",
+    },
+    addClassBtn: {
+        position: "absolute",
+        bottom: "3%",
+        right: "2%",
     },
 }));
 function NewClasses(props) {
@@ -56,71 +59,77 @@ function NewClasses(props) {
     const createClass = () => {
         setLoading(true);
         course
-            .createCourse(newClassName,section, user["user_id"])
+            .createCourse(newClassName, section, user["user_id"])
             .then((res) => {
                 toast(res["message"]);
-                setCourses([...courses,res['newClassroom']])
+                setCourses([...courses, res["newClassroom"]]);
                 setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
             });
         setOpen(false);
-    }
+    };
     const handleClose = () => {
         setOpen(false);
-
     };
-    useEffect(  () => {
+    useEffect(() => {
         let isMounted = true;
         const controller = new AbortController();
 
-        getCourses(controller).then((data)=>{
-            isMounted && setCourses(data['result'])
-            isMounted && setLoading(false)
-        })
+        getCourses(controller).then((data) => {
+            isMounted && setCourses(data["result"]);
+            isMounted && setLoading(false);
+        });
 
-        return ()=>{
-            isMounted = false
-            controller.abort()
-        }
+        return () => {
+            isMounted = false;
+            controller.abort();
+        };
     }, []);
     return (
         <>
             <ResponsiveAppBar />
             {!loading ? (
-                <Grid container spacing={2} className={classes.root}>
-                    {courses.map(({ class_name, classroom_id,section }, index) => {
-                        return <ClassCard
-                            key={index}
-                            id={classroom_id}
-                            classname={class_name}
-                            section={section}
-                        />;
-                    })}
-                    {courses?.length === 0 ? (
-                        <Grid item xs={12} sm={6} md={3}>
-                            <Card className={classes.createClass}>
-                                <Typography
-                                    variant={"h5"}
-                                    align={"center"}
-                                    className={classes.noClass}
-                                >
-                                    you haven't join any courses yet.
-                                </Typography>
-                            </Card>
-                        </Grid>
-                    ) : null}
+                <>
+                    <Grid container spacing={2} className={classes.root}>
+                        {courses.map(({ class_name, classroom_id, section }, index) => {
+                            return (
+                                <ClassCard
+                                    key={index}
+                                    id={classroom_id}
+                                    classname={class_name}
+                                    section={section}
+                                />
+                            );
+                        })}
+                        {courses?.length === 0 ? (
+                            <Grid item xs={12} sm={6} md={3}>
+                                <Card className={classes.createClass}>
+                                    <Typography
+                                        variant={"h5"}
+                                        align={"center"}
+                                        className={classes.noClass}
+                                    >
+                                        you haven't join any courses yet.
+                                    </Typography>
+                                </Card>
+                            </Grid>
+                        ) : null}
+                    </Grid>
                     {parseInt(user?.role_id) === 3 ? (
-                        <Grid item xs={12} sm={6} md={3}>
-                            <Card className={classes.createClass}>
-                                <Button variant="contained" color="warning" onClick={handleClickOpen}>
-                                    New Class
-                                </Button>
-                            </Card>
-                        </Grid>
+                        <div className={classes.addClassBtn}>
+                            <Fab
+                                color="primary"
+                                aria-label="add"
+
+                                onClick={handleClickOpen}
+                            >
+                                <AddIcon />
+                            </Fab>
+                        </div>
                     ) : null}
-                </Grid>
+                </>
             ) : (
                 <LinearProgress />
             )}
@@ -158,7 +167,6 @@ function NewClasses(props) {
                             />
                         </Grid>
                     </Grid>
-
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>

@@ -22,10 +22,50 @@ import { token } from "../api/axios";
 import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
     root: {
-        // maxWidth: 300,
+        position: "relative",
+        margin: "0.5rem",
     },
     media: {
-        height: 120,
+        height: 200,
+    },
+    dots: {
+        // position: 'absolute',
+        float: "right",
+        color: "#FFF",
+    },
+    classInfo: {
+        padding: "0 1rem",
+        display: "inline-block",
+        color: "#FFF",
+        "& p:nth-child(1)": {
+            fontWeight: 800,
+            fontSize: 18,
+            marginBottom: "0.7rem",
+        },
+        "& p:nth-child(2)": {
+            margin: 0,
+            fontSize: 14,
+        },
+    },
+    instructorInfo: {
+        position: "absolute",
+        bottom: 0,
+        padding: "0.3rem 1rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        "& img": {
+            display: "inline-block",
+            backgroundColor: "red",
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            objectFit: "center",
+        },
+        "& p": {
+            paddingLeft: "0.7rem",
+            color: "#FFF",
+        },
     },
 }));
 
@@ -48,7 +88,7 @@ function ClassCard(props) {
     const handleClickOption = () => {
         generateInvitationLink();
         setAnchorEl(null);
-    }
+    };
     const generateInvitationLink = () => {
         const user_data = jwt(token);
         const textBeforeHash = `${props.id}:${user_data.username}`;
@@ -60,56 +100,63 @@ function ClassCard(props) {
     };
     return (
         <Grid item xs={12} sm={6} md={3}>
-            <Card className={classes.root}>
+            <Card className={classes.root} sx={{ borderRadius: "15px" }}>
                 <CardActionArea href={`/courses/${props.id}`}>
-                    <CardHeader
-                        avatar={
-                            // alt={user.role_id == 3 ? user.username : props.instructor['username']}
-                            <Avatar alt={"t"} src="/static/images/avatar/2.jpg" />
-                        }
-                        action={
-                            <div>
-                                <IconButton
-                                    aria-label="more"
-                                    id="long-button"
-                                    aria-controls={open ? "long-menu" : undefined}
-                                    aria-expanded={open ? "true" : undefined}
-                                    aria-haspopup="true"
-                                    onMouseDown={(event) => event.stopPropagation()}
-                                    onClick={handleClick}
-                                >
-                                    <MoreVertIcon />
-                                </IconButton>
-                                <Menu
-                                    id="long-menu"
-                                    MenuListProps={{
-                                        "aria-labelledby": "long-button",
-                                    }}
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    PaperProps={{
-                                        style: {
-                                            maxHeight: ITEM_HEIGHT * 4.5,
-                                            width: "20ch",
-                                        },
-                                    }}
-                                >
-                                    {options.map((option) => (
-                                        <MenuItem key={option} onClick={handleClickOption}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
-                            </div>
-                        }
-                        title={props.classname}
-                        subheader={"Section " + props.section.toUpperCase()}
-                    />
                     <CardMedia
                         className={classes.media}
                         image="https://www.gstatic.com/classroom/themes/img_code.jpg"
-                    />
+                    >
+                        <div className={classes.classInfo}>
+                            <p>{props.classname}</p>
+                            <p>{"Section " + props.section.toUpperCase()}</p>
+                        </div>
+
+                        <div className={classes.dots}>
+                            <IconButton
+                                aria-label="more"
+                                id="long-button"
+                                aria-controls={open ? "long-menu" : undefined}
+                                aria-expanded={open ? "true" : undefined}
+                                aria-haspopup="true"
+                                onMouseDown={(event) => event.stopPropagation()}
+                                onClick={handleClick}
+                            >
+                                <MoreVertIcon sx={{ color: "#FFF" }} />
+                            </IconButton>
+                            <Menu
+                                id="long-menu"
+                                MenuListProps={{
+                                    "aria-labelledby": "long-button",
+                                }}
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                PaperProps={{
+                                    style: {
+                                        maxHeight: ITEM_HEIGHT * 4.5,
+                                        width: "20ch",
+                                    },
+                                }}
+                            >
+                                {options.map((option) => (
+                                    <MenuItem key={option} onClick={handleClickOption}>
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </div>
+                        <div className={classes.instructorInfo}>
+                            <img
+                                alt={"img"}
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
+                            />
+                            <p>
+                                {user.role_id == 3
+                                    ? user.username
+                                    : props.instructor["username"]}
+                            </p>
+                        </div>
+                    </CardMedia>
                 </CardActionArea>
             </Card>
         </Grid>
