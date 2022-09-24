@@ -9,21 +9,12 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import {connect, useDispatch, useSelector} from "react-redux";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from '@mui/material/IconButton';
-import axios from "axios";
-import {SvgIcon} from "@mui/material";
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import FontAwesomeSvgIcon from "../../../components/FontAwesomeSvgIcon";
+
 import LongMenu from "../../../components/LongMenu";
 import {
     SET_COURSE_EXAMS, SET_QUESTIONS
 } from "../../../store/actions";
 import {deleteExam} from "../../../api/services/Exam";
-import {setCourseExams} from "../../../actions/CourseAction";
-import {getExamGrade} from "../../../api/services/UserAnswer";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import GradingIcon from '@mui/icons-material/Grading';
 import BarChartIcon from '@mui/icons-material/BarChart';
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +89,6 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
                 </div>
             </div>
             <LongMenu
-                className={classes.menuIcon}
                 options={["Delete Exam", "See Grades","Exam Statistics"]}
                 icons={[<DeleteOutlineIcon />,<GradingIcon />,<BarChartIcon />]}
                 functions={[function (e) {
