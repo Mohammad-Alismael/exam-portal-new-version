@@ -26,17 +26,20 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'blue',
     },
     paperStyle: {
-        padding: 30,
+        position: 'relative',
+        padding: 20,
         height: '28vh',
-        width: '63%',
+        width: '65%',
         margin: "30px auto",
         backgroundImage: `url(${classes})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
+        borderRadius: '15px !important',
     },
     mainGrid: {
         width: '68%',
         margin: "30px auto",
+        justifyContent: 'center',
     },
     textPaper: {
         padding: 20,
@@ -59,7 +62,27 @@ const useStyles = makeStyles((theme) => ({
         height: '100%',
         width: '63%',
         margin: "30px auto",
-    }
+    },
+    instructorInfo: {
+        position: "absolute",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        "& img": {
+            display: "inline-block",
+            backgroundColor: "red",
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            objectFit: "center",
+        },
+        "& p": {
+            fontSize: '1.3rem',
+            paddingLeft: "0.7rem",
+            color: "#FFF",
+        },
+    },
 }));
 const WhiteTextTypography = withStyles({
     root: {
@@ -74,11 +97,6 @@ function Course(props) {
     const user = useSelector(state => state.UserReducerV2).user;
     const course = useSelector(state => state.CourseReducer);
 
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(2),
-    }));
     useEffect(()=>{
         const controller = new AbortController();
         dispatch({ type: SET_COURSE_ID, payload : {courseId: course_id} })
@@ -97,21 +115,26 @@ function Course(props) {
             { isLoading ? <LinearProgress /> :
             <Box>
                 <Paper elevation={5} className={classes.paperStyle}>
-                  <WhiteTextTypography variant="h4" style={{ marginTop: '15%' }}>
+                  <WhiteTextTypography variant="h4">
                      <b>{course?.course_info?.class_name}</b>
                   </WhiteTextTypography>
                   <WhiteTextTypography variant="h4" style={{ fontSize: '25px' }}>
                       section {course?.course_info?.section.toUpperCase()}
                   </WhiteTextTypography>
+                    <div className={classes.instructorInfo}>
+                        <img
+                            alt={"img"}
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
+                        />
+                        <p>
+                            {user.role_id == 3
+                                ? user.username
+                                : course?.course_info?.instructor["username"]}
+                        </p>
+                    </div>
                 </Paper>
                 <Grid container spacing={2} className={classes.mainGrid}>
-                    <Grid item xs={3}>
-                        <Item>
-                            <Typography variant="h6">Upcoming</Typography>
-                            <Typography variant="caption">Woohoo, no work due soon!</Typography>
-                        </Item>
-                    </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={10}>
                         {parseInt(user.role_id) === 3 ? <Announcement /> : null}
                         <Grid item>
                             {

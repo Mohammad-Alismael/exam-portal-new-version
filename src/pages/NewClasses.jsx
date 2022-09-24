@@ -78,7 +78,7 @@ function NewClasses(props) {
         const controller = new AbortController();
 
         getCourses(controller).then((data) => {
-            isMounted && setCourses(data["result"]);
+            isMounted && setCourses(data);
             isMounted && setLoading(false);
         });
 
@@ -93,10 +93,12 @@ function NewClasses(props) {
             {!loading ? (
                 <>
                     <Grid container spacing={2} className={classes.root}>
-                        {courses.map(({ class_name, classroom_id, section }, index) => {
+                        {courses.map(({ class_name, course_id,classroom_id, section,instructor_info }, index) => {
                             return (
                                 <ClassCard
+                                    username={instructor_info['username']}
                                     key={index}
+                                    courseId={course_id}
                                     id={classroom_id}
                                     classname={class_name}
                                     section={section}

@@ -101,7 +101,7 @@ function ClassCard(props) {
     return (
         <Grid item xs={12} sm={6} md={3}>
             <Card className={classes.root} sx={{ borderRadius: "15px" }}>
-                <CardActionArea href={`/courses/${props.id}`}>
+                <CardActionArea href={`/courses/${props.courseId}`}>
                     <CardMedia
                         className={classes.media}
                         image="https://www.gstatic.com/classroom/themes/img_code.jpg"
@@ -151,9 +151,9 @@ function ClassCard(props) {
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
                             />
                             <p>
-                                {user.role_id == 3
+                                {parseInt(user.role_id) === 3
                                     ? user.username
-                                    : props.instructor["username"]}
+                                    : props.username}
                             </p>
                         </div>
                     </CardMedia>
