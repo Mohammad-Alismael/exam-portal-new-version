@@ -71,8 +71,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ITEM_HEIGHT = 48;
 function ClassCard(props) {
-    const user = useSelector((state) => state.UserReducerV2).user;
-    const options = user.role_id == 3 ? ["invitation link"] : [];
+    const {user} = useSelector((state) => state.UserReducerV2);
+    const options = user.role_id == 3 ? ["invitation link"] : ['withdraw course'];
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [clipboard, copyToClipboard] = useClipboard();

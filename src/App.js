@@ -61,10 +61,7 @@ function App(props) {
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route
-                    path="/reset-password/:reset_token"
-                    element={<ResetPassword />}
-                />
+                <Route path="/reset-password/:reset_token" element={<ResetPassword />}/>
                 <Route path="/activation/:email_token" element={<ActivateEmail />} />
                 <Route
                     path="/courses"

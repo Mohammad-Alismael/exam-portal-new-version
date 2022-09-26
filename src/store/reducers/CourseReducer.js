@@ -6,6 +6,7 @@ const initialState = {
     course_info: null,
     announcements: [],
     classmates: [],
+    filteredClassmates: [],
     exams: []
 }
 
@@ -30,6 +31,11 @@ const CourseReducer  = (state = initialState, action) => {
             return {
                 ...state,
                 classmates: action.classmates
+            }
+        case actionTypes.SET_FILTERED_CLASSMATES:
+            return {
+                ...state,
+                filteredClassmates: action.filteredClassmates
             }
         case actionTypes.SET_COURSE_EXAMS:
             return {

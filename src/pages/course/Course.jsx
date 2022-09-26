@@ -65,12 +65,12 @@ const useStyles = makeStyles((theme) => ({
     },
     instructorInfo: {
         position: "absolute",
-        bottom: 0,
+        bottom: 20,
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-start",
         "& img": {
-            display: "inline-block",
+            // display: "inline-block",
             backgroundColor: "red",
             width: "50px",
             height: "50px",

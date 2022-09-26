@@ -14,7 +14,6 @@ import Avatar from '@mui/material/Avatar'
 import Box from "@mui/material/Box";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
-        padding: 10,
         height:'5vh',
         width: '50%',
         margin: "5px",

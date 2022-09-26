@@ -13,14 +13,8 @@ code {
     monospace;
 }
 
-#add-question{
-  background-color: #ffd05e;
-  color: black;
-  padding: 4px 12px;
-  float: right;
-  position: absolute;
-  bottom: -3em;
-  right: 0;
+*:focus {
+  outline: none;
 }
 
 #delete-question-icon{

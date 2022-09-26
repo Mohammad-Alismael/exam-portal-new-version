@@ -93,12 +93,12 @@ function NewClasses(props) {
             {!loading ? (
                 <>
                     <Grid container spacing={2} className={classes.root}>
-                        {courses.map(({ class_name, course_id,classroom_id, section,instructor_info }, index) => {
+                        {courses.map(({ class_name,classroom_id, section,instructor_info }, index) => {
                             return (
                                 <ClassCard
-                                    username={instructor_info['username']}
+                                    username={ parseInt(user?.role_id) === 3 ? user.username : instructor_info['username']}
                                     key={index}
-                                    courseId={course_id}
+                                    courseId={classroom_id}
                                     id={classroom_id}
                                     classname={class_name}
                                     section={section}

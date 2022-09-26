@@ -5,7 +5,6 @@ import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_CLASSMATES, SET_COURSE_EXAMS, SET_C
 
 export function CourseAction(data) {
     return (dispatch) => {
-            console.log(data)
         dispatch(setCourseInfo(data['course_info']))
         dispatch(setCourseAnnouncements(data['announcements']))
         dispatch(setCourseClassmates(data['classmates']))
@@ -30,6 +29,13 @@ export function setCourseClassmates(data){
     return {
         type: Actions.SET_COURSE_CLASSMATES,
         classmates: data
+    }
+}
+
+export function setFilteredClassmates(data){
+    return {
+        type: Actions.SET_FILTERED_CLASSMATES,
+        filteredClassmates: data
     }
 }
 export function setCourseExams(data){
