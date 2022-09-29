@@ -21,21 +21,22 @@ axiosPrivate.interceptors.request.use(async  req => {
     if (token != null) req.headers.Authorization = 'Bearer ' + token
     if (!isExpired(token)) return req
 
-    if (token != null){
+    if (token != null && token !== ""){
         try {
+            console.log('calling api for new token')
             const {data} = await axios.post(REFRESH_TOKEN,{},{
                 headers: {
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                withCredentials: true
             })
             updateToken(data['accessToken'])
             req.headers.Authorization = 'Bearer ' + data['accessToken']
         }catch (e) {
             console.log(e)
-            window.location.href = '/logout'
+            // window.location.href = '/logout'
             toast("session expired, you must log in again!")
         }
-
     }
 
     return req

@@ -62,7 +62,7 @@ function PeoplePage(props) {
                 </div>
                 <Paper elevation={5} className={classes.container}>
                     <Grid xs={12}>
-                        {parseInt(user.role_id) === 3 ? <Participants username={user?.username}/> : null}
+                        {/*{parseInt(user.role_id) === 3 ? <Participants username={user?.username}/> : null}*/}
                         <Divider/>
                         {
                             course.filteredClassmates

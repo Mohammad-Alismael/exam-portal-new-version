@@ -1,15 +1,15 @@
 import axios from "axios";
-import {axiosPrivate, token, updateToken} from "../axios";
+import {axiosPrivate, BASE_URL, token, updateToken} from "../axios";
 import {toast} from "react-toastify";
 import {isExpired} from "react-jwt";
 import {AUTH_USER, CREATE_USER, FETCH_USER_INFO, FORGET_PASSWORD, REFRESH_TOKEN} from "./RouteNames";
 
 class User {
     static userAuth(username, password) {
-        return axiosPrivate.post(AUTH_USER,{
+        return axios.post(`${BASE_URL}${AUTH_USER}`,{
             username,
             password
-        }).then((res)=> {
+        },{withCredentials: true}).then((res)=> {
             const token = res.data['accessToken'];
             axiosPrivate.interceptors.request.use(
                 config => {
@@ -25,11 +25,11 @@ class User {
             return res
         }).catch((error)=>{
             // console.log(error)
-           throw error
+            throw error
         })
     }
     static createUser({username,password,emailId,roleId}) {
-        return axiosPrivate.post(CREATE_USER,{
+        return axios.post(`${BASE_URL}${CREATE_USER}`,{
             username,
             password,
             email_id: emailId,
@@ -90,9 +90,10 @@ class User {
             callback()
         } catch (err) {
             console.log(err)
+
             // if (err.response.status === 406) {
-                window.location.href = '/logout'
-                toast("session expired, you must log in again!")
+            window.location.href = '/logout'
+            toast("session expired, you must log in again!")
             // }
             callback()
         }

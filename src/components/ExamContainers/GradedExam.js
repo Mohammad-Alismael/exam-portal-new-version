@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const useStyles = makeStyles(({ palette }) => ({
     itemElement: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#fff",
         // width: '100%',
         minWidth: "100%",
         marginBottom: "0.8rem",
@@ -62,6 +62,7 @@ export default function GradedExam({ percent, examId, title, submittedAt }) {
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const redirect = (e) => {
+        // alert('wrf')
         e.preventDefault();
         navigate(`/courses/${course.courseId}/grades/${examId}/${user?.username}`);
     };

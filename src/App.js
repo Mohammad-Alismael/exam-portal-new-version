@@ -33,7 +33,7 @@ import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
 
 function App(props) {
     const [loading, setLoading] = useState(true);
-    const user = useSelector(state => state.UserReducerV2).user;
+    const {user} = useSelector(state => state.UserReducerV2);
 
     // using async useEffect can cause memory leak but i'm using 'isMounted'
     // to prevent that

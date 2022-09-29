@@ -14,6 +14,9 @@ import Divider from "@mui/material/Divider";
 import Comment from "../../../components/Comment";
 import classNames from "classnames";
 import classnames from "classnames";
+import LongMenu from "../../../components/LongMenu";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from '@mui/icons-material/Edit';
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: "10px",
@@ -81,7 +84,19 @@ const useStyles = makeStyles((theme) => ({
         display: "none",
     },
     addComment: {
-
+        display: 'flex',
+        justifyItems: 'center',
+        justifyContent: 'space-around',
+        backgroundColor: '#fff',
+        height: 41,
+        "& input":{
+            border: 'none',
+            width: '80%',
+            fontSize: 18
+        },
+        "& img":{
+            width: 25
+        }
     }
 }));
 function AnnounceComponent(props) {
@@ -104,18 +119,23 @@ function AnnounceComponent(props) {
                     />
                     <div style={{ marginLeft: "0.8rem" }}>
                         <Typography className={classes.username}>
-                            <b>{course.course_info?.instructor?.username}</b>
+                            <b>{course.course_info?.instructor?.username} <span style={{color: '#BBBBBB'}}>. {moment(props.createdAt).fromNow()}</span></b>
                         </Typography>
                         <Typography className={classes.userType}>Instructor</Typography>
                     </div>
                 </div>
-                <Typography
-                    style={{ color: "#898989" }}
-                    sx={{ mr: 2, mt: 2 }}
-                    variant="subtitle2"
-                >
-                    {moment(props.createdAt).fromNow()}
-                </Typography>
+                <LongMenu
+                    options={["Delete Comment","edit comment"]}
+                    icons={[<DeleteOutlineIcon />,<EditIcon/>]}
+                    functions={[function (e) {
+                        e.stopPropagation()
+                        alert("delete comment")
+                    },
+                        function (e) {
+                            e.stopPropagation()
+                            alert("edit comment")
+                        }]}
+                />
             </div>
 
             {props.file != null ? (
@@ -153,7 +173,9 @@ function AnnounceComponent(props) {
                 <Comment text={"how this even possible"} />
                 <Comment text={"i don't get this fam?"} />
                 <div className={classes.addComment}>
-
+                    <img src={'/images/icons/paper_clip_icon.svg'} alt={'paper_clip_icon'}/>
+                    <input type={'text'} placeholder={'add class comment'}/>
+                    <img src={'/images/icons/send_icon.svg'} alt={'send_icon'}/>
                 </div>
             </div>
         </Paper>

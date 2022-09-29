@@ -7,7 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { connect } from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../layouts/Navbar";
 import Box from "@mui/material/Box";
@@ -75,15 +75,16 @@ function Login(props) {
     const classes = useStyles(theme);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const dispatch = useDispatch()
     // const {state} = useLocation()
     const navigate = useNavigate()
     const submit = (e) => {
         e.preventDefault();
         if (username !== "" && password !== "") {
-            props.setUserData(username, password, (res) => {
+            dispatch(loginAction(username, password, (res) => {
                 // navigate(state?.path || "/courses");
                 navigate("/courses")
-            });
+            }))
         } else {
             toast("username or password field is missing!");
         }
@@ -155,10 +156,5 @@ function Login(props) {
     );
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setUserData: (username, password, callback) =>
-            dispatch(loginAction(username, password, callback)),
-    };
-};
-export default connect(null, mapDispatchToProps)(Login);
+
+export default Login;

@@ -37,7 +37,6 @@ export default function Searchbar(props) {
         const filteredClassMates = classmates.filter(({username},i)=>{
             return username.includes(e.target.value)
         })
-        console.log(filteredClassMates)
         dispatch(setFilteredClassmates(filteredClassMates))
     }
     return <div className={classes.searchbarContainer}>

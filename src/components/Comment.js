@@ -78,7 +78,7 @@ function Comment({text,file}) {
                     <div style={{marginLeft: '0.8rem'}}>
                         <Typography
                             className={classes.username}>
-                            <b>aryal alismael . 2d ago</b>
+                            <b>aryal alismael <span style={{color: '#BBBBBB'}}>. 2d ago</span></b>
                         </Typography>
                         <Typography className={classes.userType}>
                             Student
