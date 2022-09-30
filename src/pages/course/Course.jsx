@@ -140,13 +140,15 @@ function Course(props) {
                             {
                                 course.announcements.length !== 0 && course.announcements.sort(function(a, b) {
                                     return b.created_at - a.created_at;
-                                }).map(({instructorId,announcement_text,file_path,created_at},index)=>{
+                                }).map(({id,instructorId,announcement_text,file_path,created_at},index)=>{
 
                                     return <AnnounceComponent
                                         key={index}
                                         file={file_path}
+                                        announcementId={id}
                                         text={announcement_text}
-                                        createdAt={created_at}/>
+                                        createdAt={created_at}
+                                    />
                                 })
                             }
                             {

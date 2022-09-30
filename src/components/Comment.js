@@ -5,14 +5,11 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import moment from "moment/moment";
 import Grid from "@material-ui/core/Grid";
-import Divider from "@mui/material/Divider";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import LongMenu from "./LongMenu";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import GradingIcon from "@mui/icons-material/Grading";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import {deleteExam} from "../api/services/Exam";
-import {SET_COURSE_EXAMS} from "../store/actions";
+import {deleteComment} from "../api/services/Comment";
+import {setCourseAnnouncements} from "../actions/CourseAction";
+import {useDispatch, useSelector} from "react-redux";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: "10px",
@@ -68,8 +65,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Comment({text,file}) {
+function Comment({commentId,text,file,username,createdAt,announcementIndex}) {
     const classes = useStyles();
+    const course = useSelector((state) => state.CourseReducer);
+    const dispatch = useDispatch();
+
     return (
         <Paper elevation={0} className={classes.paperStyle}>
             <div className={classes.userContainer}>
@@ -78,7 +78,7 @@ function Comment({text,file}) {
                     <div style={{marginLeft: '0.8rem'}}>
                         <Typography
                             className={classes.username}>
-                            <b>aryal alismael <span style={{color: '#BBBBBB'}}>. 2d ago</span></b>
+                            <b>{username} <span style={{color: '#BBBBBB',fontSize: 14}}>. {moment(createdAt).fromNow()}</span></b>
                         </Typography>
                         <Typography className={classes.userType}>
                             Student
@@ -90,7 +90,14 @@ function Comment({text,file}) {
                     icons={[<DeleteOutlineIcon />]}
                     functions={[function (e) {
                         e.stopPropagation()
-                       alert("delete comment")
+                        deleteComment(commentId).then((data)=>{
+                            let announcementObj = course.announcements[announcementIndex]
+                            announcementObj.comments = announcementObj.comments.filter(({id})=>{
+                                return id !== commentId
+                            })
+                            course.announcements[announcementIndex] = announcementObj
+                            dispatch(setCourseAnnouncements(course.announcements))
+                        }).catch(console.log)
                     }]}
                 />
             </div>

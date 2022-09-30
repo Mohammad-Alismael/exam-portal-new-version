@@ -16,7 +16,10 @@ import classNames from "classnames";
 import classnames from "classnames";
 import LongMenu from "../../../components/LongMenu";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
+import AddCommentElement from "./AddCommentElement";
+import CommentContainer from "./CommentContainer";
+import { fetchComments } from "../../../api/services/Comment";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: "10px",
@@ -56,6 +59,13 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         width: "100%",
     },
+    howManyComments: {
+        marginTop: "0.62rem",
+        marginBottom: 0,
+        color: "#818181",
+        fontSize: "0.85rem",
+        cursor: "pointer",
+    },
     container: {
         display: "flex",
         flexDirection: "column",
@@ -65,15 +75,8 @@ const useStyles = makeStyles((theme) => ({
         padding: "0.8rem 0",
         maxWidth: "calc(100%)",
     },
-    howManyComments: {
-        marginTop: '0.62rem',
-        marginBottom: 0,
-        color: "#818181",
-        fontSize: "0.85rem",
-        cursor: "pointer",
-    },
     commentContainer: {
-        marginTop: '0.62rem',
+        marginTop: "0.62rem",
         backgroundColor: "#D9D9D9",
         padding: "0.6rem",
     },
@@ -84,26 +87,30 @@ const useStyles = makeStyles((theme) => ({
         display: "none",
     },
     addComment: {
-        display: 'flex',
-        justifyItems: 'center',
-        justifyContent: 'space-around',
-        backgroundColor: '#fff',
+        display: "flex",
+        justifyItems: "center",
+        justifyContent: "space-around",
+        backgroundColor: "#fff",
         height: 41,
-        "& input":{
-            border: 'none',
-            width: '80%',
-            fontSize: 18
+        "& input": {
+            border: "none",
+            width: "80%",
+            fontSize: 18,
         },
-        "& img":{
-            width: 25
-        }
-    }
+        "& img": {
+            width: 25,
+        },
+    },
 }));
-function AnnounceComponent(props) {
+
+function AnnounceComponent({ announcementId, createdAt, file, text }) {
     const classes = useStyles();
-    const user = useSelector((state) => state.UserReducerV2).user;
+    const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const [openCommentContainer, setOpenCommentContainer] = useState(false);
+    const announcementIndex = course.announcements.findIndex(({ id }) => {
+        return announcementId === id;
+    });
     const handleComments = (e) => {
         e.preventDefault();
         setOpenCommentContainer(!openCommentContainer);
@@ -119,28 +126,35 @@ function AnnounceComponent(props) {
                     />
                     <div style={{ marginLeft: "0.8rem" }}>
                         <Typography className={classes.username}>
-                            <b>{course.course_info?.instructor?.username} <span style={{color: '#BBBBBB'}}>. {moment(props.createdAt).fromNow()}</span></b>
+                            <b>
+                                {course.course_info?.instructor?.username}{" "}
+                                <span style={{ color: "#BBBBBB",fontSize: 14 }}>
+                  . {moment(createdAt).fromNow()}
+                </span>
+                            </b>
                         </Typography>
                         <Typography className={classes.userType}>Instructor</Typography>
                     </div>
                 </div>
                 <LongMenu
-                    options={["Delete Comment","edit comment"]}
-                    icons={[<DeleteOutlineIcon />,<EditIcon/>]}
-                    functions={[function (e) {
-                        e.stopPropagation()
-                        alert("delete comment")
-                    },
+                    options={["Delete Comment", "edit comment"]}
+                    icons={[<DeleteOutlineIcon />, <EditIcon />]}
+                    functions={[
                         function (e) {
-                            e.stopPropagation()
-                            alert("edit comment")
-                        }]}
+                            e.stopPropagation();
+                            alert("delete comment");
+                        },
+                        function (e) {
+                            e.stopPropagation();
+                            alert("edit comment");
+                        },
+                    ]}
                 />
             </div>
 
-            {props.file != null ? (
+            {file != null ? (
                 <Grid item xs={12}>
-                    <img className={classes.uploadPreview} src={props.file} alt={"img"} />
+                    <img className={classes.uploadPreview} src={file} alt={"img"} />
                 </Grid>
             ) : null}
             <Grid item xs={12}>
@@ -149,35 +163,20 @@ function AnnounceComponent(props) {
                     sx={{ ml: 1, mb: 1, flex: 1 }}
                     variant="body1"
                 >
-                    {props.text}
+                    {text}
                 </Typography>
             </Grid>
             <Divider />
             <div onClick={handleComments}>
-                <p className={classes.howManyComments}>43 comments</p>
+                <p className={classes.howManyComments}>
+                    {course.announcements[announcementIndex].comments.length} comments
+                </p>
             </div>
-            <div
-                className={classnames(
-                    classes.commentContainer,
-                    openCommentContainer
-                        ? classes.commentContainerOpen
-                        : classes.commentContainerClose
-                )}
-            >
-                <Comment text={"how this even possible"} />
-                <Comment text={"i don't get this fam?"} />
-                <Comment text={"how this even possible"} />
-                <Comment text={"i don't get this fam?"} />
-                <Comment text={"how this even possible"} />
-                <Comment text={"i don't get this fam?"} />
-                <Comment text={"how this even possible"} />
-                <Comment text={"i don't get this fam?"} />
-                <div className={classes.addComment}>
-                    <img src={'/images/icons/paper_clip_icon.svg'} alt={'paper_clip_icon'}/>
-                    <input type={'text'} placeholder={'add class comment'}/>
-                    <img src={'/images/icons/send_icon.svg'} alt={'send_icon'}/>
-                </div>
-            </div>
+            <CommentContainer
+                openCommentContainer={openCommentContainer}
+                announcementIndex={announcementIndex}
+                announcementId={announcementId}
+            />
         </Paper>
     );
 }
