@@ -41,5 +41,10 @@ axiosPrivate.interceptors.request.use(async  req => {
 
     return req
 });
-
-export {token,axiosPrivate}
+class MyError extends Error {
+    constructor(data) {
+        super(data.message);
+        this.status = data.status;
+    }
+}
+export {token,axiosPrivate,MyError}

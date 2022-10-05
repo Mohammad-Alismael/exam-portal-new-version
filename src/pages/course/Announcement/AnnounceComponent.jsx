@@ -9,7 +9,7 @@ import axios from "axios";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Divider from "@mui/material/Divider";
 import Comment from "../../../components/Comment";
 import classNames from "classnames";
@@ -20,6 +20,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddCommentElement from "./AddCommentElement";
 import CommentContainer from "./CommentContainer";
 import { fetchComments } from "../../../api/services/Comment";
+import { Editor, EditorState, convertFromRaw } from "draft-js";
+import { deleteAnnouncement } from "../../../api/services/Annoucments";
+import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
+
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: "10px",
@@ -102,19 +106,33 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }));
-
+const calcState = (text) => {
+    return text
+        ? EditorState.createWithContent(convertFromRaw(JSON.parse(text)))
+        : EditorState.createEmpty();
+};
 function AnnounceComponent({ announcementId, createdAt, file, text }) {
     const classes = useStyles();
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
+    const dispatch = useDispatch();
     const [openCommentContainer, setOpenCommentContainer] = useState(false);
+    const [editorState, setEditorState] = React.useState(calcState(text));
     const announcementIndex = course.announcements.findIndex(({ id }) => {
-        return announcementId === id;
+        return parseInt(announcementId) === parseInt(id);
     });
     const handleComments = (e) => {
         e.preventDefault();
         setOpenCommentContainer(!openCommentContainer);
     };
+
+    useEffect(() => {
+        setEditorState(calcState(text));
+    }, []);
+
+    useEffect(() => {
+        setEditorState(calcState(text));
+    }, [course.announcements.length]);
     return (
         <Paper elevation={5} className={classes.paperStyle}>
             <div className={classes.userContainer}>
@@ -128,7 +146,7 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                         <Typography className={classes.username}>
                             <b>
                                 {course.course_info?.instructor?.username}{" "}
-                                <span style={{ color: "#BBBBBB",fontSize: 14 }}>
+                                <span style={{ color: "#BBBBBB", fontSize: 14 }}>
                   . {moment(createdAt).fromNow()}
                 </span>
                             </b>
@@ -136,20 +154,35 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                         <Typography className={classes.userType}>Instructor</Typography>
                     </div>
                 </div>
-                <LongMenu
+                {parseInt(user.role_id) === 3 ? <LongMenu
                     options={["Delete Comment", "edit comment"]}
                     icons={[<DeleteOutlineIcon />, <EditIcon />]}
                     functions={[
                         function (e) {
                             e.stopPropagation();
-                            alert("delete comment");
+                            deleteAnnouncement(announcementId, course.courseId)
+                                .then((data) => {
+                                    console.log(JSON.parse(text).blocks[0].text)
+                                    const announcements = course.announcements.filter(
+                                        ({ id }) => {
+                                            return id !== announcementId;
+                                        }
+                                    );
+                                    dispatch({
+                                        type: SET_COURSE_ANNOUNCEMENTS,
+                                        payload: { announcements },
+                                    });
+                                })
+                                .catch((e) => {
+                                    console.log(e);
+                                });
                         },
                         function (e) {
                             e.stopPropagation();
                             alert("edit comment");
                         },
                     ]}
-                />
+                /> : null}
             </div>
 
             {file != null ? (
@@ -157,14 +190,11 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                     <img className={classes.uploadPreview} src={file} alt={"img"} />
                 </Grid>
             ) : null}
-            <Grid item xs={12}>
-                <Typography
-                    style={{ color: "black" }}
-                    sx={{ ml: 1, mb: 1, flex: 1 }}
-                    variant="body1"
-                >
-                    {text}
-                </Typography>
+            <Grid item xs={12} style={{ padding: "0 0.8rem" }}>
+                <Editor
+                    editorState={editorState}
+                    // onEditorStateChange={setEditorState}
+                />
             </Grid>
             <Divider />
             <div onClick={handleComments}>

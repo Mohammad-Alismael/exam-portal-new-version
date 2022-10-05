@@ -1,5 +1,5 @@
 import User from './User';
-import {axiosPrivate, token} from "../axios";
+import {axiosPrivate, MyError, token} from "../axios";
 const {UPLOAD_ANNOUNCEMENT_FILE, CREATE_ANNOUNCEMENT} = require("./RouteNames");
 const {toast} = require("react-toastify");
 
@@ -21,11 +21,21 @@ async function createAnnouncement(announcementText,courseId) {
                 announcement_text: announcementText,
                 courseId
             })
-        console.log(response.data)
         return response.data
     } catch (e) {
-        console.log(e.response.data)
-        toast.info(e.response?.data?.message)
+        throw new MyError({message: e.response.data, status : e.response.status});
     }
 }
-export {uploadFileAnnouncement,createAnnouncement}
+
+async function deleteAnnouncement(id, courseId) {
+    try {
+        const response = await axiosPrivate
+            .delete(`${CREATE_ANNOUNCEMENT}/${id}`,{data: {
+                    courseId
+                }})
+        return response.data
+    } catch (e) {
+        throw new MyError({message: e.response.data, status: e.response.status});
+    }
+}
+export {uploadFileAnnouncement,createAnnouncement,deleteAnnouncement}

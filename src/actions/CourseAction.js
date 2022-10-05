@@ -6,7 +6,7 @@ import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_CLASSMATES, SET_COURSE_EXAMS, SET_C
 export function CourseAction(data) {
     return (dispatch) => {
         dispatch(setCourseInfo(data['course_info']))
-        dispatch(setCourseAnnouncements(data['announcements']))
+        dispatch({ type: SET_COURSE_ANNOUNCEMENTS, payload: { announcements: data['announcements'] } });
         dispatch(setCourseClassmates(data['classmates']))
         dispatch({ type: SET_COURSE_EXAMS, payload: { exams: data['exams'] } });
 

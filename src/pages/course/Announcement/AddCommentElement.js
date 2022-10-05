@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import {createComment} from "../../../api/services/Comment";
 import {useDispatch, useSelector} from "react-redux";
 import {setCourseAnnouncements} from "../../../actions/CourseAction";
+import {SET_COURSE_ANNOUNCEMENTS} from "../../../store/actions";
 const useStyles = makeStyles((theme) => ({
     addComment: {
         display: 'flex',
@@ -31,14 +32,17 @@ export default function AddCommentElement({announcementId,announcementIndex}) {
     const postComment = (e) => {
         e.preventDefault()
         createComment(commentText,announcementId).then((res)=>{
-
             if (res.status !== 204) {
                 let announcementObj = course.announcements[announcementIndex]
                 let currentCommentArray = announcementObj.comments
                 currentCommentArray.push(res.data)
                 announcementObj.comments = currentCommentArray
                 course.announcements[announcementIndex] = announcementObj
-                dispatch(setCourseAnnouncements(course.announcements))
+                dispatch({
+                    type: SET_COURSE_ANNOUNCEMENTS,
+                    payload: { announcements: course.announcements },
+                });
+                // dispatch(setCourseAnnouncements(course.announcements))
             }else {
                 toast.error('comment already existed!')
             }

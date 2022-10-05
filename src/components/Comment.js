@@ -10,6 +10,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {deleteComment} from "../api/services/Comment";
 import {setCourseAnnouncements} from "../actions/CourseAction";
 import {useDispatch, useSelector} from "react-redux";
+import {SET_COURSE_ANNOUNCEMENTS} from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: "10px",
@@ -96,7 +97,11 @@ function Comment({commentId,text,file,username,createdAt,announcementIndex}) {
                                 return id !== commentId
                             })
                             course.announcements[announcementIndex] = announcementObj
-                            dispatch(setCourseAnnouncements(course.announcements))
+                            dispatch({
+                                type: SET_COURSE_ANNOUNCEMENTS,
+                                payload: { announcements: course.announcements },
+                            });
+                            // dispatch(setCourseAnnouncements(course.announcements))
                         }).catch(console.log)
                     }]}
                 />
