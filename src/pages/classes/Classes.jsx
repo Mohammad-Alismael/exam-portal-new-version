@@ -1,4 +1,4 @@
-import ResponsiveAppBar from "../layouts/ResponsiveAppBar";
+import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Dialog from "@mui/material/Dialog";
@@ -9,19 +9,19 @@ import { TextField } from "@material-ui/core";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import ClassCard from "../components/ClassCard";
+import ClassCard from "./ClassCard";
 import { Button } from "@material-ui/core";
 import { Fab, Typography } from "@mui/material";
 import { connect, useSelector } from "react-redux";
-import { Course, getCourses } from "../api/services/Course";
+import { Course, getCourses } from "../../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
 import AddIcon from "@mui/icons-material/Add";
+import jwt from "jwt-decode";
+import {token} from "../../api/axios";
+import CryptoJS from "crypto-js";
+import useClipboard from "react-hook-clipboard";
 
-import { Outlet } from "react-router";
-import User from "../api/services/User";
-import { axiosPrivate, token } from "../api/axios";
-import { FETCH_CLASSROOMS } from "../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: "1rem",
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         right: "2%",
     },
 }));
-function NewClasses(props) {
+function Classes(props) {
     const classes = useStyles();
     const user = useSelector((state) => state.UserReducerV2).user;
     const [open, setOpen] = React.useState(false);
@@ -52,6 +52,8 @@ function NewClasses(props) {
     const [newClassName, setNewClassName] = useState("");
     const [section, setSection] = useState("");
     const [loading, setLoading] = React.useState(true);
+    const [clipboard, copyToClipboard] = useClipboard();
+
     const course = new Course();
     const handleClickOpen = () => {
         setOpen(true);
@@ -93,18 +95,43 @@ function NewClasses(props) {
             {!loading ? (
                 <>
                     <Grid container spacing={2} className={classes.root}>
-                        {courses.map(({ class_name,classroom_id, section,instructor_info }, index) => {
-                            return (
-                                <ClassCard
-                                    username={ parseInt(user?.role_id) === 3 ? user.username : instructor_info['username']}
-                                    key={index}
-                                    courseId={classroom_id}
-                                    id={classroom_id}
-                                    classname={class_name}
-                                    section={section}
-                                />
-                            );
-                        })}
+                        {courses.map(
+                            (
+                                { class_name, classroom_id, section, instructor_info },
+                                index
+                            ) => {
+                                return (
+                                    <ClassCard
+                                        username={
+                                            parseInt(user?.role_id) === 3
+                                                ? user.username
+                                                : instructor_info["username"]
+                                        }
+                                        key={index}
+                                        courseId={classroom_id}
+                                        id={classroom_id}
+                                        classname={class_name}
+                                        section={section}
+                                        options={user.role_id == 3 ? ["invitation link"] : ['withdraw course']}
+                                        functions={user.role_id == 3 ? [
+                                            function (e) {
+                                                const user_data = jwt(token);
+                                                const textBeforeHash = `${classroom_id}:${user_data.username}`;
+                                                let encrypted = encodeURIComponent(
+                                                    CryptoJS.AES.encrypt(textBeforeHash, process.env.REACT_APP_INVITATION_KEY)
+                                                ).toString();
+                                                copyToClipboard(window.location.origin + "/invitation/" + encrypted);
+                                                toast.info("copied to clipboard");
+                                            }
+                                        ] : [
+                                            function (e) {
+                                                toast.info('withdraw course')
+                                            }
+                                        ]}
+                                    />
+                                );
+                            }
+                        )}
                         {courses?.length === 0 ? (
                             <Grid item xs={12} sm={6} md={3}>
                                 <Card className={classes.createClass}>
@@ -121,12 +148,7 @@ function NewClasses(props) {
                     </Grid>
                     {parseInt(user?.role_id) === 3 ? (
                         <div className={classes.addClassBtn}>
-                            <Fab
-                                color="primary"
-                                aria-label="add"
-
-                                onClick={handleClickOpen}
-                            >
+                            <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
                                 <AddIcon />
                             </Fab>
                         </div>
@@ -179,4 +201,4 @@ function NewClasses(props) {
     );
 }
 
-export default NewClasses;
+export default Classes;

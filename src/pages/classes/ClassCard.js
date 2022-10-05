@@ -14,11 +14,10 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { toast } from "react-toastify";
 import jwt from "jwt-decode";
-import * as Actions from "../store/actions";
 import { connect, useSelector } from "react-redux";
 import useClipboard from "react-hook-clipboard";
 import CryptoJS from "crypto-js";
-import { token } from "../api/axios";
+import { token } from "../../api/axios";
 import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -85,19 +84,7 @@ function ClassCard(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleClickOption = () => {
-        generateInvitationLink();
-        setAnchorEl(null);
-    };
-    const generateInvitationLink = () => {
-        const user_data = jwt(token);
-        const textBeforeHash = `${props.id}:${user_data.username}`;
-        let encrypted = encodeURIComponent(
-            CryptoJS.AES.encrypt(textBeforeHash, process.env.REACT_APP_INVITATION_KEY)
-        ).toString();
-        copyToClipboard(window.location.origin + "/invitation/" + encrypted);
-        toast.info("copied to clipboard");
-    };
+
     return (
         <Grid item xs={12} sm={6} md={3}>
             <Card className={classes.root} sx={{ borderRadius: "15px" }}>
@@ -138,8 +125,8 @@ function ClassCard(props) {
                                     },
                                 }}
                             >
-                                {options.map((option) => (
-                                    <MenuItem key={option} onClick={handleClickOption}>
+                                {props.options.map((option,i) => (
+                                    <MenuItem key={option} onClick={props.functions[i]}>
                                         {option}
                                     </MenuItem>
                                 ))}
