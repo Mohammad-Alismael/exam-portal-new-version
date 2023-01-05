@@ -11,20 +11,22 @@ export default function Logout() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     useEffect(() => {
+        dispatch(login(null));
+        dispatch(accessToken1(null));
         axios
             .delete(`${BASE_URL}${DELETE_TOKEN}`,{withCredentials: true})
             .then((data) => {
-                dispatch(login(null));
-                dispatch(accessToken1(null));
                 sessionStorage.removeItem("1store1");
                 sessionStorage.removeItem("key");
                 sessionStorage.removeItem("jwt");
-                window.location.pathname = '/'
             })
             .catch((error)=>{
                 console.log(error.response.status)
-                alert(error.response.data.message)
+                // alert(error.response.data.message)
             });
+
+        window.location.pathname = '/'
+
 
     }, []);
     return <div></div>;

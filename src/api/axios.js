@@ -23,8 +23,8 @@ axiosPrivate.interceptors.request.use(async  req => {
 
     if (token != null && token !== ""){
         try {
-            console.log('calling api for new token')
-            const {data} = await axios.post(REFRESH_TOKEN,{},{
+            console.log('calling api for new token to refresh this token' + token)
+            const {data} = await axios.post(`${BASE_URL}${REFRESH_TOKEN}`,{},{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 },
@@ -33,8 +33,8 @@ axiosPrivate.interceptors.request.use(async  req => {
             updateToken(data['accessToken'])
             req.headers.Authorization = 'Bearer ' + data['accessToken']
         }catch (e) {
-            console.log(e)
-            // window.location.href = '/logout'
+            console.log(e.response)
+            window.location.href = '/logout'
             toast("session expired, you must log in again!")
         }
     }

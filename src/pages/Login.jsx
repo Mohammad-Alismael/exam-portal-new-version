@@ -28,22 +28,19 @@ const useStyles = makeStyles((theme) => ({
     },
     paperStyle: {
         padding: 30,
-        height: "70vh",
+        // height: "70vh",
         width: "35%",
-        margin: "30px auto",
+        // margin: "30px auto",
     },
     paper: {
-        marginTop: theme.spacing(7),
+        marginTop: theme.spacing(4),
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        maxWidth: 320
     },
     logo: {
         maxWidth: "20%",
-    },
-    form: {
-        maxWidth: "320px",
-        align: "center",
     },
     signInBtn: {
         margin: theme.spacing(3, 0, 2),
@@ -92,8 +89,8 @@ function Login(props) {
     return (
         <div>
             <Navbar type={1} />
-            <Grid item md={12} sm={12} style={{padding: "7%" }}>
-                <Paper elevation={10} className={classes.paperStyle}>
+            <Grid container direction="row" justifyContent="center" alignItems="center" style={{height:'100vh'}}>
+                <Paper elevation={10} style={{padding:'30px'}}>
                     <div className={classes.paper}>
                         <Typography variant="h3">
                             <b>Login</b>
@@ -101,8 +98,8 @@ function Login(props) {
                     </div>
                     <Divider style={{ margin: "30px 0px 0px" }} />
                     <div className={classes.paper}>
-                        <Grid item md={12} sm={12} xs={6}>
-                            <form className={classes.form} noValidate>
+                        <Grid>
+                            <form noValidate>
                                 <TextField
                                     onChange={(e) => setUsername(e.target.value)}
                                     variant="outlined"

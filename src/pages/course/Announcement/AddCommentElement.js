@@ -6,10 +6,15 @@ import {createComment} from "../../../api/services/Comment";
 import {useDispatch, useSelector} from "react-redux";
 import {setCourseAnnouncements} from "../../../actions/CourseAction";
 import {SET_COURSE_ANNOUNCEMENTS} from "../../../store/actions";
+import SendIcon from '@mui/icons-material/Send';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 const useStyles = makeStyles((theme) => ({
     addComment: {
+        position: 'relative',
         display: 'flex',
         justifyItems: 'center',
+        alignItems: 'center',
+        borderRadius: '10px',
         justifyContent: 'space-around',
         backgroundColor: '#fff',
         height: 41,
@@ -17,10 +22,15 @@ const useStyles = makeStyles((theme) => ({
             border: 'none',
             width: '80%',
             fontSize: 18
-        },
-        "& img":{
-            width: 25,
-            cursor: 'pointer'
+        }
+    },
+    icon: {
+        width: 35,
+        cursor: 'pointer',
+        color : '#b9b9b9',
+        "& :hover":{
+            color : 'rgba(0,0,0,0.8)',
+            transition: 'color 0.6s'
         }
     }
 }));
@@ -51,12 +61,12 @@ export default function AddCommentElement({announcementId,announcementIndex}) {
 
     const classes = useStyles();
     return <div className={classes.addComment}>
-        <img src={"/images/icons/paper_clip_icon.svg"} alt={"paper_clip_icon"}/>
+        <AttachFileIcon className={classes.icon}/>
         <input
             type={"text"}
             placeholder={"add class comment"}
             onChange={(e)=>(setCommentText(e.target.value))}
         />
-        <img src={"/images/icons/send_icon.svg"} alt={"send_icon"} onClick={postComment}/>
+        <SendIcon className={classes.icon} onClick={postComment} />
     </div>;
 }

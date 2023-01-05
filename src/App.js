@@ -40,6 +40,7 @@ function App(props) {
     useEffect(   async () => {
         let isMounted = true;
         // this part to get new token while the user refreshes any page
+        console.log({token,user})
         if (token == null && user != null) {
             await User.refreshTokenWithCallBack(() => {
                 isMounted && setLoading(false);

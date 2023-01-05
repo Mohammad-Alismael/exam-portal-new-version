@@ -20,9 +20,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddCommentElement from "./AddCommentElement";
 import CommentContainer from "./CommentContainer";
 import { fetchComments } from "../../../api/services/Comment";
-import { Editor, EditorState, convertFromRaw } from "draft-js";
+import {EditorState, convertFromRaw } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+
 import { deleteAnnouncement } from "../../../api/services/Annoucments";
 import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
+import EditEditor from "./EditEditor";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -117,6 +120,7 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
     const course = useSelector((state) => state.CourseReducer);
     const dispatch = useDispatch();
     const [openCommentContainer, setOpenCommentContainer] = useState(false);
+    const [editAnnouncement, setEditAnnouncement] = useState(false);
     const [editorState, setEditorState] = React.useState(calcState(text));
     const announcementIndex = course.announcements.findIndex(({ id }) => {
         return parseInt(announcementId) === parseInt(id);
@@ -179,22 +183,20 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                         },
                         function (e) {
                             e.stopPropagation();
-                            alert("edit comment");
+                            setEditAnnouncement(!editAnnouncement)
                         },
                     ]}
                 /> : null}
             </div>
-
-            {file != null ? (
-                <Grid item xs={12}>
-                    <img className={classes.uploadPreview} src={file} alt={"img"} />
-                </Grid>
-            ) : null}
             <Grid item xs={12} style={{ padding: "0 0.8rem" }}>
-                <Editor
+                { !editAnnouncement ? <Editor
+                    readOnly={true}
                     editorState={editorState}
-                    // onEditorStateChange={setEditorState}
-                />
+                    toolbar={{
+                        options: []
+                    }}
+                /> : <EditEditor text={text}/>
+                 }
             </Grid>
             <Divider />
             <div onClick={handleComments}>

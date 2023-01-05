@@ -14,6 +14,7 @@ import {SET_COURSE_ANNOUNCEMENTS} from "../store/actions";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: "10px",
+        borderRadius: "10px",
         margin: "auto auto 0.6rem auto",
     },
     userContainer: {

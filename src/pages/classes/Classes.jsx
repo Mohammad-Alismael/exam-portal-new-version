@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "./ClassCard";
 import { Button } from "@material-ui/core";
-import { Fab, Typography } from "@mui/material";
+import {Fab, FormGroup, Typography} from "@mui/material";
 import { connect, useSelector } from "react-redux";
 import { Course, getCourses } from "../../api/services/Course";
 import { toast } from "react-toastify";
@@ -20,7 +20,9 @@ import AddIcon from "@mui/icons-material/Add";
 import jwt from "jwt-decode";
 import {token} from "../../api/axios";
 import CryptoJS from "crypto-js";
+import Switch from '@mui/material/Switch';
 import useClipboard from "react-hook-clipboard";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,8 +50,10 @@ function Classes(props) {
     const classes = useStyles();
     const user = useSelector((state) => state.UserReducerV2).user;
     const [open, setOpen] = React.useState(false);
+    const [openDefault, setOpenDefault] = React.useState(false);
     const [courses, setCourses] = React.useState([]);
     const [newClassName, setNewClassName] = useState("");
+    const label = { inputProps: { 'aria-label': 'Size switch demo' } };
     const [section, setSection] = useState("");
     const [loading, setLoading] = React.useState(true);
     const [clipboard, copyToClipboard] = useClipboard();
@@ -58,6 +62,9 @@ function Classes(props) {
     const handleClickOpen = () => {
         setOpen(true);
     };
+    const openDefaultBanner = () =>{
+        setOpenDefault(true)
+    }
     const createClass = () => {
         setLoading(true);
         course
@@ -102,11 +109,7 @@ function Classes(props) {
                             ) => {
                                 return (
                                     <ClassCard
-                                        username={
-                                            parseInt(user?.role_id) === 3
-                                                ? user.username
-                                                : instructor_info["username"]
-                                        }
+                                        username={parseInt(user?.role_id) === 3 ? user.username : instructor_info["username"]}
                                         key={index}
                                         courseId={classroom_id}
                                         id={classroom_id}
@@ -159,42 +162,59 @@ function Classes(props) {
             )}
 
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Create New Class</DialogTitle>
+                <DialogTitle><b>Create New Classroom</b></DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        To create new class, please enter class name. We will send updates
-                        occasionally.
-                    </DialogContentText>
                     <Grid container spacing={4}>
-                        <Grid item xs={6} md={6} xl={6}>
+                        <Grid item xs={12} md={12} xl={12}>
                             <TextField
                                 onChange={(e) => setNewClassName(e.target.value)}
                                 autoFocus
                                 margin="dense"
                                 id="class_name"
-                                label="new class name"
+                                label="class name (required)"
                                 type="text"
+                                color="primary"
                                 fullWidth
-                                variant="standard"
+                                variant="filled"
                             />
-                        </Grid>
-                        <Grid item xs={6} md={6} xl={6}>
                             <TextField
                                 onChange={(e) => setSection(e.target.value)}
                                 autoFocus
                                 margin="dense"
                                 id="section"
+                                color="primary"
                                 label="section"
                                 type="text"
                                 fullWidth
-                                variant="standard"
+                                variant="filled"
                             />
+                            <FormGroup>
+                                <FormControlLabel
+                                   control={<Switch {...label} color="primary" />}
+                                   label="Let students ask questions"
+                                   labelPlacement="start"
+                                />
+                                <FormControlLabel
+                                    control={<Switch {...label} color="primary" />}
+                                    label="Comments under my comment"
+                                    labelPlacement="start"
+                                />
+                            </FormGroup>
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={openDefaultBanner}>select</Button>
                     <Button onClick={createClass}>Create</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={openDefault} onClose={()=> (setOpenDefault(false))}>
+                <DialogTitle>default imgs</DialogTitle>
+                <DialogContent>
+                </DialogContent>
+                <DialogActions>
                 </DialogActions>
             </Dialog>
         </>
