@@ -7,151 +7,94 @@ import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import {connect, useDispatch} from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../layouts/Navbar";
 import Box from "@mui/material/Box";
 import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
-import {TextField} from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Button from "@mui/material/Button";
-import {theme} from "../utils/global/useStyles";
-import {useLocation} from "react-router";
-import {token} from "../api/axios";
+import { theme } from "../utils/global/useStyles";
+import { useLocation } from "react-router";
+import { token } from "../api/axios";
+import withContainer from "../components/withContainer";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-        height: "100vh",
-        flexGrow: 1,
-        padding: "7%",
-    },
-    paperStyle: {
-        padding: 30,
-        // height: "70vh",
-        width: "35%",
-        // margin: "30px auto",
-    },
-    paper: {
-        marginTop: theme.spacing(4),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: 320
-    },
-    logo: {
-        maxWidth: "20%",
-    },
-    signInBtn: {
-        margin: theme.spacing(3, 0, 2),
-        textTransform: "none",
-        fontSize: 17,
-        maxWidth: "40%",
-        maxHeight: "50px",
-        padding: "16px",
-    },
     forgotPasswordBox: {
         display: "flex",
         justifyContent: "center",
-    },
-    title: {
-        flexGrow: 1,
-    },
-
-    container: {
-        display: "flex",
-        alignItems: "center",
-    },
-    border: {
-        borderBottom: "2px solid lightgray",
-        width: "100%",
-    },
+    }
 }));
 
 function Login(props) {
     const classes = useStyles(theme);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     // const {state} = useLocation()
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault();
         if (username !== "" && password !== "") {
-            dispatch(loginAction(username, password, (res) => {
-                // navigate(state?.path || "/courses");
-                navigate("/courses")
-            }))
+            dispatch(
+                loginAction(username, password, (res) => {
+                    // navigate(state?.path || "/courses");
+                    navigate("/courses");
+                })
+            );
         } else {
             toast("username or password field is missing!");
         }
     };
     return (
         <div>
-            <Navbar type={1} />
-            <Grid container direction="row" justifyContent="center" alignItems="center" style={{height:'100vh'}}>
-                <Paper elevation={10} style={{padding:'30px'}}>
-                    <div className={classes.paper}>
-                        <Typography variant="h3">
-                            <b>Login</b>
-                        </Typography>
-                    </div>
-                    <Divider style={{ margin: "30px 0px 0px" }} />
-                    <div className={classes.paper}>
-                        <Grid>
-                            <form noValidate>
-                                <TextField
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="Username"
-                                    label="Username"
-                                    name="Username"
-                                    autoComplete="email"
-                                    autoFocus
-                                    align="center"
-                                    color="warning"
-                                />
-                                <TextField
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    color="warning"
-                                />
-                            </form>
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
-                        </Grid>
-                        <Button
-                            onClick={submit}
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            sx={{mb:3,width: '45%'}}
-                            size="large"
-                        >
-                            <b>Login</b>
-                        </Button>
-                    </div>
-                    <Divider style={{ margin: "0px 0px 20px" }} />
-                    <Box className={classes.forgotPasswordBox}>
-                        <Link href="/forgot-password">{"Forgot your password?"}</Link>
-                    </Box>
-                </Paper>
-            </Grid>
+            <TextField
+                onChange={(e) => setUsername(e.target.value)}
+                variant="outlined"
+                required
+                fullWidth
+                id="Username"
+                label="Username"
+                name="Username"
+                autoComplete="email"
+                align="center"
+                color="warning"
+            />
+            <TextField
+                onChange={(e) => setPassword(e.target.value)}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                color="warning"
+            />
+            <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+            />
+            <Button
+                onClick={submit}
+                variant="contained"
+                color="primary"
+                type="submit"
+                sx={{ mb: 3, width: "45%", ml: "27%" }}
+                size="large"
+            >
+                <b>login</b>
+            </Button>
+            <Divider style={{ margin: "0px 0px 20px" }} />
+
+            <Box className={classes.forgotPasswordBox}>
+                <Link href="/forgot-password">{"Forgot your password?"}</Link>
+            </Box>
         </div>
     );
 }
 
-
-export default Login;
+export default withContainer({ navBarType: 1, title: "login" })(Login);

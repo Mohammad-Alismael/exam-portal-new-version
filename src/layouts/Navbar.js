@@ -8,6 +8,9 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     logo: {
         maxWidth: '20%',
+        [theme.breakpoints.down('md')]: {
+            maxWidth: '30%',
+        }
     },
     title: {
         flexGrow: 1,
@@ -17,7 +20,7 @@ function Navbar(props) {
     const classes = useStyles();
     return (
         <AppBar position="fixed" color="white" elevation={0} >
-            <Toolbar style={{ marginLeft: '12%', marginRight: '12%', }}>
+            <Toolbar>
                 <img src={logo} className={classes.logo} alt="ExamInstructor Portal" />
                 <Typography variant="body2" className={classes.title} style={{ color: '#666666' }} align="right">
                     {props.type == 1 ? "Don't have an account?" : "Already have an account?"}
