@@ -52,6 +52,7 @@ function Login(props) {
             <TextField
                 onChange={(e) => setUsername(e.target.value)}
                 variant="outlined"
+                margin="normal"
                 required
                 fullWidth
                 id="Username"

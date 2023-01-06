@@ -38,6 +38,8 @@ function ForgotPassword(props) {
             <TextField
                 onChange={(e) => setEmail(e.target.value)}
                 variant="outlined"
+                margin="normal"
+                fullWidth
                 required
                 id="Email"
                 label="email"
@@ -47,7 +49,7 @@ function ForgotPassword(props) {
                 align="center"
             />
             <Button
-                sx={{ mt: 6 }}
+                sx={{ mt: 4 }}
                 onClick={submit}
                 variant="contained"
                 color="primary"

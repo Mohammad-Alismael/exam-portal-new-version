@@ -33,11 +33,11 @@ export default function withContainer(props) {
                     <Grid container direction="row" justifyContent="center" alignItems="center" style={{height: '100vh'}}>
                         <Paper elevation={10} style={{padding: '30px'}}>
                             <div className={classes.paper}>
-                                <Typography variant="h3" align={'center'}>
+                                <Typography variant="h3" align={'center'} style={{textTransform: 'capitalize'}}>
                                     <b>{props.title}</b>
                                 </Typography>
                                 <Divider style={{margin: '8px 0px'}}/>
-                                <Wrapped style={{padding: '15px 0'}} {...moreProps} />
+                                <Wrapped {...moreProps} />
                             </div>
                         </Paper>
                     </Grid>

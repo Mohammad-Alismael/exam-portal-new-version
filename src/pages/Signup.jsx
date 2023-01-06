@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
-import Paper from "@material-ui/core/Paper";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import Navbar from "../layouts/Navbar";
 import { SignUpAction } from "../actions/SignUpAction";
 import { authStyles } from "../utils/global/useStyles";
 import withContainer from "../components/withContainer";
@@ -80,18 +75,19 @@ function Signup(props) {
                 id="password"
                 autoComplete="current-password"
             />
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ mt: 4,mb: 4 }}>
                 <InputLabel id="demo-simple-select-label">User Type</InputLabel>
                 <Select
+
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={type}
                     label="User type"
                     onChange={(e) => setType(e.target.value)}
                 >
-                    <MenuItem value={1}>undergraduate</MenuItem>
-                    <MenuItem value={2}>graduate</MenuItem>
-                    <MenuItem value={3}>instructor</MenuItem>
+                    <MenuItem value={1}>Undergraduate</MenuItem>
+                    <MenuItem value={2}>Graduate</MenuItem>
+                    <MenuItem value={3}>Instructor</MenuItem>
                 </Select>
             </FormControl>
 

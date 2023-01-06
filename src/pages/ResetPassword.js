@@ -1,16 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
-import {
-    createTheme,
-    makeStyles,
-    ThemeProvider,
-} from "@material-ui/core/styles";
-import Navbar from "../layouts/Navbar";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
 import Button from "@mui/material/Button";
 import ForgotPassword from "./ForgotPassword";
@@ -40,20 +29,21 @@ function ResetPassword(props) {
     };
     return (
         <div>
-                <TextField
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="newPassword"
-                    label="new password"
-                    name="newPassword"
-                    autoComplete="text"
-                    autoFocus
-                    align="center"
-                />
+            <TextField
+                onChange={(e) => setNewPassword(e.target.value)}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="newPassword"
+                label="new password"
+                name="newPassword"
+                autoComplete="text"
+                autoFocus
+                align="center"
+            />
             <Button
+                sx={{ mt: 4 }}
                 onClick={submit}
                 variant="contained"
                 color="primary"
@@ -66,4 +56,6 @@ function ResetPassword(props) {
         </div>
     );
 }
-export default withContainer({ navBarType: 2,title: "Reset Password" })(ResetPassword);
+export default withContainer({ navBarType: 2, title: "Reset Password" })(
+    ResetPassword
+);
