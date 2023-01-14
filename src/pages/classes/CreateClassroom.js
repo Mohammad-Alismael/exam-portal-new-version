@@ -28,7 +28,7 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
 
 
     const setCourseName = (e) => {
-        setCourseName(e.target.value);
+        setNewClassName(e.target.value);
     }
 
     const setCourseSection = (e) => {

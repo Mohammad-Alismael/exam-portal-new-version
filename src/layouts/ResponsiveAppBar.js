@@ -28,7 +28,7 @@ const settings = [{ title: "Logout", url: "/logout" }];
 
 const useStyles = makeStyles((theme) => ({
     logo: {
-        marginTop: "-5px",
+        marginLeft: "-5px",
         maxWidth: "13%",
     },
 }));
@@ -83,7 +83,9 @@ const ResponsiveAppBar = (props) => {
 
         setPages(urls);
     }
-
+    const redirectToDashboard = () =>{
+        navigate("/courses")
+    }
     useEffect(() => {
         // hiding other routes
         if (location.pathname === "/courses") {
@@ -102,6 +104,7 @@ const ResponsiveAppBar = (props) => {
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <img
+                        onClick={redirectToDashboard}
                         src={"/images/logo.png"}
                         className={classes.logo}
                         alt="ExamInstructor Portal"
@@ -133,29 +136,11 @@ const ResponsiveAppBar = (props) => {
                                 display: { xs: "block", md: "none" },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem
-                                    key={page.title}
-                                    onClick={() => handleCloseNavMenu(page.url)}
-                                >
-                                    <Typography textAlign="center">{page.title}</Typography>
-                                </MenuItem>
-                            ))}
                         </Menu>
                     </Box>
                     <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page.title}
-                                onClick={() => handleCloseNavMenu(page.url)}
-                                sx={{ my: 2, color: "black", display: "block" }}
-                            >
-                                {page.title}
-                            </Button>
-                        ))}
                     </Box>
-
                     <Box sx={{ flexGrow: 0, display: "flex" }}>
                         <MenuItem>
                             <IconButton
