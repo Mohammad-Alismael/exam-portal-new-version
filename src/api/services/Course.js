@@ -6,35 +6,34 @@ import {isExpired} from "react-jwt";
 import jwt from "jwt-decode";
 import {CREATE_CLASSROOM, ENROLL_CLASSROOM, FETCH_CLASSROOMS, FETCH_COURSE_INFO} from "./RouteNames";
 
-class Course {
+async function createCourse(course_name,section ,user_id){
+    console.log({course_name,section ,user_id})
+    return axiosPrivate.post(CREATE_CLASSROOM,{
+        class_name: course_name,
+        section,
+        instructor_id: user_id,
+    }).then((res)=> {
+        return res.data
+    }).catch((error)=>{
+        console.log(error)
+        if (error.response.status == 403){
+            toast('user timed out!')
+        }
+    })
+}
 
-     createCourse(course_name,section ,user_id) {
-        return axiosPrivate.post(CREATE_CLASSROOM,{
-            class_name: course_name,
-            section,
-            instructor_id: user_id,
-        }).then((res)=> {
-            return res.data
-        }).catch((error)=>{
-            console.log(error)
-            if (error.response.status == 403){
-                toast('user timed out!')
-            }
-        })
-    }
-    enrollToCourse(course_id) {
-        return axiosPrivate.post(ENROLL_CLASSROOM,{
-            classroom_id : course_id
-        }).then((res)=> {
-            return res.data
-        }).catch((error)=>{
-            console.log(error)
-            if (error.response.status == 403){
-                toast('user timed out!')
-            }
-        })
+async function enrollToCourse(course_id) {
+    return axiosPrivate.post(ENROLL_CLASSROOM,{
+        classroom_id : course_id
+    }).then((res)=> {
+        return res.data
+    }).catch((error)=>{
+        console.log(error)
+        if (error.response.status == 403){
+            toast('user timed out!')
+        }
+    })
 
-    }
 }
 async function fetchCourseInfo(courseId,controller) {
     try {
@@ -49,7 +48,7 @@ async function fetchCourseInfo(courseId,controller) {
 }
 async function getCourses(controller){
     try {
-        const response = await axiosPrivate(FETCH_CLASSROOMS,{
+        const response = await axiosPrivate.get(FETCH_CLASSROOMS,{
             signal: controller.signal
         })
         return response['data']
@@ -58,4 +57,4 @@ async function getCourses(controller){
         console.log(e)
     }
 }
-export {Course,fetchCourseInfo,getCourses};
+export {createCourse,enrollToCourse,fetchCourseInfo,getCourses};

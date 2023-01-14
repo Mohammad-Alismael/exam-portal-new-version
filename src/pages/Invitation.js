@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import {axiosPrivate} from "../api/axios";
 import CryptoJS from 'crypto-js'
 import {Button, CircularProgress} from "@material-ui/core";
-import {Course} from "../api/services/Course";
+import {enrollToCourse} from "../api/services/Course";
 
 function Invitation(props) {
     const { invitationHash } = useParams();
@@ -21,9 +21,8 @@ function Invitation(props) {
     const [classroomId, setClassroomId] = React.useState("");
     const [instructorEmailId, setInstructorEmailId] = React.useState("");
     const [instructorusername, setInstructorusername] = React.useState("");
-    const course = new Course()
     const handleClickOpen = () => {
-        course.enrollToCourse(classroomId).then((res)=>{
+        enrollToCourse(classroomId).then((res)=>{
             toast(res['message'])
             navigate("/courses");
         })

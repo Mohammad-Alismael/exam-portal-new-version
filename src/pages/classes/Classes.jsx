@@ -13,7 +13,7 @@ import ClassCard from "./ClassCard";
 import { Button } from "@material-ui/core";
 import {Fab, FormGroup, Typography} from "@mui/material";
 import { connect, useSelector } from "react-redux";
-import { Course, getCourses } from "../../api/services/Course";
+import { createCourse,enrollToCourse, getCourses } from "../../api/services/Course";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
 import AddIcon from "@mui/icons-material/Add";
@@ -23,6 +23,9 @@ import CryptoJS from "crypto-js";
 import Switch from '@mui/material/Switch';
 import useClipboard from "react-hook-clipboard";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import CardMedia from "@mui/material/CardMedia";
+import * as PropTypes from "prop-types";
+import CreateClassroom from "./CreateClassroom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,40 +48,27 @@ const useStyles = makeStyles((theme) => ({
         bottom: "3%",
         right: "2%",
     },
+    defaultImgs: {
+        width: 290, margin: 1, cursor: "pointer"
+    }
 }));
+
 function Classes(props) {
     const classes = useStyles();
-    const user = useSelector((state) => state.UserReducerV2).user;
     const [open, setOpen] = React.useState(false);
     const [openDefault, setOpenDefault] = React.useState(false);
     const [courses, setCourses] = React.useState([]);
-    const [newClassName, setNewClassName] = useState("");
-    const label = { inputProps: { 'aria-label': 'Size switch demo' } };
-    const [section, setSection] = useState("");
     const [loading, setLoading] = React.useState(true);
     const [clipboard, copyToClipboard] = useClipboard();
+    const user = useSelector((state) => state.UserReducerV2).user;
 
-    const course = new Course();
     const handleClickOpen = () => {
         setOpen(true);
     };
-    const openDefaultBanner = () =>{
-        setOpenDefault(true)
+    const setLoadingProp = (val) => {
+        setLoading(val)
     }
-    const createClass = () => {
-        setLoading(true);
-        course
-            .createCourse(newClassName, section, user["user_id"])
-            .then((res) => {
-                toast(res["message"]);
-                setCourses([...courses, res["newClassroom"]]);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        setOpen(false);
-    };
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -98,13 +88,13 @@ function Classes(props) {
     }, []);
     return (
         <>
-            <ResponsiveAppBar />
+            <ResponsiveAppBar/>
             {!loading ? (
                 <>
                     <Grid container spacing={2} className={classes.root}>
                         {courses.map(
                             (
-                                { class_name, classroom_id, section, instructor_info },
+                                {class_name, classroom_id, section, instructor_info},
                                 index
                             ) => {
                                 return (
@@ -152,71 +142,16 @@ function Classes(props) {
                     {parseInt(user?.role_id) === 3 ? (
                         <div className={classes.addClassBtn}>
                             <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
-                                <AddIcon />
+                                <AddIcon/>
                             </Fab>
                         </div>
                     ) : null}
                 </>
             ) : (
-                <LinearProgress />
+                <LinearProgress/>
             )}
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle><b>Create New Classroom</b></DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} md={12} xl={12}>
-                            <TextField
-                                onChange={(e) => setNewClassName(e.target.value)}
-                                autoFocus
-                                margin="dense"
-                                id="class_name"
-                                label="class name (required)"
-                                type="text"
-                                color="primary"
-                                fullWidth
-                                variant="filled"
-                            />
-                            <TextField
-                                onChange={(e) => setSection(e.target.value)}
-                                autoFocus
-                                margin="dense"
-                                id="section"
-                                color="primary"
-                                label="section"
-                                type="text"
-                                fullWidth
-                                variant="filled"
-                            />
-                            <FormGroup>
-                                <FormControlLabel
-                                   control={<Switch {...label} color="primary" />}
-                                   label="Let students ask questions"
-                                   labelPlacement="start"
-                                />
-                                <FormControlLabel
-                                    control={<Switch {...label} color="primary" />}
-                                    label="Comments under my comment"
-                                    labelPlacement="start"
-                                />
-                            </FormGroup>
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={openDefaultBanner}>select</Button>
-                    <Button onClick={createClass}>Create</Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog open={openDefault} onClose={()=> (setOpenDefault(false))}>
-                <DialogTitle>default imgs</DialogTitle>
-                <DialogContent>
-                </DialogContent>
-                <DialogActions>
-                </DialogActions>
-            </Dialog>
+            <CreateClassroom open={open} loading={loading} setLoadingProp={setLoadingProp} onClose={handleClose} courses={courses} setCourses={setCourses}/>
         </>
     );
 }
