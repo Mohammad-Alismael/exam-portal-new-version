@@ -10,7 +10,7 @@ const initialState = {
     exams: []
 }
 
-const CourseReducer  = (state = initialState, action) => {
+const CourseReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_COURSE_ID:
             return {

@@ -26,7 +26,7 @@ export const LeftArrow = styled.img`
   width: 12px;
   display: none;
   position: absolute;
-  right: 15px;
+  right: 1.2rem;
   top: 10px;
   transition: transform 0.2s ease-in-out;
   transform: rotate(${props => props.opened ? '90deg' : '0deg'})
@@ -37,7 +37,7 @@ export const CourseSection = styled.span`
   font-size: 12px;
 `
 export const SubItem = styled.div`
-  background-color: rgba(255, 205, 56, 0.15);
+ 
   display: ${props => props.opened ? 'block' : 'none'};
   position: relative;
   padding: 0.3rem 0 ;
@@ -51,6 +51,9 @@ export const SubItem = styled.div`
     left: 70px;
     top: 25%;
     text-transform: capitalize;
+  }
+  &:hover{
+    background-color: rgba(255, 205, 56, 0.15);
   }
 `
 export const Container = styled.div`

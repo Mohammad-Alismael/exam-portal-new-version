@@ -1,6 +1,7 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import {makeStyles} from "@material-ui/core/styles";
+import Button from "@mui/material/Button";
 const useStyles = makeStyles((theme) => ({
     dropzone: {
         border:"3px #FFCD38 dashed",
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 0
     }
 }));
-function Dropzone({ onDrop, accept, open }) {
+function Dropzone({ onDrop, accept, setDefaultImgOpen }) {
     const classes = useStyles();
     const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
         useDropzone({
@@ -38,15 +39,13 @@ function Dropzone({ onDrop, accept, open }) {
                     ) : (
                         <>
                             <img className={classes.icon} src={'/images/icons/cloud-upload.png'} alt={'gg'}/>
-                            <p>Drag your image for cover photo or choose for here</p>
+                            <p>Drag your image for cover photo</p>
                         </>
                     )}
                 </div>
 
             </div>
-            <button type="button" onClick={()=>(alert("nice"))} className="btn">
-                Click to select files
-            </button>
+            <Button variant="contained" onClick={()=>(setDefaultImgOpen(true))}>or choose form here</Button>
             <aside>
                 <ul>{files}</ul>
             </aside>

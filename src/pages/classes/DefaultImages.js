@@ -1,21 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
-import DialogActions from "@mui/material/DialogActions";
-import CardMedia from "@mui/material/CardMedia";
+import {useDispatch} from "react-redux";
+import {SET_BACKGROUND_OBJECT_FILE, SET_NEW_COURSE_NAME} from "../../store/actions";
 
-function DefaultImages({open,onClose}) {
+function DefaultImages({open,setDefaultImgOpen}) {
+    const dispatch = useDispatch();
 
     const selectImg = (e) =>{
-        console.log(e.target.src)
+        const url = e.target.src
+        const fileName = url.split("/")[4];
+        const toDataURL = url => fetch(url)
+            .then(response => response.blob())
+            .then(blob => new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.onerror = reject
+                reader.readAsDataURL(blob)
+            }))
+
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type:mime});
+        }
+
+        toDataURL(url)
+            .then(dataUrl => {
+                const fileData = dataURLtoFile(dataUrl, fileName);
+                dispatch({ type: SET_BACKGROUND_OBJECT_FILE, payload: { backgroundFileObject: fileData } });
+                setDefaultImgOpen(false)
+            })
     }
 
 
     return (
-        <Dialog direction="up" open={open} onClose={onClose}>
+        <Dialog direction="up" open={open} onClose={()=>(setDefaultImgOpen(false))}>
         <DialogContent>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 4, md: 12 }}>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((val,index) => (

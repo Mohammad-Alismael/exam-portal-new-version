@@ -16,7 +16,7 @@ import Invitation from "./pages/Invitation";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ActivateEmail from "./pages/ActivateEmail";
-import Classes from "./pages/classes/Classes";
+import Courses from "./pages/classes/Courses";
 import Protected from "./utils/Protected";
 import {axiosPrivate, token, updateToken} from "./api/axios";
 import { theme } from "./utils/global/useStyles";
@@ -68,7 +68,7 @@ function App(props) {
                     path="/courses"
                     element={
                         <Protected onlyAccessTo={ALL_ROLES}>
-                            <Classes />
+                            <Courses />
                         </Protected>
                     }
                 />

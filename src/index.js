@@ -15,6 +15,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import CourseReducer from "./store/reducers/CourseReducer";
 import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
 import SubmissionsReducer from "./store/reducers/SubmissionsReducer";
+import CreateNewCourseReducer from "./store/reducers/CreateNewCourseReducer";
 const rootReducer = combineReducers({
     ExamReducer,
     AddQuestionReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
     ExamStudentReducer,
     SubmissionsReducer,
     CreateReducer,
-    CourseReducer
+    CourseReducer,
+    CreateNewCourseReducer
 });
 
 function saveToLocalStorage(store) {
