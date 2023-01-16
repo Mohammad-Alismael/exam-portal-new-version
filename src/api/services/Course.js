@@ -44,8 +44,9 @@ async function fetchCourseInfo(courseId,controller) {
     }catch (e) {
         console.log(e)
         alert("error happened while fetching course info")
-    }
+        throw {message: "error happened while fetching course info"}
 
+    }
 }
 async function getCourses(controller){
     try {

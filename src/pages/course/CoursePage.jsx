@@ -88,7 +88,7 @@ const WhiteTextTypography = withStyles({
         color: "#FFFFFF",
     },
 })(Typography);
-function Course(props) {
+function CoursePage(props) {
     const classes = useStyles();
     const { course_id } = useParams();
     const dispatch = useDispatch();
@@ -102,7 +102,7 @@ function Course(props) {
         fetchCourseInfo(course_id, controller).then((data) => {
             dispatch(CourseAction(data));
             setIsLoading(false);
-        });
+        }).catch(console.log);
         return () => {
             controller.abort();
         };
@@ -171,4 +171,4 @@ function Course(props) {
     );
 }
 
-export default Course;
+export default CoursePage;

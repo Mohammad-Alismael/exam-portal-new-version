@@ -4,7 +4,7 @@ import {
 } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Course from "./pages/course/Course";
+import CoursePage from "./pages/course/CoursePage";
 import Logout from "./pages/Logout";
 import { connect, useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -77,7 +77,7 @@ function App(props) {
                         index={true}
                         element={
                             <Protected onlyAccessTo={ALL_ROLES}>
-                                <Course />
+                                <CoursePage />
                             </Protected>
                         }
                     />

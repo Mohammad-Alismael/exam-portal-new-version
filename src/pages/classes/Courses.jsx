@@ -80,6 +80,7 @@ function Courses(props) {
         const controller = new AbortController();
 
         getCourses(controller).then((data) => {
+            console.log("courses => ", data)
             isMounted && setCourses(data);
             isMounted && setLoading(false);
         });
@@ -108,7 +109,7 @@ function Courses(props) {
                                 <Grid container spacing={2}>
                                     {courses.map(
                                         (
-                                            { class_name, classroom_id, section, instructor_info },
+                                            { class_name, classroom_id, section, instructor_info,img_path },
                                             index
                                         ) => {
                                             return (
@@ -123,6 +124,7 @@ function Courses(props) {
                                                     id={classroom_id}
                                                     classname={class_name}
                                                     section={section}
+                                                    img_path={img_path}
                                                     options={
                                                         user.role_id == 3
                                                             ? ["invitation link"]

@@ -28,26 +28,18 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
     const user = useSelector((state) => state.UserReducerV2).user;
     const dispatch = useDispatch();
     const newCourseProperties = useSelector((state) => state.CreateNewCourseReducer);
-
-
     const setCourseName = (e) => {
         dispatch({ type: SET_NEW_COURSE_NAME, payload: { courseName: e.target.value } });
     }
-
     const setCourseSection = (e) => {
         dispatch({ type: SET_NEW_COURSE_SECTION, payload: { section: e.target.value } });
 
     }
-
     const letStudentsAskQuestions = (e) =>{
         dispatch({ type: SET_LET_STUDENTS_ASK_QUESTIONS, payload: { letStudentsAskQuestions: e.target.checked } });
     }
-
     const letStudentsToComment = (e) =>{
         dispatch({ type: SET_ANNOUNCEMENTS_COMMENTS, payload: { announcementsComments: e.target.checked } });
-    }
-    const handleClose = () => {
-        setDefaultImgOpen(false)
     }
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.map((file) => {
@@ -65,6 +57,7 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
         createCourse(newCourseProperties, user["user_id"])
             .then((res) => {
                 toast(res["message"]);
+                console.log("new course => " , res["newClassroom"])
                 setCourses([...courses, res["newClassroom"]]);
                 setLoadingProp(false);
             })
@@ -121,9 +114,7 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
             <Button variant="outlined" color="primary" onClick={onClose}>Cancel</Button>
             <Button variant="contained" color="primary" onClick={createClass}>Create</Button>
         </DialogActions>
-
         <DefaultImages open={DefaultImgOpen} setDefaultImgOpen={setDefaultImgOpen}/>
-
     </Dialog>
 }
 

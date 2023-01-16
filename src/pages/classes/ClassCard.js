@@ -91,7 +91,7 @@ function ClassCard(props) {
                 <CardActionArea href={`/courses/${props.courseId}`}>
                     <CardMedia
                         className={classes.media}
-                        image="https://www.gstatic.com/classroom/themes/img_code.jpg"
+                        image={props.img_path}
                     >
                         <div className={classes.classInfo}>
                             <p>{props.classname}</p>
