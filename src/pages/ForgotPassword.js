@@ -1,17 +1,6 @@
 import React, { useState } from "react";
-import Navbar from "../layouts/Navbar";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import {
-    createTheme,
-    makeStyles,
-    ThemeProvider,
-} from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
 import Button from "@mui/material/Button";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { setForgetPassword } from "../api/services/User";
 import withContainer from "../components/withContainer";

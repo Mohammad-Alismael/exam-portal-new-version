@@ -9,7 +9,8 @@ import { useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useNavigate, useParams } from "react-router-dom";
-import { styled } from "@mui/material/styles";
+import { useLocation } from 'react-router-dom';
+
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import AnnounceComponent from "./Announcement/AnnounceComponent";
 import Announcement from "./Announcement/Announcement";
@@ -19,6 +20,8 @@ import { useDispatch } from "react-redux";
 import { SET_COURSE_ID } from "../../store/actions";
 import { CourseAction } from "../../actions/CourseAction";
 import NoAnnouncement from "./Announcement/NoAnnouncement";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
         height: "28vh",
         width: "65%",
         margin: "30px auto",
-        backgroundImage: `url(${classes})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         borderRadius: "15px !important",
@@ -95,77 +97,94 @@ function CoursePage(props) {
     const [isLoading, setIsLoading] = React.useState(true);
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector((state) => state.CourseReducer);
+    const location = useLocation();
+
 
     useEffect(() => {
         const controller = new AbortController();
         dispatch({ type: SET_COURSE_ID, payload: { courseId: course_id } });
-        fetchCourseInfo(course_id, controller).then((data) => {
-            dispatch(CourseAction(data));
-            setIsLoading(false);
-        }).catch(console.log);
+        fetchCourseInfo(course_id, controller)
+            .then((data) => {
+                dispatch(CourseAction(data));
+                setIsLoading(false);
+            })
+            .catch(console.log);
         return () => {
             controller.abort();
         };
-    }, []);
-    useEffect(()=>{
-        console.log('this is from course page', course.announcements)
-    },[course.announcements.length])
+    }, [location.pathname]);
+    useEffect(() => {
+        console.log("this is from course page", course.announcements);
+    }, [course.announcements.length]);
     return (
         <div>
             <ResponsiveAppBar />
             {isLoading ? (
                 <LinearProgress />
             ) : (
-                <Box>
-                    <Paper elevation={5} className={classes.paperStyle}>
-                        <WhiteTextTypography variant="h4">
-                            <b>{course?.course_info?.class_name}</b>
-                        </WhiteTextTypography>
-                        <WhiteTextTypography variant="h4" style={{ fontSize: "25px" }}>
-                            section {course?.course_info?.section.toUpperCase()}
-                        </WhiteTextTypography>
-                        <div className={classes.instructorInfo}>
-                            <img
-                                alt={"img"}
-                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
-                            />
-                            <p>
-                                {parseInt(user.role_id) === 3
-                                    ? user.username
-                                    : course?.course_info?.instructor["username"]}
-                            </p>
-                        </div>
-                    </Paper>
-                    <Grid container spacing={2} className={classes.mainGrid}>
-                        <Grid item xs={10}>
-                            {parseInt(user.role_id) === 3 ? <Announcement /> : null}
-                            <Grid item>
-                                {course.announcements.length !== 0 &&
-                                    course.announcements
-                                        .sort(function (a, b) {
-                                            return b.created_at - a.created_at;
-                                        })
-                                        .map(
-                                            (
-                                                { id, announcement_text, file_path, created_at },
-                                                index
-                                            ) => {
-                                                return (
-                                                    <AnnounceComponent
-                                                        key={index}
-                                                        file={file_path}
-                                                        announcementId={id}
-                                                        text={announcement_text}
-                                                        createdAt={created_at}
-                                                    />
-                                                );
-                                            }
-                                        )}
-                                {course.announcements.length === 0 ? <NoAnnouncement /> : null}
+                <>
+                    <Sidebar />
+                    <CourseContainer>
+                        <Box>
+                            <Paper
+                                elevation={5}
+                                className={classes.paperStyle}
+                                style={{
+                                    backgroundImage: `url(${course?.course_info?.img_path})`,
+                                }}
+                            >
+                                <WhiteTextTypography variant="h4">
+                                    <b>{course?.course_info?.class_name}</b>
+                                </WhiteTextTypography>
+                                <WhiteTextTypography variant="h4" style={{ fontSize: "25px" }}>
+                                    section {course?.course_info?.section.toUpperCase()}
+                                </WhiteTextTypography>
+                                <div className={classes.instructorInfo}>
+                                    <img
+                                        alt={"img"}
+                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
+                                    />
+                                    <p>
+                                        {parseInt(user.role_id) === 3
+                                            ? user.username
+                                            : course?.course_info?.instructor["username"]}
+                                    </p>
+                                </div>
+                            </Paper>
+                            <Grid container spacing={2} className={classes.mainGrid}>
+                                <Grid item xs={10}>
+                                    {parseInt(user.role_id) === 3 ? <Announcement /> : null}
+                                    <Grid item>
+                                        {course.announcements.length !== 0 &&
+                                            course.announcements
+                                                .sort(function (a, b) {
+                                                    return b.created_at - a.created_at;
+                                                })
+                                                .map(
+                                                    (
+                                                        { id, announcement_text, file_path, created_at },
+                                                        index
+                                                    ) => {
+                                                        return (
+                                                            <AnnounceComponent
+                                                                key={index}
+                                                                file={file_path}
+                                                                announcementId={id}
+                                                                text={announcement_text}
+                                                                createdAt={created_at}
+                                                            />
+                                                        );
+                                                    }
+                                                )}
+                                        {course.announcements.length === 0 ? (
+                                            <NoAnnouncement />
+                                        ) : null}
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Grid>
-                </Box>
+                        </Box>
+                    </CourseContainer>
+                </>
             )}
         </div>
     );

@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "./ClassCard";
 import { Button } from "@material-ui/core";
 import { Fab, FormGroup, Typography } from "@mui/material";
-import { connect, useSelector } from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {
     createCourse,
     enrollToCourse,
@@ -33,6 +33,8 @@ import CreateClassroom from "./CreateClassroom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import ContainerWithHeader from "../../components/ContainerWithHeader/ContainerWithHeader";
+import CourseListReducer from "../../store/reducers/CourseListReducer";
+import {SET_COURSE_LIST, SET_LET_STUDENTS_ASK_QUESTIONS} from "../../store/actions";
 
 const useStyles = makeStyles((theme) => ({
     createClass: {
@@ -64,6 +66,8 @@ function Courses(props) {
     const [loading, setLoading] = React.useState(true);
     const [clipboard, copyToClipboard] = useClipboard();
     const user = useSelector((state) => state.UserReducerV2).user;
+    const courseList = useSelector((state)=> state.CourseListReducer);
+    const dispatch = useDispatch();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -80,8 +84,8 @@ function Courses(props) {
         const controller = new AbortController();
 
         getCourses(controller).then((data) => {
+            isMounted && dispatch({ type: SET_COURSE_LIST, payload: { courseList: data } });
             console.log("courses => ", data)
-            isMounted && setCourses(data);
             isMounted && setLoading(false);
         });
 
@@ -107,7 +111,7 @@ function Courses(props) {
                             title={"overview courses"}
                             children={
                                 <Grid container spacing={2}>
-                                    {courses.map(
+                                    {courseList.courseList.map(
                                         (
                                             { class_name, classroom_id, section, instructor_info,img_path },
                                             index

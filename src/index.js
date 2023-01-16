@@ -16,6 +16,7 @@ import CourseReducer from "./store/reducers/CourseReducer";
 import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
 import SubmissionsReducer from "./store/reducers/SubmissionsReducer";
 import CreateNewCourseReducer from "./store/reducers/CreateNewCourseReducer";
+import CourseListReducer from "./store/reducers/CourseListReducer";
 const rootReducer = combineReducers({
     ExamReducer,
     AddQuestionReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     SubmissionsReducer,
     CreateReducer,
     CourseReducer,
+    CourseListReducer,
     CreateNewCourseReducer
 });
 

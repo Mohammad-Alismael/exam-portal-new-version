@@ -1,23 +1,28 @@
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {BookIcon, Container, CourseCode, CourseSection, Item, LeftArrow, SubItem} from "./Sidebar.styles";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 Sidebar.propTypes = {
 
 };
 
 function Sidebar(props) {
+    const {courseList} = useSelector((state)=> state.CourseListReducer);
 
     return (
         <Container>
-            <Sidebar.Item title={'CS321'} section={'a'}/>
-            <Sidebar.Item title={'CS333'} section={'a'}/>
-            <Sidebar.Item title={'CS320'} section={'a'}/>
+            {
+                courseList.map(({class_name,section,classroom_id},index)=> (
+                    <Sidebar.Item title={class_name} section={section} classroomId={classroom_id}/>
+                ))
+            }
         </Container>
     );
 }
 
-const ItemComp = ({title,section}) => {
+const ItemComp = ({title,section,classroomId}) => {
     const [opened,setOpen] = useState(false);
     const handleChange = (e)=>{
         setOpen(!opened);
@@ -29,23 +34,25 @@ const ItemComp = ({title,section}) => {
             <CourseSection>section {section}</CourseSection>
             <LeftArrow opened={opened} src={'/images/icons/left_arrow.png'} alt={'left arrow'}/>
             <div>
-                <Sidebar.SubItem opened={opened} title={'announcement'} path={'/courses/:course_id'}/>
-                <Sidebar.SubItem opened={opened} title={'exams'} path={'/courses/:course_id/exams'}/>
-                <Sidebar.SubItem opened={opened}title={'people'} path={'/courses/:course_id/people'}/>
+                <Sidebar.SubSubItem opened={opened} title={'announcements'} path={`/courses/${classroomId}`}/>
+                <Sidebar.SubSubItem opened={opened} title={'exams'} path={`/courses/${classroomId}/exams`}/>
+                <Sidebar.SubSubItem opened={opened}title={'people'} path={`/courses/${classroomId}/people`}/>
             </div>
         </Item>
     )
 }
 
-Sidebar.Item = ItemComp
+Sidebar.Item = ItemComp;
+const SubSubItem = ({opened,title,path}) =>{
+    const navigate = useNavigate();
 
-Sidebar.SubItem = ({opened,title}) =>{
     return (
-        <SubItem opened={opened}>
+        <SubItem opened={opened} onClick={()=>(navigate(path))}>
             <img src={`/images/icons/${title}_icon.png`} alt={title}/>
             <span>{title}</span>
         </SubItem>
     )
 }
 
+Sidebar.SubSubItem = SubSubItem;
 export default Sidebar;
