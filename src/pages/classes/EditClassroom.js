@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -9,37 +9,84 @@ import {FormGroup, TextField} from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DialogActions from "@mui/material/DialogActions";
-import {createCourse} from "../../api/services/Course";
+import {updateCourse} from "../../api/services/Course";
 import {toast} from "react-toastify";
 import DefaultImages from "./DefaultImages";
 import {useDispatch, useSelector} from "react-redux";
 import uuid from "draft-js/lib/uuid";
 import Dropzone from "./Dropzone";
 import {
-    CHANGE_PREVIEW, SET_ANNOUNCEMENTS_COMMENTS,
+    SET_ANNOUNCEMENTS_COMMENTS,
     SET_BACKGROUND_OBJECT_FILE, SET_LET_STUDENTS_ASK_QUESTIONS,
     SET_NEW_COURSE_NAME,
     SET_NEW_COURSE_SECTION
 } from "../../store/actions";
 import CreateNewCourseReducer from "../../store/reducers/CreateNewCourseReducer";
+import {useParams} from "react-router-dom";
+import useSelectImg from "../../utils/hooks/useSelectImg";
 
-function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
+function EditClassroom({open,setEditOpen}) {
     const [DefaultImgOpen, setDefaultImgOpen] = React.useState(false);
-    const user = useSelector((state) => state.UserReducerV2).user;
+    const {user} = useSelector((state) => state.UserReducerV2);
     const dispatch = useDispatch();
+    const { course_id } = useParams();
+    const {courseList} = useSelector((state)=> state.CourseListReducer);
+    const courseObj = courseList.filter(({classroom_id},index)=> {
+        return classroom_id === course_id;
+    })[0];
+    const [courseName_,setCourseName_] = useState(courseObj['class_name']);
+    const [section,setSection] = useState(courseObj['section']);
+    const [letStudentsAskQuestions_, setLetStudentsAskQuestions] = React.useState(courseObj['allow_students_to_announcements']);
+    const [announcementsComments_, setAnnouncementsComments] = React.useState(courseObj['allow_students_to_comment']);
     const newCourseProperties = useSelector((state) => state.CreateNewCourseReducer);
+    const selectImg = (url) => {
+        const fileName = url.split("/")[4];
+        const toDataURL = (url) =>
+            fetch(url)
+                .then((response) => response.blob())
+                .then((blob) =>
+                    new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    })
+                );
+
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type: mime});
+        }
+
+        toDataURL(url)
+            .then((dataUrl) => {
+                const fileData = dataURLtoFile(dataUrl, fileName);
+                dispatch({ type: SET_BACKGROUND_OBJECT_FILE, payload: { backgroundFileObject: fileData } });
+            })
+    };
     const setCourseName = (e) => {
+        setCourseName_(e.target.value)
         dispatch({ type: SET_NEW_COURSE_NAME, payload: { courseName: e.target.value } });
     }
+
     const setCourseSection = (e) => {
+        setSection(e.target.value)
         dispatch({ type: SET_NEW_COURSE_SECTION, payload: { section: e.target.value } });
     }
+
     const letStudentsAskQuestions = (e) =>{
+        setLetStudentsAskQuestions(e.target.checked)
         dispatch({ type: SET_LET_STUDENTS_ASK_QUESTIONS, payload: { letStudentsAskQuestions: e.target.checked } });
     }
     const letStudentsToComment = (e) =>{
+        setAnnouncementsComments(e.target.checked)
         dispatch({ type: SET_ANNOUNCEMENTS_COMMENTS, payload: { announcementsComments: e.target.checked } });
     }
+
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.map((file) => {
             const reader = new FileReader();
@@ -51,27 +98,30 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
             return file;
         });
     }, []);
-    const createClass = () => {
-        setLoadingProp(true);
-        createCourse(newCourseProperties, user["user_id"])
-            .then((res) => {
-                toast(res["message"]);
-                console.log("new course => " , res["newClassroom"])
-                setCourses([...courses, res["newClassroom"]]);
-                setLoadingProp(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        onClose();
+    const updateClass_ = () => {
+        updateCourse(newCourseProperties,course_id).then((data)=>{
+            toast.success(data['message'])
+            window.location.reload();
+        }).catch(console.log)
     };
 
-    return <Dialog open={open} onClose={onClose}>
+    useEffect(()=>{
+        // sets default values for redux reducer
+        selectImg(courseObj['img_path'])
+        dispatch({ type: SET_ANNOUNCEMENTS_COMMENTS, payload: { announcementsComments: courseObj['allow_students_to_announcements'] } });
+        dispatch({ type: SET_LET_STUDENTS_ASK_QUESTIONS, payload: { letStudentsAskQuestions: courseObj['allow_students_to_comment'] }});
+        dispatch({ type: SET_NEW_COURSE_SECTION, payload: {section:courseObj['section']}});
+        dispatch({ type: SET_NEW_COURSE_NAME, payload: {courseName:courseObj['class_name']}});
+
+    },[])
+
+    return <Dialog open={open} onClose={(e)=>(setEditOpen(false))}>
         <DialogTitle><b>Create New Classroom</b></DialogTitle>
         <DialogContent>
             <Grid container spacing={4}>
                 <Grid item xs={12} md={12} xl={12}>
                     <TextField
+                        value={courseName_}
                         onChange={setCourseName}
                         autoFocus
                         margin="dense"
@@ -82,6 +132,7 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
                         variant="filled"
                     />
                     <TextField
+                        value={section}
                         onChange={setCourseSection}
                         autoFocus
                         margin="dense"
@@ -95,12 +146,12 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
                     <FormGroup>
                         <FormControlLabel
                             style={{justifyContent: 'space-around'}}
-                            control={<Switch onChange={letStudentsAskQuestions} color="primary"/>}
+                            control={<Switch checked={letStudentsAskQuestions_ == 1 ? true : false} onChange={letStudentsAskQuestions} color="primary"/>}
                             label="Let students ask questions/announcements"
                             labelPlacement="start"
                         />
                         <FormControlLabel
-                            control={<Switch onChange={letStudentsToComment} color="primary"/>}
+                            control={<Switch checked={announcementsComments_ == 1 ? true : false} onChange={letStudentsToComment} color="primary"/>}
                             style={{justifyContent: 'space-around'}}
                             label="Let students comment under my announcements"
                             labelPlacement="start"
@@ -110,11 +161,11 @@ function CreateClassroom({open,onClose,setLoadingProp,courses,setCourses}) {
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button variant="outlined" color="primary" onClick={onClose}>Cancel</Button>
-            <Button variant="contained" color="primary" onClick={createClass}>Create</Button>
+            <Button variant="outlined" color="primary" onClick={(e)=>(setEditOpen(false))}>Cancel</Button>
+            <Button variant="contained" color="primary" onClick={updateClass_}>update</Button>
         </DialogActions>
         <DefaultImages open={DefaultImgOpen} setDefaultImgOpen={setDefaultImgOpen}/>
     </Dialog>
 }
 
-export default CreateClassroom;
+export default EditClassroom;

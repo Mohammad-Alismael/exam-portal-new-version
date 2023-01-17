@@ -1,8 +1,10 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {BookIcon, Container, CourseCode, CourseSection, Item, LeftArrow, SubItem} from "./Sidebar.styles";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {getCourses} from "../../api/services/Course";
+import {SET_COURSE_LIST} from "../../store/actions";
 
 Sidebar.propTypes = {
 
@@ -10,7 +12,29 @@ Sidebar.propTypes = {
 
 function Sidebar(props) {
     const {courseList} = useSelector((state)=> state.CourseListReducer);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        let isMounted = true;
+        const controller = new AbortController();
 
+        getCourses(controller).then((data) => {
+            // data = data.map((val,index)=>{
+            //     return {
+            //         ...val,
+            //         letStudentsAskQuestions : val.letStudentsAskQuestions == 1 ? true : false,
+            //         announcementsComments: val.announcementsComments == 1 ? true : false
+            //     }
+            // })
+            isMounted && dispatch({ type: SET_COURSE_LIST, payload: { courseList: data } });
+            console.log("courses => ", data)
+            // isMounted && setLoading(false);
+        });
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        };
+    }, []);
     return (
         <Container>
             {

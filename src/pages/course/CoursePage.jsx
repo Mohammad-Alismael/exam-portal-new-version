@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import classes from "../../img/classes.jpg";
 import Grid from "@material-ui/core/Grid";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { connect, useSelector } from "react-redux";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,6 +22,8 @@ import { CourseAction } from "../../actions/CourseAction";
 import NoAnnouncement from "./Announcement/NoAnnouncement";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
+import Button from "@mui/material/Button";
+import EditClassroom from "../classes/EditClassroom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -98,6 +100,7 @@ function CoursePage(props) {
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector((state) => state.CourseReducer);
     const location = useLocation();
+    const [editOpen,setEditOpen] = useState(false);
 
 
     useEffect(() => {
@@ -133,6 +136,10 @@ function CoursePage(props) {
                                     backgroundImage: `url(${course?.course_info?.img_path})`,
                                 }}
                             >
+                                <Button onClick={(e)=>{
+                                    setEditOpen(!editOpen)
+                                }}>edit</Button>
+                                {editOpen ? <EditClassroom open={editOpen} setEditOpen={setEditOpen}/> : null}
                                 <WhiteTextTypography variant="h4">
                                     <b>{course?.course_info?.class_name}</b>
                                 </WhiteTextTypography>

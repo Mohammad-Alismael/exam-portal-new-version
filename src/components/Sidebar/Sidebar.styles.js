@@ -10,7 +10,7 @@ const Info = css`
 `
 
 export const CourseContainer = styled.div`
-  padding: 1rem;
+  padding: 1rem 0;
   overflow: hidden;
   width: 92.75%;
   float: right;

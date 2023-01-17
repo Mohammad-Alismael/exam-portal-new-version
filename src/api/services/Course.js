@@ -1,7 +1,7 @@
 import axios from "axios";
 import {toast} from "react-toastify";
 import {axiosPrivate, token} from "../axios";
-import {CREATE_CLASSROOM, ENROLL_CLASSROOM, FETCH_CLASSROOMS, FETCH_COURSE_INFO} from "./RouteNames";
+import {CREATE_CLASSROOM, ENROLL_CLASSROOM, FETCH_CLASSROOMS, FETCH_COURSE_INFO, UPDATE_CLASSROOMS} from "./RouteNames";
 
 async function createCourse(object ,user_id){
     const formData = new FormData();
@@ -59,4 +59,22 @@ async function getCourses(controller){
         console.log(e)
     }
 }
-export {createCourse,enrollToCourse,fetchCourseInfo,getCourses};
+async function updateCourse(object,courseId) {
+    console.log("update =>", object)
+    const formData = new FormData();
+    formData.append('class_name',object.courseName)
+    formData.append('section',object.section)
+    formData.append('allow_students_to_comment',object.announcementsComments)
+    formData.append('allow_students_to_announcements',object.letStudentsAskQuestions)
+    formData.append('file',object.backgroundFileObject)
+    try{
+        const response = await axiosPrivate.put(`${UPDATE_CLASSROOMS}/${courseId}`,formData,{
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response['data'];
+    }catch (e) {
+        console.log(e)
+    }
+}
+
+export {createCourse,enrollToCourse,fetchCourseInfo,getCourses,updateCourse};

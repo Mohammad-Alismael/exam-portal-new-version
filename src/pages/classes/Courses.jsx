@@ -65,7 +65,7 @@ function Courses(props) {
     const [courses, setCourses] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [clipboard, copyToClipboard] = useClipboard();
-    const user = useSelector((state) => state.UserReducerV2).user;
+    const {user} = useSelector((state) => state.UserReducerV2);
     const courseList = useSelector((state)=> state.CourseListReducer);
     const dispatch = useDispatch();
 
@@ -164,7 +164,7 @@ function Courses(props) {
                                             );
                                         }
                                     )}
-                                    {courses?.length === 0 ? (
+                                    {courseList.courseList?.length === 0 ? (
                                         <Grid item xs={12} sm={6} md={3}>
                                             <Card className={classes.createClass}>
                                                 <Typography
