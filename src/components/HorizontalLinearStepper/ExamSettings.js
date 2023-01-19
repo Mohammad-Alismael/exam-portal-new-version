@@ -40,7 +40,10 @@ function ExamSettings(props) {
     const [studentInfo, setStudentInfo] = React.useState("");
     const [students, setStudents] = React.useState([]);
     const { examId } = useParams();
+    const {course_id } = useParams();
     const exam = useSelector((state) => state.ExamReducer);
+    const {courseList} = useSelector((state)=> state.CourseListReducer);
+
     const course = useSelector(state => state.CourseReducer);
     const dispatch = useDispatch();
     const location = useLocation();
@@ -123,20 +126,31 @@ function ExamSettings(props) {
     };
     useEffect(()=>{
         const controller = new AbortController();
-        // fetch exam/students
-        fetchExamStudents(examId,controller).then((data)=>{
-            dispatch({
-                type: SET_STUDENTS,
-                payload: { students: data['students'] },
-            });
-            setStudents(data['students'])
-            dispatch({
-                type: SET_SPECIFIC_STUDENTS,
-                payload: { specificStudents: data["specificStudents"] },
-            });
-            setChecked(data["specificStudents"])
+        if (examId == null){//then we are in create exam route
+                dispatch({
+                    type: SET_STUDENTS,
+                    payload: { students: course.classmates },
+                });
+                setStudents(course.classmates)
+            console.log(course.classmates)
+        }else{//then we are in preview mode
+            alert(examId)
+        }
 
-        })
+        // fetch exam/students
+        // fetchExamStudents(examId,controller).then((data)=>{
+        //     dispatch({
+        //         type: SET_STUDENTS,
+        //         payload: { students: data['students'] },
+        //     });
+        //     setStudents(data['students'])
+            // dispatch({
+            //     type: SET_SPECIFIC_STUDENTS,
+            //     payload: { specificStudents: data["specificStudents"] },
+            // });
+            // setChecked(data["specificStudents"])
+
+        // })
 
         return ()=>{
             controller.abort()

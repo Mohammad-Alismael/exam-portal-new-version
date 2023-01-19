@@ -14,6 +14,7 @@ import UpComingContainer from "../../../components/ExamContainers/Containers/UpC
 import PendingContainer from "../../../components/ExamContainers/Containers/PendingContainer";
 import GradedContainer from "../../../components/ExamContainers/Containers/GradedContainer";
 import MissedContainer from "../../../components/ExamContainers/Containers/MissedContainer";
+import withSideBarAndResAppBar from "../../../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
     container: {
         // backgroundColor: 'red',
@@ -61,19 +62,19 @@ function ExamsStudent(props) {
     useEffect(()=>{
         const controller = new AbortController();
         setLoading(true)
-        fetchExamsStudent(course?.course_info?.id, controller)
-            .then((data)=>{
-                setUpcomingExams(data)
-                console.log('upcoming exams exams',data)
-            }).catch(console.log)
-        fetchPendingAndSubmittedExam(course?.course_info?.id,
-            user.user_id,controller)
-            .then((data)=>{
-                setGradedExams(data['graded_exams'])
-                setWaitingToeGradedExams(data['pending_exams'])
-                console.log('pending and graded exams',data)
-            })
-            .catch(console.log)
+        // fetchExamsStudent(course?.course_info?.id, controller)
+        //     .then((data)=>{
+        //         setUpcomingExams(data)
+        //         console.log('upcoming exams exams',data)
+        //     }).catch(console.log)
+        // fetchPendingAndSubmittedExam(course?.course_info?.id,
+        //     user.user_id,controller)
+        //     .then((data)=>{
+        //         setGradedExams(data['graded_exams'])
+        //         setWaitingToeGradedExams(data['pending_exams'])
+        //         console.log('pending and graded exams',data)
+        //     })
+        //     .catch(console.log)
         fetchMissedExams(course?.course_info?.id,controller)
             .then((data)=>{
                 setMissedExams(data)
@@ -90,7 +91,6 @@ function ExamsStudent(props) {
     }
     return (
         <>
-            <ResponsiveAppBar/>
             <div className={classes.container}>
                 <div className={classes.subContainer}>
                     <UpComingContainer
@@ -125,4 +125,4 @@ function ExamsStudent(props) {
     );
 }
 
-export default ExamsStudent;
+export default withSideBarAndResAppBar(ExamsStudent);

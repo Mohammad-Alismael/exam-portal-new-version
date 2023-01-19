@@ -10,11 +10,14 @@ const Info = css`
 `
 
 export const CourseContainer = styled.div`
-  padding: 1rem 0;
-  overflow: hidden;
+  display: block;
+  padding: 1rem;
+  //overflow: hidden;
   width: 92.75%;
+  height: 90vh;
   float: right;
   transition: width 0.5s ease-in-out;
+  overflow-y: scroll;
 `
 export const CourseCode = styled.p`
   ${Info};

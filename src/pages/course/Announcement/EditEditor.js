@@ -12,21 +12,28 @@ function EditEditor({text}) {
     const [editorState, setEditorState] = React.useState(() =>
         EditorState.createEmpty()
     );
+    const updateAnnouce = (e) =>{
+        e.preventDefault();
+
+    }
     useEffect(() => {
         setEditorState(calcState(text));
     }, []);
     return (
-        <Editor
-            editorState={editorState}
-            onEditorStateChange={setEditorState}
-            toolbar={{
-                options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove', 'history'],
-                image: {
-                    // uploadCallback: uploadImageCallBack,
-                    alt: { present: true, mandatory: true },
-                },
-            }}
-        />
+        <>
+            <Editor
+                editorState={editorState}
+                onEditorStateChange={setEditorState}
+                toolbar={{
+                    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove', 'history'],
+                    image: {
+                        // uploadCallback: uploadImageCallBack,
+                        alt: { present: true, mandatory: true },
+                    },
+                }}
+            />
+            <Button onClick={updateAnnouce}>update</Button>
+       </>
     );
 }
 

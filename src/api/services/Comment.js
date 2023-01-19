@@ -3,6 +3,7 @@ import {COMMENT, FETCH_COMMENT, FETCH_COURSE_INFO} from "./RouteNames";
 import {toast} from "react-toastify";
 
 const createComment = async (text,announcement_id) => {
+    console.log({text,announcement_id})
     try {
         const response = await axiosPrivate.post(`${COMMENT}`,
             {

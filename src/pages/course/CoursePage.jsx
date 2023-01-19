@@ -97,12 +97,16 @@ function CoursePage(props) {
     const { course_id } = useParams();
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = React.useState(true);
-    const user = useSelector((state) => state.UserReducerV2).user;
+    const {user} = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
+    const {courseList} = useSelector((state)=> state.CourseListReducer);
+
     const location = useLocation();
     const [editOpen,setEditOpen] = useState(false);
-
-
+    const courseObj = courseList.filter(({classroom_id},index)=> {
+        return classroom_id === course_id;
+    })[0];
+    console.log(courseObj)
     useEffect(() => {
         const controller = new AbortController();
         dispatch({ type: SET_COURSE_ID, payload: { courseId: course_id } });
@@ -136,9 +140,7 @@ function CoursePage(props) {
                                     backgroundImage: `url(${course?.course_info?.img_path})`,
                                 }}
                             >
-                                <Button onClick={(e)=>{
-                                    setEditOpen(!editOpen)
-                                }}>edit</Button>
+                                {parseInt(user.role_id) === 3 ?<Button onClick={(e)=>{setEditOpen(!editOpen)}}>edit</Button> : null}
                                 {editOpen ? <EditClassroom open={editOpen} setEditOpen={setEditOpen}/> : null}
                                 <WhiteTextTypography variant="h4">
                                     <b>{course?.course_info?.class_name}</b>
@@ -160,7 +162,7 @@ function CoursePage(props) {
                             </Paper>
                             <Grid container spacing={2} className={classes.mainGrid}>
                                 <Grid item xs={10}>
-                                    {parseInt(user.role_id) === 3 ? <Announcement /> : null}
+                                    {courseObj['allow_students_to_announcements'] === 1 ? <Announcement /> : null}
                                     <Grid item>
                                         {course.announcements.length !== 0 &&
                                             course.announcements

@@ -16,11 +16,7 @@ import User from "./User";
 
 async function fetchExams(courseId, controller) {
     try {
-        const res = await axiosPrivate.post(
-            FETCH_EXAMS,
-            { courseId },
-            { signal: controller.signal }
-        );
+        const res = await axiosPrivate.get(`${FETCH_EXAMS}/${courseId}`, { signal: controller.signal });
         return await res["data"];
     } catch (e) {
         console.log(e.message.status);
@@ -30,10 +26,8 @@ async function fetchExams(courseId, controller) {
 
 async function fetchExamsStudent(courseId, controller) {
     try {
-        const res = await axiosPrivate.post(
-            FETCH_EXAMS_STUDENT,
-            { courseId },
-            { signal: controller.signal }
+        const res = await axiosPrivate.get(
+            `${FETCH_EXAMS_STUDENT}/${courseId}`, { signal: controller.signal }
         );
         return await res["data"];
     } catch (e) {

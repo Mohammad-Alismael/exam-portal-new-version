@@ -48,6 +48,8 @@ function Sidebar(props) {
 
 const ItemComp = ({title,section,classroomId}) => {
     const [opened,setOpen] = useState(false);
+    const {user} = useSelector((state) => state.UserReducerV2);
+
     const handleChange = (e)=>{
         setOpen(!opened);
     }
@@ -59,8 +61,10 @@ const ItemComp = ({title,section,classroomId}) => {
             <LeftArrow opened={opened} src={'/images/icons/left_arrow.png'} alt={'left arrow'}/>
             <div>
                 <Sidebar.SubSubItem opened={opened} title={'announcements'} path={`/courses/${classroomId}`}/>
-                <Sidebar.SubSubItem opened={opened} title={'exams'} path={`/courses/${classroomId}/exams`}/>
-                <Sidebar.SubSubItem opened={opened}title={'people'} path={`/courses/${classroomId}/people`}/>
+                <Sidebar.SubSubItem opened={opened} title={'exams'} path={`/courses/${classroomId}/${user?.role_id === 3 ? 'exams' : 'exams-student'}`}/>
+                <Sidebar.SubSubItem opened={opened} title={'people'} path={`/courses/${classroomId}/people`}/>
+                {user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'grades'} path={`/courses/${classroomId}/grades`}/> :null}
+                {user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'statistics'} path={`/courses/${classroomId}/statistics`}/>: null}
             </div>
         </Item>
     )

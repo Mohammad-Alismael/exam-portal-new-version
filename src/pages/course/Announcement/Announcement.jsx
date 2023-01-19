@@ -183,7 +183,6 @@ function Announcement(props) {
 
     function uploadImageCallBack(file) {
         return new Promise((resolve, reject) => {
-
             const data = new FormData();
             data.append("image", file);
             setFormData(data);
@@ -236,7 +235,7 @@ function Announcement(props) {
                                 variant="outlined"
                                 color="warning"
                                 type="submit"
-                                size="large"
+                                // size="large"
                                 onClick={handleClose}
                                 sx={{ mr: 3 }}
                             >
@@ -247,7 +246,7 @@ function Announcement(props) {
                                 variant="contained"
                                 color="warning"
                                 type="submit"
-                                size="large"
+                                // size="large"
                             >
                                 <b>post</b>
                             </Button>

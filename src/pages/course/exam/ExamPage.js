@@ -28,6 +28,9 @@ import {
 import ResetExamReducer from "../../../actions/ResetExamReducer";
 import ExamStudent from "./ExamStudent";
 import NoExam from "./NoExam";
+import Sidebar from "../../../components/Sidebar/Sidebar";
+import { CourseContainer } from "../../../components/Sidebar/Sidebar.styles";
+import withSideBarAndResAppBar from "../../../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 25%",
@@ -57,7 +60,7 @@ const ExamPage = () => {
     const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
-    const {user} = useSelector((state) => state.UserReducerV2);
+    const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const createNewExam = (e) => {
         e.preventDefault();
@@ -85,7 +88,6 @@ const ExamPage = () => {
     }
     return (
         <>
-            <ResponsiveAppBar />
             <div className={classes.container}>
                 {parseInt(user.role_id) === 3 ? (
                     <div className={classes.createExamBtnContainer}>
@@ -102,35 +104,36 @@ const ExamPage = () => {
                         </Tooltip>
                     </div>
                 ) : null}
-                {course?.exams != 0 && course?.exams.map(
-                    (
-                        { exam_id, title, starting_at, ending_at, see_result_at },
-                        index
-                    ) => {
-                        return parseInt(user.role_id) === 3 ? (
-                            <ExamInstructor
-                                key={index}
-                                examTitle={title}
-                                examId={exam_id}
-                                startingAt={starting_at}
-                                endingAt={ending_at}
-                            />
-                        ) : (
-                            <ExamStudent
-                                key={index}
-                                examTitle={title}
-                                examId={exam_id}
-                                startingAt={starting_at}
-                                endingAt={ending_at}
-                                seeResultAt={see_result_at}
-                            />
-                        );
-                    }
-                )}
+                {course?.exams != 0 &&
+                    course?.exams.map(
+                        (
+                            { exam_id, title, starting_at, ending_at, see_result_at },
+                            index
+                        ) => {
+                            return parseInt(user.role_id) === 3 ? (
+                                <ExamInstructor
+                                    key={index}
+                                    examTitle={title}
+                                    examId={exam_id}
+                                    startingAt={starting_at}
+                                    endingAt={ending_at}
+                                />
+                            ) : (
+                                <ExamStudent
+                                    key={index}
+                                    examTitle={title}
+                                    examId={exam_id}
+                                    startingAt={starting_at}
+                                    endingAt={ending_at}
+                                    seeResultAt={see_result_at}
+                                />
+                            );
+                        }
+                    )}
                 {course?.exams == 0 ? <NoExam /> : null}
             </div>
         </>
     );
 };
 
-export default ExamPage;
+export default withSideBarAndResAppBar(ExamPage);

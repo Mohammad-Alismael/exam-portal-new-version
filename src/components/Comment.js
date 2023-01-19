@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Comment({commentId,text,file,username,createdAt,announcementIndex}) {
+function Comment({commentId,text,file,userInfo,createdAt,announcementIndex}) {
     const classes = useStyles();
     const course = useSelector((state) => state.CourseReducer);
     const dispatch = useDispatch();
@@ -80,10 +80,10 @@ function Comment({commentId,text,file,username,createdAt,announcementIndex}) {
                     <div style={{marginLeft: '0.8rem'}}>
                         <Typography
                             className={classes.username}>
-                            <b>{username} <span style={{color: '#BBBBBB',fontSize: 14}}>. {moment(createdAt).fromNow()}</span></b>
+                            <b>{userInfo?.username} <span style={{color: '#BBBBBB',fontSize: 14}}>. {moment(createdAt).fromNow()}</span></b>
                         </Typography>
                         <Typography className={classes.userType}>
-                            Student
+                            {userInfo?.role_id === 3 ? "Admin": "Student"}
                         </Typography>
                     </div>
                 </div>

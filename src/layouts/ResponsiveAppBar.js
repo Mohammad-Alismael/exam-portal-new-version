@@ -23,6 +23,8 @@ import { toast } from "react-toastify";
 import User from "../api/services/User";
 import { Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 const settings = [{ title: "Logout", url: "/logout" }];
 
@@ -103,6 +105,15 @@ const ResponsiveAppBar = (props) => {
         <AppBar position="static" color="white">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                     <img
                         onClick={redirectToDashboard}
                         src={"/images/logo.png"}

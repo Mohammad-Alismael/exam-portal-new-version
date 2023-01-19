@@ -1,15 +1,16 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {CHANGE_PREVIEW, SET_QUESTIONS} from "../../store/actions";
+import { CHANGE_PREVIEW, SET_QUESTIONS } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Question from "../../components/addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
 import ExamDetails from "../../components/ExamDetails";
 import CircularProgress from "@mui/material/CircularProgress";
+import withSideBarAndResAppBar from "../../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 15%",
@@ -70,12 +71,11 @@ function CreateExamPage(props) {
         items.splice(result.destination.index, 0, reorderedItem);
         dispatch({ type: SET_QUESTIONS, payload: { questions: items } });
     }
-    useEffect(()=>{
+    useEffect(() => {
         dispatch({ type: CHANGE_PREVIEW, payload: { isItPreview: false } });
-    },[])
+    }, []);
     return (
         <>
-            <ResponsiveAppBar />
             <div className={classes.container}>
                 <ExamDetails />
                 <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -121,4 +121,4 @@ function CreateExamPage(props) {
     );
 }
 
-export default CreateExamPage;
+export default withSideBarAndResAppBar(CreateExamPage);

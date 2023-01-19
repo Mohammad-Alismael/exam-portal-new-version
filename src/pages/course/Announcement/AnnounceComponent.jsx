@@ -26,6 +26,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { deleteAnnouncement } from "../../../api/services/Annoucments";
 import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
 import EditEditor from "./EditEditor";
+import {useParams} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -119,12 +120,17 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const dispatch = useDispatch();
+    const { course_id } = useParams();
     const [openCommentContainer, setOpenCommentContainer] = useState(false);
     const [editAnnouncement, setEditAnnouncement] = useState(false);
     const [editorState, setEditorState] = React.useState(calcState(text));
     const announcementIndex = course.announcements.findIndex(({ id }) => {
         return parseInt(announcementId) === parseInt(id);
     });
+    const {courseList} = useSelector((state)=> state.CourseListReducer);
+    const courseObj = courseList.filter(({classroom_id},index)=> {
+        return classroom_id === course_id;
+    })[0];
     const handleComments = (e) => {
         e.preventDefault();
         setOpenCommentContainer(!openCommentContainer);
@@ -199,11 +205,11 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                  }
             </Grid>
             <Divider />
-            <div onClick={handleComments}>
+            {courseObj['allow_students_to_comment'] === 1 ? <div onClick={handleComments}>
                 <p className={classes.howManyComments}>
                     {course.announcements[announcementIndex].comments.length} comments
                 </p>
-            </div>
+            </div>: null}
             <CommentContainer
                 openCommentContainer={openCommentContainer}
                 announcementIndex={announcementIndex}

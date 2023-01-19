@@ -47,15 +47,12 @@ export default function CommentContainer({
                                 text={text}
                                 createdAt={created_at}
                                 announcementIndex={announcementIndex}
-                                username={userInfo["username"]}
+                                userInfo={userInfo}
                             />
                         );
                     }
                 )}
-                <AddCommentElement
-                    announcementId={announcementId}
-                    announcementIndex={announcementIndex}
-                />
+                <AddCommentElement announcementId={announcementId} announcementIndex={announcementIndex}/>
             </div>
         </>
     );
