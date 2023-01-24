@@ -2,7 +2,7 @@ import axios from "axios";
 import {isExpired} from "react-jwt";
 import {REFRESH_TOKEN} from "./services/RouteNames";
 import {toast} from "react-toastify";
-export const BASE_URL = 'http://localhost:8081';
+export const BASE_URL = 'http://localhost:8080';
 let token = null
 
 export function updateToken(_token) {

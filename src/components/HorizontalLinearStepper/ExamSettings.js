@@ -32,6 +32,7 @@ import Avatar from "@mui/material/Avatar";
 import { v4 as uuidv4 } from "uuid";
 import {useLocation, useParams} from "react-router-dom";
 import {fetchExamStudents} from "../../api/services/Exam";
+import {fetchClassmates} from "../../api/services/Course";
 
 function ExamSettings(props) {
     const [open, setOpen] = React.useState(false);
@@ -126,15 +127,19 @@ function ExamSettings(props) {
     };
     useEffect(()=>{
         const controller = new AbortController();
+        fetchClassmates(course_id,controller).then((data)=>{
+            dispatch({
+                type: SET_STUDENTS,
+                payload: { students: data },
+            });
+            setStudents(data)
+        })
         if (examId == null){//then we are in create exam route
-                dispatch({
-                    type: SET_STUDENTS,
-                    payload: { students: course.classmates },
-                });
-                setStudents(course.classmates)
+
             console.log(course.classmates)
         }else{//then we are in preview mode
             alert(examId)
+            // fetch specific students
         }
 
         // fetch exam/students
@@ -155,7 +160,7 @@ function ExamSettings(props) {
         return ()=>{
             controller.abort()
         }
-    },[])
+    },[location.pathname])
     return (
         <>
             <Grid item xs={6}>

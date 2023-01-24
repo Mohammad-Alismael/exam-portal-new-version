@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import {connect, useSelector} from "react-redux";
+import {calcState} from "../../utils/global/GlobalConstants";
+import {Editor} from "react-draft-wysiwyg";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -40,11 +42,20 @@ function Mcq({ questionIndex }) {
     const loadOptions = (index) => {
         return (
             <Grid item xs={12} fullwidth>
-                <FormControlLabel
-                    value={options[index]['optionValue']}
-                    control={<Radio />}
-                    label={options[index]['optionValue']}
+                <Editor
+                    id={options[index]["id"]}
+                    key={options[index]["id"]}
+                    readOnly={true}
+                    editorState={calcState(options[index]['optionValue'])}
+                    toolbar={{
+                        options: []
+                    }}
                 />
+                {/*<FormControlLabel*/}
+                {/*    value={options[index]['optionValue']}*/}
+                {/*    control={<Radio />}*/}
+                {/*    label={options[index]['optionValue']}*/}
+                {/*/>*/}
                 {options[index]["img"] != null ? (
                     <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
                 ) : null}
@@ -75,5 +86,6 @@ function Mcq({ questionIndex }) {
         </Grid>
     );
 }
+
 
 export default Mcq;

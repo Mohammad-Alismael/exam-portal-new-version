@@ -34,15 +34,9 @@ import { UPLOAD_ANNOUNCEMENT_FILE } from "../../../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
     btnContainer: {
         padding: "0 0.8rem",
-        // height: 200,
-        // backgroundColor: 'red'
     },
     btnContainer2: {
         padding: "0.8rem",
-        // backgroundColor: 'blue'
-    },
-    icon: {
-        // marginTop: '0.2rem'
     },
     uploadPreview: {
         padding: "0.8rem",

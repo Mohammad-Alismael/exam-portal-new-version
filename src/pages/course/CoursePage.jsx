@@ -162,7 +162,7 @@ function CoursePage(props) {
                             </Paper>
                             <Grid container spacing={2} className={classes.mainGrid}>
                                 <Grid item xs={10}>
-                                    {courseObj['allow_students_to_announcements'] === 1 ? <Announcement /> : null}
+                                    {parseInt(user.role_id) === 3 ||courseObj['allow_students_to_announcements'] === 1 ? <Announcement /> : null}
                                     <Grid item>
                                         {course.announcements.length !== 0 &&
                                             course.announcements

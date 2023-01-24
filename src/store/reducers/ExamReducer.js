@@ -46,7 +46,7 @@ const ExamReducer = (state = initialState, action) => {
             const deepQuestionObject = deepQuestionCopy[__index]
             deepQuestionObject['options'] = newOptions
             deepQuestionCopy[__index] = deepQuestionObject
-            console.log('index', __index, 'new options', newOptions)
+            console.log('question index =>', __index, 'new options =>', newOptions)
             return {
                 ...state,
                 questions: deepQuestionCopy

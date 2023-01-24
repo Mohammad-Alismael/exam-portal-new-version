@@ -1,22 +1,109 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect, useDispatch, useSelector } from "react-redux";
-import withAddQuestion from "./withAddQuestion";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
-import IconButton from "@mui/material/IconButton";
-import ImageIcon from "@mui/icons-material/Image";
-import Tooltip from "@mui/material/Tooltip";
-import CloseIcon from "@mui/icons-material/Close";
-import { Badge } from "@mui/material";
+import {calcState, createMarkup} from "../../utils/global/GlobalConstants";
+import { convertToRaw, EditorState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import { OptionEditor } from "./OptionEditor";
+import { CHANGE_QUESTION_OPTIONS } from "../../store/actions";
+import {convertToHTML} from "draft-convert";
+const useStyles = makeStyles((theme) => ({
+    textEditorContainer: {
+        minHeight: "50px",
+        padding: "0.8rem",
+        // background: 'blue',
+        borderTop: "1px solid #D9D9D9",
+    },
+}));
+
+const Option = ({ options, index, onClick1, id, questionIndex }) => {
+    const [editorState, setEditorState] = React.useState(
+        calcState(options[index]["optionValue"])
+    );
+    const [open, setEditOpen] = React.useState(false);
+    const exam = useSelector((state) => state.ExamReducer);
+    const dispatch = useDispatch();
+
+    const matchAny = () => {
+        return options.some(({ optionValue }, index) => {
+            return optionValue === editorState;
+        });
+    };
+    const getOptionIndex = () => {
+        return options.findIndex((val, index) => val.id == id);
+    };
+    const updateOption = (e) => {
+        e.preventDefault();
+        // if option index matches any index text then throw an error
+        if (matchAny()) {
+            return toast.info("option value already exists!");
+        }
+        // console.log(
+        //     "update =>",
+        //     JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+        // );
+        // console.log("getOptionIndex =>", getOptionIndex());
+        const optionIndexFound = getOptionIndex();
+        const tmp = [...exam.questions[questionIndex].options];
+        tmp[optionIndexFound] = {
+            ...tmp[optionIndexFound],
+            optionValue: JSON.stringify(
+                convertToRaw(editorState.getCurrentContent())
+            ),
+        };
+        console.log("tmp =>", tmp);
+        dispatch({
+            type: CHANGE_QUESTION_OPTIONS,
+            payload: { newOptions: tmp, index: questionIndex },
+        });
+        setEditOpen(false);
+    };
+    return (
+        <>
+            <Grid container alignItems={"center"} xs={12}>
+                <Grid container alignItems={"center"} xs={12}>
+                    <FormControlLabel value={index} control={<Radio />} label="" />
+                    {/*<Editor*/}
+                    {/*    wrapperClassName="wrapper-class"*/}
+                    {/*    editorClassName="editor-class"*/}
+                    {/*    toolbarClassName="toolbar-class"*/}
+                    {/*    id={options[index]["id"]}*/}
+                    {/*    readOnly={true}*/}
+                    {/*    editorState={calcState(options[index]["optionValue"])}*/}
+                    {/*    toolbar={{*/}
+                    {/*        options: [],*/}
+                    {/*    }}*/}
+                    {/*/>*/}
+                    <div dangerouslySetInnerHTML={createMarkup(convertToHTML(calcState(options[index]["optionValue"]).getCurrentContent()))}></div>
+                    <Button onClick={(e) => setEditOpen(true)}>Edit</Button>
+                    <Button onClick={onClick1}>Delete</Button>
+                </Grid>
+            </Grid>
+            <OptionEditor
+                open={open}
+                setEditOpen={setEditOpen}
+                addOption={updateOption}
+                updateQuestionOption={(e) => setEditorState(e)}
+                editorStateOption={editorState}
+            />
+        </>
+    );
+};
+
+Option.propTypes = {
+    options: PropTypes.any,
+    index: PropTypes.any,
+    onClick: PropTypes.func,
+    onClick1: PropTypes.func,
+};
 
 function Mcq({
                  questionIndex,
@@ -26,13 +113,31 @@ function Mcq({
                  setOptionText,
                  deleteOption,
              }) {
+    const classes = useStyles();
+
     const [optionValue, setOptionValue] = React.useState("");
     const [optionImg, setOptionImg] = React.useState(null);
     const exam = useSelector((state) => state.ExamReducer);
-    const options = exam.questions[questionIndex].options;
+    const {options} = exam.questions[questionIndex];
 
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
+
+    const [editorState, setEditorState] = React.useState(
+        calcState(exam.questions[questionIndex]["questionText"])
+    );
+    const [editorStateOption, setEditorStateOption] = React.useState(
+        EditorState.createEmpty()
+    );
+    const updateQuestionOption = (e) => {
+        setEditorStateOption(e);
+        const db = JSON.stringify(
+            convertToRaw(editorStateOption.getCurrentContent())
+        );
+        setOptionValue(db);
+    };
+
+    const [openOptionEditor, setOpenOptionEditor] = useState(false);
 
     const addOption = (e) => {
         e.preventDefault();
@@ -49,12 +154,12 @@ function Mcq({
                     ...exam.questions[questionIndex].options,
                     newObj,
                 ]);
-                // setOptions([...options, newObj]);
                 setOptionImg(null);
             }
         } else {
             toast.info("MCQ can only have 4 options max!");
         }
+        setOpenOptionEditor(false);
     };
 
     const SetCorrectAnswer = (e) => {
@@ -80,50 +185,23 @@ function Mcq({
         updateQuestionOptions(deepCopy);
     };
     const loadOptions = (index) => {
+        console.log(options[index]["optionValue"]);
         return (
-            <>
-                {options[index]["img"] != null ? (
-                    <Grid xs={12} item>
-                        <Badge
-                            badgeContent={"x"}
-                            color="primary"
-                            onClick={() => removeFile(options[index]["id"])}
-                            sx={{ cursor: "pointer" }}
-                        >
-                            <img
-                                style={{ width: "100%", outline: "1px solid" }}
-                                src={options[index]["img"]["preview"]}
-                                alt={"question"}
-                            />
-                        </Badge>
-                    </Grid>
-                ) : null}
-                <Grid container alignItems={"center"} xs={12}>
-                    <FormControlLabel
-                        value={index}
-                        control={<Radio />} label="" />
-                    <TextField
-                        id={options[index]["id"]}
-                        label={""}
-                        size="small"
-                        variant="filled"
-                        value={options[index]["optionValue"]}
-                        onChange={setOptionText}
-                    />
-                    <Tooltip title={"delete option"}>
-                        <IconButton aria-label="upload picture" component="label">
-                            <CloseIcon
-                                onClick={() => deleteOption(options[index]["id"])}
-                                sx={{ mt: 3 }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </Grid>
-            </>
+            <Mcq.Option
+                key={options[index]["id"]}
+                id={options[index]["id"]}
+                options={options}
+                index={index}
+                questionIndex={questionIndex}
+                onClick={() => removeFile(options[index]["id"])}
+                onClick1={() => deleteOption(options[index]["id"])}
+            />
         );
     };
 
     useEffect(() => {
+        console.log("questionIndex =>",questionIndex)
+        console.log(exam.questions[questionIndex])
     }, []);
     return (
         <Grid xs={12} container>
@@ -134,7 +212,10 @@ function Mcq({
                 alignItems="center"
                 xs={12}
             >
-                <RadioGroup onChange={SetCorrectAnswer} value={exam?.questions[questionIndex]?.answerKey}>
+                <RadioGroup
+                    onChange={SetCorrectAnswer}
+                    value={exam?.questions[questionIndex]?.answerKey}
+                >
                     <Grid container>
                         {options.map((val, index) => {
                             return loadOptions(index);
@@ -142,53 +223,24 @@ function Mcq({
                     </Grid>
                     <br />
                     {!exam.isItPreview ? (
-                        <Grid container>
-                            <Grid item xs={7}>
-                                <TextField
-                                    label={"option value"}
-                                    size="small"
-                                    variant="filled"
-                                    fullWidth
-                                    onChange={(e) => setOptionValue(e.target.value)}
-                                />
-                            </Grid>
-                            <Tooltip title="upload option file">
-                                <IconButton aria-label="upload picture" component="label">
-                                    <input
-                                        onChange={optionFile}
-                                        hidden
-                                        accept="image/*"
-                                        type="file"
-                                    />
-                                    <ImageIcon
-                                        sx={{
-                                            height: "40px",
-                                            width: "40px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                            <Grid
-                                item
-                                xs={4}
-                                sx={{ backgroundColor: "transparent", position: "relative" }}
-                            >
-                                <Button
-                                    sx={{ position: "absolute", bottom: 10 }}
-                                    variant="contained"
-                                    size={"medium"}
-                                    fullWidth
-                                    onClick={addOption}
-                                >
-                                    add option
-                                </Button>
-                            </Grid>
-                        </Grid>
+                        <>
+                            <OptionEditor
+                                open={openOptionEditor}
+                                setEditOpen={setOpenOptionEditor}
+                                addOption={addOption}
+                                updateQuestionOption={updateQuestionOption}
+                                editorStateOption={editorStateOption}
+                            />
+                            <Button onClick={() => setOpenOptionEditor(true)}>
+                                add option
+                            </Button>
+                        </>
                     ) : null}
                 </RadioGroup>
             </Grid>
         </Grid>
     );
 }
+Mcq.Option = Option;
 
 export default Mcq;

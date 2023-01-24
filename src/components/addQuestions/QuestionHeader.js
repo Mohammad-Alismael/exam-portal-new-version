@@ -25,6 +25,10 @@ import Question from "../questions/Question";
 import Tooltip from "@mui/material/Tooltip";
 import PublishIcon from "@mui/icons-material/Publish";
 import {Badge} from "@mui/material";
+import {Editor} from "react-draft-wysiwyg";
+import {convertFromRaw, convertToRaw, EditorState} from "draft-js";
+import {calcState} from "../../utils/global/GlobalConstants";
+import QuestionEditor from "./QuestionEditor";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -48,7 +52,16 @@ const useStyles = makeStyles((theme) => ({
         right: 15,
         // paddingTop: 20
     },
+    textEditorContainer: {
+        minHeight: '50px',
+        padding: "0.8rem",
+        // background: 'blue',
+        border: '1px solid #D9D9D9'
+    },
 }));
+
+
+
 function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionArray,preview}) {
     const classes = useStyles();
     const [questionText, setQuestionText] = React.useState("empty");
@@ -58,9 +71,12 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
+    const [editorState, setEditorState] = React.useState(calcState(exam.questions[questionIndex]['questionText']));
     const updateQuestionText = (e) => {
-        updateQuestionArray({ questionText: e.target.value })
-        setQuestionText(e.target.value)
+        setEditorState(e);
+        const db = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+        updateQuestionArray({ questionText: db })
+        setQuestionText(db)
 
     };
     const handleWhoCanSee = (e) => {
@@ -91,37 +107,25 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
     const removeFile = (e) => {
         updateQuestionArray({previewFile: null})
     }
+
+    useEffect(() => {
+        setEditorState(calcState(exam.questions[questionIndex]['questionText']));
+    }, []);
     return (
         <>
-            { exam.questions[questionIndex]['previewFile'] != null ?
-                    <Grid xs={12} item>
-                        <Badge badgeContent={'x'} color="primary" onClick={removeFile} sx={{cursor: 'pointer'}}>
-                            <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']} alt={'question img'}/>
-                        </Badge>
-                    </Grid>
-                : null }
-            <Grid xs={exam?.questionTimer ? 5 : 6} item>
-                <TextField
-                    id="outlined-uncontrolled"
-                    label="Question text"
-                    value={exam.questions[questionIndex].questionText}
-                    defaultValue={""}
-                    fullWidth
-                    onChange={updateQuestionText}
-                    variant="standard"
-                />
+            {exam.questions[questionIndex]['previewFile'] != null ?
+                <Grid xs={12} item>
+                    <Badge badgeContent={'x'} color="primary" onClick={removeFile} sx={{cursor: 'pointer'}}>
+                        <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']}
+                             alt={'question img'}/>
+                    </Badge>
+                </Grid>
+                : null}
+
+            <Grid xs={12} item className={classes.textEditorContainer}>
+                <QuestionEditor editorState={editorState} onEditorStateChange={updateQuestionText}/>
             </Grid>
-            <Tooltip title="upload file">
-                <IconButton aria-label="upload picture" component="label">
-                    <input onChange={handleQuestionFile} hidden accept="image/*" type="file" />
-                    <ImageIcon
-                        sx={{
-                            height: "40px",
-                            width: "40px",
-                        }} />
-                </IconButton>
-            </Tooltip>
-            <Grid xs={2} item>
+            <Grid xs={4} item>
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Question Type</InputLabel>
                     <Select
@@ -141,7 +145,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid xs={2} item>
+            <Grid xs={4} item>
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Who can see</InputLabel>
                     <Select
@@ -156,7 +160,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                     </Select>
                 </FormControl>
             </Grid>
-            { exam?.questionTimer ? <Grid xs={1} item>
+            {exam?.questionTimer ? <Grid xs={1} item>
                 <FormControl fullWidth variant="standard">
                     <TextField
                         type="number"
@@ -164,12 +168,12 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                         value={exam.questions[questionIndex].time}
                         onChange={handleTime}
                         variant="standard"
-                        inputProps={{ min: 1, max: 100 }}
+                        inputProps={{min: 1, max: 100}}
                         label={"minutes"}
                     />
                 </FormControl>
-            </Grid> : null }
-            <Grid xs={1} item>
+            </Grid> : null}
+            <Grid xs={4} item>
                 <FormControl fullWidth variant="standard">
                     <TextField
                         type="number"
@@ -177,7 +181,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                         value={exam.questions[questionIndex].points}
                         onChange={handlePoints}
                         variant="standard"
-                        inputProps={{ min: 1, max: 100 }}
+                        inputProps={{min: 1, max: 100}}
                         label={"points"}
                     />
                 </FormControl>

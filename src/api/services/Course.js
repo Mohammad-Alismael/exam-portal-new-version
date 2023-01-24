@@ -1,7 +1,14 @@
 import axios from "axios";
 import {toast} from "react-toastify";
 import {axiosPrivate, token} from "../axios";
-import {CREATE_CLASSROOM, ENROLL_CLASSROOM, FETCH_CLASSROOMS, FETCH_COURSE_INFO, UPDATE_CLASSROOMS} from "./RouteNames";
+import {
+    CREATE_CLASSROOM,
+    ENROLL_CLASSROOM,
+    FETCH_CLASSMATES,
+    FETCH_CLASSROOMS,
+    FETCH_COURSE_INFO,
+    UPDATE_CLASSROOMS
+} from "./RouteNames";
 
 async function createCourse(object ,user_id){
     const formData = new FormData();
@@ -76,5 +83,15 @@ async function updateCourse(object,courseId) {
         console.log(e)
     }
 }
+async function fetchClassmates(courseId,controller){
+    try {
+        const response = await axiosPrivate.get(`${FETCH_CLASSMATES}/${courseId}`,{
+            signal: controller.signal
+        })
+        return response['data']
 
-export {createCourse,enrollToCourse,fetchCourseInfo,getCourses,updateCourse};
+    }catch (e) {
+        console.log(e)
+    }
+}
+export {createCourse,enrollToCourse,fetchCourseInfo,getCourses,updateCourse,fetchClassmates};

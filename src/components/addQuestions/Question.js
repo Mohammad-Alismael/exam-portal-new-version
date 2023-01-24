@@ -112,65 +112,63 @@ const Question = ({ questionIndex, uid }) => {
         dispatch({ type: SET_EXAM_QUESTION_INDEX, payload: { question: deepCopyObj, index } });
     };
     const chooseQuestionType = (questionType) => {
-        if (questionType === 1) {
-            return (
-                <Mcq
-                    questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArrayv2}
-                    updateQuestionOptions={updateQuestionOptions}
-                    checkOptionText={checkOptionText}
-                    setOptionText={setOptionText}
-                    deleteOption={deleteOption}
-                />
-            );
-        } else if (questionType === 2) {
-            return (
-                <Text
-                    questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArrayv2}
-                />
-            );
-        } else if (questionType === 3) {
-            return (
-                <CheckBoxComp
-                    questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArrayv2}
-                    updateQuestionOptions={updateQuestionOptions}
-                    checkOptionText={checkOptionText}
-                    setOptionText={setOptionText}
-                    deleteOption={deleteOption}
-                    getOptionIndex={getOptionIndex}
-                />
-            );
-        } else if (questionType === 4) {
-            return (
-                <Matching
-                    questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArrayv2}
-                    updateQuestionOptions={updateQuestionOptions}
-                />
-            );
-        } else {
-            return (
-                <Truth
-                    questionIndex={questionIndex}
-                    updateQuestionArray={updateQuestionArrayv2}
-                />
-            );
+        switch (questionType) {
+            case 1:
+                return (
+                    <Mcq
+                        questionIndex={questionIndex}
+                        updateQuestionArray={updateQuestionArrayv2}
+                        updateQuestionOptions={updateQuestionOptions}
+                        checkOptionText={checkOptionText}
+                        setOptionText={setOptionText}
+                        deleteOption={deleteOption}
+                    />
+                );
+            case 2:
+                return (
+                    <Text
+                        questionIndex={questionIndex}
+                        updateQuestionArray={updateQuestionArrayv2}
+                    />
+                );
+            case 3:
+                return (
+                    <CheckBoxComp
+                        questionIndex={questionIndex}
+                        updateQuestionArray={updateQuestionArrayv2}
+                        updateQuestionOptions={updateQuestionOptions}
+                        checkOptionText={checkOptionText}
+                        setOptionText={setOptionText}
+                        deleteOption={deleteOption}
+                        getOptionIndex={getOptionIndex}
+                    />
+                );
+            case 4:
+                return (
+                    <Matching
+                        questionIndex={questionIndex}
+                        updateQuestionArray={updateQuestionArrayv2}
+                        updateQuestionOptions={updateQuestionOptions}
+                    />
+                );
+            default:
+                return (
+                    <Truth
+                        questionIndex={questionIndex}
+                        updateQuestionArray={updateQuestionArrayv2}
+                    />
+                );
         }
     };
-    const copyOptions = (currentOptions) =>{
-        if (currentOptions != null ){
-            var options = [];
-            for (let i = 0; i < currentOptions.length; i++) {
-                options.push({...currentOptions[i], id:  uuidv4()})
-            }
-            return options
+
+    const copyOptions = (currentOptions) => {
+        if (!currentOptions) {
+            return currentOptions;
         }
 
-        return currentOptions
+        return currentOptions.map(option => ({...option, id: uuidv4()}));
+    };
 
-    }
 
     const handleDeleteQuestion = (e) =>{
         e.preventDefault()

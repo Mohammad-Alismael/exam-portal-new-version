@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import Grid from "@mui/material/Grid";
 import QuestionHeader from "./QuestionHeader";
 import { Paper } from "@mui/material";
@@ -10,6 +10,11 @@ import CheckBoxComp from "./CheckBoxComp";
 import Matching from "./Matching";
 import Truth from "./Truth";
 import Typography from "@mui/material/Typography";
+import {Editor} from "react-draft-wysiwyg";
+import DOMPurify from 'dompurify';
+import { convertToHTML } from 'draft-convert';
+
+import {calcState, createMarkup} from "../../utils/global/GlobalConstants";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -24,51 +29,33 @@ const Question = ({ questionIndex}) => {
     const classes = useStyles();
     const exam = useSelector((state) => state.ExamReducer);
 
+    const questionTypeMapping = {
+        1: Mcq,
+        2: Text,
+        3: CheckBoxComp,
+        4: Matching,
+        5: Truth
+    }
+
     const chooseQuestionType = (questionType) => {
-        if (questionType === 1) {
-            return (
-                <Mcq
-                    questionIndex={questionIndex}
-                />
-            );
-        } else if (questionType === 2) {
-            return (
-                <Text
-                    questionIndex={questionIndex}
-                />
-            );
-        } else if (questionType === 3) {
-            return (
-                <CheckBoxComp
-                    questionIndex={questionIndex}
-                />
-            );
-        } else if (questionType === 4) {
-            return (
-                <Matching
-                    questionIndex={questionIndex}
-                />
-            );
-        } else {
-            return (
-                <Truth
-                    questionIndex={questionIndex}
-                />
-            );
-        }
+        const Component = questionTypeMapping[questionType];
+        return <Component questionIndex={questionIndex} />;
     };
+
+    const [convertedContent, setConvertedContent] = useState(null);
+
+    useEffect(() => {
+        let html = convertToHTML(calcState(exam.questions[questionIndex].questionText).getCurrentContent());
+        setConvertedContent(html);
+    }, [exam.questions, questionIndex]);
+
 
     return (
         <Paper className={classes.paperStyle} elevation={0}>
             <Grid container>
-                { exam.questions[questionIndex]['previewFile'] != null ? <Grid xs={12} item>
-                    <img style={{maxWidth: '100%',marginBottom: '1rem'}} src={exam.questions[questionIndex]['previewFile']['preview']} alt={'question img'}/>
-                </Grid> : null }
                 { exam.questions[questionIndex].questionType != 4 ?
                     <Grid item xs={10}>
-                    <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
-                        {exam.questions[questionIndex].questionText}
-                    </Typography>
+                        <h3 dangerouslySetInnerHTML={createMarkup(convertedContent)}></h3>
                 </Grid> : null}
                 { exam.questions[questionIndex].questionType != 4 ?
                     <Grid item xs={2}>
