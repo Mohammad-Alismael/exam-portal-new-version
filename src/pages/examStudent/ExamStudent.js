@@ -51,7 +51,7 @@ function ExamStudent() {
             }
         });
         fetchExamQuestionsStudent(examId, controller).then((data) => {
-            console.log("exam questions for students", data);
+            console.log("exam PreviewQuestions for students", data);
             const questions = data.map(
                 (
                     {
@@ -104,7 +104,7 @@ function ExamStudent() {
                     size={40}
                     thickness={4}
                 />
-                {/*{examsStudent.questions[examsStudent?.questionIndex].time != null ? <QuestionTimer /> : null}*/}
+                {/*{examsStudent.PreviewQuestions[examsStudent?.questionIndex].time != null ? <QuestionTimer /> : null}*/}
                 <QuestionNavigation />
                 <StudentQuestion />
             </>

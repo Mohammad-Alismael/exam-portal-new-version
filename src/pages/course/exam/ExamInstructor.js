@@ -60,7 +60,7 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
     const redirect = (e) => {
         e.stopPropagation()
         dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
-        navigate(`/preview/${examId}`);
+        navigate(`/courses/${course.courseId}/edit-exam/${examId}`);
     };
     useEffect(()=>{
         const controller = new AbortController();

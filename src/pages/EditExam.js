@@ -25,6 +25,7 @@ import {
 import ExamDetails from "../components/ExamDetails";
 import { CircularProgress } from "@material-ui/core";
 import { toast } from "react-toastify";
+import withSideBarAndResAppBar from "../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "7% 15%",
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function PreviewExam(props) {
+function EditExam(props) {
     const classes = useStyles();
     const { examId } = useParams();
     const navigate = useNavigate();
@@ -63,95 +64,95 @@ function PreviewExam(props) {
     };
 
     useEffect(() => {
-        dispatch({ type: CHANGE_PREVIEW, payload: { isItPreview: true } });
+        dispatch({type: CHANGE_PREVIEW, payload: {isItPreview: true}});
         const controller = new AbortController();
-        fetchExamDetails(examId, controller)
-            .then((data) => {
-                console.log("exam details", data);
+        async function fetchData() {
+            console.log("this course =>", course)
+            try {
+                const [examDetails, examQuestions] = await Promise.all([
+                    fetchExamDetails(examId, course?.courseId, controller),
+                    fetchExamQuestions(examId, controller)
+                ]);
+
                 dispatch({
                     type: SET_STARTING_AT,
-                    payload: { startingAt: data["starting_at"] },
+                    payload: { startingAt: examDetails["starting_at"] }
                 });
                 dispatch({
                     type: SET_ENDING_AT,
-                    payload: { endingAt: data["ending_at"] },
+                    payload: { endingAt: examDetails["ending_at"] }
                 });
                 dispatch({
                     type: SET_EXAM_TITLE,
-                    payload: { examTitle: data["title"] },
+                    payload: { examTitle: examDetails["title"] }
                 });
                 dispatch({
                     type: SET_ASSIGNED_FOR,
-                    payload: { assignedFor: data["assigned_for"] },
+                    payload: { assignedFor: examDetails["assigned_for"] }
                 });
                 dispatch({
                     type: SET_NAVIGATION,
-                    payload: { navigation: data["navigation"] },
+                    payload: { navigation: examDetails["navigation"] }
                 });
                 dispatch({
                     type: SET_EXAM_TIMER,
-                    payload: { questionTimer: data["question_timer"] },
+                    payload: { questionTimer: examDetails["question_timer"] }
                 });
                 dispatch({
                     type: SET_EXAM_RANDOMNESS,
-                    payload: { questionRandomness: data["question_randomness"] },
+                    payload: { questionRandomness: examDetails["question_randomness"] }
                 });
                 dispatch({
                     type: SET_EXAM_ANSWER_KEY_AT,
-                    payload: { postingAnswerKeyAt: data["see_result_at"] },
+                    payload: { postingAnswerKeyAt: examDetails["see_result_at"] }
                 });
                 dispatch({
                     type: SET_EXAM_ANSWER_KEY,
-                    payload: { postingAnswerKey: data["see_result_at"] == null },
+                    payload: { postingAnswerKey: examDetails["see_result_at"] == null }
                 });
-
+                console.log("exam question => ", examQuestions)
+                const ar = examQuestions.map(
+                    ({
+                         is_active,
+                         time_limit,
+                         points,
+                         question_text,
+                         question_type,
+                         question_id,
+                         who_can_see,
+                         file_path,
+                         options,
+                         answerKey
+                     }) => {
+                        return {
+                            answerKey,
+                            isActive: is_active,
+                            options,
+                            time: time_limit,
+                            points: points,
+                            questionText: question_text,
+                            questionType: question_type,
+                            tmpId: question_id,
+                            whoCanSee: who_can_see,
+                            previewFile: file_path
+                        };
+                    }
+                );
+                dispatch({ type: SET_QUESTIONS, payload: { questions: ar } });
                 setLoading(false);
-            })
-            .catch((err) => {
+            } catch (err) {
                 setExamDetails1(true);
-                console.log(err);
+                console.error(err);
                 setLoading(false);
-            });
+            }
+        }
 
-        fetchExamQuestions(examId, controller).then((data) => {
-            const ar = data.map(
-                (
-                    {
-                        is_active,
-                        time_limit,
-                        points,
-                        question_text,
-                        question_type,
-                        question_id,
-                        who_can_see,
-                        file_path,
-                        options,
-                        answerKey
-                    },
-                    i
-                ) => {
-                    return {
-                        answerKey,
-                        isActive: is_active,
-                        options,
-                        time: time_limit,
-                        points: points,
-                        questionText: question_text,
-                        questionType: question_type,
-                        tmpId: question_id,
-                        whoCanSee: who_can_see,
-                        previewFile: file_path,
-                    };
-                }
-            );
-            dispatch({ type: SET_QUESTIONS, payload: { questions: ar } });
-            setLoading(false);
-        });
+        fetchData().then(console.log);
 
         return () => {
             controller.abort();
         };
-    }, []);
+    }, [examId, course, dispatch]);
     if (loading) {
         return <CircularProgress size={200} />;
     }
@@ -165,7 +166,6 @@ function PreviewExam(props) {
     }
     return (
         <>
-            <ResponsiveAppBar />
             <div className={classes.container}>
                 <ExamDetails />
                 {exam.questions.map(({ tmpId }, index) => {
@@ -180,4 +180,4 @@ function PreviewExam(props) {
     );
 }
 
-export default PreviewExam;
+export default withSideBarAndResAppBar(EditExam);

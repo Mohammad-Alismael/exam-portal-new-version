@@ -53,6 +53,7 @@ function CreateExamPage(props) {
             time: null,
             points: 5,
             questionText: "",
+            objectFile: null,
             questionType: 5,
             tmpId: uid,
             whoCanSee: 3,

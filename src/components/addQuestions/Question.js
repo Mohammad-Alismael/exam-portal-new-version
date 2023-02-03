@@ -30,6 +30,12 @@ import {deleteQuestion} from "../../api/services/Question";
 import {useNavigate, useParams} from "react-router-dom";
 import {deleteExam} from "../../api/services/Exam";
 import {toast} from "react-toastify";
+import {
+    CHECKBOX_QUESTION_TYPE,
+    MATCHING_QUESTION_TYPE,
+    MCQ_QUESTION_TYPE, NOT_FOUND,
+    TEXT_QUESTION_TYPE
+} from "../../utils/global/GlobalConstants";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -76,7 +82,7 @@ const Question = ({ questionIndex, uid }) => {
         const optionTextFound = exam.questions[questionIndex].options.findIndex((option,i)=>{
             return option['optionValue'] === optionValue
         })
-        if (optionTextFound != -1){
+        if (optionTextFound != NOT_FOUND){
             toast.info("option already existed!");
         }
         return optionTextFound
@@ -113,7 +119,7 @@ const Question = ({ questionIndex, uid }) => {
     };
     const chooseQuestionType = (questionType) => {
         switch (questionType) {
-            case 1:
+            case MCQ_QUESTION_TYPE:
                 return (
                     <Mcq
                         questionIndex={questionIndex}
@@ -124,14 +130,14 @@ const Question = ({ questionIndex, uid }) => {
                         deleteOption={deleteOption}
                     />
                 );
-            case 2:
+            case TEXT_QUESTION_TYPE:
                 return (
                     <Text
                         questionIndex={questionIndex}
                         updateQuestionArray={updateQuestionArrayv2}
                     />
                 );
-            case 3:
+            case CHECKBOX_QUESTION_TYPE:
                 return (
                     <CheckBoxComp
                         questionIndex={questionIndex}
@@ -143,7 +149,7 @@ const Question = ({ questionIndex, uid }) => {
                         getOptionIndex={getOptionIndex}
                     />
                 );
-            case 4:
+            case MATCHING_QUESTION_TYPE:
                 return (
                     <Matching
                         questionIndex={questionIndex}
@@ -151,7 +157,7 @@ const Question = ({ questionIndex, uid }) => {
                         updateQuestionOptions={updateQuestionOptions}
                     />
                 );
-            default:
+            default:// TRUTH_QUESTION_TYPE
                 return (
                     <Truth
                         questionIndex={questionIndex}
@@ -183,27 +189,24 @@ const Question = ({ questionIndex, uid }) => {
             dispatch({ type: DELETE_EXAM_QUESTION_INDEX, payload: { index: questionIndex } });
         }
     }
-    const duplicateQuestion = (e) =>{
-        e.preventDefault()
-        const deepCopyExamQuestions = [...exam.questions]
-        let copiedQuestion = exam.questions[questionIndex]
+    const duplicateQuestion = (e) => {
+        e.preventDefault();
+        const deepCopyExamQuestions = [...exam.questions];
+        const copiedQuestion = exam.questions[questionIndex];
+
         // create new id for duplicate version
-        let modifiedObjects = {tmpId: uuidv4(), options: null}
+        const newId = uuidv4();
         // create new ids for duplicate options
-        const newOptions = copyOptions(copiedQuestion.options)
-        modifiedObjects['options'] = newOptions
-        // duplicating answer key with new ids
+        const newOptions = copyOptions(copiedQuestion.options);
+        // duplicate answer key with new ids
+        const newQuestion = {...copiedQuestion, tmpId: newId, options: newOptions};
 
-        let newQuestion = {...copiedQuestion, ...modifiedObjects}
-        deepCopyExamQuestions[questionIndex + 1] = newQuestion
+        deepCopyExamQuestions.splice(questionIndex + 1, 0, newQuestion);
 
-        for (let i = questionIndex + 1; i < exam.questions.length; i++) {
-            deepCopyExamQuestions[i+1] = exam.questions[i]
-        }
-        console.log(deepCopyExamQuestions)
+        console.log(deepCopyExamQuestions);
         dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopyExamQuestions } });
+    };
 
-    }
     const questionPreview = (e) => {
         e.preventDefault()
         handleClickOpen()

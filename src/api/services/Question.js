@@ -1,5 +1,6 @@
 import {axiosPrivate, token} from "../axios";
 import {
+    CREATE_QUESTION,
     DELETE_QUESTION,
     FETCH_EXAM_QUESTIONS,
     FETCH_EXAM_QUESTIONS_STUDENT,
@@ -35,7 +36,7 @@ async function fetchExamQuestions(exam_id,controller) {
 
 async function updateExamQuestions(examObject) {
     try {
-        const res = await axiosPrivate.post(UPDATE_EXAM_QUESTION,{...examObject})
+        const res = await axiosPrivate.put(`${UPDATE_EXAM_QUESTION}/${examObject?.exam_id}`,{...examObject})
         return await res['data']
     } catch (e) {
         console.log(e)
@@ -49,4 +50,23 @@ async function fetchExamQuestionsStudent(exam_id,controller) {
         console.log(e)
     }
 }
-export {deleteQuestion,fetchExamQuestions,updateExamQuestions,fetchExamQuestionsStudent};
+
+async function createQuestionsRequest(questionsObject) {
+    console.log("question object =>", questionsObject)
+    const res = await axiosPrivate.post(`${CREATE_QUESTION}`,{
+        ...questionsObject
+    })
+    return res['data'];
+}
+
+function wrapWithTryCatch(fn) {
+    return async function(exam_id, controller) {
+        try {
+            return await fn(exam_id, controller);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+const createQuestions = wrapWithTryCatch(createQuestionsRequest);
+export {deleteQuestion,createQuestions,createQuestionsRequest,fetchExamQuestions,updateExamQuestions,fetchExamQuestionsStudent};

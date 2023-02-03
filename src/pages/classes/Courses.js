@@ -1,21 +1,12 @@
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import { TextField } from "@material-ui/core";
-import DialogTitle from "@mui/material/DialogTitle";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "./ClassCard";
-import { Button } from "@material-ui/core";
 import { Fab, FormGroup, Typography } from "@mui/material";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {
-    createCourse,
-    enrollToCourse,
     getCourses,
 } from "../../api/services/Course";
 import { toast } from "react-toastify";
@@ -24,16 +15,11 @@ import AddIcon from "@mui/icons-material/Add";
 import jwt from "jwt-decode";
 import { token } from "../../api/axios";
 import CryptoJS from "crypto-js";
-import Switch from "@mui/material/Switch";
 import useClipboard from "react-hook-clipboard";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import CardMedia from "@mui/material/CardMedia";
-import * as PropTypes from "prop-types";
 import CreateClassroom from "./CreateClassroom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import ContainerWithHeader from "../../components/ContainerWithHeader/ContainerWithHeader";
-import CourseListReducer from "../../store/reducers/CourseListReducer";
 import {SET_COURSE_LIST, SET_LET_STUDENTS_ASK_QUESTIONS} from "../../store/actions";
 
 const useStyles = makeStyles((theme) => ({

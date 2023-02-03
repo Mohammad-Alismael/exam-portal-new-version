@@ -14,7 +14,7 @@ import {Editor} from "react-draft-wysiwyg";
 import DOMPurify from 'dompurify';
 import { convertToHTML } from 'draft-convert';
 
-import {calcState, createMarkup} from "../../utils/global/GlobalConstants";
+import {calcState, createMarkup, MATCHING_QUESTION_TYPE} from "../../utils/global/GlobalConstants";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -47,17 +47,24 @@ const Question = ({ questionIndex}) => {
     useEffect(() => {
         let html = convertToHTML(calcState(exam.questions[questionIndex].questionText).getCurrentContent());
         setConvertedContent(html);
+        console.log("preview =>",exam.questions[questionIndex]['previewFile'])
     }, [exam.questions, questionIndex]);
 
 
     return (
         <Paper className={classes.paperStyle} elevation={0}>
             <Grid container>
-                { exam.questions[questionIndex].questionType != 4 ?
+                { exam.questions[questionIndex].questionType != MATCHING_QUESTION_TYPE ?
                     <Grid item xs={10}>
+                        {exam.questions[questionIndex]['previewFile'] != null ?
+                            <Grid xs={12} item>
+                                <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']}
+                                     alt={'question img'}/>
+                            </Grid>
+                            : null}
                         <h3 dangerouslySetInnerHTML={createMarkup(convertedContent)}></h3>
                 </Grid> : null}
-                { exam.questions[questionIndex].questionType != 4 ?
+                { exam.questions[questionIndex].questionType != MATCHING_QUESTION_TYPE ?
                     <Grid item xs={2}>
                     <Typography style={{color:"black"}} sx={{ float: 'right', flex: 1 }} variant="subtitle1">
                         <b>{exam.questions[questionIndex].points} points</b>

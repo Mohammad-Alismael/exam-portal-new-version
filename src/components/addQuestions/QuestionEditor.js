@@ -1,13 +1,21 @@
 import {Editor} from "react-draft-wysiwyg";
 import PropTypes from "prop-types";
 import React from "react";
+import {SET_QUESTION_FILE_OBJECT} from "../../store/actions";
+import {useDispatch} from "react-redux";
 
-export default function QuestionEditor(props) {
+export default function QuestionEditor({updateQuestionArray,editorState,onEditorStateChange}) {
+    const dispatch = useDispatch();
     function uploadImageCallBack(file) {
         return new Promise((resolve, reject) => {
             const data = new FormData();
             data.append("image", file);
             // setFormData(data);
+            dispatch({
+                type: SET_QUESTION_FILE_OBJECT,
+                payload: { objectFile: data},
+            });
+            updateQuestionArray({ previewFile: file })
             Object.assign(file, {
                 preview: URL.createObjectURL(file),
             });
@@ -15,11 +23,12 @@ export default function QuestionEditor(props) {
         });
     }
     return <Editor
+        placeholder="Write your question text here..."
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"
         editorClassName="editorClassName"
-        editorState={props.editorState}
-        onEditorStateChange={props.onEditorStateChange}
+        editorState={editorState}
+        onEditorStateChange={onEditorStateChange}
         toolbar={{
             options: ["inline", "blockType", "fontSize", "fontFamily", "list","textAlign", "colorPicker", "link", "embedded", "image", "remove", "history"],
             image: {
@@ -31,6 +40,7 @@ export default function QuestionEditor(props) {
 }
 
 QuestionEditor.propTypes = {
+    updateQuestionArray: PropTypes.func,
     editorState: PropTypes.any,
     onEditorStateChange: PropTypes.func,
     uploadCallback: PropTypes.func

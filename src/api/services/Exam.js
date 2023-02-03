@@ -35,6 +35,7 @@ async function fetchExamsStudent(courseId, controller) {
     }
 }
 async function createExam(examObject) {
+    console.log("exam object => ",examObject)
     try {
         const res = await axiosPrivate.post(CREATE_EXAM, { ...examObject });
         return await res["data"];
@@ -43,9 +44,9 @@ async function createExam(examObject) {
     }
 }
 
-async function fetchExamDetails(exam_id, controller) {
+async function fetchExamDetails(exam_id,courseId, controller) {
     try {
-        const res = await axiosPrivate.get(`${FETCH_EXAM_DETAILS}/${exam_id}`, {
+        const res = await axiosPrivate.get(`${FETCH_EXAM_DETAILS}/${courseId}/${exam_id}`, {
             signal: controller.signal,
         });
         return await res["data"];
@@ -67,7 +68,7 @@ async function fetchExamStudents(exam_id, controller) {
 
 async function updateExamDetails(examObject) {
     try {
-        const res = await axiosPrivate.post(UPDATE_EXAM_DETAILS, { ...examObject });
+        const res = await axiosPrivate.put(UPDATE_EXAM_DETAILS, { ...examObject });
         return await res["data"];
     } catch (e) {
         console.log(Object.keys(e));

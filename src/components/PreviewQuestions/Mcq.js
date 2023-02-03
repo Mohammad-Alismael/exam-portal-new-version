@@ -63,7 +63,7 @@ function Mcq({ questionIndex }) {
         );
     };
     useEffect(()=>{
-        // console.log(exam.questions[questionIndex])
+        // console.log(exam.PreviewQuestions[questionIndex])
         setOptions([...exam.questions[questionIndex].options])
     },[])
     return (

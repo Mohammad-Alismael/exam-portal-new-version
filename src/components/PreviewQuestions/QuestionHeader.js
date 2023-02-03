@@ -35,28 +35,28 @@ function QuestionHeader({ questionIndex }) {
 
     // const updateQuestionText = (e) => {
     //     setQuestionText(e.target.value)
-    //     const deepCopy = [...exam.questions];
+    //     const deepCopy = [...exam.PreviewQuestions];
     //         deepCopy[id] = {
     //             ...deepCopy[id],
     //             questionText: e.target.value,
     //         };
-    //     dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
-    //     console.log("new",exam.questions[id]['questionText'])
+    //     dispatch({ type: SET_QUESTIONS, payload: { PreviewQuestions: deepCopy } });
+    //     console.log("new",exam.PreviewQuestions[id]['questionText'])
     // };
     // const handleWhoCanSee = (e) => {
-    //     const deepCopy = [...exam.questions];
+    //     const deepCopy = [...exam.PreviewQuestions];
     //     deepCopy[id] = {...deepCopy[id],whoCanSee:parseInt(e.target.value)}
-    //     dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+    //     dispatch({ type: SET_QUESTIONS, payload: { PreviewQuestions: deepCopy } });
     // }
     // const handleQuestionType = (e) => {
-    //     const deepCopy = [...exam.questions];
+    //     const deepCopy = [...exam.PreviewQuestions];
     //     deepCopy[id] = {...deepCopy[id],questionType:parseInt(e.target.value)}
-    //     dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+    //     dispatch({ type: SET_QUESTIONS, payload: { PreviewQuestions: deepCopy } });
     // }
     // const handlePoints = (e) =>{
-    //     const deepCopy = [...exam.questions];
+    //     const deepCopy = [...exam.PreviewQuestions];
     //     deepCopy[id] = {...deepCopy[id],points:parseInt(e.target.value)}
-    //     dispatch({ type: SET_QUESTIONS, payload: { questions: deepCopy } });
+    //     dispatch({ type: SET_QUESTIONS, payload: { PreviewQuestions: deepCopy } });
     // }
 
     return (
@@ -65,12 +65,12 @@ function QuestionHeader({ questionIndex }) {
         //     <Grid container>
         //         <Grid item xs={10}>
         //             <Typography style={{color:"black"}} sx={{ ml: 1, flex: 1 }} variant="h6">
-        //                 {exam.questions[questionIndex].questionText}
+        //                 {exam.PreviewQuestions[questionIndex].questionText}
         //             </Typography>
         //         </Grid>
         //         <Grid item xs={2}>
         //             <Typography style={{color:"black"}} sx={{ float: 'right', flex: 1 }} variant="h6">
-        //                 {exam.questions[questionIndex].points} points
+        //                 {exam.PreviewQuestions[questionIndex].points} points
         //             </Typography>
         //         </Grid>
         //         <Grid item xs={12}>
@@ -84,7 +84,7 @@ function QuestionHeader({ questionIndex }) {
         //             id="outlined-uncontrolled"
         //             label="Question text"
         //             // size="small"
-        //             value={exam.questions[questionIndex]["questionText"]}
+        //             value={exam.PreviewQuestions[questionIndex]["questionText"]}
         //             defaultValue={""}
         //             fullWidth
         //             // onChange={updateQuestionText}
@@ -107,7 +107,7 @@ function QuestionHeader({ questionIndex }) {
         //                 labelId="type"
         //                 id="type"
         //                 disabled={false}
-        //                 value={exam.questions[questionIndex]?.questionType}
+        //                 value={exam.PreviewQuestions[questionIndex]?.questionType}
         //                 label="Question type"
         //             >
         //                 <MenuItem value={1}>MCQs</MenuItem>
@@ -122,7 +122,7 @@ function QuestionHeader({ questionIndex }) {
         //         <FormControl fullWidth variant="standard">
         //             <InputLabel id="type">Who can see</InputLabel>
         //             <Select
-        //                 value={exam.questions[questionIndex]?.whoCanSee}
+        //                 value={exam.PreviewQuestions[questionIndex]?.whoCanSee}
         //                 label="Who can see"
         //                 // onChange={handleWhoCanSee}
         //             >
@@ -137,7 +137,7 @@ function QuestionHeader({ questionIndex }) {
         //             <TextField
         //                 type="number"
         //                 fullWidth
-        //                 value={exam.questions[questionIndex]?.points}
+        //                 value={exam.PreviewQuestions[questionIndex]?.points}
         //                 // onChange={handlePoints}
         //                 variant="standard"
         //                 inputProps={{ min: 1, max: 100 }}

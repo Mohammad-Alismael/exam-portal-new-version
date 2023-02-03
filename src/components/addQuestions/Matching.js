@@ -48,6 +48,7 @@ function Matching({
     };
 
     const SetCorrectAnswer = (e) => {
+        console.log("SetCorrectAnswer = >",parseInt(e.target.value))
         updateQuestionArray({ answerKey: parseInt(e.target.value) });
     };
 
@@ -76,7 +77,7 @@ function Matching({
                             return(
                             <>
                                 <MenuItem value={index}>
-                                    <div dangerouslySetInnerHTML={createMarkup(convertToHTML(calcState(val["optionValue"]).getCurrentContent()))} value={index} />
+                                    <div dangerouslySetInnerHTML={createMarkup(convertToHTML(calcState(val["optionValue"]).getCurrentContent()))} />
                                 </MenuItem>
                             </>
                             )

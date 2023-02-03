@@ -42,6 +42,8 @@ export const CourseSection = styled.span`
 export const SubItem = styled.div`
  
   display: ${props => props.opened ? 'block' : 'none'};
+  transition: all 0.5s ease-in-out;
+
   position: relative;
   padding: 0.3rem 0 ;
   img{

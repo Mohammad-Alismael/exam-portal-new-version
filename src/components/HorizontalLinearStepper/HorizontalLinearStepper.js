@@ -18,7 +18,7 @@ import {Backdrop} from "@mui/material";
 import {CircularProgress} from "@material-ui/core";
 import {createExam, updateExamDetails} from "../../api/services/Exam";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {updateExamQuestions} from "../../api/services/Question";
+import {createQuestions, createQuestionsRequest, updateExamQuestions} from "../../api/services/Question";
 import {
     SET_ASSIGNED_FOR,
     SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT, SET_EXAM_RANDOMNESS, SET_EXAM_TIMER,
@@ -65,47 +65,68 @@ export default function HorizontalLinearStepper(props) {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    function updateExam() {
-        updateExamDetails({...exam, examId}).then(res => {
-            toast.info(res['message'])
-            if (exam?.questions.length == 0) setPostExamLoading(false)
-        }).catch((e) => {
-            console.log(e)
-            setPostExamLoading(false)
-        })
-        if (exam?.questions.length !== 0) {
-            updateExamQuestions({...exam, examId}).then(res => {
-                toast.info(res['message'])
-                setPostExamLoading(false)
-            }).catch((e) => {
-                console.log(e)
-                setPostExamLoading(false)
-            })
+    async function updateExam() {
+
+        try {
+            const detailsRes = await updateExamDetails({ ...exam, examId,courseId: course?.courseId });
+            // toast.info(detailsRes.message);
+
+            if (!exam || exam.questions.length === 0) {
+                setPostExamLoading(false);
+                return;
+            }
+        } catch (e) {
+            console.error(e);
+            setPostExamLoading(false);
+            return;
+        }
+
+        try {
+            const questionsRes = await updateExamQuestions({ questions: exam.questions, exam_id: examId });
+            // toast.info(questionsRes.message);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setPostExamLoading(false);
         }
     }
 
-    const postExam = (e) => {
-        e.preventDefault()
+
+    function calcTotalPoints() {
+        const totalPoints = exam.questions.map(({points}, i) => {
+            return points
+        }).reduce((previousValue, currentValue, currentIndex) => previousValue + currentValue, 0)
+        return totalPoints;
+    }
+
+    const postExam = async (e) => {
+        e.preventDefault();
         setOpen(false);
-        setPostExamLoading(true)
-        const str = location.pathname
-        const words = str.split('/')
-        if (words.includes('preview')){
-            updateExam();
-        }else {
-            createExam({...exam, classroom_id: course?.course_info?.id})
-                .then(res => {
-                    toast.info(res['message'])
-                    setPostExamLoading(false)
-                    navigate(`/courses/${course?.courseId}/exams`)
-                    dispatch(ResetExamReducer())
-                }).catch((e) => {
-                console.log(e)
-                setPostExamLoading(false)
-            })
-        }
+        setPostExamLoading(true);
+        try {
+            const path = location.pathname;
+            const words = path.split("/");
 
-    }
+            if (words.includes("edit-exam")) {
+                await updateExam();
+                toast.info("exam update it successfully !");
+            } else {
+                const totalPoints = calcTotalPoints();
+                const res = await createExam({ ...exam, courseId: course?.courseId, totalPoints });
+                console.log("exam created =>", res)
+                const questionsResult = await createQuestionsRequest({ questions: exam.questions, courseId: course?.courseId, totalPoints, exam_id: res['exam_id'] });
+                console.log(questionsResult);
+                toast.info(res["message"]);
+
+            }
+            setPostExamLoading(false);
+            navigate(`/courses/${course?.courseId}/exams`);
+            dispatch(ResetExamReducer());
+        } catch (e) {
+            console.log(e);
+            setPostExamLoading(false);
+        }
+    };
 
     return (
         <Box sx={{ width: "100%" }}>
@@ -123,7 +144,7 @@ export default function HorizontalLinearStepper(props) {
             <React.Fragment>
                 {activeStep == steps.length ? (
                     <Grid container spacing={2} sx={{ mt: 2, mb: 2, padding: "0 1rem" }}>
-                        <Typography>finished exam details, now you can add questions</Typography>
+                        <Typography>you have successfully finished exam details, now you can add questions</Typography>
                     </Grid>
                     ): (
                     <Grid container spacing={2} sx={{ mt: 2, mb: 2, padding: "0 1rem" }}>
@@ -151,7 +172,7 @@ export default function HorizontalLinearStepper(props) {
                     aria-describedby="alert-dialog-description"
                 >
                     <DialogTitle id="alert-dialog-title">
-                        {"Are you sure you want to post the exam?"}
+                        Are you sure you want to post the exam?
                     </DialogTitle>
                     <DialogActions>
                         <Button onClick={handleClose}>no</Button>

@@ -104,6 +104,31 @@ class User {
         }
     }
 }
+const userAuth = async (username, password) => {
+    try {
+        const res = await axios.post(
+            `${BASE_URL}${AUTH_USER}`,
+            {
+                username,
+                password,
+            },
+            { withCredentials: true }
+        );
+        const token = res.data["accessToken"];
+        axiosPrivate.interceptors.request.use(
+            (config) => {
+                if (token) {
+                    config.headers["Authorization"] = "Bearer " + token;
+                }
+                return config;
+            },
+            (error) => Promise.reject(error)
+        );
+        return res;
+    } catch (error) {
+        throw error;
+    }
+};
 export const getUserInfo = async (username) =>{
     try {
         let response = await axiosPrivate(`${FETCH_USER_INFO}/${username}`);

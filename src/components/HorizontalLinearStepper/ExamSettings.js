@@ -135,10 +135,9 @@ function ExamSettings(props) {
             setStudents(data)
         })
         if (examId == null){//then we are in create exam route
-
             console.log(course.classmates)
-        }else{//then we are in preview mode
-            alert(examId)
+        }else{//then we are in edit mode
+            // alert(examId)
             // fetch specific students
         }
 

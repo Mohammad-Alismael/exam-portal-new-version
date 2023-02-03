@@ -7,6 +7,7 @@ const initialState = {
     whoCanSee: 1,
     questionType: 5,
     questionText: "",
+    objectFile: null,
     isActive: true,
     options: null
 };
@@ -41,6 +42,12 @@ const AddQuestionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 questionText: action.payload.questionText
+            }
+        case actionTypes.SET_QUESTION_FILE_OBJECT:
+            console.log("object file =>", action.payload.objectFile.get("image"))
+            return {
+                ...state,
+                objectFile: action.payload.objectFile
             }
         case actionTypes.SET_IS_ACTIVE:
             return {

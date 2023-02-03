@@ -10,7 +10,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import PreviewExam from "./pages/PreviewExam";
+import EditExam from "./pages/EditExam";
 import ExamStudent from "./pages/examStudent/ExamStudent";
 import Invitation from "./pages/Invitation";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -35,21 +35,22 @@ function App(props) {
     const [loading, setLoading] = useState(true);
     const {user} = useSelector(state => state.UserReducerV2);
 
-    // using async useEffect can cause memory leak but i'm using 'isMounted'
-    // to prevent that
-    useEffect(   async () => {
+    useEffect(() => {
         let isMounted = true;
-        // this part to get new token while the user refreshes any page
-        console.log({token,user})
-        if (token == null && user != null) {
-            await User.refreshTokenWithCallBack(() => {
-                isMounted && setLoading(false);
-            })
-        }
-        isMounted && setLoading(false);
-        return () => isMounted = false
-
-    }, []);
+        const refreshToken = async () => {
+            console.log({ token, user });
+            if (token === null && user !== null) {
+                await User.refreshTokenWithCallBack(() => {
+                    isMounted && setLoading(false);
+                });
+            }
+            isMounted && setLoading(false);
+        };
+        refreshToken();
+        return () => {
+            isMounted = false;
+        };
+    }, [token, user]);
 
     if (loading) {
         return <CircularProgress size={200}/>;
@@ -142,15 +143,12 @@ function App(props) {
                             <CreateExamPage />
                         </Protected>
                     }/>
-                </Route>
-                <Route
-                    path="/preview/:examId"
-                    element={
+                    <Route path="edit-exam/:examId" element={
                         <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
-                            <PreviewExam />
+                            <EditExam />
                         </Protected>
-                    }
-                />
+                    }/>
+                </Route>
                 <Route exact path="/exam/:examId" element={
                     <Protected onlyAccessTo={STUDENT_ROLES}>
                         <ExamStudent />

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
-import { TextField } from "@material-ui/core";
+import {CircularProgress, TextField} from "@material-ui/core";
 import Button from "@mui/material/Button";
 import { theme } from "../utils/global/useStyles";
 import withContainer from "../components/withContainer";
@@ -25,20 +25,28 @@ function Login(props) {
     const classes = useStyles(theme);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setLoading] = useState(false);
     const dispatch = useDispatch();
     // const {state} = useLocation()
     const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault();
         if (username !== "" && password !== "") {
+            setLoading(true)
             dispatch(
                 loginAction(username, password, (res) => {
                     // navigate(state?.path || "/courses");
+                    setLoading(false)
                     navigate("/courses");
                 })
             );
         } else {
             toast("username or password field is missing!");
+        }
+    };
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.target.click();
         }
     };
     return (
@@ -74,14 +82,16 @@ function Login(props) {
                 label="Remember me"
             />
             <Button
+                disabled={isLoading}
                 onClick={submit}
+                onKeyDown={handleKeyPress}
                 variant="contained"
                 color="primary"
                 type="submit"
                 sx={{ mb: 3, width: "45%", ml: "27%" }}
                 size="large"
             >
-                <b>login</b>
+                {isLoading ? <CircularProgress size={24} /> : <b>login</b>}
             </Button>
             <Divider style={{ margin: "0px 0px 20px" }} />
 

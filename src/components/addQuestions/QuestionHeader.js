@@ -6,28 +6,20 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect, useDispatch, useSelector } from "react-redux";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import ImageIcon from "@mui/icons-material/Image";
-import {SET_POINTS, SET_QUESTION_TEXT, SET_QUESTION_TYPE, SET_QUESTIONS, SET_WHO_CAN_SEE} from "../../store/actions";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
-import IconButton from "@mui/material/IconButton";
-import { v4 as uuidv4 } from "uuid";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import {Button} from "@material-ui/core";
-import Question from "../questions/Question";
-import Tooltip from "@mui/material/Tooltip";
-import PublishIcon from "@mui/icons-material/Publish";
+import Question from "../PreviewQuestions/Question";
 import {Badge} from "@mui/material";
-import {Editor} from "react-draft-wysiwyg";
 import {convertFromRaw, convertToRaw, EditorState} from "draft-js";
-import {calcState} from "../../utils/global/GlobalConstants";
+import {
+    calcState,
+    CHECKBOX_QUESTION_TYPE, MATCHING_QUESTION_TYPE,
+    MCQ_QUESTION_TYPE,
+    TEXT_QUESTION_TYPE, TRUTH_QUESTION_TYPE
+} from "../../utils/global/GlobalConstants";
 import QuestionEditor from "./QuestionEditor";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,9 +57,6 @@ const useStyles = makeStyles((theme) => ({
 function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionArray,preview}) {
     const classes = useStyles();
     const [questionText, setQuestionText] = React.useState("empty");
-    const [whoCanSee, setWhoCanSee] = React.useState(0);
-    const [points, setPoints] = React.useState(0);
-    const [open, setOpen] = React.useState(false);
     const exam = useSelector((state) => state.ExamReducer);
     const question = useSelector((state) => state.AddQuestionReducer);
     const dispatch = useDispatch();
@@ -75,6 +64,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
     const updateQuestionText = (e) => {
         setEditorState(e);
         const db = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+        console.log(db)
         updateQuestionArray({ questionText: db })
         setQuestionText(db)
 
@@ -94,42 +84,29 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
     const handlePoints = (e) =>{
         updateQuestionArray({ points: parseInt(e.target.value) })
     }
-    const handleQuestionFile = (e) =>{
-        e.preventDefault()
-        let myFiles = e.target.files;
-        Object.assign(myFiles[0],
-            {
-                preview: URL.createObjectURL(myFiles[0]),
-            }
-        )
-        updateQuestionArray({previewFile: myFiles[0]})
-    }
-    const removeFile = (e) => {
-        updateQuestionArray({previewFile: null})
-    }
 
     useEffect(() => {
         setEditorState(calcState(exam.questions[questionIndex]['questionText']));
     }, []);
     return (
         <>
-            {exam.questions[questionIndex]['previewFile'] != null ?
-                <Grid xs={12} item>
-                    <Badge badgeContent={'x'} color="primary" onClick={removeFile} sx={{cursor: 'pointer'}}>
-                        <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']}
-                             alt={'question img'}/>
-                    </Badge>
-                </Grid>
-                : null}
+            {/*{exam.questions[questionIndex]['previewFile'] != null ?*/}
+            {/*    <Grid xs={12} item>*/}
+            {/*        <Badge badgeContent={'x'} color="primary" onClick={removeFile} sx={{cursor: 'pointer'}}>*/}
+            {/*            <img style={{maxWidth: '100%'}} src={exam.questions[questionIndex]['previewFile']['preview']}*/}
+            {/*                 alt={'question img'}/>*/}
+            {/*        </Badge>*/}
+            {/*    </Grid>*/}
+            {/*    : null}*/}
 
             <Grid xs={12} item className={classes.textEditorContainer}>
-                <QuestionEditor editorState={editorState} onEditorStateChange={updateQuestionText}/>
+                <QuestionEditor updateQuestionArray={updateQuestionArray} editorState={editorState} onEditorStateChange={updateQuestionText}/>
             </Grid>
             <Grid xs={4} item>
                 <FormControl fullWidth variant="standard">
                     <InputLabel id="type">Question Type</InputLabel>
                     <Select
-                        defaultValue={""}
+                        defaultValue=""
                         onChange={handleQuestionType}
                         labelId="type"
                         id="type"
@@ -137,11 +114,11 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                         value={exam.questions[questionIndex].questionType}
                         label="Question type"
                     >
-                        <MenuItem value={1}>MCQs</MenuItem>
-                        <MenuItem value={2}>Text</MenuItem>
-                        <MenuItem value={3}>Checkbox</MenuItem>
-                        <MenuItem value={4}>Matching</MenuItem>
-                        <MenuItem value={5}>True/False</MenuItem>
+                        <MenuItem value={MCQ_QUESTION_TYPE}>MCQs</MenuItem>
+                        <MenuItem value={TEXT_QUESTION_TYPE}>Text</MenuItem>
+                        <MenuItem value={CHECKBOX_QUESTION_TYPE}>Checkbox</MenuItem>
+                        <MenuItem value={MATCHING_QUESTION_TYPE}>Matching</MenuItem>
+                        <MenuItem value={TRUTH_QUESTION_TYPE}>True/False</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>
@@ -160,7 +137,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                     </Select>
                 </FormControl>
             </Grid>
-            {exam?.questionTimer ? <Grid xs={1} item>
+            {exam?.questionTimer ? <Grid xs={2} item>
                 <FormControl fullWidth variant="standard">
                     <TextField
                         type="number"
@@ -173,7 +150,7 @@ function QuestionHeader({previewOpen,previewClose,questionIndex,updateQuestionAr
                     />
                 </FormControl>
             </Grid> : null}
-            <Grid xs={4} item>
+            <Grid xs={2} item>
                 <FormControl fullWidth variant="standard">
                     <TextField
                         type="number"
