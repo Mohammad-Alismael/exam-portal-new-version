@@ -5,6 +5,7 @@ import classNames from "classnames";
 import * as PropTypes from "prop-types";
 import ExamContainer from "../../../components/ExamContainers/UpComingContainer";
 import classnames from "classnames";
+import withSideBarAndResAppBar from "../../../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
     container: {
         // backgroundColor: 'red',
@@ -63,4 +64,4 @@ function Grades(props) {
     );
 }
 
-export default Grades;
+export default withSideBarAndResAppBar(Grades);

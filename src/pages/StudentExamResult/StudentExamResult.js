@@ -68,7 +68,7 @@ function StudentExamResult(props) {
             <div className={classes.questionContainer}>
                 {
                     submissions.map((val,i)=>{
-                        return <Question questionIndex={i}/>
+                        return <Question key={i} questionIndex={i}/>
                     })
                 }
                 {parseInt(user?.role_id) === 3 ?<div>

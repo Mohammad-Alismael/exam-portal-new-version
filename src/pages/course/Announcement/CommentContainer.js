@@ -10,8 +10,8 @@ import { useSelector } from "react-redux";
 const useStyles = makeStyles((theme) => ({
     commentContainer: {
         marginTop: "0.62rem",
-        backgroundColor: "#D9D9D9",
-        padding: "0.6rem",
+        backgroundColor: "#fff",
+        padding: "0.6rem 0.6rem 0 0.6rem",
     },
     commentContainerOpen: {
         display: "block",
@@ -29,13 +29,14 @@ export default function CommentContainer({
     const course = useSelector((state) => state.CourseReducer);
 
     return (
-        <>
+        <div className={classnames(
+            openCommentContainer
+                ? classes.commentContainerOpen
+                : classes.commentContainerClose
+        )}>
             <div
                 className={classnames(
-                    classes.commentContainer,
-                    openCommentContainer
-                        ? classes.commentContainerOpen
-                        : classes.commentContainerClose
+                    classes.commentContainer
                 )}
             >
                 {course.announcements[announcementIndex].comments.map(
@@ -52,9 +53,9 @@ export default function CommentContainer({
                         );
                     }
                 )}
-                <AddCommentElement announcementId={announcementId} announcementIndex={announcementIndex}/>
             </div>
-        </>
+            <AddCommentElement announcementId={announcementId} announcementIndex={announcementIndex}/>
+        </div>
     );
 }
 

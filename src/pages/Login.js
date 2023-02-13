@@ -5,7 +5,7 @@ import Divider from "@material-ui/core/Divider";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { connect, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Box from "@mui/material/Box";
 import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
@@ -27,7 +27,7 @@ function Login(props) {
     const [password, setPassword] = useState("");
     const [isLoading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    // const {state} = useLocation()
+    const {state} = useLocation()
     const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault();
@@ -35,11 +35,12 @@ function Login(props) {
             setLoading(true)
             dispatch(
                 loginAction(username, password, (res) => {
-                    // navigate(state?.path || "/courses");
-                    setLoading(false)
+                    navigate(state?.path || "/courses");
+
                     navigate("/courses");
                 })
             );
+            setLoading(false)
         } else {
             toast("username or password field is missing!");
         }

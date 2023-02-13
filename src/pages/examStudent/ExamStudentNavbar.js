@@ -34,35 +34,32 @@ function ExamStudentNavbar(props) {
         })
 
     }
-    useEffect(()=>{
+    useEffect(() => {
         let interval;
-        let timer = examStudent?.examDetails?.timeLeft
-        let hours;
-        let minutes;
-        let seconds;
-        interval = setInterval(function () {
-            hours = parseInt((timer/(1000*60*60)) % 24)
-            minutes = parseInt( (timer/(1000*60)) % 60);
-            seconds = parseInt((timer/1000) % 60);
+        const { timeLeft } = examStudent?.examDetails || {};
 
-            hours = hours < 10 ? "0" + hours : hours;
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+        if (timeLeft) {
+            interval = setInterval(() => {
+                const hours = parseInt((timeLeft / (1000 * 60 * 60)) % 24, 10);
+                const minutes = parseInt((timeLeft / (1000 * 60)) % 60, 10);
+                const seconds = parseInt((timeLeft / 1000) % 60, 10);
 
-            setTimer(hours + ":" + minutes + ":" + seconds)
-            timer = timer - 1000
-            dispatch({type: SET_EXAM_STUDENT_TIMER, payload: {timeLeft: timer}});
+                setTimer(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+                const updatedTimeLeft = timeLeft - 1000;
+                dispatch({ type: SET_EXAM_STUDENT_TIMER, payload: { timeLeft: updatedTimeLeft } });
 
-            if (timer < 0) {
-                submitUserAnswer(examStudent?.questions,examId).then(console.log)
-                navigate(`/courses/${course?.courseId}/exams`)
-                toast("you have finished the exam!")
-                clearInterval(interval)
-            }
+                if (updatedTimeLeft < 0) {
+                    submitUserAnswer(examStudent?.questions, examId).then(console.log);
+                    navigate(`/courses/${course?.courseId}/exams`);
+                    toast("you have finished the exam!");
+                    clearInterval(interval);
+                }
+            }, 999);
+        }
 
-        }, 999);
-    return () => clearInterval(interval); //This is important
-    },[])
+        return () => clearInterval(interval);
+    }, [examStudent, course, examId, dispatch]);
+
 
     return (
         <Grid

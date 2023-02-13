@@ -11,6 +11,7 @@ function PendingContainer({ exams, noExamTitle }) {
                 exams.map(({ title, exam_id, submitted_at, see_result_at }, i) => {
                     return (
                         <PendingExam
+                            key={i}
                             title={title}
                             examId={exam_id}
                             submittedAt={submitted_at}

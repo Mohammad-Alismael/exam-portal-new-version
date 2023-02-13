@@ -42,7 +42,7 @@ export const CourseSection = styled.span`
 export const SubItem = styled.div`
  
   display: ${props => props.opened ? 'block' : 'none'};
-  transition: all 0.5s ease-in-out;
+  transition: all 0.4s ease-in-out;
 
   position: relative;
   padding: 0.3rem 0 ;
@@ -65,7 +65,7 @@ export const Container = styled.div`
   padding-top: 1.3rem;
   display: inline-block;
   background-color: #fff;
-  width: 5%;
+  width: 4%;
   height: 100vh;
   transition: width 0.5s ease-in-out;
   &:hover{
@@ -88,7 +88,7 @@ export const Container = styled.div`
 `
 export const BookIcon = styled.img`
   width: 30px;
-  margin-left: 1.2rem;
+  margin-left: 0.75rem;
 `
 export const Item = styled.div`
   margin-bottom: 0.4rem;

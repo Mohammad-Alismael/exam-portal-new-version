@@ -26,7 +26,7 @@ async function fetchExams(courseId, controller) {
 
 async function fetchExamsStudent(courseId, controller) {
     try {
-        const res = await axiosPrivate.get(
+        const res = await axiosPrivate.post(
             `${FETCH_EXAMS_STUDENT}/${courseId}`, { signal: controller.signal }
         );
         return await res["data"];
@@ -103,10 +103,10 @@ async function fetchExamDetailsForStudent(exam_id, controller) {
     }
 }
 
-async function fetchMissedExams(classroomId, controller) {
+async function fetchMissedExams(courseId, controller) {
     try {
         const res = await axiosPrivate.get(
-            `${FETCH_MISSED_EXAMS}/${classroomId}`,
+            `${FETCH_MISSED_EXAMS}/${courseId}`,
             {signal: controller.signal}
         );
         return await res["data"];

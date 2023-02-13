@@ -63,8 +63,8 @@ const ItemComp = ({title,section,classroomId}) => {
                 <Sidebar.SubSubItem opened={opened} title={'announcements'} path={`/courses/${classroomId}`}/>
                 <Sidebar.SubSubItem opened={opened} title={'exams'} path={`/courses/${classroomId}/${user?.role_id === 3 ? 'exams' : 'exams-student'}`}/>
                 <Sidebar.SubSubItem opened={opened} title={'people'} path={`/courses/${classroomId}/people`}/>
-                {user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'grades'} path={`/courses/${classroomId}/grades`}/> :null}
-                {user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'statistics'} path={`/courses/${classroomId}/statistics`}/>: null}
+                {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'grades'} path={`/courses/${classroomId}/grades`}/> :null}*/}
+                {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'statistics'} path={`/courses/${classroomId}/statistics`}/>: null}*/}
             </div>
         </Item>
     )

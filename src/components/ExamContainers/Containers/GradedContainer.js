@@ -11,6 +11,7 @@ function GradedContainer({ exams, noExamTitle}) {
                 exams.map(({ title, exam_id, submitted_at }, i) => {
                     return (
                         <GradedExam
+                            key={i}
                             title={title}
                             examId={exam_id}
                             percent={43}

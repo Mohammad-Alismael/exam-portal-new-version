@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import moment from "moment";
 import { toast } from "react-toastify";
 import {connect, useDispatch, useSelector} from "react-redux";
@@ -17,6 +17,7 @@ import {
 import {deleteExam} from "../../../api/services/Exam";
 import GradingIcon from '@mui/icons-material/Grading';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import ResetExamReducer from "../../../actions/ResetExamReducer";
 const useStyles = makeStyles((theme) => ({
     container: {
         width: '100%',
@@ -56,11 +57,13 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
     const navigate = useNavigate();
     const {user} = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
+    const { course_id } = useParams();
     const dispatch = useDispatch();
     const redirect = (e) => {
         e.stopPropagation()
         dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
-        navigate(`/courses/${course.courseId}/edit-exam/${examId}`);
+        dispatch(ResetExamReducer());
+        navigate(`/courses/${course_id}/edit-exam/${examId}`);
     };
     useEffect(()=>{
         const controller = new AbortController();

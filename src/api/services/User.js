@@ -131,7 +131,7 @@ const userAuth = async (username, password) => {
 };
 export const getUserInfo = async (username) =>{
     try {
-        let response = await axiosPrivate(`${FETCH_USER_INFO}/${username}`);
+        let response = await axiosPrivate.get(`${FETCH_USER_INFO}/${username}`);
         return await response.data;
     }catch (e) {
         throw Error('error happened!')

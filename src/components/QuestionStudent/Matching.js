@@ -11,6 +11,8 @@ import {useDispatch, useSelector} from "react-redux";
 import Typography from "@mui/material/Typography";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
 import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
+import {convertToHTML} from "draft-convert";
+import {calcState} from "../../utils/global/GlobalConstants";
 const useStyles = makeStyles((theme) => ({
 }));
 function Matching ({questionIndex}) {
@@ -24,7 +26,7 @@ function Matching ({questionIndex}) {
 
         dispatch({
             type: SET_QUESTION_USER_ANSWER,
-            payload: {userAnswer: e.target.value},
+            payload: {userAnswer: e.target.value,index:questionIndex},
         });
     }
     useEffect(()=>{
@@ -45,7 +47,7 @@ function Matching ({questionIndex}) {
                                     return <MenuItem
                                         key={index+1}
                                         value={index}
-                                    >{val['optionValue']}</MenuItem>
+                                    >{<p dangerouslySetInnerHTML={{__html: convertToHTML(calcState(options[index]["optionValue"]).getCurrentContent())}} />}</MenuItem>
                                 })
                             }
 

@@ -7,16 +7,17 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 const useStyles = makeStyles((theme) => ({
     container: {
-        margin: "10% 15%",
-        padding: "1rem",
-        backgroundColor: '#FFF',
+        backgroundColor: 'green'
+        // margin: "10% 15%",
+        // padding: "1rem",
+        // backgroundColor: '#FFF',
     },
     numberContainer: {
         borderRadius: '5px',
         backgroundColor: '#D9D9D9',
         display: "inline-block",
-        padding: '1rem',
-        margin: '0 1rem',
+        padding: '0.8rem',
+        margin: '0.8rem',
         cursor: "pointer",
         "& p": {
             float: 'center',
@@ -38,44 +39,49 @@ function QuestionNavigation(props) {
         if (parseInt(examStudent?.examDetails?.navigation) === 1)
             dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: index}});
     }
-    useEffect(()=>{
-        itemsRef.current.forEach((value, index, array)=>{
-            const questionIndex = parseInt(examStudent?.questionIndex)
-            if (index === questionIndex){
-                itemsRef.current[index].style.outline = '2px solid #FFCD38'
-                itemsRef.current[index].style.backgroundColor = '#D9D9D9'
-            }else {
-                itemsRef.current[index].style.outline = '2px solid transparent'
-                itemsRef.current[index].style.backgroundColor = '#D9D9D9'
-            }
+    useEffect(() => {
+        itemsRef.current.forEach((value, index, array) => {
+            const questionIndex = parseInt(examStudent?.questionIndex);
 
-            if (index < questionIndex){
-                itemsRef.current[index].style.backgroundColor = '#FFCD38'
-            }
-        })
-    },[examStudent?.questionIndex])
+            const styles = {
+                outline: index === questionIndex ? '2px solid #FFCD38' : '2px solid transparent',
+                backgroundColor: index < questionIndex ? '#FFCD38' : '#D9D9D9',
+            };
+
+            itemsRef.current[index].style = styles;
+        });
+    }, [examStudent?.questionIndex]);
+
     return (
-        <Paper fullwidth elevation={5} className={classes.container}>
-            <Grid xs={12}>
-                <Grid item xs={12}>
-                    <Typography variant="h4" align={'left'}>
-                        Questions
-                    </Typography>
-                    <Divider sx={{ borderBottomWidth: 3,color: 'primary.main' }}/>
+        <>
+            <Typography
+                sx={{ mb: 4, color: '#fff' }}
+                variant="h4"
+                align="left"
+            >
+                <b>Navigation</b>
+            </Typography>
+            <Paper fullWidth elevation={5} className={classes.container}>
+                <Grid xs={12}>
+                    <Grid
+                        container
+                        justifyContent="flex-start"
+                        xs={12}
+                        sx={{ mt: 4 }}
+                    >
+                        {examStudent.questions.map((val, i) => (
+                            <div
+                                ref={(el) => (itemsRef.current[i] = el)}
+                                onClick={(e) => handleOnClick(e, i)}
+                                className={classes.numberContainer}
+                            >
+                                <p>{i + 1}</p>
+                            </div>
+                        ))}
+                    </Grid>
                 </Grid>
-                <Grid container justifyContent={'flex-start'} xs={12} sx={{mt:4}}>
-                    {
-                        examStudent.questions.map((val,i)=>{
-                            return (
-                                <div ref={el => itemsRef.current[i] = el} onClick={(e)=>(handleOnClick(e,i))} className={classes.numberContainer}>
-                                    <p>{i+1}</p>
-                                </div>
-                            )
-                        })
-                    }
-                </Grid>
-            </Grid>
-        </Paper>
+            </Paper>
+        </>
     );
 }
 

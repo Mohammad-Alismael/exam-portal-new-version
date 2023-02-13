@@ -150,7 +150,8 @@ function CoursePage(props) {
                                 </WhiteTextTypography>
                                 <div className={classes.instructorInfo}>
                                     <img
-                                        alt={"img"}
+                                        alt="img"
+                                        loading
                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
                                     />
                                     <p>

@@ -51,11 +51,6 @@ function Mcq({ questionIndex }) {
                         options: []
                     }}
                 />
-                {/*<FormControlLabel*/}
-                {/*    value={options[index]['optionValue']}*/}
-                {/*    control={<Radio />}*/}
-                {/*    label={options[index]['optionValue']}*/}
-                {/*/>*/}
                 {options[index]["img"] != null ? (
                     <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
                 ) : null}

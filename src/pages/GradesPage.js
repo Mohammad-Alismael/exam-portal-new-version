@@ -23,12 +23,12 @@ import Pagination from "@mui/material/Pagination";
 import { fetchStudentsSubmission } from "../api/services/UserSubmission";
 import moment from "moment/moment";
 import LinearProgress from "@mui/material/LinearProgress";
+import withSideBarAndResAppBar from "../layouts/withSideBarAndResAppBar";
 
 const useStyles = makeStyles((theme) => ({
     container: {
         margin: "7% 15%",
         padding: "1rem",
-        backgroundColor: "#FFF",
     },
     leftContainer: {
         width: "28%",
@@ -78,7 +78,7 @@ const columns = [
 ];
 function CustomToolbar() {
     return (
-        <GridToolbarContainer sx={{ float: "right" }}>
+        <GridToolbarContainer sx={{ float: "right",mt:2,mr:2 }}>
             <GridToolbarColumnsButton />
             <GridToolbarFilterButton />
             <GridToolbarDensitySelector />
@@ -144,15 +144,14 @@ function GradesPage(props) {
     };
     return (
         <div>
-            <ResponsiveAppBar />
             {isLoading ? (
                 <LinearProgress />
             ) : (
-                <>
-                    <Typography variant="h4" align={"left"} sx={{ mb: 3 }}>
-                        Exam Grades
+                <div className={classes.container}>
+                    <Typography sx={{mb: 4,color: '#fff'}} variant="h4" align={"left"}>
+                        <b>Exam Grades</b>
                     </Typography>
-                    <Paper fullwidth elevation={5} className={classes.container}>
+                    <Paper fullwidth elevation={5} >
                         <div style={{ height: 450, width: "100%" }}>
                             <DataGrid
                                 onRowClick={redirect}
@@ -167,10 +166,10 @@ function GradesPage(props) {
                             />
                         </div>
                     </Paper>
-                </>
+                </div>
             )}
         </div>
     );
 }
 
-export default GradesPage;
+export default withSideBarAndResAppBar(GradesPage);

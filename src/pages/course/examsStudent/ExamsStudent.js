@@ -29,13 +29,12 @@ const useStyles = makeStyles((theme) => ({
     subContainer: {
         // backgroundColor: 'green',
         display: 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'flex-start',
         height: '55vh',
     },
     subContainer2: {
         // backgroundColor: 'red',
-
         justifyContent: 'flex-start',
     },
     subContainer3: {
@@ -59,33 +58,38 @@ function ExamsStudent(props) {
     const [gradedExams,setGradedExams] = useState([])
     const [missedExams,setMissedExams] = useState([])
     const [loading,setLoading] = useState(false)
-    useEffect(()=>{
+    async function fetchExamData(course_id, controller) {
+        try {
+            const [upcomingExams, pendingAndGradedExams, missedExams] = await Promise.all([
+                fetchExamsStudent(course_id, controller),
+                fetchPendingAndSubmittedExam(course_id, user.user_id, controller),
+                fetchMissedExams(course_id, controller)
+            ]);
+
+            setUpcomingExams(upcomingExams);
+            console.log('upcoming exams exams', upcomingExams);
+
+            setGradedExams(pendingAndGradedExams['graded_exams']);
+            setWaitingToeGradedExams(pendingAndGradedExams['pending_exams']);
+            console.log('pending and graded exams', pendingAndGradedExams);
+
+            setMissedExams(missedExams);
+            setLoading(false);
+            console.log('missed exams =>', missedExams);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect( () => {
         const controller = new AbortController();
-        setLoading(true)
-        // fetchExamsStudent(course?.course_info?.id, controller)
-        //     .then((data)=>{
-        //         setUpcomingExams(data)
-        //         console.log('upcoming exams exams',data)
-        //     }).catch(console.log)
-        // fetchPendingAndSubmittedExam(course?.course_info?.id,
-        //     user.user_id,controller)
-        //     .then((data)=>{
-        //         setGradedExams(data['graded_exams'])
-        //         setWaitingToeGradedExams(data['pending_exams'])
-        //         console.log('pending and graded exams',data)
-        //     })
-        //     .catch(console.log)
-        fetchMissedExams(course?.course_info?.id,controller)
-            .then((data)=>{
-                setMissedExams(data)
-                setLoading(false)
-                console.log('missed exams',data)
-            })
-            .catch(console.log)
+        setLoading(true);
+        fetchExamData(course_id,controller).then(console.log)
         return () => {
             controller.abort();
         };
-    },[])
+    }, []);
+
     if (loading) {
         return <CircularProgress size={200} />;
     }

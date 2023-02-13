@@ -11,6 +11,7 @@ function MissedContainer({ exams, noExamTitle}) {
                 exams.map(({ title, exam_id, ending_at}, i) => {
                     return (
                         <MissedExam
+                            key={i}
                             title={title}
                             examId={exam_id}
                             submittedAt={ending_at}

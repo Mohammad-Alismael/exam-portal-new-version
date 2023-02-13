@@ -34,10 +34,12 @@ import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
 function App(props) {
     const [loading, setLoading] = useState(true);
     const {user} = useSelector(state => state.UserReducerV2);
+    const [location, setLocation] = useState(window.location.href);
 
     useEffect(() => {
         let isMounted = true;
         const refreshToken = async () => {
+            console.log("This should run first!")
             console.log({ token, user });
             if (token === null && user !== null) {
                 await User.refreshTokenWithCallBack(() => {
@@ -50,7 +52,7 @@ function App(props) {
         return () => {
             isMounted = false;
         };
-    }, [token, user]);
+    }, [token, user, location]);
 
     if (loading) {
         return <CircularProgress size={200}/>;

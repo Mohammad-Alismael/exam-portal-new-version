@@ -17,12 +17,13 @@ async function fetchStudentsSubmission(examId,controller) {
 }
 async function fetchStudentSubmission(examId,username,controller) {
     const user = await getUserInfo(username)
-    console.log('studentId',user?.user_id)
+    console.log('studentId =>',user)
     try {
         const res = await axiosPrivate.get(`${FETCH_STUDENTS_SUBMISSION}/${examId}/${user?.user_id}`, {signal: controller.signal});
         return await res['data'];
     } catch (e) {
-        console.log(e.response.status);
+        console.log(e)
+        // console.log(e.response.status);
     }
 }
 async function didUserSubmit(examId,studentId,controller) {

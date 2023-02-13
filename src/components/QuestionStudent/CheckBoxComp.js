@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -14,6 +14,8 @@ import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
 import { SET_QUESTION_USER_ANSWER } from "../../store/actions";
 import { toast } from "react-toastify";
 import LoadCheckBoxOptions from "../LoadCheckBoxOptions";
+import {convertToHTML} from "draft-convert";
+import {calcState} from "../../utils/global/GlobalConstants";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -75,8 +77,6 @@ const CheckBoxComp = ({ questionIndex }) => {
         }
     };
 
-    useEffect(()=>{
-    },[])
     return (
         <>
             <Grid item xs={12}>

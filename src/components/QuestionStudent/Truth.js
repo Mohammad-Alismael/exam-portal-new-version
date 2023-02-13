@@ -4,7 +4,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {SET_QUESTION_USER_ANSWER, SET_STUDENT_EXAM_DETAILS} from "../../store/actions";
-const Truth = () => {
+const Truth = ({questionIndex}) => {
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const dispatch = useDispatch();
 
@@ -12,7 +12,7 @@ const Truth = () => {
         e.preventDefault()
         dispatch({
             type: SET_QUESTION_USER_ANSWER,
-            payload: {userAnswer: (e.target.value === 'true')},
+            payload: {userAnswer: (e.target.value === 'true'),index: questionIndex},
         });
     }
     return (

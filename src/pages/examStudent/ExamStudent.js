@@ -27,67 +27,85 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     borderRadius: 5,
 }));
 
+const useStyles = makeStyles((theme) => ({
+    innerContainer: {
+        position: "relative",
+    },
+    numberContainer: {
+        borderRadius: '5px',
+        backgroundColor: '#D9D9D9',
+        display: "inline-block",
+        padding: '0.8rem',
+        cursor: "pointer",
+        "& p": {
+            float: 'center',
+            padding: 0,
+            margin: 0,
+            fontWeight: 'bold'
+        }
+    }
+}));
+
 function ExamStudent() {
+    const classes = useStyles();
     const { examId } = useParams();
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const [isLoading, setIsLoading] = React.useState(false);
     const dispatch = useDispatch();
     const course = useSelector(state => state.CourseReducer);
     const navigate = useNavigate();
+    async function fetchExamData(examId, controller) {
+        const examDetails = await fetchExamDetailsForStudent(examId, controller);
+        if (examDetails == null) {
+            navigate(`/courses/${course?.courseId}/exams`)
+            toast("no exam found!")
+            return;
+        }
+        dispatch({
+            type: SET_STUDENT_EXAM_DETAILS,
+            payload: { examDetails: { ...examDetails, timeLeft: parseInt(examDetails['ending_at']) - parseInt(examDetails['starting_at']) } }
+        });
+        dispatch({ type: SET_QUESTION_INDEX, payload: { questionIndex: 0 } });
+
+        const examQuestions = await fetchExamQuestionsStudent(examId, controller);
+        console.log("exam PreviewQuestions for students", examQuestions);
+        const questions = examQuestions.map(
+            ({
+                 is_active,
+                 time_limit,
+                 points,
+                 question_text,
+                 question_type,
+                 question_id,
+                 who_can_see,
+                 file_path,
+                 options,
+                 answerKey,
+                 maxAnswerCount
+             }, i) => {
+                return {
+                    answerKey,
+                    isActive: is_active,
+                    options,
+                    time: time_limit * 60,
+                    points: points,
+                    questionText: question_text,
+                    questionType: question_type,
+                    tmpId: question_id,
+                    userAnswer: null,
+                    whoCanSee: who_can_see,
+                    previewFile: file_path,
+                    maxAnswerCount
+                };
+            }
+        );
+        dispatch({ type: SET_EXAM_QUESTIONS_STUDENT, payload: { questions } });
+        setIsLoading(true);
+    }
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchExamDetailsForStudent(examId, controller).then((data) => {
-            if (data == null) {
-                navigate(`/courses/${course?.courseId}/exams`)
-                toast("no exam found!")
-            }else {
-                dispatch({
-                    type: SET_STUDENT_EXAM_DETAILS,
-                    payload: {examDetails:
-                            {...data, timeLeft :parseInt(data['ending_at']) - parseInt(data['starting_at'])}}
-                });
-                dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: 0}});
-            }
-        });
-        fetchExamQuestionsStudent(examId, controller).then((data) => {
-            console.log("exam PreviewQuestions for students", data);
-            const questions = data.map(
-                (
-                    {
-                        is_active,
-                        time_limit,
-                        points,
-                        question_text,
-                        question_type,
-                        question_id,
-                        who_can_see,
-                        file_path,
-                        options,
-                        answerKey,
-                        maxAnswerCount
-                    },
-                    i
-                ) => {
-                    return {
-                        answerKey,
-                        isActive: is_active,
-                        options,
-                        time: time_limit * 60,
-                        points: points,
-                        questionText: question_text,
-                        questionType: question_type,
-                        tmpId: question_id,
-                        userAnswer: null,
-                        whoCanSee: who_can_see,
-                        previewFile: file_path,
-                        maxAnswerCount
-                    };
-                }
-            );
-            dispatch({ type: SET_EXAM_QUESTIONS_STUDENT, payload: { questions } });
-            setIsLoading(true)
-        });
+        fetchExamData(examId,controller).then(console.log).catch(console.log)
         return () => {
             controller.abort();
         };
@@ -104,9 +122,15 @@ function ExamStudent() {
                     size={40}
                     thickness={4}
                 />
-                {/*{examsStudent.PreviewQuestions[examsStudent?.questionIndex].time != null ? <QuestionTimer /> : null}*/}
-                <QuestionNavigation />
-                <StudentQuestion />
+                 {/*<QuestionTimer />*/}
+                <Grid container spacing={10} style={{margin: "0.15% 0"}}>
+                    <Grid item xs={3} className={classes.innerContainer}>
+                        <QuestionNavigation />
+                    </Grid>
+                    <Grid item xs={9} className={classes.innerContainer}>
+                        <StudentQuestion />
+                    </Grid>
+                </Grid>
             </>
         );
     }

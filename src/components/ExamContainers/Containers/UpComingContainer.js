@@ -1,9 +1,4 @@
-import * as PropTypes from "prop-types";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import GradedExam from "../GradedExam";
-import PendingExam from "../PendingExam";
-import MissedExam from "../MissedExam";
 import UpComingExam from "../UpComingExam";
 import NoExam from "../NoExam";
 import WithContainer from "../withContainer";

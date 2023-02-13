@@ -11,6 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import {connect, useDispatch, useSelector} from "react-redux";
 import ExamStudentReducer from "../../store/reducers/ExamStudentReducer";
 import {SET_QUESTION_USER_ANSWER} from "../../store/actions";
+import {calcState} from "../../utils/global/GlobalConstants";
+import {Editor} from "react-draft-wysiwyg";
+import {convertToHTML} from "draft-convert";
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
         padding: 30,
@@ -46,7 +49,7 @@ function Mcq({ questionIndex }) {
                 <FormControlLabel
                     value={options[index]['optionValue']}
                     control={<Radio id={index}/>}
-                    label={options[index]['optionValue']}
+                    label={<p dangerouslySetInnerHTML={{__html: convertToHTML(calcState(options[index]["optionValue"]).getCurrentContent())}} />}
                 />
                 {options[index]["img"] != null ? (
                     <img style={{width: '100%',outline: '1px solid'}} src={options[index]["img"]["preview"]} alt={"question"} />
@@ -59,7 +62,7 @@ function Mcq({ questionIndex }) {
         console.log(e.target)
         dispatch({
             type: SET_QUESTION_USER_ANSWER,
-            payload: {userAnswer: e.target.id},
+            payload: {userAnswer: e.target.id,index: questionIndex},
         });
     }
     useEffect(()=>{

@@ -27,6 +27,7 @@ import { deleteAnnouncement } from "../../../api/services/Annoucments";
 import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
 import EditEditor from "./EditEditor";
 import {useParams} from "react-router-dom";
+import {convertToHTML} from "draft-convert";
 
 const useStyles = makeStyles((theme) => ({
     paperStyle: {
@@ -34,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
         margin: "auto auto 0.8rem auto",
     },
     userContainer: {
-        width: "100%",
         position: "relative",
         display: "flex",
         flexDirection: "row",
@@ -67,12 +67,23 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         width: "100%",
     },
+    commentsMetaData:{
+      display: "inline-flex",
+      padding: "10px",
+      alignItems:"center"
+    },
     howManyComments: {
-        marginTop: "0.62rem",
-        marginBottom: 0,
+        display: "inline-block",
+        paddingLeft: "10px",
+        margin: 0,
         color: "#818181",
         fontSize: "0.85rem",
         cursor: "pointer",
+    },
+    commentsIcon:{
+        margin:0,
+        padding: 0,
+        width: '18px'
     },
     container: {
         display: "flex",
@@ -195,21 +206,16 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                 /> : null}
             </div>
             <Grid item xs={12} style={{ padding: "0 0.8rem" }}>
-                { !editAnnouncement ? <Editor
-                    readOnly={true}
-                    editorState={editorState}
-                    toolbar={{
-                        options: []
-                    }}
-                /> : <EditEditor text={text}/>
-                 }
+                {!editAnnouncement ? <div dangerouslySetInnerHTML={{__html: convertToHTML(calcState(text).getCurrentContent())}} /> : <EditEditor text={text}/>}
             </Grid>
             <Divider />
-            {courseObj['allow_students_to_comment'] === 1 ? <div onClick={handleComments}>
+            {courseObj['allow_students_to_comment'] === 1 ? <div className={classes.commentsMetaData} onClick={handleComments}>
+                <img className={classes.commentsIcon} src="/images/icons/comments_icon.svg" alt='icon'/>
                 <p className={classes.howManyComments}>
                     {course.announcements[announcementIndex].comments.length} comments
                 </p>
             </div>: null}
+            <Divider />
             <CommentContainer
                 openCommentContainer={openCommentContainer}
                 announcementIndex={announcementIndex}

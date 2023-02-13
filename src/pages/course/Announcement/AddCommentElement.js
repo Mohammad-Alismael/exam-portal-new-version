@@ -8,6 +8,7 @@ import {setCourseAnnouncements} from "../../../actions/CourseAction";
 import {SET_COURSE_ANNOUNCEMENTS} from "../../../store/actions";
 import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
     addComment: {
         position: 'relative',
@@ -17,7 +18,10 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '10px',
         justifyContent: 'space-around',
         backgroundColor: '#fff',
-        height: 41,
+        height: 39,
+        width: '92%',
+        border: "1px solid #818181",
+        float: 'right',
         "& input":{
             border: 'none',
             width: '80%',
@@ -37,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
 export default function AddCommentElement({announcementId,announcementIndex}) {
     const [commentText,setCommentText] = useState()
     const course = useSelector((state) => state.CourseReducer);
+    const {user} = useSelector((state) => state.UserReducerV2);
+
     const dispatch = useDispatch();
 
     const postComment = (e) => {
@@ -60,13 +66,18 @@ export default function AddCommentElement({announcementId,announcementIndex}) {
     }
 
     const classes = useStyles();
-    return <div className={classes.addComment}>
-        <AttachFileIcon className={classes.icon}/>
-        <input
-            type={"text"}
-            placeholder={"add class comment"}
-            onChange={(e)=>(setCommentText(e.target.value))}
-        />
-        <SendIcon className={classes.icon} onClick={postComment} />
-    </div>;
+    return(
+    <div style={{display: 'inline'}}>
+        <Avatar style={{display:'inline-flex'}} alt={user?.username} src="/static/images/avatar/2.jpg" />
+        <div className={classes.addComment}>
+            <input
+                type="text"
+                placeholder="write a comment ... "
+                onChange={(e)=>(setCommentText(e.target.value))}
+            />
+            <AttachFileIcon className={classes.icon}/>
+            <SendIcon className={classes.icon} onClick={postComment} />
+        </div>
+    </div> )
+    ;
 }
