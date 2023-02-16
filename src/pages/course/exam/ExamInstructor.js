@@ -29,12 +29,11 @@ const useStyles = makeStyles((theme) => ({
     },
     containerForOnClick: {
         width: '100%',
-        padding: '1rem',
+        padding: '0.6rem',
         display: 'flex',
         flexDirection: 'row',
         alignItems:'center',
         justifyContent: 'space-between',
-        // backgroundColor: 'red'
     },
     subContainer:{
         display: 'flex',
@@ -46,10 +45,6 @@ const useStyles = makeStyles((theme) => ({
             marginLeft: '0.8rem'
         }
     },
-    time: {
-        display: 'flex',
-        flexDirection: 'column',
-    }
 }));
 
 function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
@@ -83,10 +78,10 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
                 <div className={classes.subContainer}>
                     <div className={classes.time}>
                         <Typography variant="caption">
-                            {moment(startingAt).format("MMMM Do YYYY, h:mm:ss a")}
-                        </Typography>
+                            {moment(startingAt).format("MMMM Do, h:mm:ss a")}
+                        </Typography> {" - "}
                         <Typography variant="caption">
-                            {moment(endingAt).format("MMMM Do YYYY, h:mm:ss a")}
+                            {moment(endingAt).format("MMMM Do, h:mm:ss a")}
                         </Typography>
                     </div>
                 </div>
@@ -97,7 +92,6 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
                 functions={[function (e) {
                     e.stopPropagation()
                     deleteExam(examId).then((data) => {
-                        console.log(data)
                         const newExamsArray = course.exams.filter(({exam_id},i)=>{
                             return exam_id !== examId
                         })
@@ -107,11 +101,11 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
                 },
                     function (e) {
                     e.stopPropagation()
-                    navigate(`/courses/${course?.courseId}/grades/${examId}`)
+                    navigate(`/courses/${course_id}/grades/${examId}`)
 
                 },function (e) {
                     e.stopPropagation()
-                    navigate(`/courses/${course?.courseId}/statistics/${examId}`)
+                    navigate(`/courses/${course_id}/statistics/${examId}`)
 
                 }]}
             />

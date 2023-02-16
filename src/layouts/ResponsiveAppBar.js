@@ -161,15 +161,6 @@ const ResponsiveAppBar = (props) => {
                         className={classes.logo}
                         alt="ExamInstructor Portal"
                     />
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
                     <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                         <IconButton
                             size="large"

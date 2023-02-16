@@ -23,41 +23,43 @@ const Truth = ({questionIndex}) => {
     const {submissions} = useSelector((state) => state.SubmissionsReducer);
     const classes = useStyles();
     const itemsRef = useRef([]);
-
+    const handleRef = (el, index) => {
+        itemsRef.current[index] = el;
+    };
     useEffect(()=>{
         // if the user checked the correct answer make it green and make the rest black
         // if the user didn't check the correct answer make the user answer red and correct answer green
 
         const answerKey = parseInt(submissions[questionIndex].answerKey);
         const userAnswer = parseInt(submissions[questionIndex].userAnswer[0]);
-        // console.log('userAnswer',answerKey)
-        // console.log('answerKey',userAnswer)
-        // console.log('case1',userAnswer === answerKey && userAnswer === 0 )
-        // console.log('case2',userAnswer === answerKey && userAnswer === 1 )
-        // console.log('case3','else')
-        if (userAnswer === answerKey && userAnswer === 0){
-            itemsRef.current[0].style.color = 'rgb(84,255,56)'
-            itemsRef.current[1].style.color = 'rgb(0,0,0)'
-        } else if (userAnswer === answerKey && userAnswer === 1){
-            itemsRef.current[0].style.color = 'rgb(0,0,0)'
-            itemsRef.current[1].style.color = 'rgb(84,255,56)'
-        }else{
-            itemsRef.current[answerKey].style.color = 'rgb(84,255,56)'
-            itemsRef.current[userAnswer].style.color = 'rgb(255,104,56)'
+        // Update the styles of the answer elements based on the user's answer
+        if (userAnswer === answerKey && userAnswer === 0) {
+            // If the user's answer is correct and is the first option
+            itemsRef.current[0].style.color = "rgb(84,255,56)";
+            itemsRef.current[1].style.color = "rgb(0,0,0)";
+        } else if (userAnswer === answerKey && userAnswer === 1) {
+            // If the user's answer is correct and is the second option
+            itemsRef.current[0].style.color = "rgb(0,0,0)";
+            itemsRef.current[1].style.color = "rgb(84,255,56)";
+        } else {
+            // If the user's answer is incorrect
+            itemsRef.current[answerKey].style.color = "rgb(84,255,56)";
+            itemsRef.current[userAnswer].style.color = "rgb(255,104,56)";
         }
+        console.log(submissions[questionIndex])
     },[])
 
     return (
-        <RadioGroup style={{ marginLeft: 12 }}>
+        <RadioGroup>
             <FormControlLabel
                 value={0}
-                control={<Radio disabled={true}checked={submissions[questionIndex].userAnswer == 0} />}
-                label={<Typography ref={el => itemsRef.current[0] = el}>False</Typography>}
+                control={<Radio disabled={true} checked={submissions[questionIndex].userAnswer == 0} />}
+                label={<Typography ref={el => handleRef(el,0)}>False</Typography>}
             />
             <FormControlLabel
                 value={1}
                 control={<Radio disabled={true} checked={submissions[questionIndex].userAnswer == 1}/>}
-                label={<Typography ref={el => itemsRef.current[1] = el}>True</Typography>}
+                label={<Typography ref={el => handleRef(el,1)}>True</Typography>}
             />
         </RadioGroup>
     );

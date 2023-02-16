@@ -9,6 +9,7 @@ import Question from "../../components/ResultQuestions/Question";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@mui/material";
 import {correctQuestions} from "../../api/services/UserAnswer";
+import {TEXT_QUESTION_TYPE} from "../../utils/global/GlobalConstants";
 const useStyles = makeStyles((theme) => ({
     questionContainer: {
         margin: "5% 15%",
@@ -21,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
 
 function getQuestions(data) {
     const questionTextType = data.filter((item) => {
-        return parseInt(item["questionDetails"]['question_type']) === 2
+        return parseInt(item["questionDetails"]['question_type']) === TEXT_QUESTION_TYPE
     })
     const restOfQuestions = data.filter((item) => {
-        return parseInt(item["questionDetails"]['question_type']) !== 2
+        return parseInt(item["questionDetails"]['question_type']) !== TEXT_QUESTION_TYPE
     })
     return {questionTextType, restOfQuestions};
 }
@@ -32,36 +33,50 @@ function getQuestions(data) {
 function StudentExamResult(props) {
     const classes = useStyles();
     const { examId,username } = useParams();
-    const [studentId,setStudentId] = useState(null)
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {user} = useSelector((state) => state.UserReducerV2);
     const {submissions} = useSelector((state) => state.SubmissionsReducer);
     const updateSubmit = (e) => {
-        correctQuestions(examId,username).then((data)=>{
-            if (data.response.status === 200){
-                navigate('/courses')
-            }
-        })
-            .catch(console.log)
-    }
-    useEffect(()=>{
+        correctQuestions(examId, username)
+            .then((data) => {
+                console.log("updateSubmit => ", data);
+                if (data?.status === 206) {
+                    navigate('/courses');
+                }
+            })
+            .catch((error) => {
+                console.log("An error occurred: ", error);
+                // Handle the error here, for example, by showing an error message to the user
+            });
+    };
+
+    useEffect(() => {
         const controller = new AbortController();
 
-        fetchStudentSubmission(examId,username,controller).then((data)=>{
-            const {questionTextType, restOfQuestions} = getQuestions(data);
-            console.log('wtf', data)
-            const insertedData = parseInt(user?.role_id) === 3 ? questionTextType.concat(restOfQuestions) : data
-            dispatch({
-                type: SET_SUBMISSIONS,
-                payload: {submissions: insertedData},
-            });
-        })
-            .catch(console.log)
+        const fetchSubmission = async () => {
+            try {
+                const data = await fetchStudentSubmission(examId, username, controller);
+                const { questionTextType, restOfQuestions } = getQuestions(data);
+                console.log('wtf', data)
+                console.log({ questionTextType, restOfQuestions })
+                const insertedData = parseInt(user?.role_id) === 3 ? questionTextType.concat(restOfQuestions) : data;
+                dispatch({
+                    type: SET_SUBMISSIONS,
+                    payload: { submissions: insertedData },
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchSubmission();
+
         return () => {
             controller.abort();
         };
-    },[])
+    }, [examId, username, user, dispatch]);
+
     return (
         <div>
             <ResponsiveAppBar />
@@ -83,7 +98,6 @@ function StudentExamResult(props) {
                     </Button>
                 </div> : null }
             </div>
-
         </div>
     );
 }

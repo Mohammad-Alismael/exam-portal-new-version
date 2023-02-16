@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 import { toast } from "react-toastify";
+import {useStyleExamStudentCard} from "../../utils/global/useStyles";
 
 const useStyles = makeStyles(({ palette }) => ({
     itemElement: {
@@ -27,47 +28,51 @@ const useStyles = makeStyles(({ palette }) => ({
         color: "#000000",
     },
     examTitle: {
+        textTransform: 'capitalize',
+        paddingTop: '0.5rem',
         marginBottom: "3px",
         fontWeight: "bold",
     },
     submittedAt: {
-        fontSize: "12px",
-        marginTop: "3px",
-    },
-    icon: {
-        width: 40,
-        height: 40,
-        margin: "1rem",
-    },
+        fontSize: "10px",
+        paddingTop: "8px",
+        color: '#818181'
+    }
 }));
 
-export default function UpComingExam({ title, examId, startingAt, endingAt }) {
+export default function UpComingExam({ title, examId, startingAt, endingAt}) {
     const classes = useStyles();
     const navigate = useNavigate();
-
+    const classCircle = useStyleExamStudentCard({
+        color: '#42D62A'
+    })
     const redirect = (e) => {
         e.preventDefault();
         const now = new Date().getTime();
         if (startingAt < now && endingAt > now) navigate(`/exam/${examId}`);
         else toast.info("you are too late foe taking this exam");
     };
+    const isSameDay = moment(startingAt).isSame(endingAt, 'day');
+    const formattedStartingAt = moment(startingAt).format('dddd Do, h:mm:ss a');
+    const formattedEndingAt = moment(endingAt).format('h:mm:ss a');
     return (
         <div className={classes.itemElement} onClick={redirect}>
-            <img
-                className={classes.icon}
-                src={"/images/icons/exam_logo.svg"}
-                alt={"logo"}
-            />
+            <div className={classCircle.circle}>
+                <span>New</span>
+            </div>
             <div className={classes.headerContainer}>
                 <p className={classNames(classes.miniHeader, classes.examTitle)}>
                     {title}
                 </p>
-                <p className={classNames(classes.miniHeader, classes.submittedAt)}>
-                    Starting at {moment(startingAt).format("MMMM Do YYYY, h:mm:ss a")}
-                </p>
-                <p className={classNames(classes.miniHeader, classes.submittedAt)}>
-                    Ending at {moment(endingAt).format("MMMM Do YYYY, h:mm:ss a")}
-                </p>
+                {
+                    isSameDay ?  (
+                        <p className={classNames(classes.miniHeader, classes.submittedAt)}>
+                            {formattedStartingAt} - {formattedEndingAt}
+                        </p>
+                    ) : (<p className={classNames(classes.miniHeader, classes.submittedAt)}>
+                        {moment(startingAt).format("dddd Do, h:mm:ss a")} - {moment(endingAt).format("dddd Do, h:mm:ss a")}
+                    </p>)
+                }
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
+import {useStyleExamStudentCard} from "../../utils/global/useStyles";
 
 const useStyles = makeStyles(({ palette }) => ({
     itemElement: {
@@ -32,38 +33,25 @@ const useStyles = makeStyles(({ palette }) => ({
     submittedAt: {
         fontSize: "12px",
         marginTop: "10px",
-    },
-    circle: {
-        display: "inline-block",
-        border: `3px solid #FF6838`,
-        borderRadius: "50%",
-        width: "60px",
-        height: "60px",
-        margin: "0.5rem",
-        "& span:nth-child(1)": {
-            marginLeft: "17%",
-            marginTop: "36%",
-            fontWeight: "semi-bold",
-            display: "block",
-            fontSize: 12,
-            color: "#FF6838",
-        },
-    },
+    }
 }));
 
 export default function MissedExam({ title, endingAt }) {
     const classes = useStyles();
+    const styleExamStudentCard = useStyleExamStudentCard({
+        color: '#FF6838'
+    })
     return (
         <div className={classes.itemElement}>
-            <div className={classes.circle}>
+            <div className={styleExamStudentCard.circle}>
                 <span>Missed</span>
             </div>
             <div className={classes.headerContainer}>
-                <p className={classNames(classes.miniHeader, classes.examTitle)}>
+                <p className={classNames(classes.miniHeader,styleExamStudentCard.examTitle)}>
                     {title}
                 </p>
-                <p className={classNames(classes.miniHeader, classes.submittedAt)}>
-                    Ended at {moment(endingAt).format("MMMM Do YYYY, h:mm:ss a")}
+                <p className={classNames(styleExamStudentCard.submittedAt)}>
+                    Ended at {moment(endingAt).format("MMMM Do,h:mm:ss a")}
                 </p>
             </div>
         </div>

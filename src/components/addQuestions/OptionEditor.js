@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
         // borderTop: '1px solid #D9D9D9'
     },
     container:{
-        padding: "15% 10%"
+        padding: "10%"
     }
 }));
 export const OptionEditor = ({open,editorStateOption,setEditOpen,addOption,updateQuestionOption}) => {

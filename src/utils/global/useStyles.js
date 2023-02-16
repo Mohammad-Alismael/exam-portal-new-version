@@ -1,51 +1,50 @@
 import {createTheme, makeStyles} from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
-    paperStyle: {
+    paperStyle:{
         padding: 30,
         height: '15vh auto',
         width: '50%',
         margin: "30px auto",
         position: 'relative'
     },
-    textField: {
+    textField:{
         width: '100%',
     },
-    dropDown: {
+    dropDown:{
         margin:"50px"
     },
-    deleteIcon : {
+    deleteIcon:{
         float: "right",
         cursor: "pointer",
         position: 'absolute',
         top: 15,
         right: 15
-        // paddingTop: 20
     }
 }));
 
 export const authStyles = makeStyles((theme) => ({
-    root: {
+    root:{
         flexGrow: 1,
         backgroundColor: '#1a1a1a',
     },
-    paperStyle: {
+    paperStyle:{
         padding: 30,
         height: '70vh',
         width: '35%',
         margin: "30px auto"
     },
-    paper: {
+    paper:{
         marginTop: theme.spacing(5),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
     },
-    form: {
+    form:{
         maxWidth: '320px',
         align: 'center',
     },
-    signUpBtn: {
+    signUpBtn:{
         margin: theme.spacing(3, 0, 2),
         textTransform: 'none',
         fontSize: 17,
@@ -91,9 +90,36 @@ export const theme = createTheme({
         error: {
             main: 'rgb(255,104,56)'
         }
-
     },
     background: {
         default: "#222222",
     }
 })
+
+export const useStyleExamStudentCard = makeStyles((theme)=> ({
+    circle:(props) => ({
+        display: "inline-flex",
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: `3px solid ${props.color}`,
+        borderRadius: "50%",
+        width: "60px",
+        height: "60px",
+        margin: "0.5rem",
+        "& span:nth-child(1)": {
+            fontWeight: "semi-bold",
+            display: "block",
+            fontSize: 12,
+            color: `${props.color}`,
+        },
+    }),
+    examTitle: {
+        textTransform: 'capitalize',
+        paddingBottom: "0.1rem",
+        fontWeight: "bold",
+    },
+    submittedAt: {
+        fontSize: "10px",
+        color: '#818181'
+    }
+}))

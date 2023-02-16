@@ -30,7 +30,7 @@ async function correctQuestionText(points,questionId,username) {
 async function correctQuestions(examId,username) {
     try {
         const res = await axiosPrivate.post(CORRECT_QUESTIONS,{examId,username});
-        return await res;
+        return res;
     } catch (e) {
         console.log(e.response.status);
     }

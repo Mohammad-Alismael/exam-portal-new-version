@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import { connect, useSelector } from "react-redux";
 import * as Actions from "../../store/actions";
 import { Typography } from "@mui/material";
+import {convertToHTML} from "draft-convert";
+import {calcState, createMarkup} from "../../utils/global/GlobalConstants";
 
 function Mcq({ questionIndex }) {
     const { submissions } = useSelector((state) => state.SubmissionsReducer);
@@ -18,7 +20,6 @@ function Mcq({ questionIndex }) {
     useEffect(() => {
         // if the user checked the correct answer make it green and make the rest black
         // if the user didn't check the correct answer make the user answer red and correct answer green
-
         const answerKey = parseInt(submissions[questionIndex].answerKey);
         const userAnswer = parseInt(submissions[questionIndex].userAnswer[0]);
         console.log('answerKey', answerKey)
@@ -29,7 +30,6 @@ function Mcq({ questionIndex }) {
                 itemsRef.current[index].style.color = "rgb(0,0,0)";
             });
         }
-
         if (userAnswer === answerKey) {
             itemsRef.current[userAnswer].style.color = "rgb(84,255,56)";
         } else if (userAnswer !== answerKey) {
@@ -39,6 +39,7 @@ function Mcq({ questionIndex }) {
             makeTheRestBlack();
         }
     }, []);
+
     return (
         <RadioGroup name="radio-buttons-group">
             {options.map((val, index) => {
@@ -53,9 +54,7 @@ function Mcq({ questionIndex }) {
                                 />
                             }
                             label={
-                                <Typography ref={(el) => (itemsRef.current[index] = el)}>
-                                    {options[index]["optionValue"]}
-                                </Typography>
+                                <p ref={(el) => (itemsRef.current[index] = el)} dangerouslySetInnerHTML={{__html: convertToHTML(calcState(options[index]["optionValue"]).getCurrentContent())}} />
                             }
                         />
                     </Grid>

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ExamStudent() {
     const classes = useStyles();
-    const { examId } = useParams();
+    const { examId,course_id } = useParams();
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const [isLoading, setIsLoading] = React.useState(false);
     const dispatch = useDispatch();
@@ -122,12 +122,11 @@ function ExamStudent() {
                     size={40}
                     thickness={4}
                 />
-                 {/*<QuestionTimer />*/}
-                <Grid container spacing={10} style={{margin: "0.15% 0"}}>
-                    <Grid item xs={3} className={classes.innerContainer}>
+                <Grid container spacing={10} style={{padding: '7% 15%'}}>
+                    <Grid item xs={12} md={3} lg={3} xl={3}  className={classes.innerContainer}>
                         <QuestionNavigation />
                     </Grid>
-                    <Grid item xs={9} className={classes.innerContainer}>
+                    <Grid item xs={12} md={9} lg={9} xl={9} className={classes.innerContainer}>
                         <StudentQuestion />
                     </Grid>
                 </Grid>

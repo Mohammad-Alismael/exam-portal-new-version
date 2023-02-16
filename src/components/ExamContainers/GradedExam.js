@@ -3,13 +3,13 @@ import * as PropTypes from "prop-types";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment/moment";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { useSelector } from "react-redux";
+import {useStyleExamStudentCard} from "../../utils/global/useStyles";
 
 const useStyles = makeStyles(({ palette }) => ({
     itemElement: {
-        backgroundColor: "#fff",
-        // width: '100%',
+        backgroundColor: "#FFF",
         minWidth: "100%",
         marginBottom: "0.8rem",
         borderRadius: "15px",
@@ -17,6 +17,8 @@ const useStyles = makeStyles(({ palette }) => ({
         cursor: "pointers",
     },
     headerContainer: {
+        position: "absolute",
+        top: "0.9rem",
         display: "inline-block",
         height: "60px",
     },
@@ -28,10 +30,6 @@ const useStyles = makeStyles(({ palette }) => ({
     examTitle: {
         // marginBottom: '10px',
         fontWeight: "bold",
-    },
-    submittedAt: {
-        marginTop: "5px",
-        fontSize: "12px",
     },
     circle: {
         display: "inline-block",
@@ -59,12 +57,15 @@ const useStyles = makeStyles(({ palette }) => ({
 export default function GradedExam({ percent, examId, title, submittedAt }) {
     const classes = useStyles();
     const navigate = useNavigate();
+    const {course_id} = useParams();
+    const styleExamStudentCard = useStyleExamStudentCard({
+        color: '#FFCD38'
+    })
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const redirect = (e) => {
-        // alert('wrf')
         e.preventDefault();
-        navigate(`/courses/${course.courseId}/grades/${examId}/${user?.username}`);
+        navigate(`/courses/${course_id}/grades/${examId}/${user?.username}`);
     };
     return (
         <div className={classes.itemElement} onClick={redirect}>
@@ -73,11 +74,11 @@ export default function GradedExam({ percent, examId, title, submittedAt }) {
                 <span>Percent</span>
             </div>
             <div className={classes.headerContainer}>
-                <p className={classNames(classes.miniHeader, classes.examTitle)}>
+                <p className={classNames(classes.miniHeader,styleExamStudentCard.examTitle)}>
                     {title}
                 </p>
-                <p className={classNames(classes.miniHeader, classes.submittedAt)}>
-                    Submitted at {moment(submittedAt).format("MMMM Do YYYY, h:mm:ss a")}
+                <p className={classNames(styleExamStudentCard.submittedAt)}>
+                    Submitted at {moment(submittedAt).format("MMMM Do,h:mm:ss a")}
                 </p>
             </div>
         </div>

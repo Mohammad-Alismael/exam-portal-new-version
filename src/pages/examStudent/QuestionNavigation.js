@@ -6,11 +6,8 @@ import {SET_QUESTION_INDEX} from "../../store/actions";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 const useStyles = makeStyles((theme) => ({
-    container: {
-        backgroundColor: 'green'
-        // margin: "10% 15%",
-        // padding: "1rem",
-        // backgroundColor: '#FFF',
+    container:{
+
     },
     numberContainer: {
         borderRadius: '5px',
@@ -19,12 +16,14 @@ const useStyles = makeStyles((theme) => ({
         padding: '0.8rem',
         margin: '0.8rem',
         cursor: "pointer",
-        "& p": {
+        width: '1rem',
+        aspectRatio: '1/1',
+        "& > p": {
             float: 'center',
             padding: 0,
             margin: 0,
-            // margin: '0 0 0 25%',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            textAlign: 'center'
         }
     }
 }));
@@ -36,7 +35,7 @@ function QuestionNavigation(props) {
     const examStudent = useSelector((state) => state.ExamStudentReducer);
     const handleOnClick = (e,index) => {
         e.preventDefault()
-        if (parseInt(examStudent?.examDetails?.navigation) === 1)
+        if (examStudent?.examDetails?.navigation)
             dispatch({type: SET_QUESTION_INDEX, payload: {questionIndex: index}});
     }
     useEffect(() => {
@@ -48,7 +47,8 @@ function QuestionNavigation(props) {
                 backgroundColor: index < questionIndex ? '#FFCD38' : '#D9D9D9',
             };
 
-            itemsRef.current[index].style = styles;
+            itemsRef.current[index].style.backgroundColor = styles.backgroundColor;
+            itemsRef.current[index].style.outline = styles.outline;
         });
     }, [examStudent?.questionIndex]);
 
@@ -65,7 +65,7 @@ function QuestionNavigation(props) {
                 <Grid xs={12}>
                     <Grid
                         container
-                        justifyContent="flex-start"
+                        justifyContent="center"
                         xs={12}
                         sx={{ mt: 4 }}
                     >

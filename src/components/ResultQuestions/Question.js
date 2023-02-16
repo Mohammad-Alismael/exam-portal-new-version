@@ -23,22 +23,21 @@ export default function Question({ questionIndex }) {
     const questionType = parseInt(submissions[questionIndex]["questionDetails"]['question_type']);
     const dispatch = useDispatch();
 
+    const questionTypeMapping = {
+        1: Mcq,
+        2: Text,
+        3: CheckBoxComp,
+        4: Matching,
+        5: Truth
+    }
+
     const chooseQuestionType = (questionType) => {
-        if (questionType === 1) {
-            return <Mcq questionIndex={questionIndex} />;
-        } else if (questionType === 2) {
-            return <Text questionIndex={questionIndex} />;
-        } else if (questionType === 3) {
-            return <CheckBoxComp questionIndex={questionIndex} />;
-        } else if (questionType === 4) {
-            return <Matching questionIndex={questionIndex} />;
-        } else {
-            return <Truth questionIndex={questionIndex} />;
-        }
+        const Component = questionTypeMapping[questionType];
+        return <Component questionIndex={questionIndex} />;
     };
     return (
         <Paper elevation={3} className={classes.questionContainer}>
-            <Grid container spacing={2} sx={{ mt: 2, mb: 2, padding: "0 1rem" }}>
+            <Grid container spacing={2} sx={{ mt: 2, padding: "0 1rem" }}>
                 <QuestionImg questionIndex={questionIndex} />
                 {questionType !== 4 ? (
                     <QuestionText questionIndex={questionIndex} />
@@ -53,7 +52,7 @@ export default function Question({ questionIndex }) {
                     <QuestionPointsForText questionIndex={questionIndex} />
                 ) : null}
             </Grid>
-            <Grid item xs={12} style={{ margin: "0 12px" }}>
+            <Grid item xs={12} sx={{mt: 2,padding: "0 24px 24px 24px" }}>
                 {chooseQuestionType(
                     submissions[questionIndex]["questionDetails"].question_type
                 )}

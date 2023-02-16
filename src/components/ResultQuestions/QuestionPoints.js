@@ -12,15 +12,7 @@ export default function QuestionPoints({ questionIndex }) {
     return (
         <>
             <Grid item xs={2}>
-                <Typography
-                    style={{ color: "black" }}
-                    sx={{ float: "right", flex: 1 }}
-                    variant="subtitle1"
-                >
-                    <b>
-                        {userPoints}/{questionPoints} points
-                    </b>
-                </Typography>
+                <h3 style={{float:'right'}}><b>{userPoints}/{questionPoints} points</b></h3>
             </Grid>
         </>
     );

@@ -4,14 +4,16 @@ import NoExam from "./NoExam";
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     itemContainer: {
-        // backgroundColor: 'blue',
-        width: "50%",
-        height: "80%",
-        margin: " 2rem",
+        margin: "2rem",
+    },
+    len: {
+        fontSize: '1rem',
+        color: '#868686',
+        margin: '0 0.2rem'
     },
     elementsContainer: {
+        height: '75vh',
         overflowY: "auto",
-        height: "75%",
         "&::-webkit-scrollbar": {
             width: "0 !important",
         },
@@ -19,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     itemContainerHeader: {
         color: "#fff",
         textTransform: "capitalize",
-        fontWeight: 700,
+        fontWeight: 800,
         fontSize: 22,
         margin: "1rem 0",
         padding: 0,
@@ -30,7 +32,7 @@ function WithContainer(WrappedComponent) {
         const classes = useStyles();
         return (
             <div className={classes.itemContainer}>
-                <h4 className={classes.itemContainerHeader}>{props.title}</h4>
+                <h4 className={classes.itemContainerHeader}>{props.title} <span className={classes.len}>({props.exams.length})</span></h4>
                 <div className={classes.elementsContainer}>
                     <WrappedComponent {...props} />
                 </div>

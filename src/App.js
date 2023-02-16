@@ -48,7 +48,7 @@ function App(props) {
             }
             isMounted && setLoading(false);
         };
-        refreshToken();
+        refreshToken().then(console.log);
         return () => {
             isMounted = false;
         };

@@ -27,6 +27,7 @@ function ExamStudentNavbar(props) {
     const submitExam = (e) => {
         e.preventDefault()
         submitUserAnswer(examStudent?.questions,examId).then((data)=>{
+            console.log("exam submitted =>", data);
             navigate(`/courses/${course?.courseId}/exams`)
             toast("you have successfully submitted the exam!")
         }).catch((err)=>{

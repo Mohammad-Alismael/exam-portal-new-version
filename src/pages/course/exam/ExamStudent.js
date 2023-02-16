@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import moment from "moment";
 import { toast } from "react-toastify";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -86,6 +86,7 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const dispatch = useDispatch();
+    const {course_id} = useParams();
     const [finalGrade, setFinalGrade] = useState(null);
     const [submittedAt, setSubmittedAt] = useState(null);
     const [didUserSubmit_, setUserSubmit_] = useState(null);
@@ -118,7 +119,7 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
         } else if (finishedExamButNoGraded()) {
             toast.info("you have submitted but not graded");
         } else {
-            navigate(`/courses/${course.courseId}/grades/${examId}/${user?.username}`);
+            navigate(`/courses/${course_id}/grades/${examId}/${user?.username}`);
         }
     };
 
@@ -146,7 +147,7 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
         <Paper elevation={5} className={classes.container}>
             <div className={classes.containerForOnClick} onClick={redirect}>
                 <div className={classes.subContainer}>
-                    <img src={"/images/icons/exam_logo.svg"} alt={"logo"} />
+                    <img src="/images/icons/exam_logo.svg" alt="logo" />
                     <Typography variant="h6">{examTitle}</Typography>
                 </div>
                 {finalGrade != null ? (

@@ -41,7 +41,8 @@ export default function HorizontalLinearStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [postExamLoading, setPostExamLoading] = React.useState(false);
-    const { examId } = useParams();
+    const { examId,course_id } = useParams();
+    console.log({examId,course_id})
     const exam = useSelector((state) => state.ExamReducer);
     const course = useSelector(state => state.CourseReducer);
     const location = useLocation();
@@ -68,7 +69,7 @@ export default function HorizontalLinearStepper(props) {
     async function updateExam() {
 
         try {
-            const detailsRes = await updateExamDetails({ ...exam, examId,courseId: course?.courseId });
+            const detailsRes = await updateExamDetails({ ...exam, examId,courseId: course_id });
             // toast.info(detailsRes.message);
 
             if (!exam || exam.questions.length === 0) {
@@ -112,15 +113,15 @@ export default function HorizontalLinearStepper(props) {
                 toast.info("exam update it successfully !");
             } else {
                 const totalPoints = calcTotalPoints();
-                const res = await createExam({ ...exam, courseId: course?.courseId, totalPoints });
+                const res = await createExam({ ...exam, courseId: course_id, totalPoints });
                 console.log("exam created =>", res)
-                const questionsResult = await createQuestionsRequest({ questions: exam.questions, courseId: course?.courseId, totalPoints, exam_id: res['exam_id'] });
+                const questionsResult = await createQuestionsRequest({ questions: exam.questions, courseId: course_id, totalPoints, exam_id: res['exam_id'] });
                 console.log(questionsResult);
                 toast.info(res["message"]);
 
             }
             setPostExamLoading(false);
-            navigate(`/courses/${course?.courseId}/exams`);
+            navigate(`/courses/${course_id}/exams`);
             dispatch(ResetExamReducer());
         } catch (e) {
             console.log(e);

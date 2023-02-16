@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function EditExam(props) {
     const classes = useStyles();
-    const { examId } = useParams();
+    const { examId,course_id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ function EditExam(props) {
             console.log("this course =>", course)
             try {
                 const [examDetails, examQuestions] = await Promise.all([
-                    fetchExamDetails(examId, course?.courseId, controller),
+                    fetchExamDetails(examId, course_id, controller),
                     fetchExamQuestions(examId, controller)
                 ]);
 
@@ -152,10 +152,8 @@ function EditExam(props) {
         return () => {
             controller.abort();
         };
-    }, [examId, course, dispatch]);
-    if (loading) {
-        return <CircularProgress size={200} />;
-    }
+    }, [examId, course_id, dispatch]);
+
     if (examDetails1) {
         return (
             <>
@@ -164,20 +162,23 @@ function EditExam(props) {
             </>
         );
     }
-    return (
-        <>
-            <div className={classes.container}>
-                <ExamDetails />
-                {exam.questions.map(({ tmpId }, index) => {
-                    return  <Question
-                        key={tmpId}
-                        questionIndex={getQuestionIndex(tmpId)}
-                        uid={tmpId}
-                    />
-                })}
-            </div>
-        </>
-    );
+    if (loading) {
+        return <CircularProgress size={200} />;
+    }else
+        return (
+            <>
+                <div className={classes.container}>
+                    <ExamDetails />
+                    {exam.questions.map(({ tmpId }, index) => {
+                        return  <Question
+                            key={tmpId}
+                            questionIndex={getQuestionIndex(tmpId)}
+                            uid={tmpId}
+                        />
+                    })}
+                </div>
+            </>
+        );
 }
 
 export default withSideBarAndResAppBar(EditExam);

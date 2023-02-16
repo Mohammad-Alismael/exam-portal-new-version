@@ -40,8 +40,7 @@ function ExamSettings(props) {
     const [checked, setChecked] = React.useState([]);
     const [studentInfo, setStudentInfo] = React.useState("");
     const [students, setStudents] = React.useState([]);
-    const { examId } = useParams();
-    const {course_id } = useParams();
+    const { examId,course_id } = useParams();
     const exam = useSelector((state) => state.ExamReducer);
     const {courseList} = useSelector((state)=> state.CourseListReducer);
 
@@ -155,7 +154,7 @@ function ExamSettings(props) {
             // setChecked(data["specificStudents"])
 
         // })
-
+        console.log(exam);
         return ()=>{
             controller.abort()
         }

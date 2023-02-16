@@ -22,8 +22,6 @@ import {
 import {convertToHTML} from "draft-convert";
 const useStyles = makeStyles((theme) => ({
     questionContainer: {
-        // background: "red",
-        width: "90%",
         padding: "1rem",
     },
 }));
