@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Grades(props) {
+function GradesPage(props) {
     const classes = useStyles();
 
     return (
@@ -64,4 +64,4 @@ function Grades(props) {
     );
 }
 
-export default withSideBarAndResAppBar(Grades);
+export default withSideBarAndResAppBar(GradesPage);

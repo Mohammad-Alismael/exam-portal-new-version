@@ -1,5 +1,16 @@
 import {createTheme, makeStyles} from "@material-ui/core/styles";
+import { Divider } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
+const styles = {
+    root: {
+        height: '100%',
+        margin: 0,
+        borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+    },
+};
+
+export const VerticalDivider = withStyles(styles)(Divider);
 export const useStyles = makeStyles((theme) => ({
     paperStyle:{
         padding: 30,

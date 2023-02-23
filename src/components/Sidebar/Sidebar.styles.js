@@ -13,8 +13,8 @@ export const CourseContainer = styled.div`
   display: block;
   //padding: 1rem 0;
   //overflow: hidden;
-  width: 92.75%;
-  height: 90vh;
+  width: 96%;
+  height: 95vh;
   float: right;
   transition: width 0.5s ease-in-out;
   overflow-y: scroll;

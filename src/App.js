@@ -30,6 +30,7 @@ import CreateExamPage from "./pages/createExamPage/CreateExamPage";
 import {ALL_ROLES, INSTRUCTOR_ROLE, STUDENT_ROLES} from "./utils/global/GlobalConstants";
 import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
 import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
+import StatisticsPage from "./pages/course/statistics/StatisticsPage";
 
 function App(props) {
     const [loading, setLoading] = useState(true);
@@ -128,7 +129,7 @@ function App(props) {
                         path="statistics/:examId"
                         element={
                             <Protected onlyAccessTo={INSTRUCTOR_ROLE}>
-                                <GradesPage />
+                                <StatisticsPage />
                             </Protected>
                         }
                     />

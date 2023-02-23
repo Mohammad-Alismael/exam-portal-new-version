@@ -7,66 +7,21 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { theme, authStyles } from "../utils/global/useStyles";
 import { connect, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import jwt from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
-import { axiosPrivate, token, updateToken } from "../api/axios";
-import { toast } from "react-toastify";
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-
-import { Badge } from "@mui/material";
+import { Alert, AlertTitle, Badge, Popover, Stack } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from "@mui/icons-material/Menu";
+import {fetchNotifications, updateAllNotifications, updateSingleNotification} from "../api/services/Notification";
+import moment from "moment";
+import { convertToHTML } from "draft-convert";
+import { calcState } from "../utils/global/GlobalConstants";
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
 const settings = [{ title: "Logout", url: "/logout" }];
 
 const useStyles = makeStyles((theme) => ({
@@ -78,9 +33,11 @@ const useStyles = makeStyles((theme) => ({
 const ResponsiveAppBar = (props) => {
     const classes = useStyles();
     const [pages, setPages] = useState([]);
+    const [notificationList, setNotificationList] = useState([]);
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [username, setUsername] = useState("");
+    const [notification, setNotification] = useState(false);
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector((state) => state.CourseReducer);
     const navigate = useNavigate();
@@ -120,14 +77,43 @@ const ResponsiveAppBar = (props) => {
         ];
 
         if (parseInt(user.role_id) !== 3)
-            urls.push({title: "exams", url: "/exams-student"})
-        else
-            urls.push({title: "exams", url: "/exams"})
+            urls.push({ title: "exams", url: "/exams-student" });
+        else urls.push({ title: "exams", url: "/exams" });
 
         setPages(urls);
     }
-    const redirectToDashboard = () =>{
-        navigate("/courses")
+    const redirectToDashboard = () => {
+        navigate("/courses");
+    };
+
+    const clickNotificationIcon = () => {
+        setNotification(!notification);
+        Notification.requestPermission().then((perm) => {
+            if (perm === "granted") {
+                new Notification("example notification", {
+                    body: "this is more text",
+                });
+            } else {
+                alert("notitfy me");
+            }
+        });
+    };
+
+    const seeAllBtnHandler = (e) =>{
+        e.preventDefault()
+        updateAllNotifications().then((data)=>{
+            console.log(data)
+            if (data.status === 200 )
+                setNotificationList([])
+        })
+    }
+    const handleNotificationCloseIcon = (id) =>{
+        updateSingleNotification(id).then((data)=>{
+            const newNotificationList = notificationList.filter((val,i)=>{
+                return val.id !== id;
+            })
+            setNotificationList(newNotificationList)
+        })
     }
     useEffect(() => {
         // hiding other routes
@@ -139,7 +125,14 @@ const ResponsiveAppBar = (props) => {
     }, [navigate]);
 
     useEffect(() => {
+        const controller = new AbortController();
         setUsername(user?.username);
+        fetchNotifications(controller).then((data) => {
+            setNotificationList(data);
+        });
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     return (
@@ -187,24 +180,80 @@ const ResponsiveAppBar = (props) => {
                             sx={{
                                 display: { xs: "block", md: "none" },
                             }}
-                        >
-                        </Menu>
+                        ></Menu>
                     </Box>
                     <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-                    <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                    </Box>
+                    <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
                     <Box sx={{ flexGrow: 0, display: "flex" }}>
-                        <MenuItem>
+                        <MenuItem onClick={clickNotificationIcon}>
                             <IconButton
+                                aria-describedby={notification ? "simple-popover" : ""}
                                 size="medium"
                                 aria-label="show 17 new notifications"
                                 color="inherit"
                             >
-                                <Badge badgeContent={17} color="primary">
+                                <Badge badgeContent={notificationList.length} color="primary">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>
+                            <Popover
+                                anchorOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                transformOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                open={notification}
+                            >
+                                <Stack
+                                    sx={{ width: "100%" }}
+                                    spacing={2}
+                                    sx={{ backgroundColor: "secondary.main" }}
+                                >
+                                    {notificationList.length !== 0 ? (<Box onClick={seeAllBtnHandler}>
+                                        <Typography
+                                            sx={{ float: "right", pt: 2, pr: 5 }}
+                                            color="primary"
+                                            variant="overline"
+                                            display="block"
+                                            gutterBottom
+                                        >
+                                            see all
+                                        </Typography>
+                                    </Box>) : null}
+                                    {notificationList.length == 0 ? (
+                                        <Alert color="primary">
+                                            you have no new notifications
+                                        </Alert>
+                                        ): null }
+                                    {notificationList.length !== 0 && notificationList.map(
+                                        (
+                                            {id,class_name, username, announcement_text, created_at },
+                                            i
+                                        ) => {
+                                            return (
+                                                <Alert key={id} onClose={() => {handleNotificationCloseIcon(id)}} color="primary">
+                                                    <AlertTitle>
+                                                        {class_name} - {username} -{" "}
+                                                        {moment(created_at).fromNow()}
+                                                    </AlertTitle>
+                                                    <p
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: convertToHTML(
+                                                                calcState(announcement_text).getCurrentContent()
+                                                            ),
+                                                        }}
+                                                    />
+                                                </Alert>
+                                            );
+                                        }
+                                    )}
+                                </Stack>
+                            </Popover>
                         </MenuItem>
+
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 <Avatar alt={username} src="/static/images/avatar/2.jpg" />
