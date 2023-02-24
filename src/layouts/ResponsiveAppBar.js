@@ -14,21 +14,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Alert, AlertTitle, Badge, Popover, Stack } from "@mui/material";
+import {Alert, AlertTitle, Badge, Popover, Stack, useMediaQuery} from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import {fetchNotifications, updateAllNotifications, updateSingleNotification} from "../api/services/Notification";
 import moment from "moment";
 import { convertToHTML } from "draft-convert";
+
 import { calcState } from "../utils/global/GlobalConstants";
+import SidebarMobile from "../components/Sidebar/SidebarMobile";
 
 const settings = [{ title: "Logout", url: "/logout" }];
 
 const useStyles = makeStyles((theme) => ({
     logo: {
-        marginLeft: "-5px",
-        maxWidth: "13%",
-    },
+        marginRight: '7px',
+        marginLeft: '-5px',
+        maxWidth: "3.5rem",
+        aspectRatio: 1
+    }
 }));
 const ResponsiveAppBar = (props) => {
     const classes = useStyles();
@@ -38,6 +42,7 @@ const ResponsiveAppBar = (props) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [username, setUsername] = useState("");
     const [notification, setNotification] = useState(false);
+    const [openTab, setOpenTab] = useState(false);
     const user = useSelector((state) => state.UserReducerV2).user;
     const course = useSelector((state) => state.CourseReducer);
     const navigate = useNavigate();
@@ -134,12 +139,14 @@ const ResponsiveAppBar = (props) => {
             controller.abort();
         };
     }, []);
+    const isLargeScreen = useMediaQuery('(min-width:768px)');
 
     return (
         <AppBar position="static" color="white">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <IconButton
+                    {!isLargeScreen ? (<IconButton
+                        onClick={()=>{setOpenTab(!openTab)}}
                         size="large"
                         edge="start"
                         color="inherit"
@@ -147,13 +154,14 @@ const ResponsiveAppBar = (props) => {
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton>) : null}
                     <img
                         onClick={redirectToDashboard}
-                        src={"/images/logo.png"}
+                        src="/logo.png"
                         className={classes.logo}
                         alt="ExamInstructor Portal"
                     />
+                    <Typography>Exam portal</Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                         <IconButton
                             size="large"
@@ -289,6 +297,7 @@ const ResponsiveAppBar = (props) => {
                     </Box>
                 </Toolbar>
             </Container>
+            <SidebarMobile openTab={openTab}/>
         </AppBar>
     );
 };

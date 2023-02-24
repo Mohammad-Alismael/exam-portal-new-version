@@ -24,6 +24,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import Button from "@mui/material/Button";
 import EditClassroom from "../classes/EditClassroom";
+import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 
 const useStyles = makeStyles((theme) => ({
     root: {

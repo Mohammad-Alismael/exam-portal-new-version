@@ -173,6 +173,7 @@ function Announcement(props) {
                     console.log(error);
                 });
         }
+        openAnnouncement(true);
     };
 
     function uploadImageCallBack(file) {

@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const Info = css`
   position: absolute;
@@ -7,17 +8,30 @@ const Info = css`
   left: 60px;
   margin: 0;
   transition: opacity 0.2s ease-in-out;
+  @media (max-width: 425px){
+    opacity: 1;
+    display: block;
+  }
 `
-
+export const StyledChevronRightIcon = styled(ChevronRightIcon)`
+  font-size: 35px;
+  position: absolute;
+  right: 1.2rem;
+  top: 10px;
+  display: none;
+  transition: transform 0.2s ease-in-out;
+  transform: rotate(${props => props.opened ? '90deg' : '0deg'})
+`
 export const CourseContainer = styled.div`
   display: block;
-  //padding: 1rem 0;
-  //overflow: hidden;
-  width: 96%;
+  width: 95%;
   height: 95vh;
   float: right;
   transition: width 0.5s ease-in-out;
   overflow-y: scroll;
+  @media (max-width: 425px) {
+    width: 100%;
+  }
 `
 export const CourseCode = styled.p`
   ${Info};
@@ -27,7 +41,6 @@ export const CourseCode = styled.p`
 `
 export const LeftArrow = styled.img`
   width: 12px;
-  display: none;
   position: absolute;
   right: 1.2rem;
   top: 10px;
@@ -65,9 +78,13 @@ export const Container = styled.div`
   padding-top: 1.3rem;
   display: inline-block;
   background-color: #fff;
-  width: 4%;
+  width: 5%;
+  min-width: 45px;
   height: 100vh;
   transition: width 0.5s ease-in-out;
+  @media (max-width: 425px) {
+    display: none;
+  }
   &:hover{
     cursor: pointer;
     width: 15%;
@@ -87,8 +104,13 @@ export const Container = styled.div`
   }
 `
 export const BookIcon = styled.img`
-  width: 30px;
-  margin-left: 0.75rem;
+  width: 2rem;
+  margin-left: 19px;
+  @media (max-width: 768px) {
+    width: 1.5rem;
+    margin-left: 0.50rem;
+  }
+
 `
 export const Item = styled.div`
   margin-bottom: 0.4rem;
@@ -102,8 +124,8 @@ export const Item = styled.div`
   &:hover{
     //background-color: rgba(255, 205, 56, 0.15);
     ${BookIcon}{
-      width: 30px;
-      margin-left: calc(1.2rem - 5px);
+      transform: scale(1);
+      margin-left: calc(1.5rem - 5px);
     }
   }
 `

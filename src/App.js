@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CoursePage from "./pages/course/CoursePage";
 import Logout from "./pages/Logout";
-import { connect, useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -18,10 +18,9 @@ import ResetPassword from "./pages/ResetPassword";
 import ActivateEmail from "./pages/ActivateEmail";
 import Courses from "./pages/classes/Courses";
 import Protected from "./utils/Protected";
-import {axiosPrivate, token, updateToken} from "./api/axios";
+import {token} from "./api/axios";
 import { theme } from "./utils/global/useStyles";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { CircularProgress } from "@material-ui/core";
 import ExamPage from "./pages/course/exam/ExamPage";
 import PeoplePage from "./pages/course/people/PeoplePage";
 import GradesPage from "./pages/GradesPage";
@@ -31,6 +30,7 @@ import {ALL_ROLES, INSTRUCTOR_ROLE, STUDENT_ROLES} from "./utils/global/GlobalCo
 import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
 import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
 import StatisticsPage from "./pages/course/statistics/StatisticsPage";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function App(props) {
     const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ function App(props) {
     }, [token, user, location]);
 
     if (loading) {
-        return <CircularProgress size={200}/>;
+        return <LoadingSpinner />;
     }
     return (
         <ThemeProvider theme={theme}>
