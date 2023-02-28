@@ -24,7 +24,6 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import Button from "@mui/material/Button";
 import EditClassroom from "../classes/EditClassroom";
-import SidebarMobile from "../../components/Sidebar/SidebarMobile";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,14 +35,12 @@ const useStyles = makeStyles((theme) => ({
         padding: 20,
         height: "28vh",
         width: "65%",
-        margin: "30px auto",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         borderRadius: "15px !important",
     },
     mainGrid: {
         width: "68%",
-        margin: "30px auto",
         justifyContent: "center",
     },
     textPaper: {
@@ -74,7 +71,6 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: "flex-start",
         "& img": {
-            // display: "inline-block",
             backgroundColor: "red",
             width: "50px",
             height: "50px",
@@ -88,9 +84,17 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }));
-const WhiteTextTypography = withStyles({
+const CourseNameHeader = withStyles({
     root: {
         color: "#FFFFFF",
+        fontSize: '6vmin'
+    },
+})(Typography);
+
+const CourseSectionHeader = withStyles({
+    root: {
+        color: "#FFFFFF",
+        fontSize: '3.5vmin'
     },
 })(Typography);
 function CoursePage(props) {
@@ -133,7 +137,7 @@ function CoursePage(props) {
                 <>
                     <Sidebar />
                     <CourseContainer>
-                        <Box>
+                        <Box sx={{display: 'flex', justifyContent: 'center',flexDirection:'column', alignItems: 'center',gap: '2rem', paddingTop: '4rem'}}>
                             <Paper
                                 elevation={5}
                                 className={classes.paperStyle}
@@ -143,12 +147,12 @@ function CoursePage(props) {
                             >
                                 {parseInt(user.role_id) === 3 ?<Button onClick={(e)=>{setEditOpen(!editOpen)}}>edit</Button> : null}
                                 {editOpen ? <EditClassroom open={editOpen} setEditOpen={setEditOpen}/> : null}
-                                <WhiteTextTypography variant="h4">
+                                <CourseNameHeader variant="h4">
                                     <b>{course?.course_info?.class_name}</b>
-                                </WhiteTextTypography>
-                                <WhiteTextTypography variant="h4" style={{ fontSize: "25px" }}>
+                                </CourseNameHeader>
+                                <CourseSectionHeader variant="h3">
                                     section {course?.course_info?.section.toUpperCase()}
-                                </WhiteTextTypography>
+                                </CourseSectionHeader>
                                 <div className={classes.instructorInfo}>
                                     <img
                                         alt="img"
@@ -162,7 +166,7 @@ function CoursePage(props) {
                                     </p>
                                 </div>
                             </Paper>
-                            <Grid container spacing={2} className={classes.mainGrid}>
+                            <Grid container className={classes.mainGrid}>
                                 <Grid item xs={10}>
                                     {parseInt(user.role_id) === 3 ||courseObj['allow_students_to_announcements'] === 1 ? <Announcement /> : null}
                                     <Grid item>

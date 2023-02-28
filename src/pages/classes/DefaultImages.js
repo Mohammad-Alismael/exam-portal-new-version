@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import {useDispatch} from "react-redux";
 import {SET_BACKGROUND_OBJECT_FILE, SET_NEW_COURSE_NAME} from "../../store/actions";
+import {BASE_URL} from "../../api/axios";
 
 function DefaultImages({open,setDefaultImgOpen}) {
     const dispatch = useDispatch();
@@ -45,7 +46,7 @@ function DefaultImages({open,setDefaultImgOpen}) {
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 4, md: 12 }}>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((val,index) => (
                     <Grid item xs={4} sm={4} md={4} key={index}>
-                        <img onClick={selectImg} style={{ height: '100%',width: '100%'}} src={`http://localhost:8081/default-backgrounds/ep_option${val}.png`}  alt={index}/>
+                        <img onClick={selectImg} style={{ height: '100%',width: '100%'}} src={`${BASE_URL}/default-backgrounds/ep_option${val}.png`}  alt={index}/>
                     </Grid>
                 ))}
             </Grid>

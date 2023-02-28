@@ -36,8 +36,7 @@ function Login(props) {
             dispatch(
                 loginAction(username, password, (res) => {
                     navigate(state?.path || "/courses");
-
-                    navigate("/courses");
+                    // navigate("/courses");
                 })
             );
             setLoading(false)

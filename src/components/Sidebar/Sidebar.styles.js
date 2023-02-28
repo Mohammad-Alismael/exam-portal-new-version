@@ -24,11 +24,12 @@ export const StyledChevronRightIcon = styled(ChevronRightIcon)`
 `
 export const CourseContainer = styled.div`
   display: block;
-  width: 95%;
+  width: 92.7%;
   height: 95vh;
   float: right;
   transition: width 0.5s ease-in-out;
   overflow-y: scroll;
+  padding: 1rem;
   @media (max-width: 425px) {
     width: 100%;
   }

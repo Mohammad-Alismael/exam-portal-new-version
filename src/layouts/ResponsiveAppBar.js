@@ -297,7 +297,7 @@ const ResponsiveAppBar = (props) => {
                     </Box>
                 </Toolbar>
             </Container>
-            <SidebarMobile openTab={openTab}/>
+            {/*<SidebarMobile openTab={openTab}/>*/}
         </AppBar>
     );
 };

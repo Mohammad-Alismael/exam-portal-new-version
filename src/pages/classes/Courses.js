@@ -87,12 +87,12 @@ function Courses(props) {
                 <>
                     <Sidebar />
                     <CourseContainer>
-                        <ContainerWithHeader
-                            title={"latest announcements"}
-                            children={
-                                <p style={{color: '#fff'}}>i will add a component here</p>
-                            }
-                        />
+                        {/*<ContainerWithHeader*/}
+                        {/*    title={"latest announcements"}*/}
+                        {/*    children={*/}
+                        {/*        <p style={{color: '#fff'}}>i will add a component here</p>*/}
+                        {/*    }*/}
+                        {/*/>*/}
                         <ContainerWithHeader
                             title={"overview courses"}
                             children={

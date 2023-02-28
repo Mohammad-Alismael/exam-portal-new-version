@@ -38,4 +38,18 @@ async function deleteAnnouncement(id, courseId) {
         throw new MyError({message: e.response.data, status: e.response.status});
     }
 }
-export {uploadFileAnnouncement,createAnnouncement,deleteAnnouncement}
+
+async function updateAnnouncement(id,announcementText, courseId) {
+    try {
+        const response = await axiosPrivate
+            .put(`${CREATE_ANNOUNCEMENT}/${id}`,{
+                    courseId,
+                    announcement_text: announcementText,
+                })
+        return response.data
+    } catch (e) {
+        console.log(e)
+        throw new MyError({message: e.response.data, status: e.response.status});
+    }
+}
+export {uploadFileAnnouncement,createAnnouncement,deleteAnnouncement,updateAnnouncement}

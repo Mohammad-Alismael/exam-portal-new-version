@@ -160,7 +160,7 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                 <div className={classes.userInfo}>
                     <Avatar
                         className={classes.icon}
-                        alt={"m"}
+                        alt="m"
                         src="/static/images/avatar/2.jpg"
                     />
                     <div style={{ marginLeft: "0.8rem" }}>
@@ -206,7 +206,8 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                 /> : null}
             </div>
             <Grid item xs={12} style={{ padding: "0 0.8rem" }}>
-                {!editAnnouncement ? <div dangerouslySetInnerHTML={{__html: convertToHTML(calcState(text).getCurrentContent())}} /> : <EditEditor text={text}/>}
+                {!editAnnouncement ? <div dangerouslySetInnerHTML={{__html: convertToHTML(calcState(text).getCurrentContent())}} /> :
+                    <EditEditor announcementId={announcementId} text={text} setEditAnnouncement={setEditAnnouncement}/>}
             </Grid>
             <Divider />
             {courseObj['allow_students_to_comment'] === 1 ? <div className={classes.commentsMetaData} onClick={handleComments}>

@@ -8,8 +8,8 @@ export function loginAction(username,password,callback){
 
     return (dispatch) => {
         return userApi.userAuth(username,password)
-            .then( res => {
-                console.log(res)
+            .then(res => {
+                console.log("why =>",res)
                 const token_data = jwt(res.data['accessToken'] )
                 const token = res.data['accessToken']
                 dispatch(login(token_data))
@@ -19,7 +19,7 @@ export function loginAction(username,password,callback){
                 // window.sessionStorage.setItem('jwt', token)
                 callback()
             }).catch(error => {
-                console.log(error)
+                console.log(error.response)
                 toast.info(error.response.data.message)
             });
     }
