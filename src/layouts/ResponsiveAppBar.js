@@ -142,7 +142,7 @@ const ResponsiveAppBar = (props) => {
     const isLargeScreen = useMediaQuery('(min-width:768px)');
 
     return (
-        <AppBar position="static" color="white">
+        <AppBar position="static" color="white" style={{width: '95%'}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {!isLargeScreen ? (<IconButton
@@ -155,42 +155,41 @@ const ResponsiveAppBar = (props) => {
                     >
                         <MenuIcon />
                     </IconButton>) : null}
-                    <img
-                        onClick={redirectToDashboard}
-                        src="/logo.png"
-                        className={classes.logo}
-                        alt="ExamInstructor Portal"
-                    />
-                    <Typography>Exam portal</Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        ></IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "left",
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{
-                                display: { xs: "block", md: "none" },
-                            }}
-                        ></Menu>
-                    </Box>
-                    <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+                    {/*<img*/}
+                    {/*    onClick={redirectToDashboard}*/}
+                    {/*    src="/logo.png"*/}
+                    {/*    className={classes.logo}*/}
+                    {/*    alt="ExamInstructor Portal"*/}
+                    {/*/>*/}
+                    {/*<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>*/}
+                    {/*    <IconButton*/}
+                    {/*        size="large"*/}
+                    {/*        aria-label="account of current user"*/}
+                    {/*        aria-controls="menu-appbar"*/}
+                    {/*        aria-haspopup="true"*/}
+                    {/*        onClick={handleOpenNavMenu}*/}
+                    {/*        color="inherit"*/}
+                    {/*    ></IconButton>*/}
+                    {/*    <Menu*/}
+                    {/*        id="menu-appbar"*/}
+                    {/*        anchorEl={anchorElNav}*/}
+                    {/*        anchorOrigin={{*/}
+                    {/*            vertical: "bottom",*/}
+                    {/*            horizontal: "left",*/}
+                    {/*        }}*/}
+                    {/*        keepMounted*/}
+                    {/*        transformOrigin={{*/}
+                    {/*            vertical: "top",*/}
+                    {/*            horizontal: "left",*/}
+                    {/*        }}*/}
+                    {/*        open={Boolean(anchorElNav)}*/}
+                    {/*        onClose={handleCloseNavMenu}*/}
+                    {/*        sx={{*/}
+                    {/*            display: { xs: "block", md: "none" },*/}
+                    {/*        }}*/}
+                    {/*    ></Menu>*/}
+                    {/*</Box>*/}
+                    {/*<AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />*/}
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
                     <Box sx={{ flexGrow: 0, display: "flex" }}>
                         <MenuItem onClick={clickNotificationIcon}>

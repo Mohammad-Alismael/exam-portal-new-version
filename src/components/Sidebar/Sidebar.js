@@ -1,26 +1,28 @@
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
-    BookIcon,
     Container,
     CourseCode,
     CourseSection,
     Item,
-    LeftArrow,
-    StyledChevronRightIcon,
-    SubItem
+    Logo, LogoContainer, StyledBookIcon, StyledCampaignIcon,
+    StyledChevronRightIcon, StyledExamIcon, StyledPeopleIcon,
+    SubItem, TitleH3
 } from "./Sidebar.styles";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {getCourses} from "../../api/services/Course";
 import {SET_COURSE_LIST} from "../../store/actions";
-Sidebar.propTypes = {
+import Typography from "@mui/material/Typography";
 
-};
 
 function Sidebar(props) {
     const {courseList} = useSelector((state)=> state.CourseListReducer);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const redirectToDashboard = () => {
+        navigate("/courses");
+    };
     useEffect(() => {
         let isMounted = true;
         const controller = new AbortController();
@@ -37,6 +39,10 @@ function Sidebar(props) {
     }, []);
     return (
         <Container>
+            <LogoContainer>
+                <Logo src="/logo.png" alt='logo icon' onClick={redirectToDashboard}/>
+                <TitleH3>Exam portal</TitleH3>
+            </LogoContainer>
             {
                 courseList.map(({class_name,section,classroom_id},index)=> (
                     <Sidebar.Item title={class_name} section={section} classroomId={classroom_id}/>
@@ -54,10 +60,10 @@ const ItemComp = ({title,section,classroomId}) => {
     }
     return (
         <Item onClick={handleChange}>
-            <BookIcon src='/images/icons/book_icon.png' alt='book icon'/>
+            <StyledBookIcon/>
             <CourseCode>{title}</CourseCode>
             <CourseSection>section {section}</CourseSection>
-            <StyledChevronRightIcon />
+            <StyledChevronRightIcon opened={opened}/>
             <div>
                 <Sidebar.SubSubItem opened={opened} title='announcements' path={`/courses/${classroomId}`}/>
                 <Sidebar.SubSubItem opened={opened} title='exams' path={`/courses/${classroomId}/${user?.role_id === 3 ? 'exams' : 'exams-student'}`}/>
@@ -75,7 +81,9 @@ const SubSubItem = ({opened,title,path}) =>{
 
     return (
         <SubItem opened={opened} onClick={()=>(navigate(path))}>
-            <img src={`/images/icons/${title}_icon.png`} alt={title}/>
+            {title.includes('exams') ? <StyledExamIcon /> : null}
+            {title.includes('people') ? <StyledPeopleIcon /> : null}
+            {title.includes('announcements') ? <StyledCampaignIcon /> : null}
             <span>{title}</span>
         </SubItem>
     )

@@ -24,6 +24,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import Button from "@mui/material/Button";
 import EditClassroom from "../classes/EditClassroom";
+import NavbarDashboard from "../../layouts/Navbar/NavbarDashboard";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -130,7 +131,7 @@ function CoursePage(props) {
     }, [course.announcements.length]);
     return (
         <div>
-            <ResponsiveAppBar />
+            <NavbarDashboard/>
             {isLoading ? (
                 <LinearProgress />
             ) : (

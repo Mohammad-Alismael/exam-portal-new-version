@@ -8,10 +8,10 @@ ContainerWithHeader.propTypes = {
 
 function ContainerWithHeader({title,children}) {
     return (
-        <div>
+        <>
             <Header>{title}</Header>
             <Container>{children}</Container>
-        </div>
+        </>
     );
 }
 

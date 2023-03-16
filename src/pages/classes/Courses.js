@@ -21,6 +21,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import ContainerWithHeader from "../../components/ContainerWithHeader/ContainerWithHeader";
 import {SET_COURSE_LIST, SET_LET_STUDENTS_ASK_QUESTIONS} from "../../store/actions";
+import NavbarDashboard from "../../layouts/Navbar/NavbarDashboard";
 
 const useStyles = makeStyles((theme) => ({
     createClass: {
@@ -82,7 +83,7 @@ function Courses(props) {
     }, []);
     return (
         <>
-            <ResponsiveAppBar />
+            <NavbarDashboard/>
             {!loading ? (
                 <>
                     <Sidebar />
