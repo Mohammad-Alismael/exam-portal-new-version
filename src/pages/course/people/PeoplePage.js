@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
     upperContainer: {
         width: "calc(63% + 20px)",
+        // backgroundColor: 'red',
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -47,18 +48,15 @@ function PeoplePage(props) {
     return (
         <>
             <div className={classes.root}>
-                <Searchbar />
+
                 <div className={classes.upperContainer}>
                     <Typography color={"#fff"} variant="h4">
                         Classmates
                     </Typography>
-                    <Typography color={"#fff"} variant="subtitle2">
-                        {course.filteredClassmates.length} students
-                    </Typography>
+                    <Searchbar />
                 </div>
                 <Paper elevation={5} className={classes.container}>
                     <Grid xs={12}>
-                        {/*{parseInt(user.role_id) === 3 ? <Participants username={user?.username}/> : null}*/}
                         <Divider />
                         {course.filteredClassmates.map(({ username, email }, i) => {
                             return (

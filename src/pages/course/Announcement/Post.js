@@ -126,7 +126,7 @@ const calcState = (text) => {
         ? EditorState.createWithContent(convertFromRaw(JSON.parse(text)))
         : EditorState.createEmpty();
 };
-function AnnounceComponent({ announcementId, createdAt, file, text }) {
+function Post({ announcementId, createdAt, file, text }) {
     const classes = useStyles();
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
@@ -176,9 +176,13 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                     </div>
                 </div>
                 {parseInt(user.role_id) === 3 ? <LongMenu
-                    options={["Delete Comment", "edit comment"]}
-                    icons={[<DeleteOutlineIcon />, <EditIcon />]}
+                    options={["Edit Post","Delete Post"]}
+                    icons={[<EditIcon />,<DeleteOutlineIcon />]}
                     functions={[
+                        function (e) {
+                            e.stopPropagation();
+                            setEditAnnouncement(!editAnnouncement)
+                        },
                         function (e) {
                             e.stopPropagation();
                             deleteAnnouncement(announcementId, course.courseId)
@@ -198,18 +202,20 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
                                     console.log(e);
                                 });
                         },
-                        function (e) {
-                            e.stopPropagation();
-                            setEditAnnouncement(!editAnnouncement)
-                        },
                     ]}
                 /> : null}
             </div>
             <Grid item xs={12} style={{ padding: "0 0.8rem" }}>
-                {!editAnnouncement ? <div dangerouslySetInnerHTML={{__html: convertToHTML(calcState(text).getCurrentContent())}} /> :
+                {!editAnnouncement ? <Editor toolbarClassName={classes.toolbarEditor}
+                                             wrapperClassName={classes.wrapperEditor}
+                                             editorClassName={classes.editor}
+                                             editorState={calcState(text)}
+                                             readOnly={true}
+                                             toolbarHidden
+                    /> :
                     <EditEditor announcementId={announcementId} text={text} setEditAnnouncement={setEditAnnouncement}/>}
             </Grid>
-            <Divider />
+            {courseObj['allow_students_to_comment'] === 1 ? <Divider /> : null}
             {courseObj['allow_students_to_comment'] === 1 ? <div className={classes.commentsMetaData} onClick={handleComments}>
                 <img className={classes.commentsIcon} src="/images/icons/comments_icon.svg" alt='icon'/>
                 <p className={classes.howManyComments}>
@@ -226,4 +232,4 @@ function AnnounceComponent({ announcementId, createdAt, file, text }) {
     );
 }
 
-export default AnnounceComponent;
+export default Post;

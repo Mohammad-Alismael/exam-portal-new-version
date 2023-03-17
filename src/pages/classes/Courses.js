@@ -83,111 +83,99 @@ function Courses(props) {
     }, []);
     return (
         <>
-            <NavbarDashboard/>
-            {!loading ? (
-                <>
-                    <Sidebar />
-                    <CourseContainer>
-                        {/*<ContainerWithHeader*/}
-                        {/*    title={"latest announcements"}*/}
-                        {/*    children={*/}
-                        {/*        <p style={{color: '#fff'}}>i will add a component here</p>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        <ContainerWithHeader
-                            title={"overview courses"}
-                            children={
-                                <Grid container spacing={2}>
-                                    {courseList.courseList.map(
-                                        (
-                                            { class_name, classroom_id, section, instructor_info,img_path },
-                                            index
-                                        ) => {
-                                            return (
-                                                <ClassCard
-                                                    username={
-                                                        parseInt(user?.role_id) === 3
-                                                            ? user.username
-                                                            : instructor_info["username"]
-                                                    }
-                                                    key={index}
-                                                    courseId={classroom_id}
-                                                    id={classroom_id}
-                                                    classname={class_name}
-                                                    section={section}
-                                                    img_path={img_path}
-                                                    options={
-                                                        user.role_id == 3
-                                                            ? ["invitation link"]
-                                                            : ["withdraw course"]
-                                                    }
-                                                    functions={
-                                                        user.role_id == 3
-                                                            ? [
-                                                                function (e) {
-                                                                    const user_data = jwt(token);
-                                                                    const textBeforeHash = `${classroom_id}:${user_data.username}`;
-                                                                    let encrypted = encodeURIComponent(
-                                                                        CryptoJS.AES.encrypt(
-                                                                            textBeforeHash,
-                                                                            process.env.REACT_APP_INVITATION_KEY
-                                                                        )
-                                                                    ).toString();
-                                                                    copyToClipboard(
-                                                                        window.location.origin +
-                                                                        "/invitation/" +
-                                                                        encrypted
-                                                                    );
-                                                                    toast.info("copied to clipboard");
-                                                                },
-                                                            ]
-                                                            : [
-                                                                function (e) {
-                                                                    toast.info("withdraw course");
-                                                                },
-                                                            ]
-                                                    }
-                                                />
-                                            );
-                                        }
-                                    )}
-                                    {courseList.courseList?.length === 0 ? (
-                                        <Grid item xs={12} sm={6} md={3}>
-                                            <Card className={classes.createClass}>
-                                                <Typography
-                                                    variant={"h5"}
-                                                    align={"center"}
-                                                    className={classes.noClass}
-                                                >
-                                                    you haven't join any courses yet.
-                                                </Typography>
-                                            </Card>
-                                        </Grid>
-                                    ) : null}
+            <NavbarDashboard loading={loading}/>
+            <Sidebar />
+            <CourseContainer>
+                <ContainerWithHeader
+                    title={"overview courses"}
+                    children={
+                        <Grid container spacing={2}>
+                            {courseList.courseList.map(
+                                (
+                                    { class_name, classroom_id, section, instructor_info,img_path },
+                                    index
+                                ) => {
+                                    return (
+                                        <ClassCard
+                                            username={
+                                                parseInt(user?.role_id) === 3
+                                                    ? user.username
+                                                    : instructor_info["username"]
+                                            }
+                                            key={index}
+                                            courseId={classroom_id}
+                                            id={classroom_id}
+                                            classname={class_name}
+                                            section={section}
+                                            img_path={img_path}
+                                            options={
+                                                user.role_id == 3
+                                                    ? ["invitation link"]
+                                                    : ["withdraw course"]
+                                            }
+                                            functions={
+                                                user.role_id == 3
+                                                    ? [
+                                                        function (e) {
+                                                            const user_data = jwt(token);
+                                                            const textBeforeHash = `${classroom_id}:${user_data.username}`;
+                                                            let encrypted = encodeURIComponent(
+                                                                CryptoJS.AES.encrypt(
+                                                                    textBeforeHash,
+                                                                    process.env.REACT_APP_INVITATION_KEY
+                                                                )
+                                                            ).toString();
+                                                            copyToClipboard(
+                                                                window.location.origin +
+                                                                "/invitation/" +
+                                                                encrypted
+                                                            );
+                                                            toast.info("copied to clipboard");
+                                                        },
+                                                    ]
+                                                    : [
+                                                        function (e) {
+                                                            toast.info("withdraw course");
+                                                        },
+                                                    ]
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
+                            {courseList.courseList?.length === 0 ? (
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <Card className={classes.createClass}>
+                                        <Typography
+                                            variant={"h5"}
+                                            align={"center"}
+                                            className={classes.noClass}
+                                        >
+                                            you haven't join any courses yet.
+                                        </Typography>
+                                    </Card>
                                 </Grid>
-                            }
-                        />
+                            ) : null}
+                        </Grid>
+                    }
+                />
 
-                        {parseInt(user?.role_id) === 3 ? (
-                            <div className={classes.addClassBtn}>
-                                <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
-                                    <AddIcon />
-                                </Fab>
-                            </div>
-                        ) : null}
-                    </CourseContainer>
-                    <CreateClassroom
-                        open={open}
-                        loading={loading}
-                        setLoadingProp={setLoadingProp}
-                        onClose={handleClose}
-                        courses={courses}
-                        setCourses={setCourses}
-                    />
-                </>
-            ) : (
-                <LinearProgress />
-            )}
+                {parseInt(user?.role_id) === 3 ? (
+                    <div className={classes.addClassBtn}>
+                        <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
+                            <AddIcon />
+                        </Fab>
+                    </div>
+                ) : null}
+            </CourseContainer>
+            <CreateClassroom
+                open={open}
+                loading={loading}
+                setLoadingProp={setLoadingProp}
+                onClose={handleClose}
+                courses={courses}
+                setCourses={setCourses}
+            />
         </>
     );
 }

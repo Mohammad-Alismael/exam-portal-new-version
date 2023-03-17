@@ -17,6 +17,7 @@ import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
 import SubmissionsReducer from "./store/reducers/SubmissionsReducer";
 import CreateNewCourseReducer from "./store/reducers/CreateNewCourseReducer";
 import CourseListReducer from "./store/reducers/CourseListReducer";
+import SidebarReducer from "./store/reducers/SidebarReducer";
 const rootReducer = combineReducers({
     ExamReducer,
     AddQuestionReducer,
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
     CreateReducer,
     CourseReducer,
     CourseListReducer,
-    CreateNewCourseReducer
+    CreateNewCourseReducer,
+    SidebarReducer
 });
 
 function saveToLocalStorage(store) {

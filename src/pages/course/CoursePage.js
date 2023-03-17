@@ -12,8 +12,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 
 import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
-import AnnounceComponent from "./Announcement/AnnounceComponent";
-import Announcement from "./Announcement/Announcement";
+import Post from "./Announcement/Post";
+import CreateAnnouncement from "./Announcement/CreateAnnouncement";
 import { withStyles } from "@material-ui/core/styles";
 import { fetchCourseInfo } from "../../api/services/Course";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,8 @@ import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import Button from "@mui/material/Button";
 import EditClassroom from "../classes/EditClassroom";
 import NavbarDashboard from "../../layouts/Navbar/NavbarDashboard";
+import {CircularProgress} from "@material-ui/core";
+import {LoadingButton} from "@mui/lab";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -106,13 +108,17 @@ function CoursePage(props) {
     const {user} = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const {courseList} = useSelector((state)=> state.CourseListReducer);
-
+    const [loadingPosts,setLoadingPosts] = useState(false)
     const location = useLocation();
     const [editOpen,setEditOpen] = useState(false);
     const courseObj = courseList.filter(({classroom_id},index)=> {
         return classroom_id === course_id;
     })[0];
     console.log(courseObj)
+    const fetch5morePosts = () =>{
+        setLoadingPosts(true)
+
+    }
     useEffect(() => {
         const controller = new AbortController();
         dispatch({ type: SET_COURSE_ID, payload: { courseId: course_id } });
@@ -131,77 +137,78 @@ function CoursePage(props) {
     }, [course.announcements.length]);
     return (
         <div>
-            <NavbarDashboard/>
-            {isLoading ? (
-                <LinearProgress />
-            ) : (
-                <>
-                    <Sidebar />
-                    <CourseContainer>
-                        <Box sx={{display: 'flex', justifyContent: 'center',flexDirection:'column', alignItems: 'center',gap: '2rem', paddingTop: '4rem'}}>
-                            <Paper
-                                elevation={5}
-                                className={classes.paperStyle}
-                                style={{
-                                    backgroundImage: `url(${course?.course_info?.img_path})`,
-                                }}
-                            >
-                                {parseInt(user.role_id) === 3 ?<Button onClick={(e)=>{setEditOpen(!editOpen)}}>edit</Button> : null}
-                                {editOpen ? <EditClassroom open={editOpen} setEditOpen={setEditOpen}/> : null}
-                                <CourseNameHeader variant="h4">
-                                    <b>{course?.course_info?.class_name}</b>
-                                </CourseNameHeader>
-                                <CourseSectionHeader variant="h3">
-                                    section {course?.course_info?.section.toUpperCase()}
-                                </CourseSectionHeader>
-                                <div className={classes.instructorInfo}>
-                                    <img
-                                        alt="img"
-                                        loading
-                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
-                                    />
-                                    <p>
-                                        {parseInt(user.role_id) === 3
-                                            ? user.username
-                                            : course?.course_info?.instructor["username"]}
-                                    </p>
-                                </div>
-                            </Paper>
-                            <Grid container className={classes.mainGrid}>
-                                <Grid item xs={10}>
-                                    {parseInt(user.role_id) === 3 ||courseObj['allow_students_to_announcements'] === 1 ? <Announcement /> : null}
-                                    <Grid item>
-                                        {course.announcements.length !== 0 &&
-                                            course.announcements
-                                                .sort(function (a, b) {
-                                                    return b.created_at - a.created_at;
-                                                })
-                                                .map(
-                                                    (
-                                                        { id, announcement_text, file_path, created_at },
-                                                        index
-                                                    ) => {
-                                                        return (
-                                                            <AnnounceComponent
-                                                                key={index}
-                                                                file={file_path}
-                                                                announcementId={id}
-                                                                text={announcement_text}
-                                                                createdAt={created_at}
-                                                            />
-                                                        );
-                                                    }
-                                                )}
-                                        {course.announcements.length === 0 ? (
-                                            <NoAnnouncement />
-                                        ) : null}
-                                    </Grid>
+            <NavbarDashboard loading={isLoading}/>
+            <>
+                <Sidebar />
+                <CourseContainer>
+                    <Box sx={{display: 'flex', justifyContent: 'center',flexDirection:'column', alignItems: 'center',gap: '2rem', paddingTop: '4rem'}}>
+                        <Paper
+                            elevation={5}
+                            className={classes.paperStyle}
+                            style={{
+                                backgroundImage: `url(${course?.course_info?.img_path})`,
+                            }}
+                        >
+                            {parseInt(user.role_id) === 3 ?<Button onClick={(e)=>{setEditOpen(!editOpen)}}>edit</Button> : null}
+                            {editOpen ? <EditClassroom open={editOpen} setEditOpen={setEditOpen}/> : null}
+                            <CourseNameHeader variant="h4">
+                                <b>{course?.course_info?.class_name}</b>
+                            </CourseNameHeader>
+                            <CourseSectionHeader variant="h3">
+                                section {course?.course_info?.section.toUpperCase()}
+                            </CourseSectionHeader>
+                            <div className={classes.instructorInfo}>
+                                <img
+                                    alt="img"
+                                    loading
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWo3luud5KPZknLR5zdUUwzvYBztWgTxrkbA&usqp=CAU"
+                                />
+                                <p>
+                                    {parseInt(user.role_id) === 3
+                                        ? user.username
+                                        : course?.course_info?.instructor["username"]}
+                                </p>
+                            </div>
+                        </Paper>
+                        <Grid container className={classes.mainGrid}>
+                            <Grid item xs={10}>
+                                {parseInt(user.role_id) === 3 ||courseObj['allow_students_to_announcements'] === 1 ? <CreateAnnouncement /> : null}
+                                <Grid item>
+                                    {course.announcements.length !== 0 &&
+                                        course.announcements
+                                            .sort(function (a, b) {
+                                                return b.created_at - a.created_at;
+                                            })
+                                            .map(
+                                                (
+                                                    { id, announcement_text, file_path, created_at },
+                                                    index
+                                                ) => {
+                                                    return (
+                                                        <Post
+                                                            key={index}
+                                                            file={file_path}
+                                                            announcementId={id}
+                                                            text={announcement_text}
+                                                            createdAt={created_at}
+                                                        />
+                                                    );
+                                                }
+                                            )}
+                                    {course.announcements.length === 0 ? (
+                                        <NoAnnouncement />
+                                    ) : null}
                                 </Grid>
+
+                                <LoadingButton loading variant="filled">
+                                    load more
+                                </LoadingButton>
+
                             </Grid>
-                        </Box>
-                    </CourseContainer>
-                </>
-            )}
+                        </Grid>
+                    </Box>
+                </CourseContainer>
+            </>
         </div>
     );
 }

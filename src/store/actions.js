@@ -59,4 +59,6 @@ export const SET_BACKGROUND_OBJECT_FILE = 'SET_BACKGROUND_OBJECT_FILE'
 export const SET_LET_STUDENTS_ASK_QUESTIONS = 'letStudentsAskQuestions'
 export const SET_ANNOUNCEMENTS_COMMENTS = 'SET_ANNOUNCEMENTS_COMMENTS'
 // course list reducer
-export const SET_COURSE_LIST = 'SET_COURSE_LIST'
+export const SET_COURSE_LIST = 'SET_COURSE_LIST';
+
+export const SET_SIDE_BAR_REF = 'SET_SIDE_BAR_REF';

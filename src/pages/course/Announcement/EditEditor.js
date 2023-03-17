@@ -7,12 +7,30 @@ import {deleteAnnouncement, updateAnnouncement} from "../../../api/services/Anno
 import {SET_COURSE_ANNOUNCEMENTS} from "../../../store/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
+import {makeStyles} from "@material-ui/core/styles";
 const calcState = (text) => {
     return text
         ? EditorState.createWithContent(convertFromRaw(JSON.parse(text)))
         : EditorState.createEmpty();
 };
+const useStyles = makeStyles((theme) => ({
+    toolbarEditor:{
+        backgroundColor: 'rgb(248,249,250)'
+    },
+    wrapperEditor: {
+        border: '1px solid rgb(236,236,236)',
+    },
+    editor: {
+        padding: "0.5rem",
+        height: '100px'
+    },
+    editorContainer: {
+        padding: "1rem 1rem 0",
+    }
+}));
+
 function EditEditor({announcementId,text,setEditAnnouncement}) {
+    const classes = useStyles();
     const [editorState, setEditorState] = React.useState(() =>
         EditorState.createEmpty()
     );
@@ -53,17 +71,20 @@ function EditEditor({announcementId,text,setEditAnnouncement}) {
     return (
         <>
             <Editor
+                toolbarClassName={classes.toolbarEditor}
+                wrapperClassName={classes.wrapperEditor}
+                editorClassName={classes.editor}
                 editorState={editorState}
                 onEditorStateChange={setEditorState}
                 toolbar={{
-                    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove', 'history'],
+                    options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove', 'history','fontFamily'],
                     image: {
                         // uploadCallback: uploadImageCallBack,
                         alt: { present: true, mandatory: true },
                     },
                 }}
             />
-            <Button onClick={updateAnnouce}>update</Button>
+            <Button sx={{mt: 3,mb: 3}} size="small" variant="contained" onClick={updateAnnouce}>update</Button>
        </>
     );
 }

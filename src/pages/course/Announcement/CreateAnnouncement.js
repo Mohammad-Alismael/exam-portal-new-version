@@ -30,10 +30,19 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Avatar from "@mui/material/Avatar";
 import * as PropTypes from "prop-types";
 import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
-import { UPLOAD_ANNOUNCEMENT_FILE } from "../../../api/services/RouteNames";
 const useStyles = makeStyles((theme) => ({
-    btnContainer: {
-        padding: "0 0.8rem",
+    toolbarEditor:{
+        backgroundColor: 'rgb(248,249,250)'
+    },
+    wrapperEditor: {
+        border: '1px solid rgb(236,236,236)',
+    },
+    editor: {
+        padding: "0.5rem",
+        height: '100px'
+    },
+    editorContainer: {
+        padding: "1rem 1rem 0",
     },
     btnContainer2: {
         padding: "0.8rem",
@@ -41,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
     uploadPreview: {
         padding: "0.8rem",
         maxWidth: "calc(100% - 1.6rem)",
-        // height: '75%'
     },
     templateContainer: {
         display: "flex",
@@ -60,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function AnnoucementTemplate(props) {
+function AnnouncementTemplate(props) {
     return (
         <div className={props.classes.templateContainer} onClick={props.onClick}>
             <Avatar
@@ -69,19 +77,19 @@ function AnnoucementTemplate(props) {
                 src="/static/images/avatar/2.jpg"
             />
 
-            <input type={"text"} placeholder={"add class comment"} />
-            <img src={"/images/icons/paper_clip_icon.svg"} alt={"send_icon"} />
+            <input type="text" placeholder="Post announcement to your class..." />
+            <img src="/images/icons/paper_clip_icon.svg" alt="send_icon" />
         </div>
     );
 }
 
-AnnoucementTemplate.propTypes = {
+AnnouncementTemplate.propTypes = {
     classes: PropTypes.any,
     onClick: PropTypes.func,
     user: PropTypes.any,
 };
 
-function Announcement(props) {
+function CreateAnnouncement(props) {
     const { user } = useSelector((state) => state.UserReducerV2);
     const course = useSelector((state) => state.CourseReducer);
     const classes = useStyles();
@@ -140,7 +148,6 @@ function Announcement(props) {
     };
     const post = (e) => {
         e.preventDefault();
-
         if (formData == null) {
             const db = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
             appendText(db)
@@ -173,7 +180,7 @@ function Announcement(props) {
                     console.log(error);
                 });
         }
-        openAnnouncement(true);
+        setOpenAnnouncement(false);
     };
 
     function uploadImageCallBack(file) {
@@ -191,7 +198,7 @@ function Announcement(props) {
     return (
         <>
             {!openAnnouncement ? (
-                <AnnoucementTemplate
+                <AnnouncementTemplate
                     classes={classes}
                     onClick={(e) => {
                         e.preventDefault();
@@ -203,15 +210,15 @@ function Announcement(props) {
             {openAnnouncement ? (
                 <Paper elevation={5}>
                     <Grid container sx={{ marginBottom: "0.8rem" }}>
-                        <Grid item xs={12} className={classes.btnContainer}>
+                        <Grid item xs={12} className={classes.editorContainer}>
                             <Editor
-                                toolbarClassName="toolbarClassName"
-                                wrapperClassName="wrapperClassName"
-                                editorClassName="editorClassName"
+                                toolbarClassName={classes.toolbarEditor}
+                                wrapperClassName={classes.wrapperEditor}
+                                editorClassName={classes.editor}
                                 editorState={editorState}
                                 onEditorStateChange={setEditorState}
                                 toolbar={{
-                                    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove', 'history'],
+                                    options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove', 'history','fontFamily'],
                                     image: {
                                         uploadCallback: uploadImageCallBack,
                                         alt: { present: true, mandatory: true },
@@ -230,7 +237,7 @@ function Announcement(props) {
                                 variant="outlined"
                                 color="warning"
                                 type="submit"
-                                // size="large"
+                                size="small"
                                 onClick={handleClose}
                                 sx={{ mr: 3 }}
                             >
@@ -241,7 +248,7 @@ function Announcement(props) {
                                 variant="contained"
                                 color="warning"
                                 type="submit"
-                                // size="large"
+                                size="small"
                             >
                                 <b>post</b>
                             </Button>
@@ -253,4 +260,4 @@ function Announcement(props) {
     );
 }
 
-export default Announcement;
+export default CreateAnnouncement;

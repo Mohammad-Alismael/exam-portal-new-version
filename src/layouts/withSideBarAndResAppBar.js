@@ -10,8 +10,7 @@ function withSideBarAndResAppBar(Wrapped) {
     return function New(props) {
         return (
             <>
-                {/*<ResponsiveAppBar/>*/}
-                <NavbarDashboard/>
+                <NavbarDashboard loading={false}/>
                 <Sidebar />
                 <CourseContainer>
                     <Wrapped {...props}/>
