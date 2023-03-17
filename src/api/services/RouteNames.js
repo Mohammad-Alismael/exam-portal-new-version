@@ -5,6 +5,8 @@ export const UPDATE_CLASSROOMS = '/classroom'
 export const FETCH_CLASSMATES = '/classroom/students';
 export const ENROLL_CLASSROOM = '/classroom/enroll'
 export const UPLOAD_ANNOUNCEMENT_FILE = '/announcement/upload'
+
+export const FETCH_5_MORE_POSTS = '/announcement/load-more'
 export const CREATE_ANNOUNCEMENT = '/announcement'
 export const REFRESH_TOKEN = '/user/refresh'
 export const FORGET_PASSWORD = '/user/forgot-password'

@@ -1,5 +1,6 @@
 import User from './User';
 import {axiosPrivate, MyError, token} from "../axios";
+import {FETCH_5_MORE_POSTS} from "./RouteNames";
 const {UPLOAD_ANNOUNCEMENT_FILE, CREATE_ANNOUNCEMENT} = require("./RouteNames");
 const {toast} = require("react-toastify");
 
@@ -46,10 +47,21 @@ async function updateAnnouncement(id,announcementText, courseId) {
                     courseId,
                     announcement_text: announcementText,
                 })
-        return response.data
+        return response.data;
     } catch (e) {
         console.log(e)
         throw new MyError({message: e.response.data, status: e.response.status});
     }
 }
-export {uploadFileAnnouncement,createAnnouncement,deleteAnnouncement,updateAnnouncement}
+async function fetch5More(id) {
+    try {
+        const response = await axiosPrivate
+            .get(`${FETCH_5_MORE_POSTS}/${id}`,)
+        return response.data;
+    } catch (e) {
+        console.log(e)
+        throw new MyError({message: e.response.data, status: e.response.status});
+
+    }
+}
+export {uploadFileAnnouncement,createAnnouncement,deleteAnnouncement,updateAnnouncement,fetch5More}

@@ -17,7 +17,7 @@ import CreateAnnouncement from "./Announcement/CreateAnnouncement";
 import { withStyles } from "@material-ui/core/styles";
 import { fetchCourseInfo } from "../../api/services/Course";
 import { useDispatch } from "react-redux";
-import { SET_COURSE_ID } from "../../store/actions";
+import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_ID} from "../../store/actions";
 import { CourseAction } from "../../actions/CourseAction";
 import NoAnnouncement from "./Announcement/NoAnnouncement";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -26,8 +26,8 @@ import Button from "@mui/material/Button";
 import EditClassroom from "../classes/EditClassroom";
 import NavbarDashboard from "../../layouts/Navbar/NavbarDashboard";
 import {CircularProgress} from "@material-ui/core";
-import {LoadingButton} from "@mui/lab";
-
+import {Check} from "@mui/icons-material";
+import {fetch5More} from "../../api/services/Annoucments";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -100,6 +100,7 @@ const CourseSectionHeader = withStyles({
         fontSize: '3.5vmin'
     },
 })(Typography);
+
 function CoursePage(props) {
     const classes = useStyles();
     const { course_id } = useParams();
@@ -115,9 +116,13 @@ function CoursePage(props) {
         return classroom_id === course_id;
     })[0];
     console.log(courseObj)
-    const fetch5morePosts = () =>{
-        setLoadingPosts(true)
-
+    const load5MorePost = () =>{
+        // setLoadingPosts(true)
+        const minId = course.announcements.reduce((min, current) => current.id < min ? current.id : min, course.announcements[0].id);
+        fetch5More(minId).then((data)=>{
+            const newAr = course.announcements.concat(data);
+            dispatch({ type: SET_COURSE_ANNOUNCEMENTS, payload: { announcements: newAr } });
+        }).catch(console.log)
     }
     useEffect(() => {
         const controller = new AbortController();
@@ -199,13 +204,9 @@ function CoursePage(props) {
                                         <NoAnnouncement />
                                     ) : null}
                                 </Grid>
-
-                                <LoadingButton loading variant="filled">
-                                    load more
-                                </LoadingButton>
-
                             </Grid>
                         </Grid>
+                        {course.announcements.length >= 5 ? <Button sx={{mb: 10}} variant="contained" onClick={load5MorePost}>load more</Button> : null}
                     </Box>
                 </CourseContainer>
             </>
