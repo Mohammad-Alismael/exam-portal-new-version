@@ -38,14 +38,14 @@ function Dropzone({ onDrop, accept, setDefaultImgOpen }) {
                         </p>
                     ) : (
                         <>
-                            <img className={classes.icon} src={'/images/icons/cloud-upload.png'} alt={'gg'}/>
+                            <img className={classes.icon} src='/images/icons/cloud-upload.png' alt='gg'/>
                             <p>Drag your image for cover photo</p>
                         </>
                     )}
                 </div>
 
             </div>
-            <Button variant="contained" onClick={()=>(setDefaultImgOpen(true))}>or choose form here</Button>
+            <Button size="small" variant="contained" onClick={()=>(setDefaultImgOpen(true))}>or choose form here</Button>
             <aside>
                 <ul>{files}</ul>
             </aside>

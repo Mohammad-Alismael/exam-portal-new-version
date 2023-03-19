@@ -173,8 +173,6 @@ function Courses(props) {
                 loading={loading}
                 setLoadingProp={setLoadingProp}
                 onClose={handleClose}
-                courses={courses}
-                setCourses={setCourses}
             />
         </>
     );

@@ -11,6 +11,7 @@ import {
 } from "./RouteNames";
 
 async function createCourse(object ,user_id){
+    console.log("before creating - >", object)
     const formData = new FormData();
     formData.append('class_name',object.courseName)
     formData.append('section',object.section)
@@ -23,10 +24,14 @@ async function createCourse(object ,user_id){
     }).then((res)=> {
         return res.data
     }).catch((error)=>{
-        console.log(error)
-        if (error.response.status == 403){
+        console.log(error.response)
+        if (error.response.status === 403){
             toast('user timed out!')
         }
+        if (error.response.status === 409){
+            toast.error(error.response.data.message);
+        }
+
     })
 }
 

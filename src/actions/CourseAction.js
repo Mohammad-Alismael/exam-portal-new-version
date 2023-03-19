@@ -1,7 +1,22 @@
 import {fetchCourseInfo} from "../api/services/Course";
 import {toast} from "react-toastify";
 import * as Actions from "../store/actions";
-import {SET_COURSE_ANNOUNCEMENTS, SET_COURSE_CLASSMATES, SET_COURSE_EXAMS, SET_COURSE_INFO} from "../store/actions";
+import {
+    SET_ANNOUNCEMENTS_COMMENTS,
+    SET_ASSIGNED_FOR, SET_BACKGROUND_OBJECT_FILE,
+    SET_COURSE_ANNOUNCEMENTS,
+    SET_COURSE_CLASSMATES,
+    SET_COURSE_EXAMS,
+    SET_COURSE_INFO,
+    SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT,
+    SET_EXAM_RANDOMNESS,
+    SET_EXAM_TIMER,
+    SET_EXAM_TITLE, SET_LET_STUDENTS_ASK_QUESTIONS,
+    SET_NAVIGATION, SET_NEW_COURSE_NAME, SET_NEW_COURSE_SECTION, SET_QUESTIONS,
+    SET_SPECIFIC_STUDENTS,
+    SET_STARTING_AT,
+    SET_STUDENTS
+} from "../store/actions";
 
 export function CourseAction(data) {
     return (dispatch) => {
@@ -12,7 +27,27 @@ export function CourseAction(data) {
 
     }
 }
-
+export function resetCourseReducer() {
+    return (dispatch) => {
+        dispatch({ type: SET_BACKGROUND_OBJECT_FILE, payload: { backgroundFileObject: null } });
+        dispatch({
+            type: SET_NEW_COURSE_NAME,
+            payload: { courseName: "" },
+        });
+        dispatch({
+            type: SET_NEW_COURSE_SECTION,
+            payload: { section: "" },
+        });
+        dispatch({
+            type: SET_LET_STUDENTS_ASK_QUESTIONS,
+            payload: { letStudentsAskQuestions: false },
+        });
+        dispatch({
+            type: SET_ANNOUNCEMENTS_COMMENTS,
+            payload: { announcementsComments: false },
+        });
+    }
+}
 function setCourseInfo(data){
     return {
         type: Actions.SET_COURSE_INFO,
