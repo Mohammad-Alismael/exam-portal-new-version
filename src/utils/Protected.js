@@ -5,7 +5,7 @@ const Protected = ({children, onlyAccessTo}) => {
     const navigate = useNavigate();
     const location = useLocation();
     const user = useSelector((state) => state.UserReducerV2).user;
-    const roles = onlyAccessTo.includes(user?.role_id)
+    const roles = onlyAccessTo.includes(parseInt(user?.role_id))
     if (user == null) {
         return <Navigate to="/" replace state={{ path: location.pathname }}/>;
     }

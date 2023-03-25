@@ -1,0 +1,12 @@
+{
+  "instructor_role": {
+    "username": "admin",
+    "password": "123",
+    "invalid_password": "12345"
+  },
+  "student_role": {
+    "username": "student",
+    "password": "123",
+    "invalid_password": "123456"
+  }
+}

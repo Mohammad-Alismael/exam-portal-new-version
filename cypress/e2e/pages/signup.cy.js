@@ -1,13 +1,13 @@
 import {CreateUserPage} from "./pages/create_user_page";
 import {BASE_URL} from "../../src/api/axios";
-import {LoginPage} from "./pages/login_page";
+import {LoginPage} from "./pages/loginPage";
 import {Alert} from "./Elements/alert";
 const createUserPage = new CreateUserPage()
 const loginPage = new LoginPage()
-
-describe('Login Tests', () => {
+import utils from '../../suppport/utils.json'
+describe('Sign Tests', () => {
     beforeEach(function () {
-        cy.visit('http://localhost:3000/signup')
+        cy.visit(`${utils.base_url}/signup`)
     })
 
     it('create new user with empty username and password', function () {
