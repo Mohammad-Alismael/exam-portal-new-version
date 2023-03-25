@@ -104,6 +104,8 @@ function CreateClassroom({open, onClose, setLoadingProp}) {
                 console.log(error);
                 return null;
             }
+        }else{
+            return backgroundFileObject
         }
     }
 

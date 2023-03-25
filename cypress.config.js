@@ -1,7 +1,9 @@
 const { defineConfig } = require('cypress')
 const axios = require("axios");
+const loginPlugin = require("./cypress/plugins/loginPlugin");
 const testDataApiEndpoint = 'http://localhost:8080'
 module.exports = defineConfig({
+  projectId: 'vsnrkh',
 
   e2e: {
     taskTimeout: 20000,
@@ -16,7 +18,9 @@ module.exports = defineConfig({
           const { data } = await axios.post(`${testDataApiEndpoint}/test/reset-db`)
           return data
         },
-        //...
+        loginWithUserData: () => {
+          return loginPlugin.loginWithUserData();
+        }
       })
     },
   },

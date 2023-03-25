@@ -1,0 +1,58 @@
+{
+  "courses": [
+    {
+      "classroom_id": "JZX97HFV8WD",
+      "id": 1,
+      "instructor_id": 1,
+      "class_name": "CS240",
+      "section": "c",
+      "img_path": "uploads/d6fe220f-f6fe-4127-9bf2-e7dc2bbfe81f.png",
+      "allow_students_to_announcements": 0,
+      "allow_students_to_comment": 0
+    },
+    {
+      "classroom_id": "LSZ54NUK5SX",
+      "id": 2,
+      "instructor_id": 1,
+      "class_name": "CS101",
+      "section": "a",
+      "img_path": "uploads/d6fe220f-f6fe-4127-9bf2-e7dc2bbfe81f.png",
+      "allow_students_to_announcements": 1,
+      "allow_students_to_comment": 0
+    },
+    {
+      "classroom_id": "JOX95IMN8UF",
+      "id": 3,
+      "instructor_id": 1,
+      "class_name": "CS101",
+      "section": "b",
+      "img_path": "uploads/d6fe220f-f6fe-4127-9bf2-e7dc2bbfe81f.png",
+      "allow_students_to_announcements": 1,
+      "allow_students_to_comment": 1
+    },
+    {
+      "classroom_id": "DBD81IPA2IN",
+      "id": 4,
+      "instructor_id": 1,
+      "class_name": "CS240",
+      "section": "a",
+      "img_path": "uploads/d6fe220f-f6fe-4127-9bf2-e7dc2bbfe81f.png",
+      "allow_students_to_announcements": 0,
+      "allow_students_to_comment": 1
+    },
+    {
+      "classroom_id": "XCL14NFB4LB",
+      "id": 5,
+      "instructor_id": 1,
+      "class_name": "CS102",
+      "section": "b",
+      "img_path": "uploads/d6fe220f-f6fe-4127-9bf2-e7dc2bbfe81f.png",
+      "allow_students_to_announcements": 0,
+      "allow_students_to_comment": 1
+    }
+  ],
+  "testCourseData": {
+    "courseName": "CS112",
+    "section": "A"
+  }
+}
