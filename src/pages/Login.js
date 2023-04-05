@@ -9,7 +9,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import Box from "@mui/material/Box";
 import { loginAction } from "../actions/LoginAcion";
 import { toast } from "react-toastify";
-import {CircularProgress, TextField} from "@material-ui/core";
+import {CircularProgress, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import { theme } from "../utils/global/useStyles";
 import withContainer from "../components/withContainer";
@@ -61,7 +61,6 @@ function Login(props) {
                 name="username"
                 autoComplete="email"
                 align="center"
-                color="warning"
             />
             <TextField
                 onChange={(e) => setPassword(e.target.value)}
@@ -74,7 +73,6 @@ function Login(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                color="warning"
             />
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}

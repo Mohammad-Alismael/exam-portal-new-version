@@ -18,7 +18,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ActivateEmail from "./pages/ActivateEmail";
 import Courses from "./pages/classes/Courses";
 import Protected from "./utils/Protected";
-import {token} from "./api/axios";
+// import {token} from "./api/axios";
 import { theme } from "./utils/global/useStyles";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import ExamPage from "./pages/course/exam/ExamPage";
@@ -31,7 +31,7 @@ import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
 import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
 import StatisticsPage from "./pages/course/statistics/StatisticsPage";
 import LoadingSpinner from "./components/LoadingSpinner";
-
+const token = window.sessionStorage.getItem('jwt')
 function App(props) {
     const [loading, setLoading] = useState(true);
     const {user} = useSelector(state => state.UserReducerV2);

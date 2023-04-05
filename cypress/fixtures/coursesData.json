@@ -38,7 +38,13 @@
       "section": "a",
       "img_path": "uploads/d6fe220f-f6fe-4127-9bf2-e7dc2bbfe81f.png",
       "allow_students_to_announcements": 0,
-      "allow_students_to_comment": 1
+      "allow_students_to_comment": 1,
+      "editCourseData": {
+        "class_name": "CS440",
+        "section": "b",
+        "allow_students_to_announcements": 1,
+        "allow_students_to_comment": 1
+      }
     },
     {
       "classroom_id": "XCL14NFB4LB",

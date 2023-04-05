@@ -1,13 +1,14 @@
 import * as actionTypes from '../actions'
-import {SET_COURSE_CLASSMATES, SET_COURSE_EXAMS} from "../actions";
 
 const initialState = {
+    isLoading: false,
     courseId: "",
     course_info: null,
     announcements: [],
     classmates: [],
     filteredClassmates: [],
-    exams: []
+    exams: [],
+    error: null
 }
 
 const CourseReducer = (state = initialState, action) => {
@@ -20,8 +21,24 @@ const CourseReducer = (state = initialState, action) => {
         case actionTypes.SET_COURSE_INFO:
             return {
                 ...state,
-                course_info: action.course_info
+                course_info: action.payload.course_info
             }
+        case actionTypes.FETCH_COURSE_INFO_REQUEST:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case actionTypes.FETCH_COURSE_INFO_SUCCESS:
+            return {
+                ...state,
+                isLoading: false
+            };
+        case actionTypes.FETCH_COURSE_INFO_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
         case actionTypes.SET_COURSE_ANNOUNCEMENTS:
             return {
                 ...state,

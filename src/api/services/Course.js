@@ -86,6 +86,7 @@ async function updateCourse(object,courseId) {
         return response['data'];
     }catch (e) {
         console.log(e)
+        throw {message: e.message}
     }
 }
 async function fetchClassmates(courseId,controller){

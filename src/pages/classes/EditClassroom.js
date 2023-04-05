@@ -24,16 +24,15 @@ import {
 import CreateNewCourseReducer from "../../store/reducers/CreateNewCourseReducer";
 import {useParams} from "react-router-dom";
 import useSelectImg from "../../utils/hooks/useSelectImg";
+import {setCourseInfo, setNewCourseReducer} from "../../actions/CourseAction";
 
 function EditClassroom({open,setEditOpen}) {
     const [DefaultImgOpen, setDefaultImgOpen] = React.useState(false);
     const {user} = useSelector((state) => state.UserReducerV2);
     const dispatch = useDispatch();
     const { course_id } = useParams();
-    const {courseList} = useSelector((state)=> state.CourseListReducer);
-    const courseObj = courseList.filter(({classroom_id},index)=> {
-        return classroom_id === course_id;
-    })[0];
+    const courseObj = useSelector((state) => state.CourseReducer)['course_info']
+
     const [courseName_,setCourseName_] = useState(courseObj['class_name']);
     const [section,setSection] = useState(courseObj['section']);
     const [letStudentsAskQuestions_, setLetStudentsAskQuestions] = React.useState(courseObj['allow_students_to_announcements']);
@@ -61,11 +60,26 @@ function EditClassroom({open,setEditOpen}) {
             }
             return new File([u8arr], filename, {type: mime});
         }
-
+        function stringify(obj) {
+            let cache = [];
+            let str = JSON.stringify(obj, function(key, value) {
+                if (typeof value === "object" && value !== null) {
+                    if (cache.indexOf(value) !== -1) {
+                        // Circular reference found, discard key
+                        return;
+                    }
+                    // Store value in our collection
+                    cache.push(value);
+                }
+                return value;
+            });
+            cache = null; // reset the cache
+            return str;
+        }
         toDataURL(url)
             .then((dataUrl) => {
                 const fileData = dataURLtoFile(dataUrl, fileName);
-                dispatch({ type: SET_BACKGROUND_OBJECT_FILE, payload: { backgroundFileObject: fileData } });
+                dispatch({ type: SET_BACKGROUND_OBJECT_FILE, payload: { backgroundFileObject: JSON.parse(stringify(fileData)) } });
             })
     };
     const setCourseName = (e) => {
@@ -101,17 +115,19 @@ function EditClassroom({open,setEditOpen}) {
     const updateClass_ = () => {
         updateCourse(newCourseProperties,course_id).then((data)=>{
             toast.success(data['message'])
-            window.location.reload();
+            dispatch(setCourseInfo(data['updated_data']))
+            dispatch(setNewCourseReducer(data['updated_data']))
+            setEditOpen(false)
         }).catch(console.log)
     };
 
     useEffect(()=>{
         // sets default values for redux reducer
         selectImg(courseObj['img_path'])
-        dispatch({ type: SET_ANNOUNCEMENTS_COMMENTS, payload: { announcementsComments: courseObj['allow_students_to_announcements'] } });
-        dispatch({ type: SET_LET_STUDENTS_ASK_QUESTIONS, payload: { letStudentsAskQuestions: courseObj['allow_students_to_comment'] }});
-        dispatch({ type: SET_NEW_COURSE_SECTION, payload: {section:courseObj['section']}});
-        dispatch({ type: SET_NEW_COURSE_NAME, payload: {courseName:courseObj['class_name']}});
+        // dispatch({ type: SET_ANNOUNCEMENTS_COMMENTS, payload: { announcementsComments: courseObj['allow_students_to_announcements'] } });
+        // dispatch({ type: SET_LET_STUDENTS_ASK_QUESTIONS, payload: { letStudentsAskQuestions: courseObj['allow_students_to_comment'] }});
+        // dispatch({ type: SET_NEW_COURSE_SECTION, payload: {section:courseObj['section']}});
+        // dispatch({ type: SET_NEW_COURSE_NAME, payload: {courseName:courseObj['class_name']}});
 
     },[])
 
@@ -146,12 +162,12 @@ function EditClassroom({open,setEditOpen}) {
                     <FormGroup>
                         <FormControlLabel
                             style={{justifyContent: 'space-around'}}
-                            control={<Switch checked={letStudentsAskQuestions_ == 1 ? true : false} onChange={letStudentsAskQuestions} color="primary"/>}
+                            control={<Switch checked={letStudentsAskQuestions_ === 1 } onChange={letStudentsAskQuestions} color="primary"/>}
                             label="Let students ask questions/announcements"
                             labelPlacement="start"
                         />
                         <FormControlLabel
-                            control={<Switch checked={announcementsComments_ == 1 ? true : false} onChange={letStudentsToComment} color="primary"/>}
+                            control={<Switch checked={announcementsComments_ === 1} onChange={letStudentsToComment} color="primary"/>}
                             style={{justifyContent: 'space-around'}}
                             label="Let students comment under my announcements"
                             labelPlacement="start"

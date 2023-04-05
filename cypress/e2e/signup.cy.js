@@ -7,7 +7,7 @@ const loginPage = new LoginPage()
 import utils from '../../suppport/utils.json'
 describe('Sign Tests', () => {
     beforeEach(function () {
-        cy.visit(`${utils.base_url}/signup`)
+        cy.visit(`${utils.base_url}/signup`);
     })
 
     it('create new user with empty username and password', function () {

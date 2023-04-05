@@ -29,7 +29,7 @@ describe('Create New Course', () => {
     it('displays create new course form', () => {
         CoursesSelectors.getCreateClassroomBtn().should('exist').click();
         CoursesSelectors.getClassNameTextField().should('exist');
-        cy.get('.MuiButton-outlined').should('exist');
+        CoursesSelectors.getCancelBtn().should('exist');
         CoursesSelectors.getSectionTextField().should('exist')
         cy.get('.MuiGrid-root > :nth-child(3) > .MuiButtonBase-root').should('exist')
         cy.get('.MuiFormGroup-root > :nth-child(1)').should('exist')
@@ -38,8 +38,12 @@ describe('Create New Course', () => {
     })
 
     it('invalid course name', () => {
-        CoursesSelectors.getClassNameTextField().type(coursesData['courses'][1]['class_name']);
-        CoursesSelectors.getSectionTextField().type(coursesData['courses'][1]['section']);
+        CoursesSelectors.getClassNameTextField().type(
+          coursesData["courses"][1]["class_name"]
+        );
+        CoursesSelectors.getSectionTextField().type(
+          coursesData["courses"][1]["section"]
+        );
         CoursesSelectors.submitBtn().click();
         CoursesSelectors.alert().should('be.visible').should('contain', 'you already have classroom named CS101');
 
@@ -63,7 +67,7 @@ describe('Create New Course', () => {
         CoursesSelectors.getCreateClassroomBtn().should('exist').click();
         CoursesSelectors.getClassNameTextField().clear().type(coursesData['testCourseData']['courseName']);
         CoursesSelectors.getSectionTextField().clear().type(coursesData['testCourseData']['section']);
-        cy.get('.MuiGrid-root > :nth-child(3) > .MuiButtonBase-root').click();
+        CoursesSelectors.getChooseBackgroundBtn().click();
         cy.get(':nth-child(9) > img').click();
         cy.get('.css-3t0fe1-MuiButtonBase-root-MuiSwitch-switchBase .MuiSwitch-input').should('exist').check()
         cy.get('.MuiDialogActions-root > .MuiButton-contained').click();

@@ -1,12 +1,12 @@
 import {fetchCourseInfo} from "../api/services/Course";
-import {toast} from "react-toastify";
+import {parse, stringify, toJSON, fromJSON} from 'flatted';
 import * as Actions from "../store/actions";
 import {
     SET_ANNOUNCEMENTS_COMMENTS,
     SET_ASSIGNED_FOR, SET_BACKGROUND_OBJECT_FILE,
     SET_COURSE_ANNOUNCEMENTS,
     SET_COURSE_CLASSMATES,
-    SET_COURSE_EXAMS,
+    SET_COURSE_EXAMS, SET_COURSE_ID,
     SET_COURSE_INFO,
     SET_ENDING_AT, SET_EXAM_ANSWER_KEY, SET_EXAM_ANSWER_KEY_AT,
     SET_EXAM_RANDOMNESS,
@@ -18,13 +18,28 @@ import {
     SET_STUDENTS
 } from "../store/actions";
 
+export const fetchCourseInfoAction = (course_id, controller) => {
+    return (dispatch) => {
+        dispatch(setCourseId(course_id));
+        dispatch(fetchCourseInfoRequest());
+        fetchCourseInfo(course_id, controller)
+            .then((data) => {
+                console.log("course info data => ",data)
+                dispatch(CourseAction(data));
+                dispatch(setNewCourseReducer(data))
+                dispatch(fetchCourseInfoSuccess());
+            })
+            .catch((error) => {
+                dispatch(fetchCourseInfoFailure(error.message));
+            });
+    }
+}
 export function CourseAction(data) {
     return (dispatch) => {
         dispatch(setCourseInfo(data['course_info']))
         dispatch({ type: SET_COURSE_ANNOUNCEMENTS, payload: { announcements: data['announcements'] } });
         dispatch(setCourseClassmates(data['classmates']))
         dispatch({ type: SET_COURSE_EXAMS, payload: { exams: data['exams'] } });
-
     }
 }
 export function resetCourseReducer() {
@@ -48,10 +63,50 @@ export function resetCourseReducer() {
         });
     }
 }
-function setCourseInfo(data){
+
+export function setNewCourseReducer({class_name,section,img_path,allow_students_to_announcements,allow_students_to_comment}) {
+    return (dispatch) => {
+        dispatch({ type: SET_BACKGROUND_OBJECT_FILE, payload: { backgroundFileObject: null } });
+        dispatch({
+            type: SET_NEW_COURSE_NAME,
+            payload: { courseName: class_name },
+        });
+        dispatch({
+            type: SET_NEW_COURSE_SECTION,
+            payload: { section },
+        });
+        dispatch({
+            type: SET_LET_STUDENTS_ASK_QUESTIONS,
+            payload: { letStudentsAskQuestions: allow_students_to_announcements },
+        });
+        dispatch({
+            type: SET_ANNOUNCEMENTS_COMMENTS,
+            payload: { announcementsComments: allow_students_to_comment},
+        });
+    }
+}
+
+export const fetchCourseInfoRequest = () => {
+    return {
+        type: 'FETCH_COURSE_INFO_REQUEST'
+    };
+};
+
+export const fetchCourseInfoSuccess = () => {
+    return {
+        type: 'FETCH_COURSE_INFO_SUCCESS'
+    };
+};
+export const fetchCourseInfoFailure = (error) => {
+    return {
+        type: 'FETCH_COURSE_INFO_FAILURE',
+        payload: error
+    };
+}
+export function setCourseInfo(course_info){
     return {
         type: Actions.SET_COURSE_INFO,
-        course_info: data
+        payload: {course_info}
     }
 }
 export function setCourseAnnouncements(data){
@@ -77,5 +132,12 @@ export function setCourseExams(data){
     return {
         type: Actions.SET_COURSE_EXAMS,
         exams: data
+    }
+}
+
+export function setCourseId(courseId) {
+    return {
+        type: SET_COURSE_ID,
+        payload: {courseId}
     }
 }

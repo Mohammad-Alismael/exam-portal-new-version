@@ -9,14 +9,13 @@ export function loginAction(username,password,callback){
     return (dispatch) => {
         return userApi.userAuth(username,password)
             .then(res => {
-                console.log("why =>",res)
                 const token_data = jwt(res.data['accessToken'] )
                 const token = res.data['accessToken']
                 dispatch(login(token_data))
                 dispatch(accessToken1(res.data['accessToken']))
                 updateToken(token)
                 // updateRefreshToken(res.data['refreshToken'])
-                // window.sessionStorage.setItem('jwt', token)
+                window.sessionStorage.setItem('jwt', token)
                 callback()
             }).catch(error => {
                 console.log(error.response)

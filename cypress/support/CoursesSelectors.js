@@ -10,9 +10,15 @@ class CoursesSelectors {
     static getSectionTextField(){
         return cy.get('#section');
     }
-
+    static getCancelBtn(){
+        return cy.get('.MuiButton-outlined')
+    }
     static submitBtn(){
         return cy.get('.MuiDialogActions-root > .MuiButton-contained');
+    }
+
+    static getChooseBackgroundBtn(){
+        return cy.get('.MuiGrid-root > :nth-child(3) > .MuiButtonBase-root');
     }
 
     static alert(){
