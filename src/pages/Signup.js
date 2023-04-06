@@ -79,9 +79,8 @@ function Signup(props) {
             <FormControl fullWidth sx={{ mt: 4,mb: 4 }}>
                 <InputLabel id="demo-simple-select-label">User Type</InputLabel>
                 <Select
-
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+                    labelId="select-user-type-label"
+                    id="select-user-type"
                     value={type}
                     label="User type"
                     onChange={(e) => setType(e.target.value)}

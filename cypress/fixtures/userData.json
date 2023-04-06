@@ -2,7 +2,13 @@
   "instructor_role": {
     "username": "admin",
     "password": "123",
-    "invalid_password": "12345"
+    "invalid_password": "12345",
+    "email_id":"example@gmail.com",
+    "create_user" : {
+      "username": "admin123",
+      "password": "123456789",
+      "email_id":"admin@gmail.com"
+    }
   },
   "student_role": {
     "username": "student",

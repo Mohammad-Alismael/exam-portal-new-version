@@ -1,60 +1,82 @@
-import {CreateUserPage} from "./pages/create_user_page";
-import {BASE_URL} from "../../src/api/axios";
-import {LoginPage} from "./pages/loginPage";
-import {Alert} from "./Elements/alert";
-const createUserPage = new CreateUserPage()
-const loginPage = new LoginPage()
-import utils from '../../suppport/utils.json'
-describe('Sign Tests', () => {
+import SignUpSelectors from "../support/SginUpSelectors";
+const { loadUserData } = require("../plugins/loadUserData");
+const { seedDatabase } = require("../plugins/seedDatabase");
+
+describe("Sign Tests", () => {
+  let userData;
+
+  beforeEach(() => {
+    loadUserData();
+    userData = Cypress.env("userData");
+    cy.visit(`/signup`);
+  });
+
+  context("my other tests", () => {
+    it("create new user with empty username and password", function () {
+      SignUpSelectors.getSignUpBtn().click();
+      SignUpSelectors.getAlert()
+        .should("be.visible")
+        .should(
+          "contain",
+          "you cannot leave username or password field empty!"
+        );
+    });
+
+    it("create new admin user with the same username", function () {
+      SignUpSelectors.getUsernameTextField().type(
+        userData["instructor_role"]["username"]
+      );
+      SignUpSelectors.getEmailAddressTextField().type(
+        userData["instructor_role"]["create_user"]["email_id"]
+      );
+      SignUpSelectors.getPasswordTextField().type(
+        userData["instructor_role"]["create_user"]["password"]
+      );
+      SignUpSelectors.selectUserType(3);
+      SignUpSelectors.getSignUpBtn().click();
+      SignUpSelectors.getAlert()
+        .should("be.visible")
+        .should("contain", "username already taken!");
+    });
+
+    it("create new admin user with the same email address", function () {
+      SignUpSelectors.getUsernameTextField()
+        .clear()
+        .type(userData["instructor_role"]["create_user"]["username"]);
+      SignUpSelectors.getEmailAddressTextField()
+        .clear()
+        .type(userData["instructor_role"]["email_id"]);
+      SignUpSelectors.getPasswordTextField()
+        .clear()
+        .type(userData["instructor_role"]["create_user"]["password"]);
+      SignUpSelectors.selectUserType(3);
+      SignUpSelectors.getSignUpBtn().click();
+      SignUpSelectors.getAlert()
+        .should("be.visible")
+        .should("contain", "email address already taken by another user!");
+    });
+  });
+
+  context("Seeding test case", () => {
     beforeEach(function () {
-        cy.visit(`${utils.base_url}/signup`);
-    })
-
-    it('create new user with empty username and password', function () {
-        createUserPage.clickSignUp()
-        Alert.checkAlertMessage('you cannot leave username or password field empty!')
+      seedDatabase();
     });
 
-    it('create new admin user', function () {
-        createUserPage.enterUsername('admin12')
-        createUserPage.enterEmailAddress('example@gmail.com')
-        createUserPage.enterPassword('Admin123')
-        createUserPage.enterUserType(3)
-        createUserPage.clickSignUp()
-        cy.visit('http://localhost:3000/')
-
-        loginPage.loginUser('admin12','Admin123')
-        Alert.checkAlertMessage('your email is not activated')
+    it("create new admin user", function () {
+      SignUpSelectors.getUsernameTextField()
+        .clear()
+        .type(userData["instructor_role"]["create_user"]["username"]);
+      SignUpSelectors.getEmailAddressTextField()
+        .clear()
+        .type(userData["instructor_role"]["create_user"]["email_id"]);
+      SignUpSelectors.getPasswordTextField()
+        .clear()
+        .type(userData["instructor_role"]["create_user"]["password"]);
+      SignUpSelectors.selectUserType(3);
+      SignUpSelectors.getSignUpBtn().click();
+      SignUpSelectors.getAlert()
+        .should("be.visible")
+        .should("contain", "check your email to activate your account!");
     });
-
-    it.only('create new admin user', function () {
-        createUserPage.enterUsername('anwar')
-        createUserPage.enterEmailAddress('answer@gmail.com')
-        createUserPage.enterPassword('Anwar123')
-        createUserPage.enterUserType(1)
-        createUserPage.clickSignUp()
-        cy.visit('http://localhost:3000/')
-
-        loginPage.loginUser('anwar','Anwar123')
-        Alert.checkAlertMessage('your email is not activated')
-
-    });
-
-    it('create new admin user with the same username', function () {
-        createUserPage.enterUsername('admin12')
-        createUserPage.enterEmailAddress('example2@gmail.com')
-        createUserPage.enterPassword('admin_123')
-        createUserPage.enterUserType(3)
-        createUserPage.clickSignUp()
-        Alert.checkAlertMessage('username already taken!')
-    });
-
-    it('create new admin user with the same email address', function () {
-        createUserPage.enterUsername('admin_12_clone')
-        createUserPage.enterEmailAddress('example@gmail.com')
-        createUserPage.enterPassword('admin_123')
-        createUserPage.enterUserType(3)
-        createUserPage.clickSignUp()
-        Alert.checkAlertMessage('email address already taken by another user!')
-    });
-})
+  });
+});

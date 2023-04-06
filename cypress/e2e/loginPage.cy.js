@@ -1,4 +1,3 @@
-import utils from "../../suppport/utils.json";
 
 describe('Login Page', () => {
     let userData;
@@ -6,7 +5,7 @@ describe('Login Page', () => {
         cy.fixture("userData").then((data)=>{
             userData = data;
         })
-        cy.visit(`${utils.base_url}`)
+        cy.visit(`/`)
     })
 
     it('displays login form', () => {
@@ -35,5 +34,6 @@ describe('Login Page', () => {
         cy.get('input[name="password"]').type(userData['instructor_role']['password']);
         cy.get('button[type="submit"]').click()
         cy.url().should('include', '/courses')
+        cy.get('.MuiTypography-subtitle2').should('contain',userData['instructor_role']['username'])
     })
 })
