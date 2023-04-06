@@ -21,11 +21,9 @@ async function createCourse(object ,user_id){
     formData.append('instructor_id',user_id)
     const url = object.backgroundFileObject.url
     console.log("url =>", url)
-    toDataURL(url).then((dataUrl) => {
-      const fileData = dataURLtoFile(dataUrl, url.split("/")[4]);
-        formData.append('file',fileData)
-        console.log(fileData)
-    });
+    const dataUrl = await toDataURL(url);
+    const fileData = dataURLtoFile(dataUrl, url.split("/")[4]);
+    formData.append('file',fileData)
 
     // return axiosPrivate.post(CREATE_CLASSROOM,formData,{
     //     headers: { 'Content-Type': 'multipart/form-data' }

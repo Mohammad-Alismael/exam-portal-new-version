@@ -108,11 +108,9 @@ export function fetchCourseListSuccess() {
         type: Actions.FETCH_COURSE_LIST_SUCCESS
     }
 }
-export const fetchCourseInfoRequest = () => {
-  return {
-    type: Actions.FETCH_COURSE_INFO_REQUEST,
-  };
-};
+export const fetchCourseInfoRequest =  () => ({
+  type: Actions.FETCH_COURSE_INFO_REQUEST
+});
 
 export const fetchCourseInfoSuccess = () => {
   return {

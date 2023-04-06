@@ -18,7 +18,9 @@ import { toast } from "react-toastify";
 import useErrorMessage from "../../utils/hooks/useErrorMessage";
 import { dataURLtoFile, toDataURL } from "../../utils/global/GlobalConstants";
 import { BASE_URL } from "../../api/axios";
-import {resetCourseReducer} from "../../actions/CourseAction";
+import {fetchCourseInfoRequest, fetchCourseInfoSuccess, resetCourseReducer} from "../../actions/CourseAction";
+import {setFileObjectAction} from "../../actions/CreateNewCourseAction";
+import {stringify} from "flatted";
 function CreateClassroom({ open, onClose }) {
   const [DefaultImgOpen, setDefaultImgOpen] = React.useState(false);
   const { user } = useSelector((state) => state.UserReducerV2);
@@ -91,23 +93,14 @@ function CreateClassroom({ open, onClose }) {
       const randomNum = Math.floor(Math.random() * 9) + 1;
       const url = `${BASE_URL}/default-backgrounds/ep_option${randomNum}.png`;
       const fileName = url.split("/")[4];
-
-      try {
-        const dataUrl = await toDataURL(url);
-        const fileData = dataURLtoFile(dataUrl, fileName);
-        console.log("file data =>", fileData);
-        return fileData;
-      } catch (error) {
-        console.log(error);
-        return null;
-      }
+      dispatch(setFileObjectAction({url}))
+      // return {url}
     } else {
-      return backgroundFileObject;
+      // return backgroundFileObject;
     }
   }
 
   async function handleCreateCourse(newCourseProperties, userId) {
-    console.log(newCourseProperties)
     try {
       const res = await createCourse(newCourseProperties, userId);
       const newClassroom = res.newClassroom;
@@ -119,14 +112,13 @@ function CreateClassroom({ open, onClose }) {
       toast(res.message);
       console.log("new course => ", newClassroom);
 
-
       onClose();
     } catch (error) {
       console.log(error);
     }
   }
 
-  const createClass = async () => {
+   const createClass = async () => {
     const {courseName,section} = localState
     if (!courseName && !section) {
       showErrorMsg("Course name can't be empty");
@@ -143,23 +135,28 @@ function CreateClassroom({ open, onClose }) {
       showErrorSectionMsg("Section can't be empty");
       return;
     }
-    setLoading(true)
+     console.log("hello")
+    // setLoading(true)
+     console.log(JSON.parse(stringify(fetchCourseInfoRequest())))
+    dispatch(fetchCourseInfoRequest());
+    // dispatch(stringify(fetchCourseInfoRequest()));
     // dispatch(setNewCourseProperties(localState))
-    const backgroundFileObject = await createBackgroundFileObject();
-    const courseProperties = { ...localState, backgroundFileObject };
-    await handleCreateCourse(courseProperties, user["user_id"]);
-    setLocalState({
-      courseName: '',
-      section: '',
-      backgroundFileObject: null,
-      letStudentsAskQuestions: false,
-      announcementsComments: false
-    })
-    setLoading(false)
+    // const backgroundFileObject = await createBackgroundFileObject();
+    // const courseProperties = { ...localState, backgroundFileObject };
+    // await handleCreateCourse(newCourseProperties, user["user_id"]);
+    // setLocalState({
+    //   courseName: '',
+    //   section: '',
+    //   backgroundFileObject: null,
+    //   letStudentsAskQuestions: false,
+    //   announcementsComments: false
+    // })
+    // dispatch(fetchCourseInfoSuccess());
+    // setLoading(false)
   };
-  if (loading){
-    return <p>loading ..</p>
-  }
+  // if (loading){
+  //   return <p>loading ..</p>
+  // }
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>

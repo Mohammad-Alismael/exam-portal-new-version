@@ -11,7 +11,7 @@ describe("Sign Tests", () => {
     cy.visit(`/signup`);
   });
 
-  context("my other tests", () => {
+  context("testing with no seeding", () => {
     it("create new user with empty username and password", function () {
       SignUpSelectors.getSignUpBtn().click();
       SignUpSelectors.getAlert()

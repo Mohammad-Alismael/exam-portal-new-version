@@ -6,6 +6,11 @@ module.exports = defineConfig({
   projectId: 'vsnrkh',
 
   e2e: {
+    chromeWebSecurity: false,
+    permissions: {
+      clipboardWrite: true,
+      clipboardRead: true
+    },
     taskTimeout: 20000,
     defaultCommandTimeout: 8000,
     testIsolation: false,
