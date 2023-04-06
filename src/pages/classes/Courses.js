@@ -91,7 +91,7 @@ function Courses(props) {
                     ? [
                         function (e) {
                           const user_data = jwt(token);
-                          const textBeforeHash = `${classroom_id}:${user_data.username}`;
+                          const textBeforeHash = `${classroom_id}:${user_data.username}:${class_name}`;
                           let encrypted = encodeURIComponent(
                             CryptoJS.AES.encrypt(
                               textBeforeHash,

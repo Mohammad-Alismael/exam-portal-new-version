@@ -7,99 +7,92 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { connect, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {axiosPrivate} from "../api/axios";
-import CryptoJS from 'crypto-js'
-import {Button, CircularProgress} from "@material-ui/core";
-import {enrollToCourse} from "../api/services/Course";
+import { axiosPrivate } from "../api/axios";
+import CryptoJS from "crypto-js";
+import { Button, CircularProgress } from "@material-ui/core";
+import { enrollToCourse } from "../api/services/Course";
+import SweetAlert from "react-bootstrap-sweetalert";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Invitation(props) {
-    const { invitationHash } = useParams();
-    const user = useSelector((state) => state.UserReducerV2).user;
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [open, setOpen] = React.useState(true);
-    const navigate = useNavigate();
-    const [classroomId, setClassroomId] = React.useState("");
-    const [instructorEmailId, setInstructorEmailId] = React.useState("");
-    const [instructorusername, setInstructorusername] = React.useState("");
-    const handleClickOpen = () => {
-        enrollToCourse(classroomId).then((res)=>{
-            toast(res['message'])
-            navigate("/courses");
-        })
+  const { invitationHash } = useParams();
+  const user = useSelector((state) => state.UserReducerV2).user;
+  const [isLoading, setIsLoading] = React.useState(false);
+  const navigate = useNavigate();
+  const [classroomId, setClassroomId] = React.useState("");
+  const [className, setClassName] = React.useState("");
+  const [instructorEmailId, setInstructorEmailId] = React.useState("");
+  const [instructorusername, setInstructorusername] = React.useState("");
+  const handleClickOpen = () => {
+    enrollToCourse(classroomId).then((res) => {
+      toast(res["message"]);
+      navigate("/courses");
+    });
+  };
+
+  const handleClose = () => {
+    navigate("/courses");
+  };
+  const handleClickOk = () => {
+    navigate("/courses");
+  };
+
+  useEffect(() => {
+    if (user.role_id === 3) {
+      // Redirect instructor to dashboard
+      toast.info("You are an instructor and can't join other courses!");
+      navigate("/");
+      return;
+    }
+
+    setIsLoading(true);
+
+    const decryptInvitation = async () => {
+      try {
+        const decrypted = CryptoJS.AES.decrypt(
+            invitationHash,
+            process.env.REACT_APP_INVITATION_KEY
+        ).toString(CryptoJS.enc.Utf8);
+
+        const [classroomId, username, className_] = decrypted.split(":");
+        setClassroomId(classroomId);
+        setClassName(className_);
+        setInstructorusername(username);
+
+        const response = await axiosPrivate(`/user/${username}`);
+        const instructor = response.data;
+        setInstructorEmailId(instructor.email_id);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    const handleClose = () => {
-        navigate("/courses");
-    };
-    const handleClickOk = () => {
-        navigate("/courses");
-    };
+    decryptInvitation();
+  }, [invitationHash, navigate, user.role_id]);
 
-    useEffect(() => {
-        if (user.role_id != 3) {
-            setIsLoading(true);
-        let decrypted = CryptoJS.AES.decrypt(invitationHash, process.env.REACT_APP_INVITATION_KEY);
-        const decrypt = decrypted.toString(CryptoJS.enc.Utf8);
-        console.log(decrypt)
-            const classroomId = decrypt.split(":")[0];
-            setClassroomId(classroomId);
-            const username = decrypt.split(":")[1];
-            setInstructorusername(username);
-            (async () => {
-                let response = await axiosPrivate(`/user/${username}`);
-                let user = await response.data;
-                setInstructorEmailId(user['email_id'])
-                setIsLoading(false)
-            })();
-        } else {
-            toast.info("you are an instructor, can't join other courses!");
-            navigate('/')
-        }
-
-    }, [invitationHash, navigate, user.role_id]);
-
-    return (
-        <div>
-            {isLoading ? <CircularProgress /> : null}
-            {!isLoading ? (
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                        {user.role_id != 3
-                            ? "Is (s)/he your instructor?"
-                            : "invitation link works only for students!"}
-                    </DialogTitle>
-                    {user.role_id != 3 ? (
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                {instructorEmailId}
-                            </DialogContentText>
-                            <DialogContentText id="alert-dialog-description">
-                                {instructorusername}
-                            </DialogContentText>
-                        </DialogContent>
-                    ) : null}
-                    <DialogActions>
-                        {user.role_id != 3 ? (
-                            <>
-                                <Button onClick={handleClose}>No</Button>
-                                <Button onClick={handleClickOpen} autoFocus>Yes</Button>
-                            </>
-                            ) : null}
-                        {user.role_id == 3 ? (
-                            <Button onClick={handleClickOk} autoFocus>
-                                ok
-                            </Button>
-                        ) : null}
-                    </DialogActions>
-                </Dialog>
-            ) : null}
-        </div>
-    );
+if (!isLoading)
+  return (
+    <SweetAlert
+      warning
+      showCancel
+      confirmBtnText="Yes"
+      confirmBtnBsStyle="primary"
+      title={
+        user.role_id != 3
+          ? `Is ${instructorusername} your instructor?`
+          : "invitation link works only for students!"
+      }
+      onConfirm={handleClickOpen}
+      onCancel={handleClose}
+      focusCancelBtn
+    >
+      You will joining {className}
+    </SweetAlert>
+  );
+else
+  return <LoadingSpinner />;
 }
 
 export default Invitation;
