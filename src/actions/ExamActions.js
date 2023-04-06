@@ -8,7 +8,7 @@ import {
     SET_STARTING_AT, SET_STUDENTS
 } from "../store/actions";
 
-export default function ResetExamReducer(){
+export default function ExamActions(){
     return (dispatch) => {
         dispatch({
             type: SET_STARTING_AT,

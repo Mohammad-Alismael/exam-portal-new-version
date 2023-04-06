@@ -9,6 +9,7 @@ import {
     FETCH_COURSE_INFO,
     UPDATE_CLASSROOMS
 } from "./RouteNames";
+import {dataURLtoFile, toDataURL} from "../../utils/global/GlobalConstants";
 
 async function createCourse(object ,user_id){
     console.log("before creating - >", object)
@@ -18,21 +19,31 @@ async function createCourse(object ,user_id){
     formData.append('allow_students_to_comment',object.announcementsComments)
     formData.append('allow_students_to_announcements',object.letStudentsAskQuestions)
     formData.append('instructor_id',user_id)
-    formData.append('file',object.backgroundFileObject)
-    return axiosPrivate.post(CREATE_CLASSROOM,formData,{
-        headers: { 'Content-Type': 'multipart/form-data' }
-    }).then((res)=> {
-        return res.data
-    }).catch((error)=>{
-        console.log(error.response)
-        if (error.response.status === 403){
-            toast('user timed out!')
-        }
-        if (error.response.status === 409){
-            toast.error(error.response.data.message);
-        }
+    const url = object.backgroundFileObject.url
+    console.log("url =>", url)
+    toDataURL(url).then((dataUrl) => {
+      const fileData = dataURLtoFile(dataUrl, url.split("/")[4]);
+        formData.append('file',fileData)
+        console.log(fileData)
+    });
 
-    })
+    // return axiosPrivate.post(CREATE_CLASSROOM,formData,{
+    //     headers: { 'Content-Type': 'multipart/form-data' }
+    // }).then((res)=> {
+    //     return res.data
+    // }).catch((error)=>{
+    //     console.log(error.response)
+    //     if (error.response.status === 400){
+    //         toast('error happened while uploading an image!')
+    //     }
+    //     if (error.response.status === 403){
+    //         toast('user timed out!')
+    //     }
+    //     if (error.response.status === 409){
+    //         toast.error(error.response.data.message);
+    //     }
+    //
+    // })
 }
 
 async function enrollToCourse(course_id) {

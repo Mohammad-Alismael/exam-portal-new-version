@@ -17,7 +17,7 @@ import {
 import {deleteExam} from "../../../api/services/Exam";
 import GradingIcon from '@mui/icons-material/Grading';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import ResetExamReducer from "../../../actions/ResetExamReducer";
+import ExamActions from "../../../actions/ExamActions";
 const useStyles = makeStyles((theme) => ({
     container: {
         width: '100%',
@@ -57,7 +57,7 @@ function ExamInstructor({examTitle,examId,startingAt,endingAt}) {
     const redirect = (e) => {
         e.stopPropagation()
         dispatch({ type: SET_QUESTIONS, payload: { questions: [] } });
-        dispatch(ResetExamReducer());
+        dispatch(ExamActions());
         navigate(`/courses/${course_id}/edit-exam/${examId}`);
     };
     useEffect(()=>{

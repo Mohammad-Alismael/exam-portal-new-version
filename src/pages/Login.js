@@ -7,7 +7,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { connect, useDispatch } from "react-redux";
 import {useLocation, useNavigate} from "react-router-dom";
 import Box from "@mui/material/Box";
-import { loginAction } from "../actions/LoginAcion";
+import { loginAction } from "../actions/UserActions";
 import { toast } from "react-toastify";
 import {CircularProgress, TextField} from "@mui/material";
 import Button from "@mui/material/Button";

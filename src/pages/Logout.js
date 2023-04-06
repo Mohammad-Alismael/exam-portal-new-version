@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import {axiosPrivate, BASE_URL, token, updateToken} from "../api/axios";
 import { DELETE_TOKEN } from "../api/services/RouteNames";
-import { accessToken1, login } from "../actions/LoginAcion";
+import { accessToken1, login } from "../actions/UserActions";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 

@@ -25,7 +25,7 @@ import {
     SET_STARTING_AT,
     SET_STUDENTS,
 } from "../../../store/actions";
-import ResetExamReducer from "../../../actions/ResetExamReducer";
+import ExamActions from "../../../actions/ExamActions";
 import ExamStudent from "./ExamStudent";
 import NoExam from "./NoExam";
 import Sidebar from "../../../components/Sidebar/Sidebar";
@@ -64,7 +64,7 @@ const ExamPage = () => {
     const course = useSelector((state) => state.CourseReducer);
     const createNewExam = (e) => {
         e.preventDefault();
-        dispatch(ResetExamReducer());
+        dispatch(ExamActions());
         navigate(`/courses/${course_id}/create-exam`);
     };
     useEffect(() => {

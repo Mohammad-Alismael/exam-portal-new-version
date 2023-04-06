@@ -5,13 +5,10 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import ExamSettings from "./ExamSettings";
 import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import {axiosPrivate} from "../../api/axios";
-import {CREATE_EXAM} from "../../api/services/RouteNames";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {Backdrop} from "@mui/material";
@@ -26,8 +23,7 @@ import {
     SET_SPECIFIC_STUDENTS,
     SET_STARTING_AT, SET_STUDENTS
 } from "../../store/actions";
-import {loginAction} from "../../actions/LoginAcion";
-import ResetExamReducer from "../../actions/ResetExamReducer";
+import ExamActions from "../../actions/ExamActions";
 
 const steps = [
     "Exam Settings",
@@ -122,7 +118,7 @@ export default function HorizontalLinearStepper(props) {
             }
             setPostExamLoading(false);
             navigate(`/courses/${course_id}/exams`);
-            dispatch(ResetExamReducer());
+            dispatch(ExamActions());
         } catch (e) {
             console.log(e);
             setPostExamLoading(false);

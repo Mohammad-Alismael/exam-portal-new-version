@@ -7,8 +7,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { connect } from "react-redux";
-import { SignUpAction } from "../actions/SignUpAction";
+import {connect, useDispatch} from "react-redux";
+import { signUpAction } from "../actions/UserActions";
 import { authStyles } from "../utils/global/useStyles";
 import withContainer from "../components/withContainer";
 
@@ -19,8 +19,9 @@ function Signup(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const submit = (e) => {
-        if (username != "" && password != "") {
+        if (username !== "" && password !== "") {
             e.preventDefault();
             const data = {
                 username,
@@ -28,9 +29,9 @@ function Signup(props) {
                 emailId: email,
                 roleId: type,
             };
-            props.signUp(data, () => {
+            dispatch(signUpAction(data, ()=>{
                 navigate("/");
-            });
+            }))
         } else {
             toast.warn("you cannot leave username or password field empty!");
         }
@@ -106,13 +107,4 @@ function Signup(props) {
     );
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        signUp: (data, callback) => dispatch(SignUpAction(data, callback)),
-    };
-};
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(withContainer({ title: "sign up" })(Signup));
+export default withContainer({ title: "sign up" })(Signup);

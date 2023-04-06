@@ -42,6 +42,10 @@ const CreateNewCourseReducer = (state = initialState, action) => {
                 ...state,
                 announcementsComments: action.payload.announcementsComments
             }
+        case actionTypes.SET_NEW_COURSE_OBJECT:
+            return {
+                ...action.payload.newCourseObject
+            }
         default:
             break;
     }

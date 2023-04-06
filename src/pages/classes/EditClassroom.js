@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -21,10 +20,8 @@ import {
     SET_NEW_COURSE_NAME,
     SET_NEW_COURSE_SECTION
 } from "../../store/actions";
-import CreateNewCourseReducer from "../../store/reducers/CreateNewCourseReducer";
 import {useParams} from "react-router-dom";
-import useSelectImg from "../../utils/hooks/useSelectImg";
-import {setCourseInfo, setNewCourseReducer} from "../../actions/CourseAction";
+import {setCourseInfo} from "../../actions/CourseAction";
 
 function EditClassroom({open,setEditOpen}) {
     const [DefaultImgOpen, setDefaultImgOpen] = React.useState(false);
@@ -116,7 +113,7 @@ function EditClassroom({open,setEditOpen}) {
         updateCourse(newCourseProperties,course_id).then((data)=>{
             toast.success(data['message'])
             dispatch(setCourseInfo(data['updated_data']))
-            dispatch(setNewCourseReducer(data['updated_data']))
+            // dispatch(setNewCourseReducer(data['updated_data']))
             setEditOpen(false)
         }).catch(console.log)
     };
