@@ -31,7 +31,7 @@ import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
 import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
 import StatisticsPage from "./pages/course/statistics/StatisticsPage";
 import LoadingSpinner from "./components/LoadingSpinner";
-const token = window.sessionStorage.getItem('jwt')
+import {token} from "./api/axios";
 function App(props) {
     const [loading, setLoading] = useState(true);
     const {user} = useSelector(state => state.UserReducerV2);

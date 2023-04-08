@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions'
-import {SET_COURSE_LIST} from "../actions";
+import {SET_COURSE_LIST, SET_COURSE_LIST_OBJECT} from "../actions";
 
 const initialState = {
     courseList: [],
@@ -18,6 +18,11 @@ const CourseListReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: true
             };
+        case actionTypes.SET_COURSE_LIST_OBJECT:
+            return {
+                ...state,
+                courseList: [...state.courseList, action.payload.courseListObject]
+            }
         case actionTypes.FETCH_COURSE_LIST_SUCCESS:
             return {
                 ...state,

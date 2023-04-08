@@ -37,7 +37,7 @@ import { CircularProgress } from "@material-ui/core";
 import { Check } from "@mui/icons-material";
 import { fetch5More } from "../../api/services/Annoucments";
 import { stringify } from "flatted";
-import {Skeleton} from "@mui/material";
+import { Skeleton } from "@mui/material";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -141,7 +141,7 @@ function CoursePage(props) {
     return () => {
       controller.abort();
     };
-  }, [location.pathname,course_id]);
+  }, [location.pathname, course_id]);
 
   return (
     <div>
@@ -200,34 +200,51 @@ function CoursePage(props) {
             <Grid container className={classes.mainGrid}>
               <Grid item xs={10}>
                 {parseInt(user.role_id) === 3 ||
-                course['course_info']["allow_students_to_announcements"] === 1 ? (
+                course["course_info"]["allow_students_to_announcements"] ===
+                  1 ? (
                   <CreateAnnouncement />
                 ) : null}
-                {!course.isLoading ? <Grid item>
-                  {course?.announcements?.length !== 0 &&
-                    course?.announcements.sort(function (a, b) {
-                        return b.created_at - a.created_at;
+                {!course.isLoading ? (
+                  <Grid item>
+                    {course?.announcements?.length !== 0 &&
+                      course?.announcements
+                        .sort(function (a, b) {
+                          return b.created_at - a.created_at;
+                        })
+                        .map(
+                          (
+                            { id, announcement_text, file_path, created_at },
+                            index
+                          ) => {
+                            return (
+                              <Post
+                                key={index}
+                                file={file_path}
+                                announcementId={id}
+                                text={announcement_text}
+                                createdAt={created_at}
+                              />
+                            );
+                          }
+                        )}
+                    {course.announcements.length === 0 ? (
+                      <NoAnnouncement />
+                    ) : null}
+                  </Grid>
+                ) : null}
+                <Grid item>
+                  {course.isLoading
+                    ? [...Array(5).keys()].map((val, index) => {
+                        return (
+                          <Skeleton
+                            sx={{ background: "#fff",mb: 4 }}
+                            variant="rectangular"
+                            height={51}
+                          />
+                        );
                       })
-                      .map(
-                        (
-                          { id, announcement_text, file_path, created_at },
-                          index
-                        ) => {
-                          return (
-                            <Post
-                              key={index}
-                              file={file_path}
-                              announcementId={id}
-                              text={announcement_text}
-                              createdAt={created_at}
-                            />
-                          );
-                        }
-                      )}
-                  {course.announcements.length === 0 ? (
-                    <NoAnnouncement />
-                  ) : null}
-                </Grid> : <Skeleton sx={{background: '#fff'}} variant="rectangular" height={51} />}
+                    : null}
+                </Grid>
               </Grid>
             </Grid>
             {course.announcements.length >= 5 ? (

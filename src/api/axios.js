@@ -3,7 +3,8 @@ import {isExpired} from "react-jwt";
 import {REFRESH_TOKEN} from "./services/RouteNames";
 import {toast} from "react-toastify";
 export const BASE_URL = 'http://localhost:8080';
-let token = window.sessionStorage.getItem('jwt');
+// let token = window.sessionStorage.getItem('jwt');
+let token = null;
 
 export function updateToken(_token) {
     token = _token

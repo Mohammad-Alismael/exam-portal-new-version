@@ -16,7 +16,7 @@ export default function Logout() {
         axios
             .delete(`${BASE_URL}${DELETE_TOKEN}`,{withCredentials: true})
             .then((data) => {
-                sessionStorage.removeItem("1store1");
+                localStorage.removeItem("1store1");
                 sessionStorage.removeItem("key");
                 sessionStorage.removeItem("jwt");
             })

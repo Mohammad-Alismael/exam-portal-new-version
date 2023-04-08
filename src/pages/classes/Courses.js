@@ -3,8 +3,8 @@ import Card from "@mui/material/Card";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ClassCard from "./ClassCard";
-import { Fab, FormGroup, Skeleton, Typography } from "@mui/material";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { Fab, Skeleton, Typography } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
 import jwt from "jwt-decode";
@@ -83,10 +83,6 @@ function Courses(props) {
                   } = course;
                   const isStudent = parseInt(user?.role_id) === 3;
 
-                  const options = isStudent
-                    ? ["invitation link"]
-                    : ["withdraw course"];
-
                   const functions = isStudent
                     ? [
                         function (e) {
@@ -118,7 +114,6 @@ function Courses(props) {
                       }
                       courseInfo={course}
                       id={classroom_id}
-                      options={options}
                       functions={functions}
                     />
                   );

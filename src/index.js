@@ -1,72 +1,99 @@
-import React, {useEffect} from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 import thunk from "redux-thunk";
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { createStore, combineReducers,applyMiddleware } from "redux";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
 import CreateReducer from "./store/reducers/CreateReducer";
 import UserReducerV2 from "./store/reducers/UserReducerV2";
-import {BrowserRouter} from "react-router-dom";
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { BrowserRouter } from "react-router-dom";
+import { composeWithDevTools } from "redux-devtools-extension";
 import CourseReducer from "./store/reducers/CourseReducer";
 import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
 import SubmissionsReducer from "./store/reducers/SubmissionsReducer";
 import CreateNewCourseReducer from "./store/reducers/CreateNewCourseReducer";
 import CourseListReducer from "./store/reducers/CourseListReducer";
 import SidebarReducer from "./store/reducers/SidebarReducer";
+import { parse, stringify, toJSON } from "flatted";
+import { persistReducer, persistStore, createMigrate } from "redux-persist";
+import storage from 'redux-persist/lib/storage'
+import {PersistGate} from "redux-persist/integration/react"; // defaults to localStorage for web
+
 const rootReducer = combineReducers({
-    ExamReducer,
-    AddQuestionReducer,
-    UserReducerV2,
-    ExamStudentReducer,
-    SubmissionsReducer,
-    CreateReducer,
-    CourseReducer,
-    CourseListReducer,
-    CreateNewCourseReducer,
-    SidebarReducer
+  ExamReducer,
+  AddQuestionReducer,
+  UserReducerV2,
+  ExamStudentReducer,
+  SubmissionsReducer,
+  CreateReducer,
+  CourseReducer,
+  CourseListReducer,
+  CreateNewCourseReducer,
+  SidebarReducer,
 });
 
 function saveToLocalStorage(store) {
-    try {
-        const serializedStore = JSON.stringify(store);
-        sessionStorage.setItem('1store1', serializedStore);
-    } catch(e) {
-        console.log(e);
-    }
+  try {
+    const serializedStore = stringify(store);
+    localStorage.setItem("1store1", serializedStore);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function loadFromLocalStorage() {
-    try {
-        const serializedStore = sessionStorage.getItem('1store1');
-        if(serializedStore === null) return undefined;
-        return JSON.parse(serializedStore);
-    } catch(e) {
-        console.log(e);
-        return undefined;
-    }
+  try {
+    const serializedStore = localStorage.getItem("1store1");
+    if (serializedStore === null) return undefined;
+    return parse(serializedStore);
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
 }
+const flattenSerializer = {
+    serialize: (data) => stringify(data),
+    deserialize: (serializedData) => parse(serializedData),
+};
+const persistConfig = {
+    key: 'root',
+    storage,
+    version: 1,
+    serialize: flattenSerializer,
+    deserialize: flattenSerializer,
+};
 
-const persistedState = loadFromLocalStorage();
+// const persistedState = loadFromLocalStorage();
 
-export const store = createStore(rootReducer, persistedState, composeWithDevTools(applyMiddleware(thunk)));
+// export const store = createStore(
+//   rootReducer,
+//   persistedState,
+//   applyMiddleware(thunk)
+// );
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = createStore(persistedReducer, applyMiddleware(thunk));
+
+const persistor = persistStore(store);
+
 store.subscribe(() => {
-    const obj = store.getState()
-    // delete obj['TokenReducer']
-    saveToLocalStorage(obj)
+  const obj = store.getState();
+  // saveToLocalStorage(obj);
 });
 
 ReactDOM.render(
-    <Provider store={store}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-    </Provider>,
-  document.getElementById('root')
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

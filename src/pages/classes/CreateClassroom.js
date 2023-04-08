@@ -12,20 +12,26 @@ import DefaultImages from "./DefaultImages";
 import { useDispatch, useSelector } from "react-redux";
 import uuid from "draft-js/lib/uuid";
 import Dropzone from "./Dropzone";
-import {SET_COURSE_LIST} from "../../store/actions";
+import { SET_COURSE_LIST } from "../../store/actions";
 import { createCourse } from "../../api/services/Course";
 import { toast } from "react-toastify";
 import useErrorMessage from "../../utils/hooks/useErrorMessage";
 import { dataURLtoFile, toDataURL } from "../../utils/global/GlobalConstants";
 import { BASE_URL } from "../../api/axios";
-import {fetchCourseInfoRequest, fetchCourseInfoSuccess, resetCourseReducer} from "../../actions/CourseAction";
-import {setFileObjectAction} from "../../actions/CreateNewCourseAction";
-import {stringify} from "flatted";
+import {
+  fetchCourseInfoRequest,
+  fetchCourseInfoSuccess,
+  resetCourseReducer,
+} from "../../actions/CourseAction";
+import {
+  createNewCourseAction,
+  setFileObjectAction,
+} from "../../actions/CreateNewCourseAction";
+import { stringify } from "flatted";
 function CreateClassroom({ open, onClose }) {
   const [DefaultImgOpen, setDefaultImgOpen] = React.useState(false);
   const { user } = useSelector((state) => state.UserReducerV2);
-  const { courseList } = useSelector((state) => state.CourseListReducer);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const {
     showError,
@@ -46,31 +52,31 @@ function CreateClassroom({ open, onClose }) {
     section: newCourseProperties.section,
     backgroundFileObject: newCourseProperties.backgroundFileObject,
     letStudentsAskQuestions: false,
-    announcementsComments: false
+    announcementsComments: false,
   });
   const setCourseName = (e) => {
     setLocalState({
       ...localState,
-      courseName: e.target.value
-    })
+      courseName: e.target.value,
+    });
   };
   const setCourseSection = (e) => {
     setLocalState({
       ...localState,
-      section: e.target.value
-    })
+      section: e.target.value,
+    });
   };
   const letStudentsAskQuestions = (e) => {
     setLocalState({
       ...localState,
-      letStudentsAskQuestions: e.target.checked
-    })
+      letStudentsAskQuestions: e.target.checked,
+    });
   };
   const letStudentsToComment = (e) => {
     setLocalState({
       ...localState,
-      announcementsComments: e.target.checked
-    })
+      announcementsComments: e.target.checked,
+    });
   };
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.map((file) => {
@@ -81,45 +87,27 @@ function CreateClassroom({ open, onClose }) {
       reader.readAsDataURL(file);
       setLocalState({
         ...localState,
-        backgroundFileObject: file
-      })
+        backgroundFileObject: file,
+      });
       return file;
     });
   }, []);
 
-  async function createBackgroundFileObject() {
-    const {backgroundFileObject} = newCourseProperties
+  function createBackgroundFileObject() {
+    const { backgroundFileObject } = newCourseProperties;
     if (backgroundFileObject == null) {
       const randomNum = Math.floor(Math.random() * 9) + 1;
       const url = `${BASE_URL}/default-backgrounds/ep_option${randomNum}.png`;
-      const fileName = url.split("/")[4];
-      dispatch(setFileObjectAction({url}))
-      // return {url}
-    } else {
-      // return backgroundFileObject;
+      return { url };
     }
   }
 
   async function handleCreateCourse(newCourseProperties, userId) {
-    try {
-      const res = await createCourse(newCourseProperties, userId);
-      const newClassroom = res.newClassroom;
-      dispatch(resetCourseReducer());
-      dispatch({
-        type: SET_COURSE_LIST,
-        payload: { courseList: [...courseList, newClassroom] },
-      });
-      toast(res.message);
-      console.log("new course => ", newClassroom);
-
-      onClose();
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(createNewCourseAction(newCourseProperties, userId, onClose));
   }
 
-   const createClass = async () => {
-    const {courseName,section} = localState
+  const createClass = async () => {
+    const { courseName, section } = localState;
     if (!courseName && !section) {
       showErrorMsg("Course name can't be empty");
       showErrorSectionMsg("Section can't be empty");
@@ -135,28 +123,19 @@ function CreateClassroom({ open, onClose }) {
       showErrorSectionMsg("Section can't be empty");
       return;
     }
-     console.log("hello")
-    // setLoading(true)
-     console.log(JSON.parse(stringify(fetchCourseInfoRequest())))
-    dispatch(fetchCourseInfoRequest());
-    // dispatch(stringify(fetchCourseInfoRequest()));
-    // dispatch(setNewCourseProperties(localState))
-    // const backgroundFileObject = await createBackgroundFileObject();
-    // const courseProperties = { ...localState, backgroundFileObject };
-    // await handleCreateCourse(newCourseProperties, user["user_id"]);
-    // setLocalState({
-    //   courseName: '',
-    //   section: '',
-    //   backgroundFileObject: null,
-    //   letStudentsAskQuestions: false,
-    //   announcementsComments: false
-    // })
-    // dispatch(fetchCourseInfoSuccess());
-    // setLoading(false)
+    setLoading(true);
+    const backgroundFileObject = createBackgroundFileObject();
+    const courseProperties = { ...localState, backgroundFileObject };
+    await handleCreateCourse(courseProperties, user["user_id"]);
+    setLocalState({
+      courseName: "",
+      section: "",
+      backgroundFileObject: null,
+      letStudentsAskQuestions: false,
+      announcementsComments: false,
+    });
+    setLoading(false);
   };
-  // if (loading){
-  //   return <p>loading ..</p>
-  // }
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
@@ -196,7 +175,7 @@ function CreateClassroom({ open, onClose }) {
             <Dropzone
               onDrop={onDrop}
               setDefaultImgOpen={setDefaultImgOpen}
-              accept={"image/*"}
+              accept="image/*"
             />
             <FormGroup>
               <FormControlLabel

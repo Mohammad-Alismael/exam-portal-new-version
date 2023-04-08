@@ -6,19 +6,13 @@ import Divider from "@material-ui/core/Divider";
 import Card from "@mui/material/Card";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Grid from "@mui/material/Grid";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { toast } from "react-toastify";
-import jwt from "jwt-decode";
 import { connect, useSelector } from "react-redux";
 import useClipboard from "react-hook-clipboard";
-import CryptoJS from "crypto-js";
-import { token } from "../../api/axios";
-import Avatar from "@mui/material/Avatar";
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
@@ -70,18 +64,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ITEM_HEIGHT = 48;
 function ClassCard(props) {
-  const {
-    class_name,
-    classroom_id,
-    section,
-    instructor_info,
-    img_path,
-  } = props.courseInfo;
+  const { class_name, classroom_id, section, instructor_info, img_path } =
+    props.courseInfo;
   const { user } = useSelector((state) => state.UserReducerV2);
   const options = user.role_id == 3 ? ["invitation link"] : ["withdraw course"];
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [clipboard, copyToClipboard] = useClipboard();
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     event.stopPropagation();
@@ -129,7 +117,7 @@ function ClassCard(props) {
                   },
                 }}
               >
-                {props.options.map((option, i) => (
+                {options.map((option, i) => (
                   <MenuItem key={option} onClick={props.functions[i]}>
                     {option}
                   </MenuItem>
@@ -151,9 +139,5 @@ function ClassCard(props) {
     </Grid>
   );
 }
-const mapStateToProps = (state) => {
-  return {
-    token: state.TokenReducer,
-  };
-};
-export default connect(mapStateToProps, null)(ClassCard);
+
+export default ClassCard;

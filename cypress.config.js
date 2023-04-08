@@ -4,7 +4,8 @@ const loginPlugin = require("./cypress/plugins/loginPlugin");
 const testDataApiEndpoint = 'http://localhost:8080'
 module.exports = defineConfig({
   projectId: 'vsnrkh',
-
+  viewportWidth: 1280,
+  viewportHeight: 800,
   e2e: {
     chromeWebSecurity: false,
     permissions: {
