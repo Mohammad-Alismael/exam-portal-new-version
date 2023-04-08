@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import IconButton from '@mui/material/IconButton';
+import IconButton from "@mui/material/IconButton";
 
 const useStyles = makeStyles((theme) => ({
   dropzone: {

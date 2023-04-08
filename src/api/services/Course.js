@@ -114,7 +114,7 @@ async function updateCourse(object, courseId) {
     return response["data"];
   } catch (e) {
     console.log(e);
-    throw { message: e.message };
+    throw { message: e.message,error: e };
   }
 }
 async function fetchClassmates(courseId, controller) {

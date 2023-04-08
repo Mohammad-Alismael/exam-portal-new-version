@@ -1,11 +1,4 @@
 import * as actionTypes from "../actions";
-import {
-    SET_ANNOUNCEMENTS_COMMENTS,
-    SET_BACKGROUND_OBJECT_FILE,
-    SET_LET_STUDENTS_ASK_QUESTIONS,
-    SET_NEW_COURSE_NAME,
-    SET_NEW_COURSE_SECTION
-} from "../actions";
 
 const initialState = {
     courseName: "",

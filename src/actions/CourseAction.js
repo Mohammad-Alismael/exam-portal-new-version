@@ -1,4 +1,8 @@
-import { fetchCourseInfo, getCourses } from "../api/services/Course";
+import {
+  fetchCourseInfo,
+  getCourses,
+  updateCourse,
+} from "../api/services/Course";
 import { parse, stringify, toJSON, fromJSON } from "flatted";
 import * as Actions from "../store/actions";
 import {
@@ -26,7 +30,8 @@ import {
   SET_STARTING_AT,
   SET_STUDENTS,
 } from "../store/actions";
-import {setNewCourseProperties} from "./CreateNewCourseAction";
+import { setNewCourseProperties } from "./CreateNewCourseAction";
+import { toast } from "react-toastify";
 
 export const fetchCourseInfoAction = (course_id, controller) => {
   return (dispatch) => {
@@ -90,6 +95,30 @@ export function getCoursesAction(controller) {
     });
   };
 }
+
+export function updateClassAction(data, course_id, callback) {
+  return (dispatch) => {
+    updateCourse(data, course_id)
+      .then((data) => {
+        toast.success(data["message"]);
+        dispatch(setCourseInfo(data["updated_data"]));
+        // dispatch(setNewCourseReducer(data['updated_data']))
+        callback(false);
+      })
+      .catch((error) => {
+        console.log(error.response);
+        if (error.response.status === 400) {
+          toast("error happened while uploading an image!");
+        }
+        if (error.response.status === 403) {
+          toast("user timed out!");
+        }
+        if (error.response.status === 409) {
+          toast.error(error.response.data.message);
+        }
+      });
+  };
+}
 export function setCourseList(courseList) {
   return {
     type: SET_COURSE_LIST,
@@ -98,18 +127,18 @@ export function setCourseList(courseList) {
 }
 
 export function fetchCourseListRequest() {
-    return {
-        type: Actions.FETCH_COURSE_LIST_REQUEST
-    }
+  return {
+    type: Actions.FETCH_COURSE_LIST_REQUEST,
+  };
 }
 
 export function fetchCourseListSuccess() {
-    return{
-        type: Actions.FETCH_COURSE_LIST_SUCCESS
-    }
+  return {
+    type: Actions.FETCH_COURSE_LIST_SUCCESS,
+  };
 }
-export const fetchCourseInfoRequest =  () => ({
-  type: Actions.FETCH_COURSE_INFO_REQUEST
+export const fetchCourseInfoRequest = () => ({
+  type: Actions.FETCH_COURSE_INFO_REQUEST,
 });
 
 export const fetchCourseInfoSuccess = () => {
@@ -161,4 +190,3 @@ export function setCourseId(courseId) {
     payload: { courseId },
   };
 }
-
