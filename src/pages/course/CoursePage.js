@@ -237,7 +237,7 @@ function CoursePage(props) {
                     ? [...Array(5).keys()].map((val, index) => {
                         return (
                           <Skeleton
-                            sx={{ background: "#fff",mb: 4 }}
+                            sx={{ background: "#fff", mb: 4 }}
                             variant="rectangular"
                             height={51}
                           />

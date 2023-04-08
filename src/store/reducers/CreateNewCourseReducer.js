@@ -32,9 +32,9 @@ const CreateNewCourseReducer = (state = initialState, action) => {
             }
         case actionTypes.SET_ANNOUNCEMENTS_COMMENTS:
             return {
-                ...state,
-                announcementsComments: action.payload.announcementsComments
-            }
+              ...state,
+              announcementsComments: action.payload.announcementsComments,
+            };
         case actionTypes.SET_NEW_COURSE_OBJECT:
             return {
                 ...action.payload.newCourseObject

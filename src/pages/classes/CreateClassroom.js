@@ -99,6 +99,8 @@ function CreateClassroom({ open, onClose }) {
       const randomNum = Math.floor(Math.random() * 9) + 1;
       const url = `${BASE_URL}/default-backgrounds/ep_option${randomNum}.png`;
       return { url };
+    }else {
+      return backgroundFileObject;
     }
   }
 

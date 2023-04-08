@@ -7,6 +7,7 @@ import {
 } from "../store/actions";
 import { createCourse } from "../api/services/Course";
 import {
+  fetchCourseInfoFailure,
   fetchCourseListRequest,
   fetchCourseListSuccess,
   resetCourseReducer,
@@ -27,6 +28,7 @@ export function createNewCourseAction(newCourseProperties, userId, onClose) {
       })
       .catch((error) => {
         console.log(error);
+        dispatch(fetchCourseInfoFailure(error.response));
       });
   };
 }
