@@ -5,7 +5,7 @@ const initialState = {
   user: null,
 };
 
-const UserReducerV2 = (state = initialState, action) => {
+const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_USER:
       return {
@@ -17,4 +17,4 @@ const UserReducerV2 = (state = initialState, action) => {
   }
   return state;
 };
-export default UserReducerV2;
+export default UserReducer;

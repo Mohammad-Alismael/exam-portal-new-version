@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
 import CreateReducer from "./store/reducers/CreateReducer";
-import UserReducerV2 from "./store/reducers/UserReducerV2";
+import UserReducer from "./store/reducers/UserReducer";
 import { BrowserRouter } from "react-router-dom";
 import { composeWithDevTools } from "redux-devtools-extension";
 import CourseReducer from "./store/reducers/CourseReducer";
@@ -26,7 +26,7 @@ import {PersistGate} from "redux-persist/integration/react"; // defaults to loca
 const rootReducer = combineReducers({
   ExamReducer,
   AddQuestionReducer,
-  UserReducerV2,
+  UserReducerV2: UserReducer,
   ExamStudentReducer,
   SubmissionsReducer,
   CreateReducer,
@@ -36,25 +36,6 @@ const rootReducer = combineReducers({
   SidebarReducer,
 });
 
-function saveToLocalStorage(store) {
-  try {
-    const serializedStore = stringify(store);
-    localStorage.setItem("1store1", serializedStore);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-function loadFromLocalStorage() {
-  try {
-    const serializedStore = localStorage.getItem("1store1");
-    if (serializedStore === null) return undefined;
-    return parse(serializedStore);
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
 const flattenSerializer = {
     serialize: (data) => stringify(data),
     deserialize: (serializedData) => parse(serializedData),
@@ -67,13 +48,6 @@ const persistConfig = {
     deserialize: flattenSerializer,
 };
 
-// const persistedState = loadFromLocalStorage();
-
-// export const store = createStore(
-//   rootReducer,
-//   persistedState,
-//   applyMiddleware(thunk)
-// );
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = createStore(persistedReducer, applyMiddleware(thunk));

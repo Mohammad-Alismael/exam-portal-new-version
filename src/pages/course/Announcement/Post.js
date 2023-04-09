@@ -160,11 +160,11 @@ function Post({ announcementId, createdAt, file, text }) {
         <div className={classes.userInfo}>
           <Avatar
             className={classes.icon}
-            alt="m"
+            alt={user.username}
             src="/static/images/avatar/2.jpg"
           />
           <div style={{ marginLeft: "0.8rem" }}>
-            <Typography className={classes.username}>
+            <Typography className={classes.username} data-cy="username">
               <b>
                 {course.course_info?.instructor?.username}{" "}
                 <span style={{ color: "#BBBBBB", fontSize: 14 }}>
@@ -207,7 +207,7 @@ function Post({ announcementId, createdAt, file, text }) {
           />
         ) : null}
       </div>
-      <Grid item xs={12} style={{ padding: "0 0.8rem" }}>
+      <Grid item xs={12} style={{ padding: "0 0.8rem" }} data-cy="post">
         {!editAnnouncement ? (
           <Editor
             toolbarClassName={classes.toolbarEditor}
