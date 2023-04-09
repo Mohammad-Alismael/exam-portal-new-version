@@ -1,4 +1,5 @@
 import {
+  fetchClassmates,
   fetchCourseInfo,
   getCourses,
   updateCourse,
@@ -32,6 +33,7 @@ import {
 } from "../store/actions";
 import { setNewCourseProperties } from "./CreateNewCourseAction";
 import { toast } from "react-toastify";
+import {fetch5More} from "../api/services/Annoucments";
 
 export const fetchCourseInfoAction = (course_id, controller) => {
   return (dispatch) => {
@@ -45,6 +47,7 @@ export const fetchCourseInfoAction = (course_id, controller) => {
         dispatch(fetchCourseInfoSuccess());
       })
       .catch((error) => {
+    console.log("error while fetching data => ", error);
         dispatch(fetchCourseInfoFailure(error.message));
       });
   };
@@ -118,6 +121,26 @@ export function updateClassAction(data, course_id, callback) {
         }
       });
   };
+}
+
+export function fetchClasMatesAction(courseId,controller) {
+  return (dispatch) => {
+    fetchClassmates(courseId, controller).then((data)=> {
+      dispatch(setCourseClassmates(data))
+      dispatch(setFilteredClassmates(data))
+      console.log("classmates => ", data)
+    })
+  }
+}
+export function load5MoreAction(minId,course){
+  return (dispatch) => {
+    fetch5More(minId)
+        .then((data) => {
+          const newAr = course.announcements.concat(data);
+          dispatch(setCourseAnnouncements(newAr));
+        })
+        .catch(console.log);
+  }
 }
 export function setCourseList(courseList) {
   return {

@@ -8,10 +8,10 @@ function loginWithUserData() {
     cy.get('button[type="submit"]').click();
 }
 
-function loginWithUserDataPassed(username,email) {
+function loginWithUserDataPassed(username,password) {
     cy.fixture("userData").then(data => {
         cy.get('input[name="username"]').type(username);
-        cy.get('input[name="password"]').type(email);
+        cy.get('input[name="password"]').type(password);
     });
     cy.get('button[type="submit"]').click();
 }

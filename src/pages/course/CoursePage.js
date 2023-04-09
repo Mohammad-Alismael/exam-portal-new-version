@@ -23,7 +23,7 @@ import {
   fetchCourseInfoAction,
   fetchCourseInfoFailure,
   fetchCourseInfoRequest,
-  fetchCourseInfoSuccess,
+  fetchCourseInfoSuccess, load5MoreAction,
   setCourseId,
   setNewCourseReducer,
 } from "../../actions/CourseAction";
@@ -125,15 +125,7 @@ function CoursePage(props) {
       (min, current) => (current.id < min ? current.id : min),
       course.announcements[0].id
     );
-    fetch5More(minId)
-      .then((data) => {
-        const newAr = course.announcements.concat(data);
-        dispatch({
-          type: SET_COURSE_ANNOUNCEMENTS,
-          payload: { announcements: newAr },
-        });
-      })
-      .catch(console.log);
+    dispatch(load5MoreAction(minId,course))
   };
   useEffect(() => {
     const controller = new AbortController();
@@ -142,7 +134,6 @@ function CoursePage(props) {
       controller.abort();
     };
   }, [location.pathname, course_id]);
-
   return (
     <div>
       <NavbarDashboard loading={course.isLoading} />
@@ -193,7 +184,7 @@ function CoursePage(props) {
                 <p>
                   {parseInt(user.role_id) === 3
                     ? user.username
-                    : course?.course_info?.instructor["username"]}
+                    : course?.course_info?.instructor?.username}
                 </p>
               </div>
             </Paper>

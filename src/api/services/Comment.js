@@ -2,21 +2,18 @@ import {axiosPrivate, MyError} from "../axios";
 import {COMMENT, FETCH_COMMENT, FETCH_COURSE_INFO} from "./RouteNames";
 import {toast} from "react-toastify";
 
-const createComment = async (text,announcement_id) => {
-    console.log({text,announcement_id})
+const createComment = async (text, announcement_id) => {
     try {
-        const response = await axiosPrivate.post(`${COMMENT}`,
-            {
-                text,
-                announcement_id
-            })
-        console.log('from created comment', response)
-        return await response
-    } catch (e) {
-        console.log(e)
-        alert("error happened while creating a comment")
+        const response = await axiosPrivate.post(COMMENT, { text, announcement_id });
+        console.log('Response from createComment:', response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        alert('Error occurred while creating a comment.');
+        throw error;
     }
-}
+};
+
 const deleteComment = async (announcement_id) => {
     try {
         const response = await axiosPrivate.delete(`${COMMENT}/${announcement_id}`)

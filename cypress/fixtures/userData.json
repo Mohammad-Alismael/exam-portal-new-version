@@ -11,7 +11,7 @@
     }
   },
   "student_role": {
-    "username": "student",
+    "username": "baris",
     "password": "123",
     "invalid_password": "123456"
   }

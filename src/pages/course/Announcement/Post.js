@@ -127,6 +127,7 @@ const calcState = (text) => {
     : EditorState.createEmpty();
 };
 function Post({ announcementId, createdAt, file, text }) {
+  // console.log(convertFromRaw(JSON.parse(text)))
   const classes = useStyles();
   const { user } = useSelector((state) => state.UserReducerV2);
   const course = useSelector((state) => state.CourseReducer);
@@ -138,10 +139,7 @@ function Post({ announcementId, createdAt, file, text }) {
   const announcementIndex = course.announcements.findIndex(({ id }) => {
     return parseInt(announcementId) === parseInt(id);
   });
-  const { courseList } = useSelector((state) => state.CourseListReducer);
-  const courseObj = courseList.filter(({ classroom_id }, index) => {
-    return classroom_id === course_id;
-  })[0];
+  const courseObj = useSelector((state) => state.CourseReducer)['course_info'];
   const handleComments = (e) => {
     e.preventDefault();
     setOpenCommentContainer(!openCommentContainer);
@@ -154,6 +152,7 @@ function Post({ announcementId, createdAt, file, text }) {
   useEffect(() => {
     setEditorState(calcState(text));
   }, [course.announcements.length]);
+
   return (
     <Paper elevation={5} className={classes.paperStyle}>
       <div className={classes.userContainer}>
@@ -225,8 +224,8 @@ function Post({ announcementId, createdAt, file, text }) {
           />
         )}
       </Grid>
-      {courseObj["allow_students_to_comment"] === 1 ? <Divider /> : null}
-      {courseObj["allow_students_to_comment"] === 1 ? (
+      {courseObj["allow_students_to_comment"] == 1 ? <Divider /> : null}
+      {courseObj["allow_students_to_comment"] == 1 ? (
         <div className={classes.commentsMetaData} onClick={handleComments}>
           <img
             className={classes.commentsIcon}
