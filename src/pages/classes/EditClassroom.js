@@ -24,6 +24,7 @@ import {
   setLetStudentCommentAction,
   setLetStudentsAskQuestionsAction,
 } from "../../actions/CreateNewCourseAction";
+import CourseReducer from "../../store/reducers/CourseReducer";
 
 function EditClassroom({ open, setEditOpen }) {
   const [DefaultImgOpen, setDefaultImgOpen] = React.useState(false);
@@ -38,9 +39,6 @@ function EditClassroom({ open, setEditOpen }) {
     letStudentsAskQuestions: courseObj["allow_students_to_announcements"],
     announcementsComments: courseObj["allow_students_to_comment"],
   });
-  const newCourseProperties = useSelector(
-    (state) => state.CreateNewCourseReducer
-  );
   const setCourseName = (e) => {
     setLocalState({
       ...localState,
@@ -91,7 +89,7 @@ function EditClassroom({ open, setEditOpen }) {
       updateClassAction(
         {
           ...localState,
-          backgroundFileObject: newCourseProperties["backgroundFileObject"],
+          backgroundFileObject: { url: courseObj["img_path"] },
         },
         course_id,
         (value) => {
@@ -102,7 +100,6 @@ function EditClassroom({ open, setEditOpen }) {
   };
 
   useEffect(() => {
-    dispatch(setFileObjectAction({ url: courseObj["img_path"] }));
   }, []);
 
   return (

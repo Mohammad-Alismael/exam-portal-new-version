@@ -81,8 +81,8 @@ function ClassCard(props) {
   };
 
   return (
-    <Grid item xs={12} sm={6} md={3}>
-      <Card className={classes.root} sx={{ borderRadius: "15px" }}>
+    <Grid item xs={12} sm={6} md={3} >
+      <Card className={classes.root} sx={{ borderRadius: "15px" }} data-cy={`course-index-${classroom_id}`}>
         <CardActionArea href={`/courses/${classroom_id}`}>
           <CardMedia className={classes.media} image={img_path}>
             <div className={classes.classInfo}>

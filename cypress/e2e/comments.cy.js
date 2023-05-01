@@ -6,8 +6,7 @@ describe("Comments", () => {
     cy.fixture("userData").as("usersData");
     cy.get("@usersData").then((usersData) => {
       cy.login(
-        usersData.student_role.username,
-        usersData.student_role.password
+        usersData.student_role
       );
     });
     cy.url().should("include", "/courses");

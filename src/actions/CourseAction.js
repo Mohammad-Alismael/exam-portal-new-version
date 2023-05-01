@@ -55,10 +55,7 @@ export const fetchCourseInfoAction = (course_id, controller) => {
 export function CourseAction(data) {
   return (dispatch) => {
     dispatch(setCourseInfo(data["course_info"]));
-    dispatch({
-      type: SET_COURSE_ANNOUNCEMENTS,
-      payload: { announcements: data["announcements"] },
-    });
+    dispatch(setCourseAnnouncements(data["announcements"]))
     dispatch(setCourseClassmates(data["classmates"]));
     dispatch({ type: SET_COURSE_EXAMS, payload: { exams: data["exams"] } });
   };
@@ -109,7 +106,7 @@ export function updateClassAction(data, course_id, callback) {
         callback(false);
       })
       .catch((error) => {
-        console.log(error.response);
+        console.log(error);
         if (error.response.status === 400) {
           toast("error happened while uploading an image!");
         }
@@ -133,6 +130,7 @@ export function fetchClasMatesAction(courseId,controller) {
   }
 }
 export function load5MoreAction(minId,course){
+  console.log(course.announcements)
   return (dispatch) => {
     fetch5More(minId)
         .then((data) => {

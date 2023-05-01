@@ -123,10 +123,7 @@ function CreateAnnouncement(props) {
   const updateList = (data) => {
     console.log("update list", data);
     const tmp = [...course.announcements, { ...data }];
-    dispatch({
-      type: SET_COURSE_ANNOUNCEMENTS,
-      payload: { announcements: tmp },
-    });
+    dispatch(setCourseAnnouncements(tmp));
   };
   const appendText = async (announcementText) => {
     try {
@@ -141,10 +138,7 @@ function CreateAnnouncement(props) {
     const res = await uploadFileAnnouncement(data);
     let new_res = { ...res, file_path: `${BASE_URL}/${res.file_path}` };
     const tmp = [...course.announcements, new_res];
-    dispatch({
-      type: SET_COURSE_ANNOUNCEMENTS,
-      payload: { announcements: tmp },
-    });
+    dispatch(setCourseAnnouncements(tmp));
   };
   const post = (e) => {
     e.preventDefault();

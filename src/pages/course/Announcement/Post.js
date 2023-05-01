@@ -139,7 +139,7 @@ function Post({ announcementId, createdAt, file, text }) {
   const announcementIndex = course.announcements.findIndex(({ id }) => {
     return parseInt(announcementId) === parseInt(id);
   });
-  const courseObj = useSelector((state) => state.CourseReducer)['course_info'];
+  const courseObj = useSelector((state) => state.CourseReducer)["course_info"];
   const handleComments = (e) => {
     e.preventDefault();
     setOpenCommentContainer(!openCommentContainer);
@@ -226,7 +226,11 @@ function Post({ announcementId, createdAt, file, text }) {
       </Grid>
       {courseObj["allow_students_to_comment"] == 1 ? <Divider /> : null}
       {courseObj["allow_students_to_comment"] == 1 ? (
-        <div className={classes.commentsMetaData} onClick={handleComments}>
+        <div
+          className={classes.commentsMetaData}
+          onClick={handleComments}
+          data-cy="comment-btn"
+        >
           <img
             className={classes.commentsIcon}
             src="/images/icons/comments_icon.svg"

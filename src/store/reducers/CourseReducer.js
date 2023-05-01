@@ -42,7 +42,7 @@ const CourseReducer = (state = initialState, action) => {
       case actionTypes.SET_COURSE_ANNOUNCEMENTS:
         return {
           ...state,
-          announcements: action.payload.announcements,
+          announcements: action.announcements
         };
       case actionTypes.SET_COURSE_CLASSMATES:
         return {

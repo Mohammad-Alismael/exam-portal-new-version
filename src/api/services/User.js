@@ -92,7 +92,7 @@ class User {
             console.log(err)
 
             // if (err.response.status === 406) {
-            window.location.href = '/logout'
+            // window.location.href = '/logout'
             toast("session expired, you must log in again!")
             // }
             callback()

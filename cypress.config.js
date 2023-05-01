@@ -13,9 +13,9 @@ module.exports = defineConfig({
       clipboardWrite: true,
       clipboardRead: true,
     },
-    taskTimeout: 20000,
+    taskTimeout: 40000,
     defaultCommandTimeout: 8000,
-    testIsolation: false,
+    testIsolation: true,
     baseUrl: "http://localhost:3000",
     watchForFileChanges: false,
     setupNodeEvents(on, config) {

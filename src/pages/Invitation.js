@@ -38,7 +38,7 @@ function Invitation(props) {
   };
 
   useEffect(() => {
-    if (user.role_id === 3) {
+    if (parseInt(user.role_id) === 3) {
       // Redirect instructor to dashboard
       toast.info("You are an instructor and can't join other courses!");
       navigate("/");
@@ -80,7 +80,7 @@ if (!isLoading)
       confirmBtnText="Yes"
       confirmBtnBsStyle="primary"
       title={
-        user.role_id != 3
+        parseInt(user.role_id) !== 3
           ? `Is ${instructorusername} your instructor?`
           : "invitation link works only for students!"
       }

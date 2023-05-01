@@ -1,6 +1,6 @@
 class CoursesSelectors {
     static getCreateClassroomBtn(){
-        return cy.get('.makeStyles-addClassBtn-13 > .MuiButtonBase-root');
+        return cy.get('[data-cy="create-course-btn"] > .MuiButtonBase-root');
     }
 
     static getClassNameTextField(){

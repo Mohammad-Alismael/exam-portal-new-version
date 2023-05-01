@@ -1,8 +1,6 @@
 class EditCourseSelectors {
   static getClassroomCard() {
-    return cy.get(
-      ":nth-child(1) > .MuiPaper-root > .MuiCardActionArea-root > .MuiCardMedia-root"
-    );
+    return cy.get('[data-cy="course-index-JZX97HFV8WD"] > .MuiCardActionArea-root > .MuiCardMedia-root')
   }
   static getEditBtn() {
     return cy.get(".MuiPaper-elevation5 > .MuiButtonBase-root");

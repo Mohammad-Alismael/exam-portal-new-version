@@ -8,11 +8,12 @@ describe("Announcements", function () {
     cy.fixture("coursesData").then((data) => {
       coursesData = data;
     });
-    loginWithUserData();
-    cy.url().should("include", "/courses");
     seedDatabase();
-    cy.reload();
   });
+  beforeEach(()=>{
+    cy.login({ username: "admin", password: "123" });
+    cy.url().should("include", "/courses");
+  })
   beforeEach(function () {});
   describe("create Announcements", function () {
     it("Announcements", function () {

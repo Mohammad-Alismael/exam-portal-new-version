@@ -23,7 +23,8 @@ import {
   fetchCourseInfoAction,
   fetchCourseInfoFailure,
   fetchCourseInfoRequest,
-  fetchCourseInfoSuccess, load5MoreAction,
+  fetchCourseInfoSuccess,
+  load5MoreAction,
   setCourseId,
   setNewCourseReducer,
 } from "../../actions/CourseAction";
@@ -125,7 +126,7 @@ function CoursePage(props) {
       (min, current) => (current.id < min ? current.id : min),
       course.announcements[0].id
     );
-    dispatch(load5MoreAction(minId,course))
+    dispatch(load5MoreAction(minId, course));
   };
   useEffect(() => {
     const controller = new AbortController();
@@ -134,6 +135,8 @@ function CoursePage(props) {
       controller.abort();
     };
   }, [location.pathname, course_id]);
+
+  // return <p style={{background:'red'}}>{course.announcements.length}</p>
   return (
     <div>
       <NavbarDashboard loading={course.isLoading} />

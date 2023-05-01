@@ -9,6 +9,6 @@ export default class CommentSelector{
         return cy.get(':nth-child(2) > .MuiPaper-root > .MuiCardActionArea-root > .MuiCardMedia-root')
     }
     static getCommentTag(){
-        return cy.get(':nth-child(1) > .makeStyles-commentsMetaData-53')
+        return cy.get(':nth-child(1) > [data-cy="comment-btn"]')
     }
 }

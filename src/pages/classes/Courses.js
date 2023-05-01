@@ -122,7 +122,12 @@ function Courses(props) {
                 ? [...Array(10).keys()].map((val, i) => {
                     return (
                       <Grid item xs={12} sm={6} md={3}>
-                        <Skeleton sx={{background: 'white'}} variant="rounded" width={300} height={180} />
+                        <Skeleton
+                          sx={{ background: "white" }}
+                          variant="rounded"
+                          width={300}
+                          height={180}
+                        />
                       </Grid>
                     );
                   })
@@ -145,7 +150,7 @@ function Courses(props) {
         />
 
         {parseInt(user?.role_id) === 3 ? (
-          <div className={classes.addClassBtn}>
+          <div className={classes.addClassBtn} data-cy="create-course-btn">
             <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
               <AddIcon />
             </Fab>
@@ -153,10 +158,7 @@ function Courses(props) {
         ) : null}
       </CourseContainer>
 
-      <CreateClassroom
-        open={open}
-        onClose={handleClose}
-      />
+      <CreateClassroom open={open} onClose={handleClose} />
     </>
   );
 }
