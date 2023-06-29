@@ -45,6 +45,7 @@ export const fetchCourseInfoAction = (course_id, controller) => {
         dispatch(CourseAction(data));
         dispatch(setNewCourseProperties(data));
         dispatch(fetchCourseInfoSuccess());
+        dispatch(fetchCourseInfoFailure(null));
       })
       .catch((error) => {
     console.log("error while fetching data => ", error);

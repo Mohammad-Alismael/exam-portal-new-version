@@ -6,7 +6,7 @@ ContainerWithHeader.propTypes = {
 
 };
 
-function ContainerWithHeader({title,children}) {
+function ContainerWithHeader({title, children}) {
     return (
         <>
             <Header>{title}</Header>

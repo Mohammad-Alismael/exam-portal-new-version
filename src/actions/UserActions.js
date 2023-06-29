@@ -1,20 +1,19 @@
 import * as Actions from "../store/actions";
 import { toast } from "react-toastify";
-import userApi from "../api/services/User";
+import { createUser, userAuth } from "../api/services/User";
 import jwt from "jwt-decode";
-import { axiosPrivate, updateRefreshToken, updateToken } from "../api/axios";
+import { updateToken } from "../api/axios";
 
 export function loginAction(username, password, callback) {
   return (dispatch) => {
-    return userApi
-      .userAuth(username, password)
+    return userAuth(username, password)
       .then((res) => {
-        const token_data = jwt(res.data["accessToken"]);
-        const token = res.data["accessToken"];
+        console.log(res);
+        const token = res.data.accessToken;
+        const token_data = jwt(token);
         dispatch(login(token_data));
-        dispatch(accessToken1(res.data["accessToken"]));
+        dispatch(accessToken1(token));
         updateToken(token);
-        // updateRefreshToken(res.data['refreshToken'])
         window.sessionStorage.setItem("jwt", token);
         callback();
       })
@@ -30,8 +29,7 @@ export function signUpAction(
   callback
 ) {
   return (dispatch) => {
-    return userApi
-      .createUser({ username, password, emailId, roleId })
+    return createUser({ username, password, emailId, roleId })
       .then((res) => {
         toast.success(res.data.message);
         callback();

@@ -10,7 +10,7 @@ import ExamReducer from "./store/reducers/ExamReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
 import CreateReducer from "./store/reducers/CreateReducer";
 import UserReducer from "./store/reducers/UserReducer";
-import { BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router, Link } from "react-router-dom";
 import { composeWithDevTools } from "redux-devtools-extension";
 import CourseReducer from "./store/reducers/CourseReducer";
 import AddQuestionReducer from "./store/reducers/AddQuestionReducer";
@@ -20,8 +20,11 @@ import CourseListReducer from "./store/reducers/CourseListReducer";
 import SidebarReducer from "./store/reducers/SidebarReducer";
 import { parse, stringify, toJSON } from "flatted";
 import { persistReducer, persistStore, createMigrate } from "redux-persist";
-import storage from 'redux-persist/lib/storage'
-import {PersistGate} from "redux-persist/integration/react"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
+import { PersistGate } from "redux-persist/integration/react";
+import { theme } from "./utils/global/useStyles";
+import { ToastContainer } from "react-toastify";
+import { ThemeProvider } from "@mui/material/styles"; // defaults to localStorage for web
 
 const rootReducer = combineReducers({
   ExamReducer,
@@ -37,15 +40,15 @@ const rootReducer = combineReducers({
 });
 
 const flattenSerializer = {
-    serialize: (data) => stringify(data),
-    deserialize: (serializedData) => parse(serializedData),
+  serialize: (data) => stringify(data),
+  deserialize: (serializedData) => parse(serializedData),
 };
 const persistConfig = {
-    key: 'root',
-    storage,
-    version: 1,
-    serialize: flattenSerializer,
-    deserialize: flattenSerializer,
+  key: "root",
+  storage,
+  version: 1,
+  serialize: flattenSerializer,
+  deserialize: flattenSerializer,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -62,9 +65,14 @@ store.subscribe(() => {
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <ToastContainer />
+        <Router>
+          <Routes>
+            <Route path="/*" element={<App />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </PersistGate>
   </Provider>,
   document.getElementById("root")

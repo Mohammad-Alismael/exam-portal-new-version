@@ -16,7 +16,9 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import ContainerWithHeader from "../../components/ContainerWithHeader/ContainerWithHeader";
 import NavbarDashboard from "../../layouts/Navbar/NavbarDashboard";
-import { getCoursesAction } from "../../actions/CourseAction";
+import {
+  getCoursesAction,
+} from "../../actions/CourseAction";
 
 const useStyles = makeStyles((theme) => ({
   createClass: {
@@ -42,11 +44,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Courses(props) {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [clipboard, copyToClipboard] = useClipboard();
   const { user } = useSelector((state) => state.UserReducerV2);
   const courseList = useSelector((state) => state.CourseListReducer);
+  console.log('courseList', courseList)
+  const [open, setOpen] = React.useState(false);
+  const [clipboard, copyToClipboard] = useClipboard();
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   const handleClickOpen = () => {
@@ -63,92 +66,89 @@ function Courses(props) {
       controller.abort();
     };
   }, []);
+  // return <p style={{color:'#fff'}}>this is courses page</p>
   return (
     <>
       <NavbarDashboard loading={courseList.isLoading} />
       <Sidebar />
       <CourseContainer>
-        <ContainerWithHeader
-          title="overview courses"
-          children={
-            <Grid container spacing={2}>
-              {!courseList.isLoading &&
-                courseList.courseList.map((course, index) => {
-                  const {
-                    class_name,
-                    classroom_id,
-                    section,
-                    instructor_info,
-                    img_path,
-                  } = course;
-                  const isStudent = parseInt(user?.role_id) === 3;
+        <ContainerWithHeader title="overview courses">
+          <Grid container spacing={2}>
+            {!courseList.isLoading &&
+              courseList.courseList.map((course, index) => {
+                const {
+                  class_name,
+                  classroom_id,
+                  section,
+                  instructor_info,
+                  img_path,
+                } = course;
+                const isStudent = parseInt(user?.role_id) === 3;
 
-                  const functions = isStudent
-                    ? [
-                        function (e) {
-                          const user_data = jwt(token);
-                          const textBeforeHash = `${classroom_id}:${user_data.username}:${class_name}`;
-                          let encrypted = encodeURIComponent(
-                            CryptoJS.AES.encrypt(
-                              textBeforeHash,
-                              process.env.REACT_APP_INVITATION_KEY
-                            )
-                          ).toString();
-                          copyToClipboard(
-                            window.location.origin + "/invitation/" + encrypted
-                          );
-                          toast.info("copied to clipboard");
-                        },
-                      ]
-                    : [
-                        function (e) {
-                          toast.info("withdraw course");
-                        },
-                      ];
+                const functions = isStudent
+                  ? [
+                      function (e) {
+                        const user_data = jwt(token);
+                        const textBeforeHash = `${classroom_id}:${user_data.username}:${class_name}`;
+                        let encrypted = encodeURIComponent(
+                          CryptoJS.AES.encrypt(
+                            textBeforeHash,
+                            process.env.REACT_APP_INVITATION_KEY
+                          )
+                        ).toString();
+                        copyToClipboard(
+                          window.location.origin + "/invitation/" + encrypted
+                        );
+                        toast.info("copied to clipboard");
+                      },
+                    ]
+                  : [
+                      function (e) {
+                        toast.info("withdraw course");
+                      },
+                    ];
 
+                return (
+                  <ClassCard
+                    key={index}
+                    username={
+                      isStudent ? user.username : instructor_info["username"]
+                    }
+                    courseInfo={course}
+                    id={classroom_id}
+                    functions={functions}
+                  />
+                );
+              })}
+            {courseList.isLoading
+              ? [...Array(10).keys()].map((val, i) => {
                   return (
-                    <ClassCard
-                      key={index}
-                      username={
-                        isStudent ? user.username : instructor_info["username"]
-                      }
-                      courseInfo={course}
-                      id={classroom_id}
-                      functions={functions}
-                    />
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Skeleton
+                        sx={{ background: "white" }}
+                        variant="rounded"
+                        width={300}
+                        height={180}
+                      />
+                    </Grid>
                   );
-                })}
-              {courseList.isLoading
-                ? [...Array(10).keys()].map((val, i) => {
-                    return (
-                      <Grid item xs={12} sm={6} md={3}>
-                        <Skeleton
-                          sx={{ background: "white" }}
-                          variant="rounded"
-                          width={300}
-                          height={180}
-                        />
-                      </Grid>
-                    );
-                  })
-                : null}
-              {!courseList.isLoading && courseList.courseList?.length === 0 ? (
-                <Grid item xs={12} sm={6} md={3}>
-                  <Card className={classes.createClass}>
-                    <Typography
-                      variant="h5"
-                      align="center"
-                      className={classes.noClass}
-                    >
-                      you haven't join any courses yet.
-                    </Typography>
-                  </Card>
-                </Grid>
-              ) : null}
-            </Grid>
-          }
-        />
-
+                })
+              : null}
+            {!courseList.isLoading && courseList.courseList?.length === 0 ? (
+              <Grid item xs={12} sm={6} md={3}>
+                <Card className={classes.createClass}>
+                  <Typography
+                    variant="h5"
+                    align="center"
+                    className={classes.noClass}
+                  >
+                    you haven't join any courses yet.
+                  </Typography>
+                </Card>
+              </Grid>
+            ) : null}
+          </Grid>
+        </ContainerWithHeader>
         {parseInt(user?.role_id) === 3 ? (
           <div className={classes.addClassBtn} data-cy="create-course-btn">
             <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
@@ -157,7 +157,6 @@ function Courses(props) {
           </div>
         ) : null}
       </CourseContainer>
-
       <CreateClassroom open={open} onClose={handleClose} />
     </>
   );

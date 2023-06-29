@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
-import { styled } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-import PublishIcon from "@mui/icons-material/Publish";
-import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import classes from "../../../img/classes.jpg";
-import Divider from "@material-ui/core/Divider";
 import {
   createAnnouncement,
   uploadFileAnnouncement,
@@ -17,7 +11,6 @@ import {
 import { toast } from "react-toastify";
 import { setCourseAnnouncements } from "../../../actions/CourseAction";
 import { BASE_URL, token } from "../../../api/axios";
-import Tooltip from "@mui/material/Tooltip";
 import { Editor } from "react-draft-wysiwyg";
 import {
   EditorState,
@@ -25,11 +18,12 @@ import {
   convertFromRaw,
   ContentState,
 } from "draft-js";
-
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { imageFileResizer } from "react-image-file-resizer";
 import Avatar from "@mui/material/Avatar";
 import * as PropTypes from "prop-types";
-import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
+import { AttachFileOutlined } from "@mui/icons-material";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 const useStyles = makeStyles((theme) => ({
   toolbarEditor: {
     backgroundColor: "rgb(248,249,250)",
@@ -53,13 +47,12 @@ const useStyles = makeStyles((theme) => ({
   },
   templateContainer: {
     display: "flex",
-    borderRadius: "25px",
+    borderRadius: "7px",
     padding: "0.4rem 0",
     marginBottom: "1.8rem",
     justifyItems: "center",
     justifyContent: "space-around",
     backgroundColor: "#fff",
-    // height: 41,
     "& input": {
       border: "none",
       width: "80%",
@@ -68,17 +61,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AnnouncementTemplate(props) {
+function AnnouncementTemplate({ classes, user, onClick }) {
   return (
-    <div className={props.classes.templateContainer} onClick={props.onClick}>
-      <Avatar
-        className={props.classes.icon}
-        alt={props.user.username}
-        src="/static/images/avatar/2.jpg"
-      />
-
+    <div className={classes.templateContainer} onClick={onClick}>
+      <Avatar alt={user.username} src="/static/images/avatar/2.jpg" />
       <input type="text" placeholder="Post announcement to your class..." />
-      <img src="/images/icons/paper_clip_icon.svg" alt="send_icon" />
+      <AttachFileOutlined style={{ marginTop: "7px" }} alt="send_icon" />
     </div>
   );
 }
@@ -94,7 +82,6 @@ function CreateAnnouncement(props) {
   const course = useSelector((state) => state.CourseReducer);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [announcementText, setAnnouncementText] = React.useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState(null);
   const [openAnnouncement, setOpenAnnouncement] = useState(false);
@@ -106,20 +93,7 @@ function CreateAnnouncement(props) {
   const [editorState, setEditorState] = React.useState(() =>
     EditorState.createEmpty()
   );
-  const handleFileInput = (file) => {
-    let myFiles = file;
-    Object.assign(file, {
-      preview: URL.createObjectURL(file),
-    });
-    setSelectedFile(file);
-    const formData = new FormData();
-    console.log(file.name);
 
-    formData.append(file.name, file);
-    console.log(formData.get(file.name));
-    // sending only one img
-    setFormData(formData);
-  };
   const updateList = (data) => {
     console.log("update list", data);
     const tmp = [...course.announcements, { ...data }];
@@ -189,18 +163,29 @@ function CreateAnnouncement(props) {
     });
   }
 
+  const handleImageUpload = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        imageFileResizer(
+            file,
+            300, // desired width
+            300, // desired height
+            "JPEG", // image format
+            100, // quality
+            0, // rotation
+            (uri) => {
+              resolve({ data: { link: uri } });
+            },
+            "base64" // output type
+        );
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   return (
     <>
-      {!openAnnouncement ? (
-        <AnnouncementTemplate
-          classes={classes}
-          onClick={(e) => {
-            e.preventDefault();
-            setOpenAnnouncement(true);
-          }}
-          user={user}
-        />
-      ) : null}
       {openAnnouncement ? (
         <Paper elevation={5}>
           <Grid container sx={{ marginBottom: "0.8rem" }}>
@@ -228,7 +213,7 @@ function CreateAnnouncement(props) {
                   ],
                   image: {
                     uploadCallback: uploadImageCallBack,
-                    alt: { present: true, mandatory: true },
+                    alt: { present: true, mandatory: false },
                   },
                 }}
               />
@@ -262,7 +247,16 @@ function CreateAnnouncement(props) {
             </Grid>
           </Grid>
         </Paper>
-      ) : null}
+      ) : (
+        <AnnouncementTemplate
+          classes={classes}
+          onClick={(e) => {
+            e.preventDefault();
+            setOpenAnnouncement(true);
+          }}
+          user={user}
+        />
+      )}
     </>
   );
 }

@@ -1,12 +1,11 @@
 import * as actionTypes from "../actions";
-import { SET_COURSE_LIST, SET_COURSE_LIST_OBJECT } from "../actions";
 
 const initialState = {
-  courseList: [],
   isLoading: false,
+  courseList: [],
 };
 
-const CourseListReducer = (state = initialState, action) => {
+export default function CourseListReducer(state = initialState, action) {
   switch (action.type) {
     case actionTypes.SET_COURSE_LIST:
       return {
@@ -30,10 +29,6 @@ const CourseListReducer = (state = initialState, action) => {
       };
 
     default:
-      break;
+      return state;
   }
-
-  return state;
-};
-
-export default CourseListReducer;
+}

@@ -41,6 +41,7 @@ function PeoplePage(props) {
   const course = useSelector((state) => state.CourseReducer);
   const dispatch = useDispatch();
   const { course_id } = useParams();
+  console.log(course_id);
   const location = useLocation();
 
   useEffect(() => {
@@ -80,4 +81,4 @@ function PeoplePage(props) {
   );
 }
 
-export default withSideBarAndResAppBar(PeoplePage);
+export default PeoplePage;

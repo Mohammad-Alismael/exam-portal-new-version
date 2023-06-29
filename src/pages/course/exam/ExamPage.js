@@ -65,7 +65,7 @@ const ExamPage = () => {
   const createNewExam = (e) => {
     e.preventDefault();
     dispatch(ExamActions());
-    navigate(`/courses/${course_id}/create-exam`);
+    navigate(`/course-page/${course_id}/create-exam`);
   };
   useEffect(() => {
     const controller = new AbortController();
@@ -137,4 +137,4 @@ const ExamPage = () => {
   );
 };
 
-export default withSideBarAndResAppBar(ExamPage);
+export default ExamPage;

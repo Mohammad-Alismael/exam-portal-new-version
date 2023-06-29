@@ -1,15 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import ResponsiveAppBar from "../../layouts/ResponsiveAppBar";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Paper, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { CHANGE_PREVIEW, SET_QUESTIONS } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Question from "../../components/addQuestions/Question";
 import { v4 as uuidv4 } from "uuid";
 import ExamDetails from "../../components/ExamDetails";
-import CircularProgress from "@mui/material/CircularProgress";
 import withSideBarAndResAppBar from "../../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateExamPage(props) {
   const classes = useStyles();
-  const navigate = useNavigate();
   const exam = useSelector((state) => state.ExamReducer);
   const dispatch = useDispatch();
   const getQuestionIndex = (uid) => {
@@ -80,7 +76,7 @@ function CreateExamPage(props) {
       <div className={classes.container}>
         <ExamDetails />
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId={"questions"}>
+          <Droppable droppableId="questions">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {exam.questions.map(({ tmpId }, index) => {
@@ -122,4 +118,4 @@ function CreateExamPage(props) {
   );
 }
 
-export default withSideBarAndResAppBar(CreateExamPage);
+export default CreateExamPage;

@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -23,11 +23,10 @@ import { fetchComments } from "../../../api/services/Comment";
 import { EditorState, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 
-import { deleteAnnouncement } from "../../../api/services/Annoucments";
-import { SET_COURSE_ANNOUNCEMENTS } from "../../../store/actions";
+import {deleteAnnoucmentFile, deleteAnnouncement, deleteAnnouncementFile} from "../../../api/services/Annoucments";
 import EditEditor from "./EditEditor";
-import { useParams } from "react-router-dom";
-import { convertToHTML } from "draft-convert";
+import { setCourseAnnouncements } from "../../../actions/CourseAction";
+import { Badge } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   paperStyle: {
@@ -66,24 +65,6 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     width: "100%",
-  },
-  commentsMetaData: {
-    display: "inline-flex",
-    padding: "10px",
-    alignItems: "center",
-  },
-  howManyComments: {
-    display: "inline-block",
-    paddingLeft: "10px",
-    margin: 0,
-    color: "#818181",
-    fontSize: "0.85rem",
-    cursor: "pointer",
-  },
-  commentsIcon: {
-    margin: 0,
-    padding: 0,
-    width: "18px",
   },
   container: {
     display: "flex",
@@ -127,31 +108,46 @@ const calcState = (text) => {
     : EditorState.createEmpty();
 };
 function Post({ announcementId, createdAt, file, text }) {
-  // console.log(convertFromRaw(JSON.parse(text)))
   const classes = useStyles();
   const { user } = useSelector((state) => state.UserReducerV2);
   const course = useSelector((state) => state.CourseReducer);
   const dispatch = useDispatch();
-  const { course_id } = useParams();
-  const [openCommentContainer, setOpenCommentContainer] = useState(false);
   const [editAnnouncement, setEditAnnouncement] = useState(false);
-  const [editorState, setEditorState] = React.useState(calcState(text));
   const announcementIndex = course.announcements.findIndex(({ id }) => {
     return parseInt(announcementId) === parseInt(id);
   });
-  const courseObj = useSelector((state) => state.CourseReducer)["course_info"];
-  const handleComments = (e) => {
-    e.preventDefault();
-    setOpenCommentContainer(!openCommentContainer);
-  };
 
-  useEffect(() => {
-    setEditorState(calcState(text));
-  }, []);
+  const deleteFile = () => {
+    // deleteAnnouncementFile(announcementId, ).then((data)=>{
+    //
+    // })
+  }
 
-  useEffect(() => {
-    setEditorState(calcState(text));
-  }, [course.announcements.length]);
+  const handleEditAnnouncement = useCallback(
+    (e) => {
+      e.stopPropagation();
+      setEditAnnouncement(!editAnnouncement);
+    },
+    [editAnnouncement]
+  );
+
+  const handleDeleteAnnouncement = useCallback(
+    (e) => {
+      e.stopPropagation();
+      deleteAnnouncement(announcementId, course.courseId)
+        .then((data) => {
+          console.log(JSON.parse(text).blocks[0].text);
+          const announcements = course.announcements.filter(({ id }) => {
+            return id !== announcementId;
+          });
+          dispatch(setCourseAnnouncements(announcements));
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    [announcementId, course.courseId, course.announcements, dispatch]
+  );
 
   return (
     <Paper elevation={5} className={classes.paperStyle}>
@@ -165,7 +161,7 @@ function Post({ announcementId, createdAt, file, text }) {
           <div style={{ marginLeft: "0.8rem" }}>
             <Typography className={classes.username} data-cy="username">
               <b>
-                {course.course_info?.instructor?.username}{" "}
+                {course.course_info?.instructor?.username}
                 <span style={{ color: "#BBBBBB", fontSize: 14 }}>
                   . {moment(createdAt).fromNow()}
                 </span>
@@ -178,72 +174,49 @@ function Post({ announcementId, createdAt, file, text }) {
           <LongMenu
             options={["Edit Post", "Delete Post"]}
             icons={[<EditIcon />, <DeleteOutlineIcon />]}
-            functions={[
-              function (e) {
-                e.stopPropagation();
-                setEditAnnouncement(!editAnnouncement);
-              },
-              function (e) {
-                e.stopPropagation();
-                deleteAnnouncement(announcementId, course.courseId)
-                  .then((data) => {
-                    console.log(JSON.parse(text).blocks[0].text);
-                    const announcements = course.announcements.filter(
-                      ({ id }) => {
-                        return id !== announcementId;
-                      }
-                    );
-                    dispatch({
-                      type: SET_COURSE_ANNOUNCEMENTS,
-                      payload: { announcements },
-                    });
-                  })
-                  .catch((e) => {
-                    console.log(e);
-                  });
-              },
-            ]}
+            functions={[handleEditAnnouncement, handleDeleteAnnouncement]}
           />
         ) : null}
       </div>
       <Grid item xs={12} style={{ padding: "0 0.8rem" }} data-cy="post">
         {!editAnnouncement ? (
-          <Editor
-            toolbarClassName={classes.toolbarEditor}
-            wrapperClassName={classes.wrapperEditor}
-            editorClassName={classes.editor}
-            editorState={calcState(text)}
-            readOnly={true}
-            toolbarHidden
-          />
+          <>
+            <Editor
+              toolbarClassName={classes.toolbarEditor}
+              wrapperClassName={classes.wrapperEditor}
+              editorClassName={classes.editor}
+              editorState={calcState(text)}
+              readOnly={true}
+              toolbarHidden
+            />
+            {file && (
+              <img style={{ width: "100%" }} src={file} alt="Uploaded" />
+            )}
+          </>
         ) : (
-          <EditEditor
-            announcementId={announcementId}
-            text={text}
-            setEditAnnouncement={setEditAnnouncement}
-          />
+          <>
+            <EditEditor
+              announcementId={announcementId}
+              text={text}
+              setEditAnnouncement={setEditAnnouncement}
+            />
+            {file && (
+              <Badge
+                badgeContent="x"
+                color="primary"
+                onClick={() => alert("delete image")}
+              >
+                <img
+                  style={{ width: "100%", cursor: "pointer" }}
+                  src={file}
+                  alt="Uploaded"
+                />
+              </Badge>
+            )}
+          </>
         )}
       </Grid>
-      {courseObj["allow_students_to_comment"] == 1 ? <Divider /> : null}
-      {courseObj["allow_students_to_comment"] == 1 ? (
-        <div
-          className={classes.commentsMetaData}
-          onClick={handleComments}
-          data-cy="comment-btn"
-        >
-          <img
-            className={classes.commentsIcon}
-            src="/images/icons/comments_icon.svg"
-            alt="icon"
-          />
-          <p className={classes.howManyComments}>
-            {course.announcements[announcementIndex].comments.length} comments
-          </p>
-        </div>
-      ) : null}
-      <Divider />
       <CommentContainer
-        openCommentContainer={openCommentContainer}
         announcementIndex={announcementIndex}
         announcementId={announcementId}
       />

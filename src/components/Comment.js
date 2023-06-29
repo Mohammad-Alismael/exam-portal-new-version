@@ -1,16 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import moment from "moment/moment";
-import Grid from "@material-ui/core/Grid";
 import LongMenu from "./LongMenu";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { deleteComment } from "../api/services/Comment";
-import { setCourseAnnouncements } from "../actions/CourseAction";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_COURSE_ANNOUNCEMENTS } from "../store/actions";
+import {setCourseAnnouncements} from "../actions/CourseAction";
 const useStyles = makeStyles((theme) => ({
   Container: {
     marginBottom: "0.8rem",
@@ -88,12 +85,29 @@ function Comment({
   const classes = useStyles();
   const course = useSelector((state) => state.CourseReducer);
   const dispatch = useDispatch();
+  
+  const handleDeleteComment = (e) => {
+    e.stopPropagation();
+    deleteComment(commentId)
+      .then((data) => {
+        const updatedAnnouncements = [
+          ...course.announcements.slice(0, announcementIndex),
+          {
+            ...course.announcements[announcementIndex],
+            comments: course.announcements[announcementIndex].comments.filter(({ id }) => id !== commentId),
+          },
+          ...course.announcements.slice(announcementIndex + 1),
+        ];
+        dispatch(setCourseAnnouncements(updatedAnnouncements))
+      })
+      .catch(console.log);
+  };
 
   return (
     <div className={classes.Container}>
       <Avatar
         className={classes.icon}
-        alt={"m"}
+        alt="m"
         src="/static/images/avatar/2.jpg"
       />
       <div className={classes.CommentContent}>
@@ -102,7 +116,7 @@ function Comment({
             {userInfo?.username}{" "}
             <span style={{ color: "#BBBBBB", fontSize: 14 }}>
               <span style={{ color: "#646464", fontSize: 12 }}>
-                ({userInfo?.role_id === 3 ? "Admin" : "Student"})
+                ({parseInt(userInfo?.role_id) === 3 ? "Admin" : "Student"})
               </span>
               .{moment(createdAt).fromNow()}
             </span>
@@ -121,25 +135,7 @@ function Comment({
           options={["Delete Comment"]}
           icons={[<DeleteOutlineIcon />]}
           functions={[
-            function (e) {
-              e.stopPropagation();
-              deleteComment(commentId)
-                .then((data) => {
-                  let announcementObj = course.announcements[announcementIndex];
-                  announcementObj.comments = announcementObj.comments.filter(
-                    ({ id }) => {
-                      return id !== commentId;
-                    }
-                  );
-                  course.announcements[announcementIndex] = announcementObj;
-                  dispatch({
-                    type: SET_COURSE_ANNOUNCEMENTS,
-                    payload: { announcements: course.announcements },
-                  });
-                  // dispatch(setCourseAnnouncements(course.announcements))
-                })
-                .catch(console.log);
-            },
+            handleDeleteComment
           ]}
         />
       </div>

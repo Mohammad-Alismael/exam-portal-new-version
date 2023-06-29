@@ -74,7 +74,6 @@ async function fetchCourseInfo(courseId, controller) {
     return await response.data;
   } catch (e) {
     console.log(e);
-    alert("error happened while fetching course info");
     throw { message: "error happened while fetching course info" };
   }
 }

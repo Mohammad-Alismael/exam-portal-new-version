@@ -59,17 +59,19 @@ export default function AddCommentElement({
         return;
       }
       const announcement = course.announcements[announcementIndex];
-      const comments = [...announcement.comments, response.data];
+
+      const comments = announcement?.comments
+        ? [...announcement.comments, response.data]
+        : [response.data];
+      console.log(comments)
       const updatedAnnouncement = { ...announcement, comments };
-      const updatedAnnouncements = [
-        ...course.announcements.slice(0, announcementIndex),
-        updatedAnnouncement,
-        ...course.announcements.slice(announcementIndex + 1),
-      ];
-      dispatch({
-        type: SET_COURSE_ANNOUNCEMENTS,
-        payload: { announcements: updatedAnnouncements },
+      const updatedAnnouncements = course.announcements.map((announcement, index) => {
+        if (index === announcementIndex) {
+          return updatedAnnouncement;
+        }
+        return announcement;
       });
+      dispatch(setCourseAnnouncements(updatedAnnouncements))
     } catch (error) {
       console.log(error);
     }
