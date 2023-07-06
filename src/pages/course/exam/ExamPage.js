@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ResponsiveAppBar from "../../../layouts/ResponsiveAppBar";
 import ExamInstructor from "./ExamInstructor";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,29 +7,11 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchExams } from "../../../api/services/Exam";
-import { setCourseExams } from "../../../actions/CourseAction";
 import { CircularProgress } from "@material-ui/core";
-import {
-  SET_ASSIGNED_FOR,
-  SET_COURSE_EXAMS,
-  SET_ENDING_AT,
-  SET_EXAM_ANSWER_KEY,
-  SET_EXAM_ANSWER_KEY_AT,
-  SET_EXAM_RANDOMNESS,
-  SET_EXAM_TIMER,
-  SET_EXAM_TITLE,
-  SET_NAVIGATION,
-  SET_QUESTIONS,
-  SET_SPECIFIC_STUDENTS,
-  SET_STARTING_AT,
-  SET_STUDENTS,
-} from "../../../store/actions";
-import ExamActions from "../../../actions/ExamActions";
+import { SET_COURSE_EXAMS } from "../../../store/actions";
+import { ExamActions } from "../../../actions/ExamActions";
 import ExamStudent from "./ExamStudent";
 import NoExam from "./NoExam";
-import Sidebar from "../../../components/Sidebar/Sidebar";
-import { CourseContainer } from "../../../components/Sidebar/Sidebar.styles";
-import withSideBarAndResAppBar from "../../../layouts/withSideBarAndResAppBar";
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: "7% 25%",
@@ -82,7 +63,7 @@ const ExamPage = () => {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [course_id]);
   if (loading) {
     return <CircularProgress size={200} />;
   }

@@ -131,7 +131,6 @@ export function fetchClasMatesAction(courseId,controller) {
   }
 }
 export function load5MoreAction(minId,course){
-  console.log(course.announcements)
   return (dispatch) => {
     fetch5More(minId)
         .then((data) => {

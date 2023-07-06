@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@mui/material";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { CHANGE_PREVIEW, SET_QUESTIONS } from "../../store/actions";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { CHANGE_PREVIEW } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Question from "../../components/addQuestions/Question";
-import { v4 as uuidv4 } from "uuid";
-import ExamDetails from "../../components/ExamDetails";
-import withSideBarAndResAppBar from "../../layouts/withSideBarAndResAppBar";
+import ExamLinearStepper from "../../components/ExamLinearStepper";
+import { createNewQuestion, setQuestionsList } from "../../actions/ExamActions";
+import { selectExamQuestions } from "../../utils/selectors/ExamSelectors";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: "7% 15%",
@@ -30,56 +31,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CreateExamPage(props) {
+  const { questions } = useSelector(selectExamQuestions);
   const classes = useStyles();
-  const exam = useSelector((state) => state.ExamReducer);
   const dispatch = useDispatch();
-  const getQuestionIndex = (uid) => {
-    const questionIndexFound = exam?.questions.findIndex((quest, index) => {
-      return quest.tmpId === uid;
-    });
-    return questionIndexFound;
-  };
+  const getQuestionIndex = useCallback(
+    (uid) => {
+      return questions.findIndex((quest, index) => {
+        return quest.tmpId === uid;
+      });
+    },
+    [questions]
+  );
   const addQuestion = (e) => {
     e.preventDefault();
-    const uid = uuidv4();
-    const questionObj = {
-      answerKey: null,
-      isActive: true,
-      options: null,
-      time: null,
-      points: 5,
-      questionText: "",
-      objectFile: null,
-      questionType: 5,
-      tmpId: uid,
-      whoCanSee: 3,
-      previewFile: null,
-    };
-
-    const newQuestionAr = exam.questions;
-    newQuestionAr.push(questionObj);
-    dispatch({ type: SET_QUESTIONS, payload: { questions: newQuestionAr } });
+    dispatch(createNewQuestion(questions));
   };
 
   function handleOnDragEnd(result) {
     if (!result.destination) return;
-    const items = Array.from(exam.questions);
+    const items = Array.from(questions);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    dispatch({ type: SET_QUESTIONS, payload: { questions: items } });
+    dispatch(setQuestionsList(items));
   }
   useEffect(() => {
     dispatch({ type: CHANGE_PREVIEW, payload: { isItPreview: false } });
-  }, []);
+  }, [dispatch]);
   return (
     <>
       <div className={classes.container}>
-        <ExamDetails />
+        <ExamLinearStepper />
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="questions">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {exam.questions.map(({ tmpId }, index) => {
+                {questions.map(({ tmpId }, index) => {
                   return (
                     <Draggable key={tmpId} draggableId={tmpId} index={index}>
                       {(provided) => (
@@ -89,6 +75,7 @@ function CreateExamPage(props) {
                           {...provided.dragHandleProps}
                         >
                           <Question
+                            key={tmpId}
                             questionIndex={getQuestionIndex(tmpId)}
                             uid={tmpId}
                           />

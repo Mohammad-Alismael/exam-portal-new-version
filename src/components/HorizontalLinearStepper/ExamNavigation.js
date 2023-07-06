@@ -4,11 +4,11 @@ import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState,memo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {SET_NAVIGATION} from "../../store/actions";
 
-export default function ExamNavigation() {
+function ExamNavigation() {
     const exam = useSelector((state) => state.ExamReducer);
     const [option,setOption] = useState('')
     const dispatch = useDispatch();
@@ -29,3 +29,5 @@ export default function ExamNavigation() {
         </FormControl>
     </Grid>;
 }
+
+export default ExamNavigation

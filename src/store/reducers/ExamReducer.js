@@ -14,6 +14,57 @@ const initialState = {
   students: [],
   isItPreview: false,
 };
+function changeQuestionOptions(state, action) {
+  const { index, newOptions } = action.payload;
+  const deepQuestionCopy = [...state.questions];
+  deepQuestionCopy[index] = {
+    ...deepQuestionCopy[index],
+    options: newOptions,
+  };
+  console.log("question index =>", index, "new options =>", newOptions);
+  return {
+    ...state,
+    questions: deepQuestionCopy,
+  };
+}
+
+function setExamQuestionIndex(state, action) {
+  const { index, question } = action.payload;
+  const newQuestionArray = state.questions.map((obj, i) => (index === i ? { ...question } : obj));
+  return {
+    ...state,
+    questions: newQuestionArray,
+  };
+}
+function removeTimeObject(state) {
+  const newQuestionArray = state.questions.map((obj) => {
+    console.log(obj);
+    return { ...obj, time: null };
+  });
+  return {
+    ...state,
+    questions: newQuestionArray,
+  };
+}
+function deleteExamQuestionIndex(state, action) {
+  const index = action.payload.index;
+  const newQuestionArray = state.questions.filter((question, idx) => {
+    return idx !== index;
+  });
+  return {
+    ...state,
+    questions: newQuestionArray,
+  };
+}
+function setWhoCanSeeObject(state, action) {
+  const questionsWithSettedWhoCanSee = state.questions.map((val) => {
+    return { ...val, whoCanSee: action.payload.whoCanSee };
+  });
+  return {
+    ...state,
+    questions: questionsWithSettedWhoCanSee,
+  };
+}
 const ExamReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.APPEND_QUESTION:
@@ -27,55 +78,19 @@ const ExamReducer = (state = initialState, action) => {
         isItPreview: action.payload.isItPreview,
       };
     case actionTypes.SET_QUESTIONS:
+      console.log('reducer',action.payload)
       return {
         ...state,
         questions: action.payload.questions,
       };
     case actionTypes.CHANGE_QUESTION_OPTIONS:
-      const __index = action.payload.index;
-      const newOptions = action.payload.newOptions;
-      const deepQuestionCopy = state.questions;
-      const deepQuestionObject = deepQuestionCopy[__index];
-      deepQuestionObject["options"] = newOptions;
-      deepQuestionCopy[__index] = deepQuestionObject;
-      console.log("question index =>", __index, "new options =>", newOptions);
-      return {
-        ...state,
-        questions: deepQuestionCopy,
-      };
+      return changeQuestionOptions(state, action);
     case actionTypes.SET_EXAM_QUESTION_INDEX:
-      const index = action.payload.index;
-      const newQuestion = action.payload.question;
-      const newQuestionArray = state.questions.map((obj, i) => {
-        if (index === i) {
-          return { ...newQuestion };
-        } else {
-          return obj;
-        }
-      });
-      return {
-        ...state,
-        questions: newQuestionArray,
-      };
+      return setExamQuestionIndex(state, action);
     case actionTypes.REMOVE_TIME_OBJECT:
-      // setting time object to null
-      const __newQuestionArray = state.questions.map((obj, i) => {
-        console.log(obj);
-        return { ...obj, time: null };
-      });
-      return {
-        ...state,
-        questions: __newQuestionArray,
-      };
+      return removeTimeObject(state);
     case actionTypes.DELETE_EXAM_QUESTION_INDEX:
-      const _index = action.payload.index;
-      const _newQuestionArray = state.questions.filter((question, index) => {
-        return index !== _index;
-      });
-      return {
-        ...state,
-        questions: _newQuestionArray,
-      };
+      return deleteExamQuestionIndex(state, action);
     case actionTypes.SET_EXAM_TITLE:
       return {
         ...state,
@@ -132,13 +147,7 @@ const ExamReducer = (state = initialState, action) => {
         students: action.payload.students,
       };
     case actionTypes.SET_WHO_CAN_SEE_OBJECT:
-      const questionsWithSettedWhoCanSee = state.questions.map((val, i) => {
-        return { val, whoCanSee: action.payload.whoCanSee };
-      });
-      return {
-        ...state,
-        questions: questionsWithSettedWhoCanSee,
-      };
+      return setWhoCanSeeObject(state, action);
     default:
       break;
   }

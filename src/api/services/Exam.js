@@ -26,7 +26,7 @@ async function fetchExams(courseId, controller) {
 
 async function fetchExamsStudent(courseId, controller) {
     try {
-        const res = await axiosPrivate.post(
+        const res = await axiosPrivate.get(
             `${FETCH_EXAMS_STUDENT}/${courseId}`, { signal: controller.signal }
         );
         return await res["data"];
@@ -35,7 +35,7 @@ async function fetchExamsStudent(courseId, controller) {
     }
 }
 async function createExam(examObject) {
-    console.log("exam object => ",examObject)
+    console.log("exam object => ", examObject);
     try {
         const res = await axiosPrivate.post(CREATE_EXAM, { ...examObject });
         return await res["data"];

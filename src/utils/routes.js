@@ -7,8 +7,8 @@ import {
   STUDENT_ROLES,
 } from "./global/GlobalConstants";
 import CoursePageLayout from "../Layout/CoursePageLayout";
-const ExamsStudent = lazy(() =>
-  import("../pages/course/examsStudent/ExamsStudent")
+const ExamsPageForStudent = lazy(() =>
+  import("../pages/course/examsStudent/ExamsPageForStudent")
 );
 const StudentExamResult = lazy(() =>
   import("../pages/StudentExamResult/StudentExamResult")
@@ -130,7 +130,7 @@ export const nestedRoutes = [
         path: "exams-student",
         element: (
           <Protected onlyAccessTo={STUDENT_ROLES}>
-            <ExamsStudent />
+            <ExamsPageForStudent />
           </Protected>
         ),
       },

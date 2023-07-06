@@ -1,41 +1,16 @@
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CoursePage from "./pages/course/CoursePage";
-import Logout from "./pages/Logout";
 import { useSelector } from "react-redux";
-import React, { Suspense, useEffect, useState } from "react";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import EditExam from "./pages/EditExam";
-import ExamStudent from "./pages/examStudent/ExamStudent";
-import Invitation from "./pages/Invitation";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import ActivateEmail from "./pages/ActivateEmail";
-import Courses from "./pages/classes/Courses";
-import Protected from "./utils/Protected";
-import { theme } from "./utils/global/useStyles";
-import { ThemeProvider } from "@mui/material/styles";
-import ExamPage from "./pages/course/exam/ExamPage";
-import PeoplePage from "./pages/course/people/PeoplePage";
-import GradesPage from "./pages/GradesPage";
+import React, {lazy, Suspense, useEffect, useState} from "react";
 import { refreshTokenWithCallBack } from "./api/services/User";
-import CreateExamPage from "./pages/createExamPage/CreateExamPage";
-import {
-  ALL_ROLES,
-  INSTRUCTOR_ROLE,
-  STUDENT_ROLES,
-} from "./utils/global/GlobalConstants";
-import StudentExamResult from "./pages/StudentExamResult/StudentExamResult";
-import ExamsStudent from "./pages/course/examsStudent/ExamsStudent";
-import StatisticsPage from "./pages/course/statistics/StatisticsPage";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { token } from "./api/axios";
-import Layout from "./Layout/Layout";
 import { nestedRoutes, routes } from "./utils/routes";
 import CoursePageLayout from "./Layout/CoursePageLayout";
-import NotFound from "./pages/NotFound";
+import { STUDENT_ROLES } from "./utils/global/GlobalConstants";
+import Protected from "./utils/Protected";
+const ExamStudent = lazy(() => import("./pages/examStudent/ExamStudent"));
+
 function App(props) {
   const [loading, setLoading] = useState(true);
   const { user } = useSelector((state) => state.UserReducerV2);
@@ -98,6 +73,14 @@ function App(props) {
                 );
               })}
           </Route>
+          <Route
+            path="/course-page/:course_id/exam/:examId"
+            element={
+              <Protected onlyAccessTo={STUDENT_ROLES}>
+                <ExamStudent />
+              </Protected>
+            }
+          />
         </Routes>
       </Suspense>
     </>

@@ -4,11 +4,11 @@ import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import React, {useState} from "react";
+import React, {useState,memo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {SET_EXAM_RANDOMNESS} from "../../store/actions";
 
-export default function ExamRandomness() {
+ function ExamRandomness() {
     const exam = useSelector((state) => state.ExamReducer);
     const [option,setOption] = useState('')
     const dispatch = useDispatch();
@@ -28,3 +28,5 @@ export default function ExamRandomness() {
         </FormControl>
     </Grid>;
 }
+
+export default ExamRandomness

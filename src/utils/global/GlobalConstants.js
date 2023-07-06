@@ -12,6 +12,14 @@ export const TEXT_QUESTION_TYPE = 2;
 export const CHECKBOX_QUESTION_TYPE = 3;
 export const MATCHING_QUESTION_TYPE = 4;
 export const TRUTH_QUESTION_TYPE = 5;
+
+export const steps = [
+    "Exam Settings",
+    "Exam Navigation",
+    "Exam Timer",
+    "Exam Randomness",
+    "Answer Key Settings",
+];
 export const calcState = (text) => {
     return text
         ? EditorState.createWithContent(convertFromRaw(JSON.parse(text)))

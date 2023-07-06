@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useState} from "react";
+import React, { forwardRef, memo, useEffect, useRef, useState } from "react";
 import {
   Container,
   CourseCode,
@@ -7,6 +7,7 @@ import {
   Logo,
   LogoContainer,
   StyledBookIcon,
+  StyledBookIconDiv,
   StyledCampaignIcon,
   StyledChevronRightIcon,
   StyledExamIcon,
@@ -22,7 +23,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useMediaQuery } from "@mui/material";
 function Sidebar(props) {
   const obj = useSelector((state) => state.CourseListReducer);
-  console.log('course list', obj)
+  console.log("course list", obj);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const sidebarRef = useRef(null);
@@ -50,6 +51,37 @@ function Sidebar(props) {
   };
   const isLargeScreen = useMediaQuery("(max-width:1024px)");
   const refs = useRef([]);
+  const setRestToClose = (specificIndex) => {
+    refs.current
+      .filter((_, index) => index !== specificIndex)
+      .forEach((ref) => {
+        ref.dataset.selected = "false";
+      });
+  };
+  const handleChange = (ref, index) => {
+    if (ref.dataset.selected === "false") ref.dataset.selected = "true";
+    else ref.dataset.selected = "false";
+    setRestToClose(index);
+  };
+
+  function SidebarItemWithRef(i, class_name, section, classroom_id) {
+    const ref = useRef(null);
+
+    useEffect(() => {
+      refs.current[i] = ref.current;
+    }, []);
+
+    return (
+      <Sidebar.Item
+        key={i}
+        ref={ref}
+        handleChange={() => handleChange(refs.current[i], i)}
+        title={class_name}
+        section={section}
+        classroomId={classroom_id}
+      />
+    );
+  }
 
   return (
     <Container data-open="true" ref={sidebarRef}>
@@ -58,59 +90,78 @@ function Sidebar(props) {
         <TitleH3>Exam portal</TitleH3>
         {isLargeScreen ? <CloseIcon onClick={handleCloseSidebar} /> : null}
       </LogoContainer>
-      { obj?.courseList.length && obj?.courseList.map(({ class_name, section, classroom_id }, i) => (
-        <Sidebar.Item
-          key={i}
-          ref={refs.current[i]}
-          title={class_name}
-          section={section}
-          classroomId={classroom_id}
-        />
-      ))}
+      {obj?.courseList.length &&
+        obj?.courseList.map(({ class_name, section, classroom_id }, i) => {
+          return SidebarItemWithRef(i, class_name, section, classroom_id);
+        })}
     </Container>
   );
 }
 
-const ItemComp = ({ title, section, classroomId }) => {
-  const [opened, setOpen] = useState(false);
-  const { user } = useSelector((state) => state.UserReducerV2);
-  const divRef = useRef(null);
-  const handleChange = (e) => {
-    setOpen(!opened);
-    if (divRef.current.dataset.selected === "false")
-      divRef.current.dataset.selected = "true";
-    else divRef.current.dataset.selected = "false";
-  };
-  return (
-    <Item onClick={handleChange}>
-      <StyledBookIcon ref={divRef} data-selected="false" />
-      <CourseCode>{title}</CourseCode>
-      <CourseSection>section {section}</CourseSection>
-      <StyledChevronRightIcon opened={opened} />
-      <div>
-        <Sidebar.SubSubItem
-          opened={opened}
-          title="announcements"
-          path={`/course-page/${classroomId}`}
-        />
-        <Sidebar.SubSubItem
-          opened={opened}
-          title="exams"
-          path={`/course-page/${classroomId}/${
-            parseInt(user?.role_id) === 3 ? "exams" : "exams-student"
-          }`}
-        />
-        <Sidebar.SubSubItem
-          opened={opened}
-          title="people"
-          path={`/course-page/${classroomId}/people`}
-        />
-        {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'grades'} path={`/courses/${classroomId}/grades`}/> :null}*/}
-        {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'statistics'} path={`/courses/${classroomId}/statistics`}/>: null}*/}
-      </div>
-    </Item>
-  );
-};
+const ItemComp = forwardRef(
+  ({ title, section, classroomId, handleChange }, ref) => {
+    const [opened, setOpen] = useState(
+      ref.current.dataset["selected"] === "true"
+    );
+    const { user } = useSelector((state) => state.UserReducerV2);
+    const handleChange_ = (e) => {
+      handleChange();
+      setOpen(!opened);
+    };
+    useEffect(() => {
+      const handleDatasetChange = (event) => {
+        if (event.target.dataset.selected !== undefined) {
+          setOpen(ref.current.dataset["selected"] === "true");
+        }
+      };
+
+      if (ref.current) {
+        ref.current.addEventListener("DOMAttrModified", handleDatasetChange);
+      }
+
+      return () => {
+        if (ref.current) {
+          ref.current.removeEventListener(
+            "DOMAttrModified",
+            handleDatasetChange
+          );
+        }
+      };
+    }, [ref]);
+
+    return (
+      <Item onClick={handleChange_}>
+        <StyledBookIconDiv ref={ref} data-selected="false">
+          <StyledBookIcon />
+        </StyledBookIconDiv>
+        <CourseCode>{title}</CourseCode>
+        <CourseSection>section {section}</CourseSection>
+        <StyledChevronRightIcon opend={opened} />
+        <div>
+          <Sidebar.SubSubItem
+            opened={opened}
+            title="announcements"
+            path={`/course-page/${classroomId}`}
+          />
+          <Sidebar.SubSubItem
+            opened={opened}
+            title="exams"
+            path={`/course-page/${classroomId}/${
+              parseInt(user?.role_id) === 3 ? "exams" : "exams-student"
+            }`}
+          />
+          <Sidebar.SubSubItem
+            opened={opened}
+            title="people"
+            path={`/course-page/${classroomId}/people`}
+          />
+          {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'grades'} path={`/courses/${classroomId}/grades`}/> :null}*/}
+          {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'statistics'} path={`/courses/${classroomId}/statistics`}/>: null}*/}
+        </div>
+      </Item>
+    );
+  }
+);
 
 Sidebar.Item = ItemComp;
 const SubSubItem = ({ opened, title, path }) => {

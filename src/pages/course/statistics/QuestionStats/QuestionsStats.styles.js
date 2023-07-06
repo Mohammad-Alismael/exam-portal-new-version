@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  border-radius: 15px;
+  border-radius: 12px;
   background-color: #fff;
   padding: 1rem;
   margin-bottom: 1.5rem;

@@ -1,10 +1,9 @@
-import styled, { css } from 'styled-components'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
-import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
-import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
-import CastForEducationOutlinedIcon from '@mui/icons-material/CastForEducationOutlined';
+import styled, { css } from "styled-components";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import NoteAltOutlinedIcon from "@mui/icons-material/NoteAltOutlined";
+import Groups2OutlinedIcon from "@mui/icons-material/Groups2Outlined";
+import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
+import { HistoryEduOutlined } from "@mui/icons-material";
 
 const Info = css`
   position: absolute;
@@ -13,60 +12,67 @@ const Info = css`
   left: 60px;
   margin: 0;
   transition: opacity 0.2s ease-in-out;
-  @media (max-width: 425px){
+  @media (max-width: 425px) {
     opacity: 1;
     display: block;
   }
-`
+`;
 const Icons = css`
   transform: scale(1.25);
   margin-left: 1.8rem;
-  color: #66676B;
-`
+  color: #66676b;
+`;
 export const StyledChevronRightIcon = styled(ChevronRightIcon)`
   position: absolute;
   right: 1.2rem;
   top: 10px;
   opacity: 0;
-  transform: rotate(${props => props.opened ? 90 : 0}deg);
+  transform: rotate(${(props:{opend: boolean}) => (props.opend ? 90 : 0)}deg);
   transition: transform 0.2s ease-in-out;
   @media (max-width: 1023px) {
     opacity: 1;
     display: block;
   }
-`
+`;
 
 export const StyledExamIcon = styled(NoteAltOutlinedIcon)`
   ${Icons}
-`
+`;
 export const StyledPeopleIcon = styled(Groups2OutlinedIcon)`
   ${Icons}
-`
+`;
 export const StyledCampaignIcon = styled(CampaignOutlinedIcon)`
   ${Icons}
-`
+`;
 
-export const StyledBookIcon = styled(CastForEducationOutlinedIcon)`
+export const StyledBookIcon = styled(HistoryEduOutlined)`
   transform: scale(1.5);
-  margin-left: 1.2rem;
+  margin-left: 25%;
   margin-bottom: 0.4rem;
-  color: #66676B;
+  color: #66676b;
 
-  &[data-selected='true'] {
-    background-color: rgba(100, 100, 100, 0.20);
+  &[data-selected="true"] {
+    background-color: rgba(100, 100, 100, 0.2);
   }
-;
-
-  &[data-selected='false'] {
+  &[data-selected="false"] {
     background-color: transparent;
   }
-;
   @media (max-width: 768px) {
     width: 1.5rem;
-    margin-left: 0.50rem;
+    margin-left: 0.5rem;
   }
-`
+`;
 
+export const StyledBookIconDiv = styled.div`
+  border-radius: 12px;
+  &[data-selected="false"] {
+    background-color: transparent;
+  }
+  &[data-selected="true"] {
+    background-color: rgba(255, 205, 56, 0.6);
+  }
+  padding-top: 0.6rem;
+`;
 export const CourseCode = styled.p`
   ${Info};
   top: 0;
@@ -76,7 +82,7 @@ export const CourseCode = styled.p`
     opacity: 1;
     display: block;
   }
-`
+`;
 export const CourseSection = styled.span`
   ${Info};
   top: 18px;
@@ -85,22 +91,22 @@ export const CourseSection = styled.span`
     opacity: 1;
     display: block;
   }
-`
+`;
 export const SubItem = styled.div`
-  display: ${props => props.opened ? 'block' : 'none'};
+  display: ${(props) => (props.opened ? "block" : "none")};
   transition: all 0.4s ease-in-out;
   position: relative;
   padding: 0.3rem 0;
-  span{
+  span {
     position: absolute;
     left: 70px;
     top: 25%;
     text-transform: capitalize;
   }
-  &:hover{
+  &:hover {
     background-color: rgba(255, 205, 56, 0.15);
   }
-`
+`;
 export const TitleH3 = styled.h3`
   display: inline-block;
   opacity: 0;
@@ -109,7 +115,7 @@ export const TitleH3 = styled.h3`
     opacity: 1;
     visibility: visible;
   }
-`
+`;
 export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -118,39 +124,39 @@ export const LogoContainer = styled.div`
     justify-content: space-around;
     margin-bottom: 1rem;
   }
-`
+`;
 export const Logo = styled.img`
   display: inline-block;
   max-width: 3.5rem;
-  margin-left: 4px;
+  margin-left: 0;
   margin-top: 0;
   @media (max-width: 768px) {
     width: 2.5rem;
     max-width: none;
     margin-left: 0;
   }
-`
+`;
 export const Container = styled.div`
   position: absolute;
   top: 0;
   display: inline-block;
   background-color: #fff;
-  width: 4.5%;
+  width: 4%;
   min-width: 45px;
   height: 100vh;
   transition: all 0.2s ease-in-out;
   z-index: 999;
   @media (max-width: 1024px) {
     width: 256px;
-    &[data-open='true'] {
+    &[data-open="true"] {
       transform: translateX(0);
     }
-    &[data-open='false'] {
+    &[data-open="false"] {
       transform: translateX(-200%);
     }
   }
-  
-  &:hover{
+
+  &:hover {
     cursor: pointer;
     width: 15%;
     ${CourseCode},${CourseSection},${StyledChevronRightIcon} {
@@ -162,20 +168,23 @@ export const Container = styled.div`
       visibility: visible;
       display: inline-block;
     }
-    ${LogoContainer}{
+    ${LogoContainer} {
       margin-bottom: 0.8rem;
+    }
+    ${StyledBookIcon} {
+      margin-left: 0.8rem;
     }
     @media (max-width: 1024px) {
       width: 256px;
     }
   }
-  
-  &:not(:hover){
-   ${SubItem}{
-     display: none;
-   }
+
+  &:not(:hover) {
+    ${SubItem} {
+      display: none;
+    }
   }
-`
+`;
 export const CourseContainer = styled.div`
   display: block;
   margin: 0 2.9% 0 7%;
@@ -189,18 +198,14 @@ export const CourseContainer = styled.div`
     margin: 0 2.5%;
     width: 95%;
   }
-`
+`;
 export const Item = styled.div`
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
   transition: border-left 0.2s ease-in-out;
   width: 100%;
   position: relative;
-  
+
   &:hover {
-    border-left: 5px solid #FFCD38;
+    border-left: 5px solid #ffcd38;
   }
-`
-
-
-
-
+`;

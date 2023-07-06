@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from "react";
+import React, { useCallback } from "react";
 import Grid from "@mui/material/Grid";
 import QuestionHeader from "./QuestionHeader";
 import { Paper } from "@mui/material";
@@ -15,11 +15,8 @@ import {
   CHANGE_QUESTION_OPTIONS,
   DELETE_EXAM_QUESTION_INDEX,
   SET_EXAM_QUESTION_INDEX,
-  SET_QUESTION_TEXT,
   SET_QUESTIONS,
-  SET_TMP_ID,
 } from "../../store/actions";
-import ImageIcon from "@mui/icons-material/Image";
 import Divider from "@mui/material/Divider";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -27,8 +24,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import { deleteQuestion } from "../../api/services/Question";
-import { useNavigate, useParams } from "react-router-dom";
-import { deleteExam } from "../../api/services/Exam";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   CHECKBOX_QUESTION_TYPE,
@@ -36,13 +32,15 @@ import {
   MCQ_QUESTION_TYPE,
   NOT_FOUND,
   TEXT_QUESTION_TYPE,
+  TRUTH_QUESTION_TYPE,
 } from "../../utils/global/GlobalConstants";
+import { setQuestionsList } from "../../actions/ExamActions";
 
 const useStyles = makeStyles((theme) => ({
   paperStyle: {
     position: "relative",
     padding: "15px 20px",
-    marginTop: "2rem",
+    marginTop: "1rem",
   },
   test: {
     position: "absolute",
@@ -56,10 +54,8 @@ const Question = ({ questionIndex, uid }) => {
   const classes = useStyles();
   const { examId } = useParams();
   const exam = useSelector((state) => state.ExamReducer);
-  const course = useSelector((state) => state.CourseReducer);
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,12 +64,6 @@ const Question = ({ questionIndex, uid }) => {
     setOpen(false);
   };
 
-  const getQuestionIndex = () => {
-    const questionIndexFound = exam?.questions.findIndex((quest, index) => {
-      return quest.tmpId === uid;
-    });
-    return questionIndexFound;
-  };
   const updateQuestionOptions = (newOptionsArray) => {
     dispatch({
       type: CHANGE_QUESTION_OPTIONS,
@@ -112,18 +102,25 @@ const Question = ({ questionIndex, uid }) => {
     tmp.splice(optionIndexFound, 1);
     updateQuestionOptions(tmp);
   };
-  const updateQuestionArrayv2 = (object) => {
-    const key = Object.keys(object)[0];
-    const value = Object.values(object)[0];
-    const index = getQuestionIndex();
-    const deepCopy = exam?.questions;
-    const deepCopyObj = deepCopy[index];
-    deepCopyObj[key] = value;
-    dispatch({
-      type: SET_EXAM_QUESTION_INDEX,
-      payload: { question: deepCopyObj, index },
-    });
-  };
+  const updateQuestionArrayv2 = useCallback(
+    (object) => {
+      const [key, value] = Object.entries(object)[0];
+      const deepCopy = exam?.questions.slice();
+      deepCopy[questionIndex] = {
+        ...deepCopy[questionIndex],
+        [key]: value,
+      };
+      dispatch({
+        type: SET_EXAM_QUESTION_INDEX,
+        payload: {
+          question: deepCopy[questionIndex],
+          index: questionIndex,
+        },
+      });
+    },
+    [dispatch, exam?.questions, questionIndex]
+  );
+
   const chooseQuestionType = (questionType) => {
     switch (questionType) {
       case MCQ_QUESTION_TYPE:
@@ -133,7 +130,6 @@ const Question = ({ questionIndex, uid }) => {
             updateQuestionArray={updateQuestionArrayv2}
             updateQuestionOptions={updateQuestionOptions}
             checkOptionText={checkOptionText}
-            setOptionText={setOptionText}
             deleteOption={deleteOption}
           />
         );
@@ -187,13 +183,17 @@ const Question = ({ questionIndex, uid }) => {
     if (exam?.isItPreview && exam?.questions.length !== 0) {
       // delete question from db
       const questionId = exam?.questions[questionIndex].tmpId;
-      deleteQuestion(questionId, examId).then((data) => {
-        dispatch({
-          type: DELETE_EXAM_QUESTION_INDEX,
-          payload: { index: questionIndex },
+      deleteQuestion(questionId, examId)
+        .then((data) => {
+          dispatch({
+            type: DELETE_EXAM_QUESTION_INDEX,
+            payload: { index: questionIndex },
+          });
+        })
+        .catch((data) => {
+          console.log(data);
+          toast.error(data["reason"]);
         });
-        // deleteExamIfNoQuestions();
-      });
     } else {
       dispatch({
         type: DELETE_EXAM_QUESTION_INDEX,
@@ -204,7 +204,9 @@ const Question = ({ questionIndex, uid }) => {
   const duplicateQuestion = (e) => {
     e.preventDefault();
     const deepCopyExamQuestions = [...exam.questions];
+
     const copiedQuestion = exam.questions[questionIndex];
+    console.log({ copiedQuestion, questionIndex });
 
     // create new id for duplicate version
     const newId = uuidv4();
@@ -220,10 +222,7 @@ const Question = ({ questionIndex, uid }) => {
     deepCopyExamQuestions.splice(questionIndex + 1, 0, newQuestion);
 
     console.log(deepCopyExamQuestions);
-    dispatch({
-      type: SET_QUESTIONS,
-      payload: { questions: deepCopyExamQuestions },
-    });
+    dispatch(setQuestionsList(deepCopyExamQuestions));
   };
 
   const questionPreview = (e) => {
@@ -235,9 +234,9 @@ const Question = ({ questionIndex, uid }) => {
     <Paper elevation={3} className={classes.paperStyle}>
       <Grid container spacing={2}>
         <QuestionHeader
+          key={uid}
           questionIndex={questionIndex}
           updateQuestionArray={updateQuestionArrayv2}
-          previewOpen={handleClickOpen}
           previewClose={handleClose}
           preview={open}
         />
@@ -267,4 +266,4 @@ const Question = ({ questionIndex, uid }) => {
   );
 };
 
-export default memo(Question);
+export default Question;
