@@ -1,32 +1,22 @@
-import React, { Component, useCallback, useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useCallback, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import moment from "moment";
-import axios from "axios";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import { useDispatch, useSelector } from "react-redux";
-import Divider from "@mui/material/Divider";
-import Comment from "../../../components/Comment";
-import classNames from "classnames";
-import classnames from "classnames";
 import LongMenu from "../../../components/LongMenu";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import AddCommentElement from "./AddCommentElement";
 import CommentContainer from "./CommentContainer";
-import { fetchComments } from "../../../api/services/Comment";
 import { EditorState, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 
-import {deleteAnnoucmentFile, deleteAnnouncement, deleteAnnouncementFile} from "../../../api/services/Annoucments";
+import { deleteAnnouncement } from "../../../api/services/Annoucments";
 import EditEditor from "./EditEditor";
 import { setCourseAnnouncements } from "../../../actions/CourseAction";
 import { Badge } from "@mui/material";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   paperStyle: {
@@ -118,11 +108,34 @@ function Post({ announcementId, createdAt, file, text }) {
   });
 
   const deleteFile = () => {
-    // deleteAnnouncementFile(announcementId, ).then((data)=>{
+    const parts = file.split("/");
+    const filename = parts[parts.length - 1];
+    console.log(filename);
+    // deleteAnnouncementFile(announcementId, filename).then((data)=>{
     //
     // })
-  }
+  };
+  const getPostTime = (createdAt) => {
+    const currentTime = new Date().getTime();
+    const targetTime = new Date(createdAt).getTime();
 
+    const durationInMilliseconds = currentTime - targetTime;
+    console.log({ currentTime, targetTime, durationInMilliseconds });
+    let duration;
+    if (durationInMilliseconds < 60000) {
+      duration = Math.floor(durationInMilliseconds / 1000);
+      return `${duration} seconds ago`;
+    } else if (durationInMilliseconds < 3600000) {
+      duration = Math.floor(durationInMilliseconds / 60000);
+      return `${duration} minutes ago`;
+    } else if (durationInMilliseconds < 86400000) {
+      duration = Math.floor(durationInMilliseconds / 3600000);
+      return `${duration} hours ago`;
+    } else {
+      duration = Math.floor(durationInMilliseconds / 86400000);
+      return `${duration} days ago`;
+    }
+  };
   const handleEditAnnouncement = useCallback(
     (e) => {
       e.stopPropagation();
@@ -201,17 +214,15 @@ function Post({ announcementId, createdAt, file, text }) {
               setEditAnnouncement={setEditAnnouncement}
             />
             {file && (
-              <Badge
-                badgeContent="x"
-                color="primary"
-                onClick={() => alert("delete image")}
-              >
-                <img
-                  style={{ width: "100%", cursor: "pointer" }}
-                  src={file}
-                  alt="Uploaded"
-                />
-              </Badge>
+              <div onClick={deleteFile}>
+                <Badge badgeContent="x" color="primary">
+                  <img
+                    style={{ width: "100%", cursor: "pointer" }}
+                    src={file}
+                    alt="Uploaded"
+                  />
+                </Badge>
+              </div>
             )}
           </>
         )}

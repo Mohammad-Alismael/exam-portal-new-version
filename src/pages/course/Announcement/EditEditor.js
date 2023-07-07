@@ -37,7 +37,7 @@ function EditEditor({ announcementId, text, setEditAnnouncement }) {
   const course = useSelector((state) => state.CourseReducer);
   const dispatch = useDispatch();
   const { course_id } = useParams();
-  const updateAnnouce = async (e) => {
+  const updateAnnounce = async (e) => {
     e.preventDefault();
 
     // Get the JSON representation of the current editor state
@@ -56,8 +56,9 @@ function EditEditor({ announcementId, text, setEditAnnouncement }) {
           : announcement
       );
       dispatch(setCourseAnnouncements(updatedAnnouncements));
+      setEditAnnouncement(false)
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
 
 
@@ -80,7 +81,7 @@ function EditEditor({ announcementId, text, setEditAnnouncement }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [setEditAnnouncement]);
 
   useEffect(() => {
     setEditorState(calcState(text));
@@ -118,7 +119,7 @@ function EditEditor({ announcementId, text, setEditAnnouncement }) {
         sx={{ mt: 3, mb: 3 }}
         size="small"
         variant="contained"
-        onClick={updateAnnouce}
+        onClick={updateAnnounce}
       >
         update
       </Button>

@@ -1,5 +1,4 @@
-import User from "./User";
-import { axiosPrivate, MyError, token } from "../axios";
+import { axiosPrivate } from "../axios";
 import { FETCH_5_MORE_POSTS } from "./RouteNames";
 const {
   UPLOAD_ANNOUNCEMENT_FILE,
@@ -29,7 +28,7 @@ async function deleteAnnouncementFile(id, file_name) {
     });
     return response.data;
   } catch (e) {
-    throw new MyError({ message: e.response.data, status: e.response.status });
+    throw new Error({ message: e.response.data, status: e.response.status });
   }
 }
 async function createAnnouncement(announcementText, courseId) {
@@ -40,7 +39,7 @@ async function createAnnouncement(announcementText, courseId) {
     });
     return response.data;
   } catch (e) {
-    throw new MyError({ message: e.response.data, status: e.response.status });
+    throw new Error({ message: e.response.data, status: e.response.status });
   }
 }
 
@@ -53,7 +52,7 @@ async function deleteAnnouncement(id, courseId) {
     });
     return response.data;
   } catch (e) {
-    throw new MyError({ message: e.response.data, status: e.response.status });
+    throw new Error({ message: e.response.data, status: e.response.status });
   }
 }
 
@@ -66,7 +65,7 @@ async function updateAnnouncement(id, announcementText, courseId) {
     return response.data;
   } catch (e) {
     console.log(e);
-    throw new MyError({ message: e.response.data, status: e.response.status });
+    throw new Error({ message: e.response.data, status: e.response.status });
   }
 }
 async function fetch5More(id) {
@@ -75,7 +74,7 @@ async function fetch5More(id) {
     return response.data;
   } catch (e) {
     console.log(e);
-    throw new MyError({ message: e.response.data, status: e.response.status });
+    throw new Error({ message: e.response.data, status: e.response.status });
   }
 }
 export {

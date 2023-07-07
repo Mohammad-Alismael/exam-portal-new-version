@@ -1,16 +1,13 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { Suspense, useEffect, useState } from "react";
-import { connect, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Post from "./Announcement/Post";
 import CreateAnnouncement from "./Announcement/CreateAnnouncement";
-import { withStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 import {
   fetchCourseInfoAction,
@@ -18,14 +15,9 @@ import {
   load5MoreAction,
 } from "../../actions/CourseAction";
 import NoAnnouncement from "./Announcement/NoAnnouncement";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import { CourseContainer } from "../../components/Sidebar/Sidebar.styles";
 import Button from "@mui/material/Button";
-import EditClassroom from "../classes/EditClassroom";
-import NavbarDashboard from "../../layouts/Navbar/NavbarDashboard";
 import { Skeleton } from "@mui/material";
 import NotFound from "../../components/NotFound";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import BackgroundImgSection from "../../components/BackgroundImgSection";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,7 +96,7 @@ function CoursePage(props) {
   };
   useEffect(() => {
     const controller = new AbortController();
-    // dispatch(fetchCourseInfoFailure(null));
+    dispatch(fetchCourseInfoFailure(null));
     dispatch(fetchCourseInfoAction(course_id, controller));
     return () => {
       controller.abort();
@@ -138,8 +130,8 @@ function CoursePage(props) {
                 course?.announcements
                   .sort(function (a, b) {
                     return (
-                      new Date(a.created_at).getTime() -
-                      new Date(b.created_at).getTime()
+                      new Date(b.created_at).getTime() -
+                      new Date(a.created_at).getTime()
                     );
                   })
                   .map(
@@ -153,7 +145,7 @@ function CoursePage(props) {
                           file={file_path}
                           announcementId={id}
                           text={announcement_text}
-                          createdAt={created_at}
+                          createdAt={new Date(created_at).getTime()}
                         />
                       );
                     }

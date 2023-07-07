@@ -20,7 +20,6 @@ const Login = lazy(() => import("../pages/Login"));
 const Logout = lazy(() => import("../pages/Logout"));
 const Signup = lazy(() => import("../pages/Signup"));
 const EditExam = lazy(() => import("../pages/EditExam"));
-const ExamStudent = lazy(() => import("../pages/examStudent/ExamStudent"));
 const Invitation = lazy(() => import("../pages/Invitation"));
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword"));

@@ -23,7 +23,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useMediaQuery } from "@mui/material";
 function Sidebar(props) {
   const obj = useSelector((state) => state.CourseListReducer);
-  console.log("course list", obj);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const sidebarRef = useRef(null);
@@ -38,14 +37,13 @@ function Sidebar(props) {
     getCourses(controller).then((data) => {
       isMounted &&
         dispatch({ type: SET_COURSE_LIST, payload: { courseList: data } });
-      console.log("courses => ", data);
     });
 
     return () => {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [dispatch]);
   const handleCloseSidebar = () => {
     sidebarRef.current.dataset.open = "false";
   };
@@ -69,7 +67,7 @@ function Sidebar(props) {
 
     useEffect(() => {
       refs.current[i] = ref.current;
-    }, []);
+    }, [i]);
 
     return (
       <Sidebar.Item
@@ -100,9 +98,7 @@ function Sidebar(props) {
 
 const ItemComp = forwardRef(
   ({ title, section, classroomId, handleChange }, ref) => {
-    const [opened, setOpen] = useState(
-      ref.current.dataset["selected"] === "true"
-    );
+    const [opened, setOpen] = useState(false);
     const { user } = useSelector((state) => state.UserReducerV2);
     const handleChange_ = (e) => {
       handleChange();
