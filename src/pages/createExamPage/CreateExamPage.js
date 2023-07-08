@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Question from "../../components/addQuestions/Question";
 import ExamLinearStepper from "../../components/ExamLinearStepper";
 import { createNewQuestion, setQuestionsList } from "../../actions/ExamActions";
-import { selectExamQuestions } from "../../utils/selectors/ExamSelectors";
+import { selectExamQuestions } from "../../store/selectors/ExamSelectors";
 
 const useStyles = makeStyles((theme) => ({
   container: {

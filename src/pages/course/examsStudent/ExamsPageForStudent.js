@@ -48,6 +48,10 @@ function ExamsPageForStudent(props) {
   async function fetchExamData(course_id, controller) {
     try {
       const [upcomingExams, pendingAndGradedExams, missedExams] =
+          // exams/students/:courseId for fetching upcoming and makeup exams
+          // exams/pending/:course_id for pending exams
+          // exams/missed/:course_id for missed exams
+          // submissions/exams/:course_id/:student_id for graded_exams and pending_exams
         await Promise.all([
           fetchExamsStudent(course_id, controller),
           fetchPendingAndSubmittedExam(course_id, user.user_id, controller),

@@ -6,12 +6,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SET_EXAM_STUDENT_TIMER,
-  SET_QUESTION_INDEX,
-  SET_QUESTION_TIME_LEFT,
 } from "../../store/actions";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import { submitUserAnswer } from "../../api/services/UserAnswer";
+import { getExamGrade, submitUserAnswer } from "../../api/services/UserAnswer";
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#FFF",
@@ -28,21 +26,29 @@ function ExamStudentNavbar(props) {
   const course = useSelector((state) => state.CourseReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const submitExam = (e) => {
+  const submitExam = async (e) => {
     e.preventDefault();
-    submitUserAnswer(examStudent?.questions, examId)
-      .then((data) => {
-        console.log("exam submitted =>", data);
-        navigate(`/course-page/${course?.courseId}/exams`);
-        toast("you have successfully submitted the exam!");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      const examData = await submitUserAnswer(examStudent?.questions, examId);
+      console.log("exam submitted =>", examData);
+      navigate(`/course-page/${course?.courseId}/exams`);
+      toast("you have successfully submitted the exam!");
+
+      const data = await getExamGrade(examId);
+      console.log(data);
+      if (data.status === 200) {
+        toast.info(data['message']);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   useEffect(() => {
     let interval;
     const { timeLeft } = examStudent?.examDetails || {};
+    console.log('course', course)
+
 
     if (timeLeft) {
       interval = setInterval(() => {

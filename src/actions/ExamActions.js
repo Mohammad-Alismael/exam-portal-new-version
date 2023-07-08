@@ -16,8 +16,8 @@ import { v4 as uuidv4 } from "uuid";
 
 export function ExamActions() {
   return (dispatch) => {
-    dispatch(setStartingAt(0));
-    dispatch(setEndingAt(0));
+    dispatch(setStartingAt(new Date().getTime()));
+    dispatch(setEndingAt(new Date().getTime()));
     dispatch(setExamTitle(""));
     dispatch(setAssignedFor(3));
     dispatch(setSpecificStudents(null));
@@ -135,7 +135,7 @@ export function createNewQuestion(questions) {
   return (dispatch) => {
     const uid = uuidv4();
     const questionObj = {
-      answerKey: [],
+      answerKey: [0],
       isActive: true,
       options: [],
       time: null,

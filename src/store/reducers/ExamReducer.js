@@ -1,8 +1,8 @@
 import * as actionTypes from "../actions";
 const initialState = {
   examTitle: "",
-  startingAt: new Date(),
-  endingAt: 0,
+  startingAt: new Date().getTime(),
+  endingAt: new Date().getTime(),
   assignedFor: 3,
   specificStudents: null,
   navigation: null,

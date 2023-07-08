@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { useSelector } from "react-redux";
 
-import { selectExamQuestions } from "../../utils/selectors/ExamSelectors";
+import { selectExamQuestions } from "../../store/selectors/ExamSelectors";
 
 const Truth = ({ questionIndex, updateQuestionArray }) => {
   const { questions } = useSelector(selectExamQuestions);

@@ -8,7 +8,6 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ExamReducer from "./store/reducers/ExamReducer";
 import ExamStudentReducer from "./store/reducers/ExamStudentReducer";
-import CreateReducer from "./store/reducers/CreateReducer";
 import UserReducer from "./store/reducers/UserReducer";
 import { Route, Routes, BrowserRouter as Router, Link } from "react-router-dom";
 import CourseReducer from "./store/reducers/CourseReducer";
@@ -31,7 +30,6 @@ const rootReducer = combineReducers({
   UserReducerV2: UserReducer,
   ExamStudentReducer,
   SubmissionsReducer,
-  CreateReducer,
   CourseReducer,
   CourseListReducer,
   CreateNewCourseReducer,

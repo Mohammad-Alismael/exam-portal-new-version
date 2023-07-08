@@ -17,7 +17,7 @@ import {createExam, updateExamDetails} from "../../api/services/Exam";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {createQuestionsRequest, updateExamQuestions,} from "../../api/services/Question";
 import {ExamActions} from "../../actions/ExamActions";
-import {selectExamProperties, selectExamQuestions} from "../../utils/selectors/ExamSelectors";
+import {selectExamProperties, selectExamQuestions} from "../../store/selectors/ExamSelectors";
 import {steps} from '../../utils/global/GlobalConstants'
 import Navigate_ from "../Navigate_";
 function HorizontalLinearStepper(props) {

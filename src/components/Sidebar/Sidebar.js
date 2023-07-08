@@ -63,17 +63,16 @@ function Sidebar(props) {
   };
 
   function SidebarItemWithRef(i, class_name, section, classroom_id) {
-    const ref = useRef(null);
-
-    useEffect(() => {
-      refs.current[i] = ref.current;
-    }, [i]);
+    // const ref = useRef(null);
+    // useEffect(() => {
+    //   refs.current[i] = ref.current;
+    // }, [i]);
 
     return (
       <Sidebar.Item
         key={i}
-        ref={ref}
-        handleChange={() => handleChange(refs.current[i], i)}
+        // ref={ref}
+        // handleChange={() => handleChange(refs.current[i], i)}
         title={class_name}
         section={section}
         classroomId={classroom_id}
@@ -96,37 +95,81 @@ function Sidebar(props) {
   );
 }
 
-const ItemComp = forwardRef(
-  ({ title, section, classroomId, handleChange }, ref) => {
+// const ItemComp = forwardRef(
+//   ({ title, section, classroomId, handleChange }, ref) => {
+//     const [opened, setOpen] = useState(false);
+//     const { user } = useSelector((state) => state.UserReducerV2);
+//     const handleChange_ = (e) => {
+//       handleChange();
+//       setOpen(!opened);
+//     };
+//     useEffect(() => {
+//       const handleDatasetChange = (event) => {
+//         if (event.target.dataset.selected !== undefined) {
+//           setOpen(ref.current.dataset["selected"] === "true");
+//         }
+//       };
+//
+//       if (ref.current) {
+//         ref.current.addEventListener("DOMAttrModified", handleDatasetChange);
+//       }
+//
+//       return () => {
+//         if (ref.current) {
+//           ref.current.removeEventListener(
+//             "DOMAttrModified",
+//             handleDatasetChange
+//           );
+//         }
+//       };
+//     }, [ref]);
+//
+//     return (
+//       <Item onClick={handleChange_}>
+//         <StyledBookIconDiv ref={ref} data-selected="false">
+//           <StyledBookIcon />
+//         </StyledBookIconDiv>
+//         <CourseCode>{title}</CourseCode>
+//         <CourseSection>section {section}</CourseSection>
+//         <StyledChevronRightIcon opend={opened} />
+//         <div>
+//           <Sidebar.SubSubItem
+//             opened={opened}
+//             title="announcements"
+//             path={`/course-page/${classroomId}`}
+//           />
+//           <Sidebar.SubSubItem
+//             opened={opened}
+//             title="exams"
+//             path={`/course-page/${classroomId}/${
+//               parseInt(user?.role_id) === 3 ? "exams" : "exams-student"
+//             }`}
+//           />
+//           <Sidebar.SubSubItem
+//             opened={opened}
+//             title="people"
+//             path={`/course-page/${classroomId}/people`}
+//           />
+//           {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'grades'} path={`/courses/${classroomId}/grades`}/> :null}*/}
+//           {/*{user?.role_id === 3 ? <Sidebar.SubSubItem opened={opened} title={'statistics'} path={`/courses/${classroomId}/statistics`}/>: null}*/}
+//         </div>
+//       </Item>
+//     );
+//   }
+// );
+const ItemComp =
+  ({ title, section, classroomId }) => {
     const [opened, setOpen] = useState(false);
     const { user } = useSelector((state) => state.UserReducerV2);
-    const handleChange_ = (e) => {
-      handleChange();
+    const ref = useRef(null);
+    const handleChange = (e) => {
+      if (ref.current.dataset.selected === "false") ref.current.dataset.selected = "true";
+      else ref.current.dataset.selected = "false";
       setOpen(!opened);
     };
-    useEffect(() => {
-      const handleDatasetChange = (event) => {
-        if (event.target.dataset.selected !== undefined) {
-          setOpen(ref.current.dataset["selected"] === "true");
-        }
-      };
-
-      if (ref.current) {
-        ref.current.addEventListener("DOMAttrModified", handleDatasetChange);
-      }
-
-      return () => {
-        if (ref.current) {
-          ref.current.removeEventListener(
-            "DOMAttrModified",
-            handleDatasetChange
-          );
-        }
-      };
-    }, [ref]);
 
     return (
-      <Item onClick={handleChange_}>
+      <Item onClick={handleChange}>
         <StyledBookIconDiv ref={ref} data-selected="false">
           <StyledBookIcon />
         </StyledBookIconDiv>
@@ -157,7 +200,7 @@ const ItemComp = forwardRef(
       </Item>
     );
   }
-);
+
 
 Sidebar.Item = ItemComp;
 const SubSubItem = ({ opened, title, path }) => {

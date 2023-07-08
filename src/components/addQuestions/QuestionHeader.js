@@ -7,13 +7,12 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect, useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import { Button } from "@material-ui/core";
 import Question from "../PreviewQuestions/Question";
-import { Badge } from "@mui/material";
-import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { convertToRaw } from "draft-js";
 import {
   calcState,
   CHECKBOX_QUESTION_TYPE,
@@ -26,7 +25,7 @@ import QuestionEditor from "./QuestionEditor";
 import {
   selectExamQuestions,
   selectQuestionHeader,
-} from "../../utils/selectors/ExamSelectors";
+} from "../../store/selectors/ExamSelectors";
 
 const useStyles = makeStyles((theme) => ({
   paperStyle: {

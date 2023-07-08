@@ -84,8 +84,6 @@ function ExamStudent({ examTitle, examId, startingAt, endingAt, seeResultAt }) {
     const classes = useStyles();
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.UserReducerV2);
-    const course = useSelector((state) => state.CourseReducer);
-    const dispatch = useDispatch();
     const {course_id} = useParams();
     const [finalGrade, setFinalGrade] = useState(null);
     const [submittedAt, setSubmittedAt] = useState(null);

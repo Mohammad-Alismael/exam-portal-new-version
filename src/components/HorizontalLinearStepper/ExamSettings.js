@@ -3,35 +3,37 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import React, {memo, useEffect} from "react";
+import React, { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  SET_WHO_CAN_SEE_OBJECT,
-} from "../../store/actions";
-import {
-  TextField,
-} from "@mui/material";
+import { SET_WHO_CAN_SEE_OBJECT } from "../../store/actions";
+import { TextField } from "@mui/material";
 
-import {setAssignedFor, setEndingAt, setExamTitle, setStartingAt} from "../../actions/ExamActions";
+import {
+  setAssignedFor,
+  setEndingAt,
+  setExamTitle,
+  setStartingAt,
+} from "../../actions/ExamActions";
 import SpecificStudentContainer from "./SpecificStudentContainer";
-import {selectExamSettings} from "../../utils/selectors/ExamSelectors";
+import { selectExamSettings } from "../../store/selectors/ExamSelectors";
 
 function ExamSettings(props) {
-
-  const { examTitle, startingAt, endingAt, assignedFor } = useSelector(selectExamSettings);
+  const { examTitle, startingAt, endingAt, assignedFor } =
+    useSelector(selectExamSettings);
+  console.log({ examTitle, startingAt, endingAt, assignedFor })
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
-  console.log({ examTitle, startingAt, endingAt, assignedFor })
+  console.log({ examTitle, startingAt, endingAt, assignedFor });
 
   const updateStartingAt = (e) => {
-    dispatch(setStartingAt(Date.parse(e.target.value)))
+    dispatch(setStartingAt(Date.parse(e.target.value)));
   };
   const updateEndingAt = (e) => {
-    dispatch(setEndingAt(Date.parse(e.target.value)))
+    dispatch(setEndingAt(Date.parse(e.target.value)));
   };
   const handleAssignedFor = (e) => {
     e.preventDefault();
-    const val =  e.target.value
+    const val = e.target.value;
     if (val === 4) {
       setOpen(true);
     } else {
@@ -41,7 +43,7 @@ function ExamSettings(props) {
       });
       setOpen(false);
     }
-    dispatch(setAssignedFor(val))
+    dispatch(setAssignedFor(val));
   };
 
   return (
@@ -80,11 +82,7 @@ function ExamSettings(props) {
           label="Starting At"
           type="datetime-local"
           fullWidth
-          defaultValue={
-            startingAt !== 0
-              ? new Date(startingAt).toISOString().slice(0, 16)
-              : new Date().toISOString().slice(0, 16)
-          }
+          defaultValue={new Date(parseInt(startingAt)).toISOString().slice(0, 16)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -97,11 +95,7 @@ function ExamSettings(props) {
           label="Ending At"
           type="datetime-local"
           fullWidth
-          defaultValue={
-            endingAt !== 0
-              ? new Date(endingAt).toISOString().slice(0, 16)
-              : new Date().toISOString().slice(0, 16)
-          }
+          defaultValue={new Date(endingAt).toISOString().slice(0, 16)}
           onChange={updateEndingAt}
           InputLabelProps={{
             shrink: true,
